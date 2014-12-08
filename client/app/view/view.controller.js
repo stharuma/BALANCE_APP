@@ -12,7 +12,7 @@ angular.module('kf6App')
         });
 
         $scope.updateCanvas = function() {
-            $http.get('/api/onviewrefs/').success(function(onviewrefs) {
+            $http.get('/api/onviewrefs/view/' + viewId).success(function(onviewrefs) {
                 $scope.onviewrefs = onviewrefs;
             });
         };
