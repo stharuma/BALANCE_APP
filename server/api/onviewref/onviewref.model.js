@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var OnviewrefSchema = new Schema({
     viewId: Schema.ObjectId,
-    postId: Schema.ObjectId,
+    contributionId: Schema.ObjectId,
     x: Number,
     y: Number,
     title: String,

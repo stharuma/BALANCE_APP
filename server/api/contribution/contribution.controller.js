@@ -62,7 +62,7 @@ exports.update = function(req, res) {
 var Onviewref = require('../onviewref/onviewref.model');
 exports.updateRefs = function(contribution) {
     Onviewref.find({
-        postId: contribution._id
+        contributionId: contribution._id
     }, function(err, refs) {
         if (err) {
             return handleError(err);

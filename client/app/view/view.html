@@ -7,7 +7,7 @@
         <div class="KFViewContributionCanvas">
             <div id="{{ref._id}}" postid="{{ref.postId}}" onviewref class="kfpostref {{ref.postId}}" ng-repeat="ref in onviewrefs" style="z-index: 5; position: absolute; top:{{ref.y}}px; left:{{ref.x}}px" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
                 <span style="white-space: nowrap;">
-                <a ng-click="openContoribution(ref.postId)" style="color: {{getColor(ref)}};">
+                <a ng-click="openContoribution(ref.contributionId)" style="color: {{getColor(ref)}};">
                     {{ref.title}}</a> {{ref.getAuthor()}}
                 </span>
             </div>

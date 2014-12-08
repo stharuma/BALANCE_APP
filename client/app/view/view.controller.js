@@ -31,7 +31,7 @@ angular.module('kf6App')
 
         $scope.createOnViewRef = function(contribution, x, y) {
             $http.post('/api/onviewrefs', {
-                postId: contribution._id,
+                contributionId: contribution._id,
                 viewId: $scope.view._id,
                 x: x,
                 y: y,
