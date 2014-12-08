@@ -1,3 +1,12 @@
 <div class="col-md-12">
     <h3>Note: {{contribution.title}}</h3>
+    <form class="thing-form">
+        <label></label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
+            <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribution</button>
+      </span>
+        </p>
+    </form>
 </div>
