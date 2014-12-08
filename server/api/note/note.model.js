@@ -4,9 +4,16 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var NoteSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+    title: String,
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    authors: {
+        type: [Schema.ObjectId],
+        default: []
+    },
+    text4search: String
 });
 
 module.exports = mongoose.model('Note', NoteSchema);
