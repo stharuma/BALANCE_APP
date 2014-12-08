@@ -43,4 +43,10 @@ angular.module('kf6App')
         $scope.onviewrefSave = function(ref) {
             $http.put('/api/onviewrefs/' + ref._id, ref);
         };
+
+        $scope.openContoribution = function(id) {
+            var url = './contribution/' + id;
+            window.open(url, '_blank');
+        };
+
     });
