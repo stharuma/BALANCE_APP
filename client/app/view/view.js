@@ -98,7 +98,7 @@ angular.module('kf6App')
     .directive('KFViewDropCanvas', function() {
         return {
             restrict: 'C',
-            link: function(scope, element) {
+            link: function(scope) {
                 var $scope = scope;
                 $scope.dragging2 = 'none';
 
@@ -136,7 +136,7 @@ angular.module('kf6App')
                         });
 
                     }
-                }
+                };
             }
         };
     });
@@ -145,7 +145,7 @@ angular.module('kf6App')
     .directive('KFViewDropCanvas', function() {
         return {
             restrict: 'C',
-            link: function(scope, element) {
+            link: function(scope) {
                 var $scope = scope;
                 $scope.selected = [];
 
