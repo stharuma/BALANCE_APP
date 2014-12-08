@@ -6,8 +6,7 @@ angular.module('kf6App')
 
         $scope.contribution = {};
 
-        $http.get('/api/notes/' + contributionId).success(function(contribution) {
-        	console.log(contribution);
+        $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
         });
     });

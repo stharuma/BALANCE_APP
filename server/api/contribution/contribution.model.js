@@ -4,9 +4,20 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var ContributionSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+    title: String,
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    authors: {
+        type: [Schema.ObjectId],
+        default: []
+    },
+    text4search: String
+});
+
+ContributionSchema.index({
+    text4search: 'text'
 });
 
 module.exports = mongoose.model('Contribution', ContributionSchema);
