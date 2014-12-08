@@ -5,8 +5,9 @@
         <p class="input-group">
             <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
             <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribution</button>
-      </span>
+        <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribution</button>        
+		    </span>
         </p>
     </form>
+    <textarea ui-tinymce ng-model="contribution.body"></textarea>
 </div>
