@@ -9,6 +9,8 @@ var errors = require('./components/errors');
 module.exports = function(app) {
 
   // Insert routes below
+  app.use('/api/onviewrefs', require('./api/onviewref'));
+  app.use('/api/notes', require('./api/note'));
   app.use('/api/views', require('./api/view'));
   app.use('/api/contributions', require('./api/contribution'));
   app.use('/api/things', require('./api/thing'));
