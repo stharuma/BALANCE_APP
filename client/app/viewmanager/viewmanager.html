@@ -1,11 +1,11 @@
 <div class="col-md-12">
     This is the viewmanager view.
     <ul>
-        <li ng-repeat="view in views">{{view.title}}</li>
+        <li ng-repeat="view in views"><a href='view/{{view._id}}'>{{view.title}}</a></li>
     </ul>
 
     <form class="thing-form">
-        <label></label>
+        <label></label>        
         <p class="input-group">
             <input type="text" class="form-control" placeholder="" ng-model="newViewTitle">
             <span class="input-group-btn">
