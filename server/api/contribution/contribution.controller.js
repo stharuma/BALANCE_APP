@@ -65,7 +65,7 @@ exports.updateRefs = function(contribution) {
         postId: contribution._id
     }, function(err, refs) {
         if (err) {
-            return handleError(res, err);
+            return handleError(err);
         }
         refs.forEach(function(ref) {
             ref.title = contribution.title;
