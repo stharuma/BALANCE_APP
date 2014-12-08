@@ -1,0 +1,17 @@
+<div class="col-md-12">
+    This is the viewmanager view.
+    <ul>
+        <li ng-repeat="view in views">{{view.title}}</li>
+    </ul>
+
+    <form class="thing-form">
+        <label></label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="" ng-model="newViewTitle">
+            <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="addView()">Add New</button>
+      </span>
+        </p>
+    </form>
+
+</div>
