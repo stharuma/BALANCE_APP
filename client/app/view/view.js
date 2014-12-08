@@ -14,7 +14,7 @@ angular.module('kf6App')
     .directive('onviewref', function() {
         return {
             restrict: 'A',
-            link: function(scope, element, attrs) {
+            link: function(scope, element) {
                 var ref = scope.ref;
 
                 var el = element[0];
@@ -56,10 +56,9 @@ angular.module('kf6App')
 
                     var elmX = element.position().left;
                     var elmY = element.position().top;
-                    var rect = $('#dropcanvas').get(0).getBoundingClientRect();
                     var xx = elmX + point.x;
                     var yy = elmY + point.y;
-                    var safari = navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") <= -1;
+                    var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
                     if (safari) {
                         e.dataTransfer.setDragImage(selImg, xx, yy);
                     }
@@ -88,20 +87,18 @@ angular.module('kf6App')
                     scope.drop(e, e.clientX, e.clientY);
                 });
 
-                el.addEventListener('dragend', function(e) {
-                    console.log('drag end!');
+                el.addEventListener('dragend', function() {
                     scope.$parent.dragging2 = 'none';
-                    //$('#dropcanvas').css('zIndex', 2);
                 });
             }
-        }
+        };
     });
 
 angular.module('kf6App')
     .directive('KFViewDropCanvas', function() {
         return {
             restrict: 'C',
-            link: function(scope, element, attrs) {
+            link: function(scope, element) {
                 scope.canvas = element;
                 var el = element[0];
                 el.droppable = true;

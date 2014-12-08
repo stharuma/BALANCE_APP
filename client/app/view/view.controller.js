@@ -13,21 +13,6 @@ angular.module('kf6App')
 
         $scope.updateCanvas = function() {
             $http.get('/api/onviewrefs/').success(function(onviewrefs) {
-                // postrefs.forEach(function(each) {
-                //     each.getAuthor = function() {
-                //         //return each.authors;
-                //         var str = '';
-                //         each.authors.forEach(function(each) {
-                //             if ($scope.allUsersById[each]) {
-                //                 if (str.length !== 0) {
-                //                     str = str + ', ';
-                //                 }
-                //                 str = str + $scope.allUsersById[each].name;
-                //             }
-                //         });
-                //         return str;
-                //     };
-                // });
                 $scope.onviewrefs = onviewrefs;
             });
         };
@@ -57,13 +42,13 @@ angular.module('kf6App')
         /* selection */
         $scope.selected = [];
 
-        function remove(arr, item) {
+        $scope.remove = function(arr, item) {
             for (var i = arr.length; i--;) {
                 if (arr[i] === item) {
                     arr.splice(i, 1);
                 }
             }
-        }
+        };
 
         $scope.searchById = function(array, id) {
             for (var i = 0; i < array.length; i++) {
@@ -72,7 +57,8 @@ angular.module('kf6App')
                 }
             }
             return null;
-        }
+        };
+
         $scope.getSelectedModels = function() {
             var models = [];
             $scope.selected.forEach(function(eachId) {
@@ -83,6 +69,7 @@ angular.module('kf6App')
             });
             return models;
         };
+
         $scope.getSelectedElements = function() {
             var models = [];
             $scope.selected.forEach(function(eachId) {
@@ -93,9 +80,11 @@ angular.module('kf6App')
             });
             return models;
         };
+
         $scope.isSelected = function(id) {
             return $scope.selected.indexOf(id) >= 0;
-        }
+        };
+
         $scope.select = function(id) {
             if ($scope.isSelected(id)) {
                 return;
@@ -114,15 +103,17 @@ angular.module('kf6App')
             });
             $('#selection').append(target);
         };
+
         $scope.unselect = function(id) {
             if ($scope.isSelected(id) === false) {
                 return;
             }
             var target = $('#' + id);
-            target.resizable("destroy");
+            target.resizable('destroy');
             $('#viewcanvas').append(target);
-            remove($scope.selected, id);
+            $scope.remove($scope.selected, id);
         };
+
         $scope.clearSelection = function() {
             console.log('clearSelection');
             console.log($scope.selected);
@@ -143,6 +134,7 @@ angular.module('kf6App')
                 e.dataTransfer.dropEffect = 'copy';
             }
         };
+
         $scope.drop = function(e, x, y) {
             if ($scope.dragging2 !== 'none') {
                 var postref = $scope.dragging2;
@@ -158,7 +150,7 @@ angular.module('kf6App')
             } else {
                 var data = e.dataTransfer.getData('text');
                 var index = data.indexOf('postref:');
-                if (index != 0) {
+                if (index !== 0) {
                     return;
                 }
                 var text = data.replace('postref:', '');
@@ -169,7 +161,8 @@ angular.module('kf6App')
                 });
 
             }
-        }
+        };
+
         $scope.onviewrefSave = function(ref) {
             $http.put('/api/onviewrefs/' + ref._id, ref);
         };

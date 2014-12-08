@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewmanagerCtrl', function($scope, $http, $state, socket) {
+    .controller('ViewmanagerCtrl', function($scope, $http, $state) {
         $scope.views = [];
 
         $http.get('/api/views').success(function(views) {
