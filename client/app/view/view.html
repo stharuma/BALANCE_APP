@@ -21,9 +21,9 @@
 
     <div class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
-            <div id="{{ref._id}}" postid="{{ref.postId}}" class="KFViewRef {{ref.postId}}" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}"  style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
+            <div id="{{ref._id}}" postid="{{ref.contributionId}}" class="KFViewRef {{ref.contributionId}}" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}"  style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
                 <span style="white-space: nowrap;">
-                    <a ng-click="openContoribution(ref.contributionId)" style="color: {{getColor(ref)}};">{{ref.title}}</a>
+                    <a ng-click="openContribution(ref)" ng-style="{'color' : ref.getColor()}">{{ref.title}}</a>
                 </span>
                 <span style="font-size: 10px; color: #777777; white-space: nowrap;">
                     {{ref.getAuthorString()}}

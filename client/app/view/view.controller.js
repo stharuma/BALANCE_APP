@@ -79,8 +79,8 @@ angular.module('kf6App')
             $http.put('/api/onviewrefs/' + ref._id, ref);
         };
 
-        $scope.openContoribution = function(id) {
-            var url = './contribution/' + id;
+        $scope.openContribution = function(ref) {
+            var url = './contribution/' + ref.contributionId;
             window.open(url, '_blank');
         };
 
