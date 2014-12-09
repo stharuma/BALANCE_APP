@@ -6,19 +6,8 @@
 
 var Record = require('./record.model');
 
-exports.register = function(socket) {
-  Record.schema.post('save', function (doc) {
-    onSave(socket, doc);
-  });
-  Record.schema.post('remove', function (doc) {
-    onRemove(socket, doc);
-  });
-}
-
-function onSave(socket, doc, cb) {
-  socket.emit('record:save', doc);
-}
-
-function onRemove(socket, doc, cb) {
-  socket.emit('record:remove', doc);
+exports.register = function(socketio) {
+    Record.schema.post('save', function(record) {
+        socketio.sockets.to(record.authorId).emit('record:save', record);
+    });
 }

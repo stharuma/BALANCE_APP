@@ -39,8 +39,8 @@ angular.module('kf6App')
         };
 
         $scope.addRef = function(ref) {
-            ref.getColor = function(){
-                if(ref.read === true){
+            ref.getColor = function() {
+                if (ref.read === true) {
                     return '#FF0000';
                 }
                 return '#0000FF';
@@ -62,15 +62,35 @@ angular.module('kf6App')
         };
 
         $scope.refreshRead = function() {
-            $http.get('/api/records/count/' + $scope.view._id + '/' + Auth.getCurrentUser()._id).success(function(res) {
+            var uid = Auth.getCurrentUser()._id;
+            if (uid === null) {
+                return;
+            }
+            $http.get('/api/records/count/' + $scope.view._id + '/' + uid).success(function(res) {
                 res.forEach(function(each) {
-                    $scope.refs.forEach(function(ref) {
-                        if (ref.contributionId === each._id) {
-                            ref.read = true;
-                        }
-                    });
+                    $scope.updateRefRead(each._id);
                 });
             });
+
+            socket.socket.emit('subscribe', uid);
+            socket.socket.on('record:save', function(record) {
+                if (record.type === 'read') {
+                    $scope.updateRefRead(record.targetId);
+                }
+            });
+            $scope.$on('$destroy', function() {
+                socket.socket.emit('unsubscribe', uid);
+                socket.socket.removeAllListeners('record:save');
+            });
+        };
+
+        $scope.updateRefRead = function(id) {
+            var ref = _.find($scope.refs, function(ref) {
+                return ref.contributionId === id;
+            });
+            if (ref) {
+                ref.read = true;
+            }
         };
 
         $scope.createNote = function() {

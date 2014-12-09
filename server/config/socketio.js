@@ -48,4 +48,5 @@ module.exports = function(socketio) {
     });
 
     require('../api/onviewref/onviewref.socket').register(socketio);
+    require('../api/record/record.socket').register(socketio);
 };
