@@ -1,6 +1,24 @@
-<div class="col-md-12" style="padding: 0px; height: 100%;">
+<div class="col-md-12" style="padding: 0px;">
     <div class="KFViewNavBar">
         View: {{view.title}}
+    </div>
+
+    <div class='KFViewToolBar'>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" style="width: 50px;" class="btn btn-primary" ng-click="createNote()">Note</button>
+            </span>
+        </span>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" style="width: 50px;" class="btn btn-primary" ng-click="createDrawing()">Draw</button>
+            </span>
+        </span>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" style="width: 50px;" class="btn btn-primary" ng-click="openSearch()">Search</button>
+            </span>
+        </span>
     </div>
 
     <div class="KFViewMainCanvas">
@@ -15,21 +33,5 @@
         <div id="dropcanvas" class="KFViewDropCanvas KFViewMarqueeCanvas"></div>
     </div>
 
-    <div class='KFViewToolBar'>
-        <span class="input-group">
-            <span class="input-group-btn">
-               <button type="submit" style="width: 50px;" class="btn btn-primary" ng-click="createNote()">Note</button>
-            </span>
-        </span>
-        <span class="input-group">
-            <span class="input-group-btn">
-               <button type="submit" style="width: 50px;" class="btn btn-primary" ng-click="createDrawing()">Draw</button>
-            </span>
-        </span>
-        <span class="input-group">
-            <span class="input-group-btn">
-                <button type="submit" style="width: 50px;" class="btn btn-primary" ng-click="openSearch()">Search</button>
-            </span>
-        </span>
-    </div>
+
 </div>
