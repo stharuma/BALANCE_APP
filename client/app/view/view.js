@@ -41,6 +41,7 @@ angular.module('kf6App')
                 el.addEventListener('dragstart', function(e) {
                     var firefox = (e.offsetX === undefined);
                     var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
+                    var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;                    
 
                     var offset = {
                         x: firefox ? e.layerX : e.offsetX,
@@ -49,10 +50,10 @@ angular.module('kf6App')
 
                     $scope.dragpoint = offset;
 
-                    if (safari) {
+                    if (safari /*|| (chrome && $scope.selected.length >= 2)*/) {
                         var imgX = element.position().left + offset.x;
                         var imgY = element.position().top + offset.y;
-                        var selImg = selection.get(0);
+                        var selImg = $('#selectioncanvas').get(0);
                         e.dataTransfer.setDragImage(selImg, imgX, imgY);
                     }
 
@@ -154,7 +155,7 @@ angular.module('kf6App')
                         }
                     });
                     target.resizable();
-                    $('#selection').append(target);
+                    $('#selectioncanvas').append(target);
                 };
 
                 $scope.unselect = function(id) {
