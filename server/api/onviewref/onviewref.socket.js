@@ -11,6 +11,6 @@ exports.register = function(socketio) {
         socketio.sockets.to(ref.viewId).emit('ref:save', ref);
     });
     Onviewref.schema.post('remove', function(ref) {
-        socketio.sockets.to(ref.viewId).emit('ref:save', ref);
+        socketio.sockets.to(ref.viewId).emit('ref:remove', ref);
     });
 }

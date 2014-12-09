@@ -8,7 +8,8 @@ angular.module('kf6App', [
   'ui.router',
   'ui.bootstrap',  
   'ui.tinymce',
-  'ui.sortable'
+  'ui.sortable',
+  'ng-context-menu'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

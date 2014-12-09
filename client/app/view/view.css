@@ -13,7 +13,8 @@
 }
 .KFViewMainCanvas {
     position: absolute;
-    /*border: 1px solid #000000;*/    
+    /*border: 1px solid #000000;*/
+    
     overflow: scroll;
     top: 20px;
     left: 50px;
@@ -48,7 +49,6 @@
     position: absolute;
     z-index: 5;
 }
-
 .ui-resizable {
     /*position: relative;*/
 }
@@ -59,8 +59,7 @@
     -ms-touch-action: none;
     touch-action: none;
 }
-.ui-resizable-disabled .ui-resizable-handle,
-.ui-resizable-autohide .ui-resizable-handle {
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle {
     display: none;
 }
 .ui-resizable-n {
@@ -128,4 +127,17 @@
 #segrip {
     right: -5px;
     bottom: -5px;
+}
+/* for context menu */
+.position-fixed {
+    position: fixed;
+}
+.menuitem {
+    padding-left: 10px;
+    cursor: default;
+    background-color: white;
+}
+.menuitem:hover {
+    color: white;
+    background-color: #0070FF;
 }

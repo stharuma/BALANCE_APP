@@ -21,19 +21,26 @@
 
     <div class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
-            <div id="{{ref._id}}" postid="{{ref.contributionId}}" class="KFViewRef {{ref.contributionId}}" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}"  style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
+            <div id="{{ref._id}}" postid="{{ref.contributionId}}" class="KFViewRef {{ref.contributionId}}" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
                 <span style="white-space: nowrap;">
                     <a ng-click="openContribution(ref)" ng-style="{'color' : ref.getColor()}">{{ref.title}}</a>
                 </span>
                 <br>
                 <span style="font-size: 10px; color: #777777; white-space: nowrap;">
                     {{ref.getAuthorString()}}
-                </span>                
+                </span>
             </div>
         </div>
         <!-- for selection proxy-->
         <div id="selectioncanvas" class="KFViewSelectedCanvas"></div>
         <div id="dropcanvas" class="KFViewDropCanvas KFViewMarqueeCanvas"></div>
+    </div>
+
+    <div class="dropdown position-fixed" id="menu-A" style="position: absolute; z-index: 20;">
+        <ul class="dropdown-menu" role="menu">
+            <li class="menuitem" ng-click="openInWindow()">Open In Window</li>
+            <li class="menuitem" ng-click="delete()">Delete</li>
+        </ul>
     </div>
 
 </div>

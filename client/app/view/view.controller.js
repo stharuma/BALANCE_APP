@@ -84,4 +84,17 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
+        $scope.contextOpen = function(childScope) {
+            $scope.contextTarget = childScope.ref;
+        };
+
+        $scope.delete = function() {
+            if ($scope.contextTarget === undefined) {
+                window.alert('contextTarget is not set.');
+                return;
+            }
+            var ref = $scope.contextTarget;
+            $http.delete('/api/onviewrefs/' + ref._id);
+        };
+
     });
