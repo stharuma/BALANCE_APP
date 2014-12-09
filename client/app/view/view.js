@@ -11,7 +11,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('onviewref', function() {
+    .directive('kfviewRef', function() {
         return {
             restrict: 'A',
             link: function(scope, element) {
@@ -95,9 +95,9 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewDropCanvas', function() {
+    .directive('kfviewDropcanvas', function() {
         return {
-            restrict: 'C',
+            restrict: 'A',
             link: function(scope) {
                 var $scope = scope;
                 $scope.dragging2 = 'none';
@@ -142,9 +142,9 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewDropCanvas', function() {
+    .directive('kfviewDropcanvas', function() {
         return {
-            restrict: 'C',
+            restrict: 'A',
             link: function(scope) {
                 var $scope = scope;
                 $scope.selected = [];
@@ -235,9 +235,9 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewDropCanvas', function() {
+    .directive('kfviewDropcanvas', function() {
         return {
-            restrict: 'C',
+            restrict: 'A',
             link: function(scope, element) {
                 scope.canvas = element;
                 var el = element[0];

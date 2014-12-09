@@ -5,14 +5,14 @@
 
     <div class="KFViewCanvas">
         <div class="KFViewContributionCanvas">
-            <div id="{{ref._id}}" postid="{{ref.postId}}" onviewref class="kfpostref {{ref.postId}}" ng-repeat="ref in onviewrefs" style="z-index: 5; position: absolute; top:{{ref.y}}px; left:{{ref.x}}px" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
+            <div id="{{ref._id}}" postid="{{ref.postId}}" kfview-ref class="kfpostref {{ref.postId}}" ng-repeat="ref in onviewrefs" style="z-index: 5; position: absolute; top:{{ref.y}}px; left:{{ref.x}}px" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
                 <span style="white-space: nowrap;">
                 <a ng-click="openContoribution(ref.contributionId)" style="color: {{getColor(ref)}};">
                     {{ref.title}}</a> {{ref.getAuthor()}}
                 </span>
             </div>
         </div>
-        <div id="dropcanvas" class="KFViewDropCanvas marqueecanvas" style="position: absolute; background-color: rgba(255, 255, 0, 0.3); width: 2000px; height: 2000px; z-index: 2;"></div>
+        <div id="dropcanvas" kfview-dropcanvas class="marqueecanvas" style="position: absolute; background-color: rgba(255, 255, 0, 0.3); width: 2000px; height: 2000px; z-index: 2;"></div>
     </div>
 
     <div style="position: fixed; top: 20px; width: 50px; z-index: 20;">
