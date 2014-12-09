@@ -21,11 +21,19 @@ angular.module('kf6App')
         $scope.updateCommunityMembers = function() {
             $http.get('/api/users/').success(function(members) {
                 $scope.communityMembers = members;
+                $scope.contribution.authors.forEach(function(id) {
+                    var member = _.find($scope.communityMembers, function(member) {
+                        return member._id === id;
+                    });
+                    if (member) {
+                        $scope.authors.push(member);
+                    }
+                });
             });
         };
 
         $scope.addAuthor = function(author) {
-            if (_.contains($scope.authors, author)){
+            if (_.contains($scope.authors, author)) {
                 window.alert('already included');
                 return;
             }
