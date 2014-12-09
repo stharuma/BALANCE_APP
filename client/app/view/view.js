@@ -225,12 +225,10 @@ angular.module('kf6App')
                 var el = element[0];
                 el.droppable = true;
                 el.addEventListener('dragover', function(e) {
-                    console.log('dragover');
                     e.preventDefault();
                     $scope.dragover(e);
                 });
                 el.addEventListener('drop', function(e) {
-                    console.log('drop');
                     e.preventDefault();
                     $scope.drop(e, e.clientX, e.clientY);
                 });
