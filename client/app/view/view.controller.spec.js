@@ -4,7 +4,8 @@ describe('Controller: ViewCtrl', function () {
 
   // load the controller's module
   beforeEach(module('kf6App'));
-
+  beforeEach(module('socketMock'));
+  
   var ViewCtrl, scope;
 
   // Initialize the controller and a mock scope

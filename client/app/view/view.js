@@ -41,7 +41,7 @@ angular.module('kf6App')
                 el.addEventListener('dragstart', function(e) {
                     var firefox = (e.offsetX === undefined);
                     var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
-                    var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;                    
+                    //var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;                    
 
                     var offset = {
                         x: firefox ? e.layerX : e.offsetX,
@@ -237,7 +237,7 @@ angular.module('kf6App')
     .directive('KFViewMarqueeCanvas', function() {
         return {
             restrict: 'C',
-            link: function(scope, element, attrs) {
+            link: function(scope, element) {
                 var marquee = null;
                 var pressX;
                 var pressY;
@@ -280,11 +280,11 @@ angular.module('kf6App')
                         return;
                     }
                     var marqueeRect = j2rect(marquee);
-                    $('.KFViewRef').each(function(x) {
+                    $('.KFViewRef').each(function() {
                         if (intersects(marqueeRect, j2rect($(this)))) {
-                            scope.select($(this).attr("id"));
+                            scope.select($(this).attr('id'));
                         } else {
-                            scope.unselect($(this).attr("id"));
+                            scope.unselect($(this).attr('id'));
                         }
                     });
                     marquee.remove();
@@ -309,4 +309,4 @@ angular.module('kf6App')
                 }
             }
         };
-    })
+    });

@@ -19,7 +19,7 @@ angular.module('kf6App')
                     socket.socket.emit('unsubscribe', viewId);
                     socket.unsyncUpdates('ref');
                 });
-                socket.syncUpdates('ref', $scope.refs, function(event, item) {});
+                socket.syncUpdates('ref', $scope.refs);
             });
         };
 
