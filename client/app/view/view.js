@@ -48,8 +48,6 @@ angular.module('kf6App')
                         y: firefox ? e.layerY : e.offsetY
                     };
 
-                    $scope.dragpoint = offset;
-
                     if (safari /*|| (chrome && $scope.selected.length >= 2)*/) {
                         var imgX = element.position().left + offset.x;
                         var imgY = element.position().top + offset.y;
@@ -70,7 +68,9 @@ angular.module('kf6App')
                         hrefs += '</a>';
                     });
                     e.dataTransfer.setData('text/html', hrefs);
-                    $scope.dragging2 = ref;
+
+                    $scope.dragging = ref;
+                    $scope.dragpoint = offset;                    
                 });
                 el.addEventListener('dragover', function(e) {
                     e.preventDefault();
@@ -81,7 +81,7 @@ angular.module('kf6App')
                     $scope.drop(e, e.clientX, e.clientY);
                 });
                 el.addEventListener('dragend', function() {
-                    $scope.dragging2 = 'none';
+                    $scope.dragging = 'none';
                 });
             }
         };
@@ -115,7 +115,7 @@ angular.module('kf6App')
                 $scope.getSelectedModels = function() {
                     var models = [];
                     $scope.selected.forEach(function(eachId) {
-                        var model = $scope.searchById($scope.onviewrefs, eachId);
+                        var model = $scope.searchById($scope.refs, eachId);
                         if (model !== null) {
                             models.push(model);
                         }
@@ -184,10 +184,9 @@ angular.module('kf6App')
             restrict: 'C',
             link: function(scope, element) {
                 var $scope = scope;
-                $scope.dragging2 = 'none';
 
                 $scope.dragover = function(e) {
-                    if ($scope.dragging2 !== 'none') {
+                    if ($scope.dragging !== 'none') {
                         e.dataTransfer.dropEffect = 'move';
                     } else {
                         e.dataTransfer.dropEffect = 'copy';
@@ -195,8 +194,8 @@ angular.module('kf6App')
                 };
 
                 $scope.drop = function(e, x, y) {
-                    if ($scope.dragging2 !== 'none') {
-                        var postref = $scope.dragging2;
+                    if ($scope.dragging !== 'none') {
+                        var postref = $scope.dragging;
                         var rect = $('#dropcanvas').get(0).getBoundingClientRect();　
                         var dx = (x - rect.left - $scope.dragpoint.x) - postref.x;
                         var dy = (y - rect.top - $scope.dragpoint.y) - postref.y;
@@ -204,7 +203,7 @@ angular.module('kf6App')
                         $scope.getSelectedModels().forEach(function(postref) {
                             postref.x += dx;　
                             postref.y += dy;
-                            $scope.onviewrefSave(postref);
+                            $scope.updateRef(postref);
                         });
                     } else {
                         var data = e.dataTransfer.getData('text');

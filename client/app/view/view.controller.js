@@ -4,7 +4,7 @@ angular.module('kf6App')
     .controller('ViewCtrl', function($scope, $http, $stateParams, socket, Auth) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
-        $scope.onviewrefs = [];
+        $scope.refs = [];
 
         $http.get('/api/views/' + viewId).success(function(view) {
             $scope.view = view;
@@ -12,14 +12,14 @@ angular.module('kf6App')
         });
 
         $scope.updateCanvas = function() {
-            $http.get('/api/onviewrefs/view/' + viewId).success(function(onviewrefs) {
-                $scope.onviewrefs = onviewrefs;
+            $http.get('/api/onviewrefs/view/' + viewId).success(function(refs) {
+                $scope.refs = refs;
                 socket.socket.emit('subscribe', viewId);
                 $scope.$on('$destroy', function() {
                     socket.socket.emit('unsubscribe', viewId);
                     socket.unsyncUpdates('ref');
                 });
-                socket.syncUpdates('ref', $scope.onviewrefs, function(event, item) {});
+                socket.syncUpdates('ref', $scope.refs, function(event, item) {});
             });
         };
 
@@ -46,7 +46,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.onviewrefSave = function(ref) {
+        $scope.updateRef = function(ref) {
             $http.put('/api/onviewrefs/' + ref._id, ref);
         };
 
