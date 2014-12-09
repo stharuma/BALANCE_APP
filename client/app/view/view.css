@@ -1,17 +1,43 @@
+.KFViewNavBar {
+    position: fixed;
+    width: 100%;
+    height: 20px;
+    background-color: blue;
+    color: white;
+}
+.KFViewToolBar {
+    position: fixed;
+    top: 20px;
+    width: 50px;
+    z-index: 0;
+}
 .KFViewMainCanvas {
     position: absolute;
-    border: 1px solid #000000;
+    /*border: 1px solid #000000;*/
+    
     overflow: scroll;
     top: 20px;
-    width: 100%;
-    height: 95vh;
+    left: 50px;
+    width: calc(100% - 50px);
+    height: calc(100vh - 20px);
 }
-
 .KFViewContributionCanvas {
-    position: absolute;	
-    overflow: hidden;
+    position: absolute;
     left: 0pt;
     top: 0pt;
     width: 2000px;
     height: 2000px;
+}
+.KFViewMarqueeCanvas {
+    position: absolute;
+    left: 0pt;
+    top: 0pt;
+    width: 2000px;
+    height: 2000px;
+    z-index: 2;
+    /*background-color: rgba(255, 255, 0, 0.3);*/
+}
+.KFViewRef {
+    position: absolute;
+    z-index: 5;
 }
