@@ -1,13 +1,17 @@
 <div class="col-md-12">
     <h3>Note: {{contribution.title}}</h3>
-    <form class="thing-form">
-        <label></label>
-        <p class="input-group">
+    <div style="position: absolute; top: 10px; width: 95%; text-align: right;">
+        <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>        
+        <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
+    </div>
+    <tabset>
+        <tab heading="Read">
+            <div ng-bind-html="contribution.body"></div>
+        </tab>
+
+        <tab heading="Edit">
             <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
-            <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribution</button>        
-		    </span>
-        </p>
-    </form>
-    <textarea ui-tinymce ng-model="contribution.body"></textarea>
+            <textarea ui-tinymce ng-model="contribution.body"></textarea>
+        </tab>
+    </tabset>
 </div>
