@@ -153,6 +153,7 @@ angular.module('kf6App')
                             'nw': '#nwgrip'
                         }
                     });
+                    target.resizable();
                     $('#selection').append(target);
                 };
 
@@ -231,3 +232,81 @@ angular.module('kf6App')
             }
         };
     });
+
+angular.module('kf6App')
+    .directive('KFViewMarqueeCanvas', function() {
+        return {
+            restrict: 'C',
+            link: function(scope, element, attrs) {
+                var marquee = null;
+                var pressX;
+                var pressY;
+
+                element.on('mousedown', function(e) {
+                    if (e.ctrlKey) {
+                        return;
+                    }
+                    if (marquee !== null) {
+                        marquee.remove();
+                        marquee = null;
+                    }
+                    element.css('zIndex', 100);
+                    pressX = e.clientX - element.offset().left;
+                    pressY = e.clientY - element.offset().top;
+                    element.append('<div id="marquee" style="position: absolute; width: 1px; height: 1px; border-style: dashed; border-width: 1pt; border-color: #000000;"></div>');
+                    marquee = $('#marquee');
+                });
+
+                element.on('mousemove', function(e) {
+                    if (marquee === null) {
+                        return;
+                    }
+                    var px = pressX + element.offset().left;
+                    var py = pressY + element.offset().top;
+                    var x = Math.min(e.clientX, px);
+                    var y = Math.min(e.clientY, py);
+                    var w = Math.abs(e.clientX - px);
+                    var h = Math.abs(e.clientY - py);
+                    marquee.offset({
+                        left: x,
+                        top: y
+                    });
+                    marquee.width(w);
+                    marquee.height(h);
+                });
+
+                element.on('mouseup', function() {
+                    if (marquee === null) {
+                        return;
+                    }
+                    var marqueeRect = j2rect(marquee);
+                    $('.KFViewRef').each(function(x) {
+                        if (intersects(marqueeRect, j2rect($(this)))) {
+                            scope.select($(this).attr("id"));
+                        } else {
+                            scope.unselect($(this).attr("id"));
+                        }
+                    });
+                    marquee.remove();
+                    marquee = null;
+                    element.css('zIndex', 2);
+                });
+
+                function intersects(r1, r2) {
+                    return !(r2.left > r1.right ||
+                        r2.right < r1.left ||
+                        r2.top > r1.bottom ||
+                        r2.bottom < r1.top);
+                }
+
+                function j2rect(j) {
+                    return {
+                        left: j.offset().left,
+                        top: j.offset().top,
+                        right: j.offset().left + j.width(),
+                        bottom: j.offset().top + j.height()
+                    };
+                }
+            }
+        };
+    })
