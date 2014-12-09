@@ -50,7 +50,7 @@ angular.module('kf6App')
             ref.authors.forEach(function(id) {
                 ref.authorObjects.push($member.getMember(id));
             });
-        }
+        };
 
         $scope.createNote = function() {
             var authors = [Auth.getCurrentUser()._id];

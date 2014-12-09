@@ -18,9 +18,8 @@ angular.module('kf6App')
                 $http.post('/api/records/read/' + contributionId);
             }, 3000);
             $scope.updateRecords();
-            $member.updateCommunityMembers(function(members) {
-                $scope.communityMembers = members;
-            });
+            $scope.communityMembers = $member.getMembers();
+            $member.updateCommunityMembers();
         }).error(function() {});
 
         $scope.contribute = function() {
