@@ -1,7 +1,7 @@
 <div class="col-md-12">
     <h3>Note: {{contribution.title}}</h3>
     <div style="position: absolute; top: 10px; width: 95%; text-align: right;">
-        <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>        
+        <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
         <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
     </div>
     <tabset>
@@ -12,6 +12,33 @@
         <tab heading="Edit">
             <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
             <textarea ui-tinymce ng-model="contribution.body"></textarea>
+        </tab>
+
+        <tab heading="Authors">
+            <div style="border: 1px solid #000000; height: 100%;">
+                <div>
+                    <h4>Authors:</h4>
+                    <!-- <ul ui-sortable ng-model="authors"> -->
+                    <ul>
+                        <li ng-repeat="author in authors">
+                            {{author.name}}
+                            <button type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Community Members:</h4>
+                    <ul ng-repeat="member in communityMembers">
+                        <li>
+                            {{member.name}}
+                            <button type="submit" class="btn btn-primary" ng-click="addAuthor(member)">Add</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </tab>
+
+        <tab heading="Attachments">
         </tab>
     </tabset>
 </div>

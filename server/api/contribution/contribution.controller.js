@@ -40,6 +40,7 @@ exports.create = function(req, res) {
 exports.update = function(req, res) {
     if (req.body._id) {
         delete req.body._id;
+        delete req.body.__v;/* by using this, we can avoid conflict of editing multi users*/
     }
     Contribution.findById(req.params.id, function(err, contribution) {
         if (err) {
@@ -49,8 +50,11 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(contribution, req.body);
+        updated.authors = req.body.authors;
+        updated.markModified('authors');
         updated.save(function(err) {
             if (err) {
+                console.log(err);
                 return handleError(res, err);
             }
             exports.updateRefs(contribution);
@@ -70,6 +74,7 @@ exports.updateRefs = function(contribution) {
         refs.forEach(function(ref) {
             ref.title = contribution.title;
             ref.authors = contribution.authors;
+            ref.markModified('authors');
             ref.save();
         });
     });
