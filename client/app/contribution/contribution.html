@@ -37,6 +37,23 @@
             </div>
         </tab>
 
+        <tab heading="Logs">
+            <div>
+                <h2>edit logs:</h2>
+                <ul ng-repeat="record in records">
+                    <li ng-if="record.type!=='read'">
+                        {{record.type}} by {{record.user.name}} at {{record.getTime()}}
+                    </li>
+                </ul>
+                <h2>read logs:</h2>
+                <ul ng-repeat="record in records">
+                    <li ng-if="record.type==='read'">
+                        {{record.type}} by {{record.user.name}} at {{record.getTime()}}
+                    </li>
+                </ul>
+            </div>
+        </tab>
+
         <tab heading="Attachments">
         </tab>
     </tabset>

@@ -1,79 +1,87 @@
 'use strict';
 
 var _ = require('lodash');
-var Note = require('./note.model');
-var Record = require('../record/record.model');
+var Record = require('./record.model');
 
-// Get list of notes
+exports.read = function(req, res) {
+    Record.create({
+            authorId: req.user._id,
+            targetId: req.params.contributionId,
+            type: 'read'
+        },
+        function(err) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(200, {});
+        });
+};
+
+// Get list of records
 exports.index = function(req, res) {
-    Note.find(function(err, notes) {
+    Record.find(function(err, records) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, notes);
+        return res.json(200, records);
     });
 };
 
-// Get a single note
+// Get a single record
 exports.show = function(req, res) {
-    Note.findById(req.params.id, function(err, note) {
+    Record.findById(req.params.id, function(err, record) {
         if (err) {
             return handleError(res, err);
         }
-        if (!note) {
+        if (!record) {
             return res.send(404);
         }
-        return res.json(note);
+        return res.json(record);
     });
 };
 
-// Creates a new note in the DB.
+// Creates a new record in the DB.
 exports.create = function(req, res) {
-    Note.create(req.body, function(err, note) {
+    Record.create(req.body, function(err, record) {
         if (err) {
             return handleError(res, err);
         }
-        Record.create({
-            authorId: req.user._id,
-            targetId: note._id,
-            type: 'create'
-        });
-        return res.json(201, note);
+        return res.json(201, record);
     });
 };
 
-// Updates an existing note in the DB.
+// Updates an existing record in the DB.
 exports.update = function(req, res) {
     if (req.body._id) {
         delete req.body._id;
     }
-    Note.findById(req.params.id, function(err, note) {
+    Record.findById(req.params.id, function(err, record) {
         if (err) {
             return handleError(res, err);
         }
-        if (!note) {
+        if (!record) {
             return res.send(404);
         }
-        var updated = _.merge(note, req.body);
+        var updated = _.merge(record, req.body);
         updated.save(function(err) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, note);
+            return res.json(200, record);
         });
     });
 };
 
-// Deletes a note from the DB.
+// Deletes a record from the DB.
 exports.destroy = function(req, res) {
-    Note.findById(req.params.id, function(err, note) {
+    Record.findById(req.params.id, function(err, record) {
         if (err) {
             return handleError(res, err);
         }
-        if (!note) {
+        if (!record) {
             return res.send(404);
         }
-        note.remove(function(err) {
+        record.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }

@@ -3,6 +3,8 @@
 var _ = require('lodash');
 var Contribution = require('./contribution.model');
 
+var Record = require('../record/record.model');
+
 // Get list of contributions
 exports.index = function(req, res) {
     Contribution.find(function(err, contributions) {
@@ -40,7 +42,7 @@ exports.create = function(req, res) {
 exports.update = function(req, res) {
     if (req.body._id) {
         delete req.body._id;
-        delete req.body.__v;/* by using this, we can avoid conflict of editing multi users*/
+        delete req.body.__v; /* by using this, we can avoid conflict of editing multi users*/
     }
     Contribution.findById(req.params.id, function(err, contribution) {
         if (err) {
@@ -57,6 +59,11 @@ exports.update = function(req, res) {
                 console.log(err);
                 return handleError(res, err);
             }
+            Record.create({
+                authorId: req.user._id,
+                targetId: contribution._id,
+                type: 'update'
+            });
             exports.updateRefs(contribution);
             return res.json(200, contribution);
         });
@@ -101,3 +108,17 @@ exports.destroy = function(req, res) {
 function handleError(res, err) {
     return res.send(500, err);
 }
+
+exports.showrecords = function(req, res) {
+    Record.find({
+        targetId: req.params.id
+    }, function(err, records) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!records) {
+            return res.send(404);
+        }
+        return res.json(records);
+    });
+};

@@ -1,16 +1,26 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $stateParams) {
+    .controller('ContributionCtrl', function($scope, $http, $member, $stateParams) {
         var contributionId = $stateParams.contributionId;
 
         $scope.contribution = {};
         $scope.authors = [];
+        $scope.records = [];
         $scope.communityMembers = [];
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
-            $scope.updateCommunityMembers();
+            $scope.contribution.authors.forEach(function(authorId) {
+                $scope.authors.push($member.getMember(authorId));
+            });
+            window.setTimeout(function() {
+                $http.post('/api/records/read/' + contributionId);
+            }, 3000);
+            $scope.updateRecords();
+            $member.updateCommunityMembers(function(members) {
+                $scope.communityMembers = members;
+            });
         }).error(function() {});
 
         $scope.contribute = function() {
@@ -18,16 +28,15 @@ angular.module('kf6App')
             $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
         };
 
-        $scope.updateCommunityMembers = function() {
-            $http.get('/api/users/').success(function(members) {
-                $scope.communityMembers = members;
-                $scope.contribution.authors.forEach(function(id) {
-                    var member = _.find($scope.communityMembers, function(member) {
-                        return member._id === id;
-                    });
-                    if (member) {
-                        $scope.authors.push(member);
-                    }
+        $scope.updateRecords = function() {
+            $http.get('/api/contributions/records/' + contributionId).success(function(records) {
+                $scope.records = records;
+                $scope.records.forEach(function(record) {
+                    record.user = $member.getMember(record.authorId);
+                    record.getTime = function() {
+                        var d = new Date(record.timestamp);
+                        return d.toLocaleString();
+                    };
                 });
             });
         };
@@ -39,7 +48,6 @@ angular.module('kf6App')
             }
             $scope.authors.push(author);
         };
-
 
         $scope.removeAuthor = function(author) {
             var index = $scope.authors.indexOf(author);

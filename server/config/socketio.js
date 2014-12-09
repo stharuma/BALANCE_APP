@@ -17,6 +17,7 @@ function onConnect(socket) {
     });
 
     // Insert sockets below
+    require('../api/record/record.socket').register(socket);
     require('../api/onviewref/onviewref.socket').register(socket);
     require('../api/note/note.socket').register(socket);
     require('../api/view/view.socket').register(socket);

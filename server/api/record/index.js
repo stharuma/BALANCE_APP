@@ -1,18 +1,17 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./contribution.controller');
+var controller = require('./record.controller');
 
 var router = express.Router();
 var auth = require('../../auth/auth.service');
 
+router.post('/read/:contributionId', auth.isAuthenticated(), controller.read);
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
-router.put('/:id', auth.isAuthenticated(), controller.update);
+router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
-
-router.get('/records/:id', controller.showrecords);
 
 module.exports = router;

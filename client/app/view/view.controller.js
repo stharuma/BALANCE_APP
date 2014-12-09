@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, socket, Auth) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $member, socket, Auth) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
         $scope.refs = [];
@@ -31,7 +31,7 @@ angular.module('kf6App')
                 $scope.refs.forEach(function(ref) {
                     $scope.addRef(ref);
                 });
-                $scope.updateCommunityMembers();
+                $member.updateCommunityMembers();
             });
         };
 
@@ -48,7 +48,7 @@ angular.module('kf6App')
                 return authorString;
             };
             ref.authors.forEach(function(id) {
-                ref.authorObjects.push($scope.getMember(id));
+                ref.authorObjects.push($member.getMember(id));
             });
         }
 
@@ -82,24 +82,6 @@ angular.module('kf6App')
         $scope.openContoribution = function(id) {
             var url = './contribution/' + id;
             window.open(url, '_blank');
-        };
-
-        $scope.communityMembers = {};
-        $scope.getMember = function(id) {
-            if (!(id in $scope.communityMembers)) {
-                $scope.communityMembers[id] = {
-                    name: ""
-                };
-            }
-            return $scope.communityMembers[id];
-        };
-
-        $scope.updateCommunityMembers = function() {
-            $http.get('/api/users/').success(function(members) {
-                members.forEach(function(each) {
-                    $scope.getMember(each._id).name = each.name;
-                });
-            });
         };
 
     });
