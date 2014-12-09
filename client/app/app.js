@@ -7,7 +7,8 @@ angular.module('kf6App', [
   'btford.socket-io',
   'ui.router',
   'ui.bootstrap',  
-  'ui.tinymce'
+  'ui.tinymce',
+  'ui.sortable'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider

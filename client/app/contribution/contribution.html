@@ -15,12 +15,11 @@
         </tab>
 
         <tab heading="Authors">
-            <div style="border: 1px solid #000000; height: 100%;">
+            <div style="height: 100%;">
                 <div>
                     <h4>Authors:</h4>
-                    <!-- <ul ui-sortable ng-model="authors"> -->
-                    <ul>
-                        <li ng-repeat="author in authors">
+                    <ul ui-sortable ng-model="authors">
+                        <li style="cursor: move;" ng-repeat="author in authors">
                             {{author.name}}
                             <button type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
                         </li>
