@@ -48,7 +48,7 @@ angular.module('kf6App')
             array.push(item);
           }
 
-          cb(event, item, array);
+          cb(event, oldItem, array);          
         });
 
         /**

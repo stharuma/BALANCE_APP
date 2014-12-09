@@ -19,9 +19,38 @@ angular.module('kf6App')
                     socket.socket.emit('unsubscribe', viewId);
                     socket.unsyncUpdates('ref');
                 });
-                socket.syncUpdates('ref', $scope.refs);
+                socket.syncUpdates('ref', $scope.refs, function(event, item) {
+                    if (event === 'created') {
+                        $scope.addRef(item);
+                    }
+                    if (event === 'updated') {
+                        $scope.addRef(item);
+                    }
+                });
+                //authors info
+                $scope.refs.forEach(function(ref) {
+                    $scope.addRef(ref);
+                });
+                $scope.updateCommunityMembers();
             });
         };
+
+        $scope.addRef = function(ref) {
+            ref.authorObjects = [];
+            ref.getAuthorString = function() {
+                var authorString = '';
+                ref.authorObjects.forEach(function(each) {
+                    if (authorString.length !== 0) {
+                        authorString += ', ';
+                    }
+                    authorString += each.name;
+                });
+                return authorString;
+            };
+            ref.authors.forEach(function(id) {
+                ref.authorObjects.push($scope.getMember(id));
+            });
+        }
 
         $scope.createNote = function() {
             var authors = [Auth.getCurrentUser()._id];
@@ -53,6 +82,24 @@ angular.module('kf6App')
         $scope.openContoribution = function(id) {
             var url = './contribution/' + id;
             window.open(url, '_blank');
+        };
+
+        $scope.communityMembers = {};
+        $scope.getMember = function(id) {
+            if (!(id in $scope.communityMembers)) {
+                $scope.communityMembers[id] = {
+                    name: ""
+                };
+            }
+            return $scope.communityMembers[id];
+        };
+
+        $scope.updateCommunityMembers = function() {
+            $http.get('/api/users/').success(function(members) {
+                members.forEach(function(each) {
+                    $scope.getMember(each._id).name = each.name;
+                });
+            });
         };
 
     });
