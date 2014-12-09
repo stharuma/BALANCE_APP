@@ -41,7 +41,7 @@ angular.module('kf6App')
         $scope.addRef = function(ref) {
             ref.getColor = function() {
                 if (ref.read === true) {
-                    return '#FF0000';
+                    return '#D80E58';
                 }
                 return '#0000FF';
             };
