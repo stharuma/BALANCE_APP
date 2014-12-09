@@ -6,19 +6,11 @@
 
 var Onviewref = require('./onviewref.model');
 
-exports.register = function(socket) {
-  Onviewref.schema.post('save', function (doc) {
-    onSave(socket, doc);
-  });
-  Onviewref.schema.post('remove', function (doc) {
-    onRemove(socket, doc);
-  });
-}
-
-function onSave(socket, doc, cb) {
-  socket.emit('onviewref:save', doc);
-}
-
-function onRemove(socket, doc, cb) {
-  socket.emit('onviewref:remove', doc);
+exports.register = function(socketio) {
+    Onviewref.schema.post('save', function(ref) {
+        socketio.sockets.to(ref.viewId).emit('ref:save', ref);
+    });
+    Onviewref.schema.post('remove', function(postref) {
+        socketio.sockets.to(ref.viewId).emit('ref:save', ref);
+    });
 }

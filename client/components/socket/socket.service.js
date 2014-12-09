@@ -42,7 +42,7 @@ angular.module('kf6App')
           // replace oldItem if it exists
           // otherwise just add item to the collection
           if (oldItem) {
-            array.splice(index, 1, item);
+            $.extend(oldItem, item);
             event = 'updated';
           } else {
             array.push(item);
