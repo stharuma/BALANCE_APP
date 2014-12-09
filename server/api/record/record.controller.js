@@ -3,6 +3,9 @@
 var _ = require('lodash');
 var Record = require('./record.model');
 
+var Onviewref = require('../onviewref/onviewref.model');
+var mongoose = require('mongoose');
+
 exports.read = function(req, res) {
     Record.create({
             authorId: req.user._id,
@@ -15,6 +18,44 @@ exports.read = function(req, res) {
             }
             return res.json(200, {});
         });
+};
+
+exports.count = function(req, res) {
+    Onviewref.find({
+        viewId: req.params.viewId
+    }, function(err, refs) {
+        if (err) {
+            return handleError(res, err);
+        }
+        var ids = [];
+        for (var i = 0; i < refs.length; i++) {
+            ids.push(refs[i].contributionId);
+        }
+        var uid = mongoose.Types.ObjectId(req.params.authorId);
+        Record.aggregate([{
+                $match: {
+                    $and: [{
+                        authorId: uid
+                    }, {
+                        type: "read"
+                    }, {
+                        targetId: {
+                            $in: ids
+                        }
+                    }]
+                }
+            }, {
+                $group: {
+                    _id: "$targetId",
+                    counts: {
+                        $sum: 1
+                    }
+                }
+            }],
+            function(err, records) {
+                return res.json(200, records);
+            });
+    });
 };
 
 // Get list of records

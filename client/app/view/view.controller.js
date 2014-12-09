@@ -32,10 +32,19 @@ angular.module('kf6App')
                     $scope.addRef(ref);
                 });
                 $member.updateCommunityMembers();
+
+                //read
+                $scope.refreshRead();
             });
         };
 
         $scope.addRef = function(ref) {
+            ref.getColor = function(){
+                if(ref.read === true){
+                    return '#FF0000';
+                }
+                return '#0000FF';
+            };
             ref.authorObjects = [];
             ref.getAuthorString = function() {
                 var authorString = '';
@@ -49,6 +58,18 @@ angular.module('kf6App')
             };
             ref.authors.forEach(function(id) {
                 ref.authorObjects.push($member.getMember(id));
+            });
+        };
+
+        $scope.refreshRead = function() {
+            $http.get('/api/records/count/' + $scope.view._id + '/' + Auth.getCurrentUser()._id).success(function(res) {
+                res.forEach(function(each) {
+                    $scope.refs.forEach(function(ref) {
+                        if (ref.contributionId === each._id) {
+                            ref.read = true;
+                        }
+                    });
+                });
             });
         };
 
