@@ -42,13 +42,14 @@ angular.module('kf6App')
                     var firefox = (e.offsetX === undefined);
                     var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
                     //var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;                    
+                    var IE = (navigator.userAgent.indexOf('MSIE') != -1) || (!!document.documentMode == true);
 
                     var offset = {
                         x: firefox ? e.layerX : e.offsetX,
                         y: firefox ? e.layerY : e.offsetY
                     };
 
-                    if (safari /*|| (chrome && $scope.selected.length >= 2)*/) {
+                    if (safari /*|| (chrome && $scope.selected.length >= 2)*/ ) {
                         var imgX = element.position().left + offset.x;
                         var imgY = element.position().top + offset.y;
                         var selImg = $('#selectioncanvas').get(0);
@@ -67,10 +68,12 @@ angular.module('kf6App')
                         hrefs += each.title;
                         hrefs += '</a>';
                     });
-                    e.dataTransfer.setData('text/html', hrefs);
+                    if (!IE) {
+                        e.dataTransfer.setData('text/html', hrefs);
+                    }
 
                     $scope.dragging = ref;
-                    $scope.dragpoint = offset;                    
+                    $scope.dragpoint = offset;
                 });
                 el.addEventListener('dragover', function(e) {
                     e.preventDefault();
@@ -222,10 +225,12 @@ angular.module('kf6App')
                 var el = element[0];
                 el.droppable = true;
                 el.addEventListener('dragover', function(e) {
+                    console.log('dragover');
                     e.preventDefault();
                     $scope.dragover(e);
                 });
                 el.addEventListener('drop', function(e) {
+                    console.log('drop');
                     e.preventDefault();
                     $scope.drop(e, e.clientX, e.clientY);
                 });
