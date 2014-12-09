@@ -16,54 +16,47 @@ angular.module('kf6App')
             restrict: 'C',
             link: function(scope, element) {
                 var ref = scope.ref;
+                var $scope = scope.$parent;
 
                 var el = element[0];
                 el.draggable = true;
                 element.on('mousedown', function(e) {
-                    var pscope = scope.$parent;
                     var pid = ref._id;
-                    var selected = pscope.isSelected(pid);
+                    var selected = $scope.isSelected(pid);
                     if (e.shiftKey) {
                         if (selected) {
-                            pscope.unselect(pid);
+                            $scope.unselect(pid);
                         } else {
-                            pscope.select(pid);
+                            $scope.select(pid);
                         }
                     } else {
                         if (selected) {
                             // do nothing
                         } else {
-                            pscope.clearSelection();
-                            pscope.select(pid);
+                            $scope.clearSelection();
+                            $scope.select(pid);
                         }
                     }
                 });
                 el.addEventListener('dragstart', function(e) {
                     var firefox = (e.offsetX === undefined);
-                    var offX = firefox ? e.layerX : e.offsetX;
-                    var offY = firefox ? e.layerY : e.offsetY;
+                    var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
 
-                    var point = {
-                        x: offX,
-                        y: offY
+                    var offset = {
+                        x: firefox ? e.layerX : e.offsetX,
+                        y: firefox ? e.layerY : e.offsetY
                     };
 
-                    scope.$parent.dragpoint = point;
+                    $scope.dragpoint = offset;
 
-
-                    var selection = $('#selection');
-                    var selImg = selection.get(0);
-
-                    var elmX = element.position().left;
-                    var elmY = element.position().top;
-                    var xx = elmX + point.x;
-                    var yy = elmY + point.y;
-                    var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
                     if (safari) {
-                        e.dataTransfer.setDragImage(selImg, xx, yy);
+                        var imgX = element.position().left + offset.x;
+                        var imgY = element.position().top + offset.y;
+                        var selImg = selection.get(0);
+                        e.dataTransfer.setDragImage(selImg, imgX, imgY);
                     }
 
-                    var models = scope.$parent.getSelectedModels();
+                    var models = $scope.getSelectedModels();
                     models.forEach(function(each) {
                         each.offsetX = each.x - ref.x;
                         each.offsetY = each.y - ref.y;
@@ -76,67 +69,19 @@ angular.module('kf6App')
                         hrefs += '</a>';
                     });
                     e.dataTransfer.setData('text/html', hrefs);
-                    scope.$parent.dragging2 = ref;
+                    $scope.dragging2 = ref;
                 });
                 el.addEventListener('dragover', function(e) {
                     e.preventDefault();
-                    scope.dragover(e);
+                    $scope.dragover(e);
                 });
                 el.addEventListener('drop', function(e) {
                     e.preventDefault();
-                    scope.drop(e, e.clientX, e.clientY);
+                    $scope.drop(e, e.clientX, e.clientY);
                 });
-
                 el.addEventListener('dragend', function() {
-                    scope.$parent.dragging2 = 'none';
+                    $scope.dragging2 = 'none';
                 });
-            }
-        };
-    });
-
-angular.module('kf6App')
-    .directive('KFViewDropCanvas', function() {
-        return {
-            restrict: 'C',
-            link: function(scope) {
-                var $scope = scope;
-                $scope.dragging2 = 'none';
-
-                $scope.dragover = function(e) {
-                    if ($scope.dragging2 !== 'none') {
-                        e.dataTransfer.dropEffect = 'move';
-                    } else {
-                        e.dataTransfer.dropEffect = 'copy';
-                    }
-                };
-
-                $scope.drop = function(e, x, y) {
-                    if ($scope.dragging2 !== 'none') {
-                        var postref = $scope.dragging2;
-                        var rect = $('#dropcanvas').get(0).getBoundingClientRect();　
-                        var dx = (x - rect.left - $scope.dragpoint.x) - postref.x;
-                        var dy = (y - rect.top - $scope.dragpoint.y) - postref.y;
-
-                        $scope.getSelectedModels().forEach(function(postref) {
-                            postref.x += dx;　
-                            postref.y += dy;
-                            $scope.onviewrefSave(postref);
-                        });
-                    } else {
-                        var data = e.dataTransfer.getData('text');
-                        var index = data.indexOf('postref:');
-                        if (index !== 0) {
-                            return;
-                        }
-                        var text = data.replace('postref:', '');
-                        var models = JSON.parse(text);
-                        //console.log(ids);
-                        models.forEach(function(each) {
-                            $scope.createPostref(each.postId, null, e.offsetX + each.offsetX, e.offsetY + each.offsetY);
-                        });
-
-                    }
-                };
             }
         };
     });
@@ -222,11 +167,8 @@ angular.module('kf6App')
                 };
 
                 $scope.clearSelection = function() {
-                    console.log('clearSelection');
-                    console.log($scope.selected);
                     var copy = $scope.selected.concat();
                     copy.forEach(function(each) {
-                        console.log(each);
                         $scope.unselect(each);
                     });
                 };
@@ -239,16 +181,52 @@ angular.module('kf6App')
         return {
             restrict: 'C',
             link: function(scope, element) {
-                scope.canvas = element;
+                var $scope = scope;
+                $scope.dragging2 = 'none';
+
+                $scope.dragover = function(e) {
+                    if ($scope.dragging2 !== 'none') {
+                        e.dataTransfer.dropEffect = 'move';
+                    } else {
+                        e.dataTransfer.dropEffect = 'copy';
+                    }
+                };
+
+                $scope.drop = function(e, x, y) {
+                    if ($scope.dragging2 !== 'none') {
+                        var postref = $scope.dragging2;
+                        var rect = $('#dropcanvas').get(0).getBoundingClientRect();　
+                        var dx = (x - rect.left - $scope.dragpoint.x) - postref.x;
+                        var dy = (y - rect.top - $scope.dragpoint.y) - postref.y;
+
+                        $scope.getSelectedModels().forEach(function(postref) {
+                            postref.x += dx;　
+                            postref.y += dy;
+                            $scope.onviewrefSave(postref);
+                        });
+                    } else {
+                        var data = e.dataTransfer.getData('text');
+                        var index = data.indexOf('postref:');
+                        if (index !== 0) {
+                            return;
+                        }
+                        var text = data.replace('postref:', '');
+                        var models = JSON.parse(text);
+                        models.forEach(function(each) {
+                            $scope.createPostref(each.postId, null, e.offsetX + each.offsetX, e.offsetY + each.offsetY);
+                        });
+                    }
+                };
+
                 var el = element[0];
                 el.droppable = true;
                 el.addEventListener('dragover', function(e) {
                     e.preventDefault();
-                    scope.dragover(e);
+                    $scope.dragover(e);
                 });
                 el.addEventListener('drop', function(e) {
                     e.preventDefault();
-                    scope.drop(e, e.clientX, e.clientY);
+                    $scope.drop(e, e.clientX, e.clientY);
                 });
             }
         };
