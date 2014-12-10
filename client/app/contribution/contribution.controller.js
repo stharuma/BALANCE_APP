@@ -12,6 +12,7 @@ angular.module('kf6App')
         $scope.communityMembers = [];
         $scope.toConnections = [];
         $scope.fromConnections = [];
+        $scope.editActive = false;
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
@@ -25,6 +26,9 @@ angular.module('kf6App')
             $scope.communityMembers = $member.getMembers();
             $member.updateCommunityMembers();
             $scope.updateConnections();
+            if (_.contains($scope.contribution.authors, Auth.getCurrentUser()._id)) {
+                $scope.editActive = true;
+            }
         }).error(function() {});
 
         $scope.updateConnections = function() {
@@ -84,6 +88,9 @@ angular.module('kf6App')
                     from: note._id,
                     to: $scope.contribution._id,
                     type: 'buildson'
+                }).success(function() {
+                    var url = './contribution/' + note._id;
+                    window.open(url, '_blank');
                 });
             });
         };

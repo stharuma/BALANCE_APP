@@ -169,6 +169,7 @@ angular.module('kf6App')
                 })
                 .success(function(note) {
                     $scope.createOnViewRef(note, 100, 100);
+                    $scope.openContribution(note._id);
                 });
         };
 
@@ -188,8 +189,8 @@ angular.module('kf6App')
             $http.put('/api/onviewrefs/' + ref._id, ref);
         };
 
-        $scope.openContribution = function(ref) {
-            var url = './contribution/' + ref.to;
+        $scope.openContribution = function(id) {
+            var url = './contribution/' + id;
             window.open(url, '_blank');
         };
 
