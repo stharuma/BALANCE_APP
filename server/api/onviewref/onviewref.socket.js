@@ -6,11 +6,11 @@
 
 var Onviewref = require('./onviewref.model');
 
-exports.register = function(socketio) {
-    Onviewref.schema.post('save', function(ref) {
-        socketio.sockets.to(ref.viewId).emit('ref:save', ref);
-    });
-    Onviewref.schema.post('remove', function(ref) {
-        socketio.sockets.to(ref.viewId).emit('ref:remove', ref);
-    });
-}
+// exports.register = function(socketio) {
+//     Onviewref.schema.post('save', function(ref) {
+//         socketio.sockets.to(ref.viewId).emit('ref:save', ref);
+//     });
+//     Onviewref.schema.post('remove', function(ref) {
+//         socketio.sockets.to(ref.viewId).emit('ref:remove', ref);
+//     });
+// }

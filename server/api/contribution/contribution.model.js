@@ -5,7 +5,10 @@ var mongoose = require('mongoose'),
 
 var ContributionSchema = new Schema({
     title: String,
-    type: {type: String, index: true},
+    type: {
+        type: String,
+        index: true
+    },
     created: {
         type: Date,
         default: Date.now
@@ -21,4 +24,30 @@ ContributionSchema.index({
     text4search: 'text'
 });
 
-module.exports = mongoose.model('Contribution', ContributionSchema);
+var Contribution = mongoose.model('Contribution', ContributionSchema);
+
+var Link = require('../link/link.model');
+Contribution.updateLinks = function(contribution) {
+    Link.find({
+        to: contribution._id
+    }, function(err, links) {
+        if (err) {
+            return handleError(err);
+        }
+        links.forEach(function(link) {
+            link.title = contribution.title;
+            link.markModified('authors');            
+            link.authors = contribution.authors;
+            link.save();
+        });
+    });
+};
+
+/* this method will be called in both update and create */
+Contribution.schema.post('save', function(contribution) {
+    Contribution.updateLinks(contribution);
+});
+
+
+
+module.exports = Contribution;

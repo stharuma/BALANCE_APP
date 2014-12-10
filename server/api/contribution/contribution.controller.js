@@ -64,28 +64,13 @@ exports.update = function(req, res) {
                 targetId: contribution._id,
                 type: 'update'
             });
-            exports.updateRefs(contribution);
+            //exports.updateRefs(contribution);
             return res.json(200, contribution);
         });
     });
 };
 
-var Onviewref = require('../onviewref/onviewref.model');
-exports.updateRefs = function(contribution) {
-    Onviewref.find({
-        contributionId: contribution._id
-    }, function(err, refs) {
-        if (err) {
-            return handleError(err);
-        }
-        refs.forEach(function(ref) {
-            ref.title = contribution.title;
-            ref.authors = contribution.authors;
-            ref.markModified('authors');
-            ref.save();
-        });
-    });
-};
+
 
 // Deletes a contribution from the DB.
 exports.destroy = function(req, res) {
