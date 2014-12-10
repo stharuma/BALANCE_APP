@@ -22,7 +22,9 @@
     <div class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
             <div id="{{ref._id}}" postid="{{ref.contributionId}}" class="KFViewRef {{ref.contributionId}}" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
-                <span style="white-space: nowrap;">                    
+                <span style="white-space: nowrap; font-size: 12px;">  
+                    <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
+                    <img ng-if="ref.read === true" src="assets/images/idea-mark-read.png">                    
                     <a ng-click="openContribution(ref)" ng-style="{'color' : ref.getColor()}">{{ref.title}}</a>
                 </span>
                 <br>
