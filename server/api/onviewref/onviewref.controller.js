@@ -16,7 +16,8 @@ exports.index = function(req, res) {
 // Get list of onviewrefs
 exports.indexByView = function(req, res) {
     Onviewref.find({
-        from: req.params.viewId
+        from: req.params.viewId,
+        type: 'onviewref'
     }, function(err, refs) {
         if (err) {
             return handleError(res, err);

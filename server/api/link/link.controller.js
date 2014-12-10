@@ -111,11 +111,15 @@ exports.create = function(req, res) {
                     }
                     refs.forEach(function(ref) {
                         Onviewref.create({
-                            title: 'xx',
                             from: ref.from,
                             to: link.from,
+                            type: 'onviewref',
                             x: ref.x + 50,
                             y: ref.y + 50
+                        }, function(err) {
+                            if (err) {
+                                console.log(err);
+                            }
                         });
                     });
                     return res.json(201, link);
