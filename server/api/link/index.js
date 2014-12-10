@@ -7,6 +7,8 @@ var router = express.Router();
 
 router.get('/', controller.index);
 router.get('/view/:id', controller.viewindex);
+router.get('/from/:id', controller.fromindex);
+router.get('/to/:id', controller.toindex);
 
 router.get('/:id', controller.show);
 router.post('/', controller.create);

@@ -10,6 +10,8 @@ angular.module('kf6App')
         $scope.authors = [];
         $scope.records = [];
         $scope.communityMembers = [];
+        $scope.toConnections = [];
+        $scope.fromConnections = [];
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
@@ -22,7 +24,17 @@ angular.module('kf6App')
             $scope.updateRecords();
             $scope.communityMembers = $member.getMembers();
             $member.updateCommunityMembers();
+            $scope.updateConnections();
         }).error(function() {});
+
+        $scope.updateConnections = function() {
+            $http.get('/api/links/to/' + contributionId).success(function(links) {
+                $scope.toConnections = links;
+            });
+            $http.get('/api/links/from/' + contributionId).success(function(links) {
+                $scope.fromConnections = links;
+            });
+        };
 
         $scope.updateRecords = function() {
             $http.get('/api/contributions/records/' + contributionId).success(function(records) {
@@ -93,6 +105,6 @@ angular.module('kf6App')
         };
 
         // window.onresize = function() {
-            
+
         // };
     });

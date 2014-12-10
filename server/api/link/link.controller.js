@@ -13,6 +13,28 @@ exports.index = function(req, res) {
     });
 };
 
+exports.fromindex = function(req, res) {
+    Link.find({
+        from: req.params.id
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, links);
+    });
+};
+
+exports.toindex = function(req, res) {
+    Link.find({
+        to: req.params.id
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, links);
+    });
+};
+
 var Onviewref = require('../onviewref/onviewref.model');
 // Get list of postrefs
 exports.viewindex = function(req, res) {
@@ -75,7 +97,7 @@ exports.create = function(req, res) {
                     refs.forEach(function(ref) {
                         Onviewref.create({
                             title: 'xx',
-                            from: ref.from,                            
+                            from: ref.from,
                             to: link.from,
                             x: ref.x + 50,
                             y: ref.y + 50
