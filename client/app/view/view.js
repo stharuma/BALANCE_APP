@@ -19,6 +19,7 @@ angular.module('kf6App')
             link: function(scope, element) {
                 var ref = scope.ref;
                 var $scope = scope.$parent;
+                var el = element[0];
 
                 scope.$watch('ref.x', function() {
                     jsPlumb.repaintEverything();
@@ -26,8 +27,10 @@ angular.module('kf6App')
                 scope.$watch('ref.y', function() {
                     jsPlumb.repaintEverything();
                 });
+                scope.$on('$destroy', function() {
+                    $scope.detachAllConnections('icon' + ref._id);
+                });
 
-                var el = element[0];
                 el.draggable = true;
                 element.on('mousedown', function(e) {
                     var pid = ref._id;

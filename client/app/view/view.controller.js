@@ -120,6 +120,8 @@ angular.module('kf6App')
             });
         };
 
+        $scope.conns = {};
+
         $scope.makelink = function(from, to) {
             var fromElements = $('.icon' + from);
             var toElements = $('.icon' + to);
@@ -129,12 +131,36 @@ angular.module('kf6App')
                 toElements.each(function() {
                     var toElement = $(this);
                     var toId = toElement.attr('id');
-                    jsPlumb.connect({
+                    var conn = jsPlumb.connect({
                         source: fromId,
-                        target: toId,
+                        target: toId
                     });
+                    $scope.registerConn(fromId, conn);
+                    $scope.registerConn(toId, conn);
                 });
             });
+        };
+
+        /* ----------- connections --------- */
+
+        $scope.registerConn = function(id, conn) {
+            if ($scope.conns[id] === undefined) {
+                $scope.conns[id] = [];
+            }
+            $scope.conns[id].push(conn);
+        };
+
+        $scope.detachAllConnections = function(id) {
+            if ($scope.conns[id] === undefined) {
+                return;
+            }
+            $scope.conns[id].forEach(function(conn) {
+                if (conn.detached !== true) {
+                    jsPlumb.detach(conn);
+                    conn.detached = true;
+                }
+            });
+            $scope.conns[id] = [];
         };
 
         jsPlumb.ready(function() {
