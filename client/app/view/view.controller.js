@@ -24,6 +24,7 @@ angular.module('kf6App')
                 socket.syncUpdates('ref', $scope.refs, function(event, item) {
                     if (event === 'created') {
                         $scope.addRef(item);
+                        $scope.updateLink(item.to);
                     }
                     if (event === 'updated') {
                         $scope.addRef(item);
@@ -98,13 +99,21 @@ angular.module('kf6App')
             }
         };
 
+        $scope.updateLink = function(id) {
+            $http.get('/api/links/tofrom/' + id).success(function(links) {
+                links.forEach(function(link) {
+                    if (link.type === 'buildson') {
+                        $scope.makelink(link.from, link.to);
+                    }
+                });
+            });
+        };
+
         $scope.updateLinks = function() {
             $http.get('/api/links/view/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
                     if (link.type === 'buildson') {
                         $scope.makelink(link.from, link.to);
-                    } else {
-                        //console.log('not a buildson');
                     }
                 });
             });

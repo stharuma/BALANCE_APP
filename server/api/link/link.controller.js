@@ -35,6 +35,21 @@ exports.toindex = function(req, res) {
     });
 };
 
+exports.tofromindex = function(req, res) {
+    Link.find({
+        $or: [{
+            from: req.params.id
+        }, {
+            to: req.params.id
+        }]
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, links);
+    });
+};
+
 var Onviewref = require('../onviewref/onviewref.model');
 // Get list of postrefs
 exports.viewindex = function(req, res) {

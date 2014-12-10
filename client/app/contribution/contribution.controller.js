@@ -3,7 +3,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $member, $stateParams) {
+    .controller('ContributionCtrl', function($scope, $http, $member, $stateParams, Auth) {
         var contributionId = $stateParams.contributionId;
 
         $scope.contribution = {};
@@ -74,9 +74,11 @@ angular.module('kf6App')
         };
 
         $scope.buildson = function() {
+            var authors = [Auth.getCurrentUser()._id];
             $http.post('/api/notes', {
                 title: 'New Note',
-                body: ''
+                body: '',
+                authors: authors
             }).success(function(note) {
                 $http.post('/api/links', {
                     from: note._id,
