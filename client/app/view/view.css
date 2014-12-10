@@ -1,14 +1,25 @@
+.kfbutton {
+    border-color: #FFFFFF;
+    background-color: #AAAAAA;
+    padding: 1px;    
+}
+.kfbutton:hover {
+    background-color: #888888;
+}
+
 .KFViewNavBar {
     position: fixed;
     width: 100%;
-    height: 20px;
-    background-color: blue;
+    height: 25px;
+    background-color: #09F;
     color: white;
+    padding-top: 3px;    
+    padding-left: 10px;
 }
 .KFViewToolBar {
     position: fixed;
-    top: 20px;
-    width: 50px;
+    top: 25px;
+    width: 40px;
     z-index: 0;
 }
 .KFViewMainCanvas {
@@ -16,10 +27,10 @@
     /*border: 1px solid #000000;*/
     
     overflow: scroll;
-    top: 20px;
-    left: 50px;
-    width: calc(100% - 50px);
-    height: calc(100vh - 20px);
+    top: 25px;
+    left: 40px;
+    width: calc(100% - 40px);
+    height: calc(100vh - 25px);
 }
 .KFViewContributionCanvas {
     position: absolute;
@@ -119,8 +130,8 @@
     top: -5px;
 }
 #nwgrip, #negrip, #swgrip, #segrip, #ngrip, #egrip, #sgrip, #wgrip {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background-color: #ffffff;
     border: 1px solid #000000;
 }
@@ -129,6 +140,7 @@
     bottom: -5px;
 }
 /* for context menu */
+
 .position-fixed {
     position: fixed;
 }
