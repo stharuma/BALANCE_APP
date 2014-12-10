@@ -61,7 +61,7 @@ angular.module('kf6App')
                 });
                 return authorString;
             };
-            ref.authors.forEach(function(id) {
+            ref.authorsTo.forEach(function(id) {
                 ref.authorObjects.push($member.getMember(id));
             });
         };

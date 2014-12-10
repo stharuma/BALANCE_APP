@@ -46,7 +46,7 @@
                 <h3>This note builds onto:</h3>
                 <ul>
                     <li ng-repeat="conn in fromConnections" ng-if="conn.type==='buildson'">
-                        <a href="/contribution/{{conn.to}}" target="_blank">{{conn.title}}</a>({{conn.to}})
+                        <a href="/contribution/{{conn.to}}" target="_blank">{{conn.titleTo}}</a>({{conn.to}})
                     </li>
                 </ul>
             </div>
@@ -54,7 +54,7 @@
                 <h3>This note is built onto by:</h3>
                 <ul>
                     <li ng-repeat="conn in toConnections" ng-if="conn.type==='buildson'">
-                        <a href="/contribution/{{conn.from}}" target="_blank">{{conn.from}}</a>({{conn.from}})
+                        <a href="/contribution/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>({{conn.from}})
                     </li>
                 </ul>
             </div>
@@ -62,7 +62,7 @@
                 <h3>This note belongs to view:</h3>
                 <ul>
                     <li ng-repeat="conn in toConnections" ng-if="conn.__t==='Onviewref'">
-                        <a href="/view/{{conn.from}}" target="_blank">{{conn.from}}</a>
+                        <a href="/view/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>({{conn.from}})
                     </li>
                 </ul>
             </div>
