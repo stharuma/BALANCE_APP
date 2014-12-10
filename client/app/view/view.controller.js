@@ -70,6 +70,7 @@ angular.module('kf6App')
                 return;
             }
             $http.get('/api/records/count/' + $scope.view._id + '/' + uid).success(function(res) {
+                console.log(res);
                 res.forEach(function(each) {
                     $scope.updateRefRead(each._id);
                 });
@@ -89,7 +90,7 @@ angular.module('kf6App')
 
         $scope.updateRefRead = function(id) {
             var ref = _.find($scope.refs, function(ref) {
-                return ref.contributionId === id;
+                return ref.to === id;
             });
             if (ref) {
                 ref.read = true;

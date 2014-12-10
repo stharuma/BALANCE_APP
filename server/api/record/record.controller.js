@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var Record = require('./record.model');
 
-var Onviewref = require('../onviewref/onviewref.model');
+var Link = require('../link/link.model');
 var mongoose = require('mongoose');
 
 exports.read = function(req, res) {
@@ -21,15 +21,15 @@ exports.read = function(req, res) {
 };
 
 exports.count = function(req, res) {
-    Onviewref.find({
-        viewId: req.params.viewId
+    Link.find({
+        from: req.params.viewId
     }, function(err, refs) {
         if (err) {
             return handleError(res, err);
         }
         var ids = [];
         for (var i = 0; i < refs.length; i++) {
-            ids.push(refs[i].contributionId);
+            ids.push(refs[i].to);
         }
         var uid = mongoose.Types.ObjectId(req.params.authorId);
         Record.aggregate([{
