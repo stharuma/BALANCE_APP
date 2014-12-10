@@ -226,7 +226,7 @@ angular.module('kf6App')
                         var text = data.replace('postref:', '');
                         var models = JSON.parse(text);
                         models.forEach(function(each) {
-                            $scope.createPostref(each.postId, null, e.offsetX + each.offsetX, e.offsetY + each.offsetY);
+                            $scope.createOnViewRef(each.to, e.offsetX + each.offsetX, e.offsetY + each.offsetY);
                         });
                     }
                 };

@@ -7,6 +7,7 @@ angular.module('kf6App')
         var viewId = $stateParams.viewId;
         $scope.view = {};
         $scope.refs = [];
+        $scope.dragging = 'none';
 
         $http.get('/api/views/' + viewId).success(function(view) {
             $scope.view = view;
@@ -168,20 +169,18 @@ angular.module('kf6App')
                     authors: authors
                 })
                 .success(function(note) {
-                    $scope.createOnViewRef(note, 100, 100);
+                    $scope.createOnViewRef(note._id, 100, 100);
                     $scope.openContribution(note._id);
                 });
         };
 
-        $scope.createOnViewRef = function(contribution, x, y) {
+        $scope.createOnViewRef = function(contributionId, x, y) {
             $http.post('/api/onviewrefs', {
-                to: contribution._id,
+                to: contributionId,
                 from: $scope.view._id,
                 type: 'onviewref',
                 x: x,
-                y: y,
-                title: contribution.title,
-                authors: contribution.authors
+                y: y
             });
         };
 
