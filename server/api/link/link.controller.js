@@ -17,14 +17,14 @@ var Onviewref = require('../onviewref/onviewref.model');
 // Get list of postrefs
 exports.viewindex = function(req, res) {
     Onviewref.find({
-        viewId: req.params.id
+        from: req.params.id
     }, function(err, refs) {
         if (err) {
             return handleError(res, err);
         }
         var ids = [];
         refs.forEach(function(ref) {
-            return ids.push(ref.contributionId);
+            return ids.push(ref.to);
         });
         Link.find({
             $or: [{
@@ -66,7 +66,7 @@ exports.create = function(req, res) {
 
         if (link.type === 'buildson') {
             Onviewref.find({
-                    contributionId: link.to,
+                    to: link.to,
                 },
                 function(err, refs) {
                     if (err) {
@@ -75,8 +75,8 @@ exports.create = function(req, res) {
                     refs.forEach(function(ref) {
                         Onviewref.create({
                             title: 'xx',
-                            contributionId: link.from,
-                            viewId: ref.viewId,
+                            from: ref.from,                            
+                            to: link.from,
                             x: ref.x + 50,
                             y: ref.y + 50
                         });
