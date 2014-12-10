@@ -7,6 +7,7 @@ var ContributionSchema = new Schema({
     title: String,
     type: {
         type: String,
+        required: true,
         index: true
     },
     created: {

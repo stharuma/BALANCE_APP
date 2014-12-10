@@ -6,14 +6,17 @@ var mongoose = require('mongoose'),
 var LinkSchema = new Schema({
     from: {
         type: Schema.ObjectId,
-        index: true
+        required: true,
+        index: true        
     },
     to: {
         type: Schema.ObjectId,
+        required: true,        
         index: true
     },
     type: {
         type: String,
+        required: true,        
         index: true
     },
     /* here are cash to work read faster */
