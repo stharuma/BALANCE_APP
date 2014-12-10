@@ -48,6 +48,6 @@ module.exports = function(socketio) {
         console.info('[%s] CONNECTED', socket.address);
     });
 
-    require('../api/onviewref/onviewref.socket').register(socketio);
+    require('../api/link/link.socket').register(socketio);
     require('../api/record/record.socket').register(socketio);
 };

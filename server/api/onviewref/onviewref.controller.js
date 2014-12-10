@@ -16,12 +16,12 @@ exports.index = function(req, res) {
 // Get list of onviewrefs
 exports.indexByView = function(req, res) {
     Onviewref.find({
-        viewId: req.params.viewId
-    }, function(err, onviewrefs) {
+        from: req.params.viewId
+    }, function(err, refs) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, onviewrefs);
+        return res.json(200, refs);
     });
 };
 

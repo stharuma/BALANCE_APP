@@ -163,8 +163,9 @@ angular.module('kf6App')
 
         $scope.createOnViewRef = function(contribution, x, y) {
             $http.post('/api/onviewrefs', {
-                contributionId: contribution._id,
-                viewId: $scope.view._id,
+                to: contribution._id,
+                from: $scope.view._id,
+                type: 'onviewref',
                 x: x,
                 y: y,
                 title: contribution.title,
@@ -177,7 +178,7 @@ angular.module('kf6App')
         };
 
         $scope.openContribution = function(ref) {
-            var url = './contribution/' + ref.contributionId;
+            var url = './contribution/' + ref.to;
             window.open(url, '_blank');
         };
 
