@@ -126,7 +126,7 @@ angular.module('kf6App')
         };
 
         jsPlumb.ready(function() {
-            jsPlumb.setContainer($('#viewcanvas'));
+            jsPlumb.setContainer($('#maincanvas'));
             jsPlumb.importDefaults({
                 Connector: ['Straight'],
                 Endpoints: ['Blank', 'Blank'],
