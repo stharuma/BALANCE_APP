@@ -22,6 +22,7 @@ exports.show = function(req, res) {
 
 // Creates a new view in the DB.
 exports.create = function(req, res) {
+  req.body.type = 'View';
   View.create(req.body, function(err, view) {
     if(err) { return handleError(res, err); }
     return res.json(201, view);

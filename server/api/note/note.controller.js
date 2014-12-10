@@ -29,6 +29,7 @@ exports.show = function(req, res) {
 
 // Creates a new note in the DB.
 exports.create = function(req, res) {
+    req.body.type = 'Note';
     Note.create(req.body, function(err, note) {
         if (err) {
             return handleError(res, err);

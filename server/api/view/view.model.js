@@ -7,4 +7,5 @@ var ViewSchema = new Schema({
   title: String
 });
 
-module.exports = mongoose.model('View', ViewSchema);
+var Contribution = require('../contribution/contribution.model');
+module.exports = Contribution.discriminator('View', ViewSchema);
