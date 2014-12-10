@@ -1,3 +1,5 @@
+/* global jsPlumb */
+
 'use strict';
 
 angular.module('kf6App')
@@ -70,7 +72,6 @@ angular.module('kf6App')
                 return;
             }
             $http.get('/api/records/count/' + $scope.view._id + '/' + uid).success(function(res) {
-                console.log(res);
                 res.forEach(function(each) {
                     $scope.updateRefRead(each._id);
                 });
@@ -107,7 +108,7 @@ angular.module('kf6App')
                     }
                 });
             });
-        }
+        };
 
         $scope.makelink = function(from, to) {
             var fromElements = $('.icon' + from);

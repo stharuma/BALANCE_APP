@@ -26,6 +26,7 @@ module.exports = function(config) {
       'client/bower_components/angular-ui-tinymce/src/tinymce.js',            
       'client/bower_components/angular-ui-sortable/sortable.min.js',                  
       'client/bower_components/ng-context-menu/dist/ng-context-menu.min.js',
+      'client/bower_components/jsPlumb/dist/js/jquery.jsPlumb-1.7.2-min.js',
       'client/app/app.js',
       'client/app/app.coffee',
       'client/app/**/*.js',

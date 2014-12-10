@@ -1,3 +1,5 @@
+/* global jsPlumb */
+
 'use strict';
 
 angular.module('kf6App')
@@ -14,7 +16,7 @@ angular.module('kf6App')
     .directive('KFViewRef', function() {
         return {
             restrict: 'C',
-            link: function(scope, element, attrs) {
+            link: function(scope, element) {
                 var ref = scope.ref;
                 var $scope = scope.$parent;
 

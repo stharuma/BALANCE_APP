@@ -32,11 +32,11 @@ Contribution.updateLinks = function(contribution) {
         to: contribution._id
     }, function(err, links) {
         if (err) {
-            return handleError(err);
+            return;
         }
         links.forEach(function(link) {
             link.title = contribution.title;
-            link.markModified('authors');            
+            link.markModified('authors');
             link.authors = contribution.authors;
             link.save();
         });
