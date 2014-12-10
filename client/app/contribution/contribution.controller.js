@@ -71,4 +71,26 @@ angular.module('kf6App')
                 });
             });
         };
+
+        $scope.tinymceOptions = {
+            theme: 'modern',
+            menubar: false,
+            statusbar: false,
+            plugins: ['advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table directionality emoticons template textcolor paste textcolor noneditable fullpage'],
+            toolbar: "undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code",
+            //toolbar1: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+            //toolbar2: 'forecolor backcolor | emotions link unlink image media | code | styleselect fontselect fontsizeselect',
+            forced_root_block: false,
+            force_br_newlines: true,
+            force_p_newlines: false,
+            extended_valid_elements: 'kf-*[*]',
+            custom_elements: '~kf-[a-zA-Z0-9]+$',
+            toolbar_items_size: 'small',
+            content_css: '/app/kf.css,/app/kfmce.css',
+            inline_styles: true
+        };
+
+        // window.onresize = function() {
+            
+        // };
     });

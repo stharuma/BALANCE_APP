@@ -6,12 +6,16 @@
     </div>
     <tabset>
         <tab heading="Read">
-            <div ng-bind-html="contribution.body"></div>
+            <div style="padding: 10px;">
+                <div ng-bind-html="contribution.body"></div>
+            </div>
         </tab>
 
         <tab heading="Edit">
-            <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
-            <textarea ui-tinymce ng-model="contribution.body"></textarea>
+            <div style="padding: 5px;">
+                <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
+                <textarea style="height: 100%;" ui-tinymce="tinymceOptions" ng-model="contribution.body"></textarea>
+            </div>
         </tab>
 
         <tab heading="Authors">
