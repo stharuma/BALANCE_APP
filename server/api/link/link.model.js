@@ -62,12 +62,12 @@ Contribution.schema.post('save', function(contribution) {
 Link.schema.post('save', function(link) { 
     if (link.titleTo === undefined) {
         Contribution.findById(link.from, function(err, fromObj) {
-            if (err) {
+            if (err || fromObj === null) {
                 console.log(err);
                 return;
             }
             Contribution.findById(link.to, function(err, toObj) {
-                if (err) {
+                if (err || toObj === null) {
                     console.log(err);
                     return;
                 }
