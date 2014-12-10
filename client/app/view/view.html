@@ -16,7 +16,7 @@
             <span class="input-group-btn">
                 <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="assets/images/viewlinkA.png"></button></button>
             </span>
-        </span>        
+        </span>
         <span class="input-group">
             <span class="input-group-btn">
                 <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()">Search</button>
@@ -26,11 +26,13 @@
 
     <div class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
-            <div id="{{ref._id}}" postid="{{ref.contributionId}}" class="KFViewRef {{ref.contributionId}}" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
-                <span style="white-space: nowrap; font-size: 12px;">  
-                    <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
-                    <img ng-if="ref.read === true" src="assets/images/idea-mark-read.png">                    
-                    <a ng-click="openContribution(ref)" ng-style="{'color' : ref.getColor()}">{{ref.title}}</a>
+            <div id="ref{{ref._id}}" postid="{{ref.contributionId}}" class="KFViewRef ref{{ref.contributionId}}" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
+                <span style="white-space: nowrap; font-size: 12px;"> 
+                    <span id="icon{{ref._id}}" class="icon{{ref.contributionId}}"> 
+                        <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
+                        <img ng-if="ref.read === true" src="assets/images/idea-mark-read.png">
+                    </span>
+                <a ng-click="openContribution(ref)" ng-style="{'color' : ref.getColor()}">{{ref.title}}</a>
                 </span>
                 <br>
                 <span style="font-size: 10px; color: #777777; white-space: nowrap;">

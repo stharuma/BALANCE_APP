@@ -22,11 +22,6 @@ angular.module('kf6App')
             $member.updateCommunityMembers();
         }).error(function() {});
 
-        $scope.contribute = function() {
-            $scope.contribution.authors = _.pluck($scope.authors, '_id');
-            $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
-        };
-
         $scope.updateRecords = function() {
             $http.get('/api/contributions/records/' + contributionId).success(function(records) {
                 $scope.records = records;
@@ -57,5 +52,23 @@ angular.module('kf6App')
             if (index >= 0) {
                 $scope.authors.splice(index, 1);
             }
+        };
+
+        $scope.contribute = function() {
+            $scope.contribution.authors = _.pluck($scope.authors, '_id');
+            $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
+        };
+
+        $scope.buildson = function() {
+            $http.post('/api/notes', {
+                title: 'New Note',
+                body: ''
+            }).success(function(note) {
+                $http.post('/api/links', {
+                    from: note._id,
+                    to: $scope.contribution._id,
+                    type: 'buildson'
+                });
+            });
         };
     });

@@ -14,9 +14,16 @@ angular.module('kf6App')
     .directive('KFViewRef', function() {
         return {
             restrict: 'C',
-            link: function(scope, element) {
+            link: function(scope, element, attrs) {
                 var ref = scope.ref;
                 var $scope = scope.$parent;
+
+                scope.$watch('ref.x', function() {
+                    jsPlumb.repaintEverything();
+                });
+                scope.$watch('ref.y', function() {
+                    jsPlumb.repaintEverything();
+                });
 
                 var el = element[0];
                 el.draggable = true;

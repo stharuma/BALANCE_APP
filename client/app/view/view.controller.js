@@ -33,6 +33,9 @@ angular.module('kf6App')
                 });
                 $member.updateCommunityMembers();
 
+                //update links
+                $scope.updateLinks();
+
                 //read
                 $scope.refreshRead();
             });
@@ -92,6 +95,59 @@ angular.module('kf6App')
                 ref.read = true;
             }
         };
+
+        $scope.updateLinks = function() {
+            $http.get('/api/links/view/' + $scope.view._id).success(function(links) {
+                links.forEach(function(link) {
+                    if (link.type === 'buildson') {
+                        $scope.makelink(link.from, link.to);
+                    } else {
+                        //console.log('not a buildson');
+                    }
+                });
+            });
+        }
+
+        $scope.makelink = function(from, to) {
+            var fromElements = $('.icon' + from);
+            var toElements = $('.icon' + to);
+            fromElements.each(function() {
+                var fromElement = $(this);
+                var fromId = fromElement.attr('id');
+                toElements.each(function() {
+                    var toElement = $(this);
+                    var toId = toElement.attr('id');
+                    jsPlumb.connect({
+                        source: fromId,
+                        target: toId,
+                    });
+                });
+            });
+        };
+
+        jsPlumb.ready(function() {
+            jsPlumb.setContainer($('#viewcanvas'));
+            jsPlumb.importDefaults({
+                Connector: ['Straight'],
+                Endpoints: ['Blank', 'Blank'],
+                Overlays: [
+                    ['Arrow', {
+                        width: 7,
+                        length: 7,
+                        location: 1
+                    }]
+                ],
+                Anchor: ['Perimeter', {
+                    shape: 'Rectangle'
+                }],
+                PaintStyle: {
+                    lineWidth: 1,
+                    strokeStyle: 'rgba(180,180,180,0.7)'
+                }
+            });
+        });
+
+        /* ----------- creation --------- */
 
         $scope.createNote = function() {
             var authors = [Auth.getCurrentUser()._id];

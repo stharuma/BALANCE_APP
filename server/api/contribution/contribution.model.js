@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 
 var ContributionSchema = new Schema({
     title: String,
+    type: {type: String, index: true},
     created: {
         type: Date,
         default: Date.now
