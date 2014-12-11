@@ -15,4 +15,9 @@ router.delete('/:id', controller.destroy);
 
 router.get('/records/:id', controller.showrecords);
 
+var multipart = require('connect-multiparty');
+var config = require('../../config/environment');
+var multipartMiddleware = multipart({ uploadDir: config.uploadpath });
+router.post('/upload', multipartMiddleware, controller.upload);
+
 module.exports = router;

@@ -9,6 +9,7 @@ angular.module('kf6App', [
   'ui.bootstrap',  
   'ui.tinymce',
   'ui.sortable',
+  'angularFileUpload',
   'ng-context-menu'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {

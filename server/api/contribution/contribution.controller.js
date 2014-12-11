@@ -107,3 +107,7 @@ exports.showrecords = function(req, res) {
         return res.json(records);
     });
 };
+
+exports.upload = function(req, res) {
+    return res.json(200, req.files);
+};
