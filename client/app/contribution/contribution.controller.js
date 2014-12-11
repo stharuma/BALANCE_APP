@@ -95,6 +95,16 @@ angular.module('kf6App')
             });
         };
 
+        $scope.updated = function(attachment) {
+            $http.post('/api/links', {
+                from: $scope.contribution._id,
+                to: attachment._id,
+                type: 'attach'
+            }).success(function() {
+                $scope.updateConnections();
+            });
+        };
+
         $scope.tinymceOptions = {
             theme: 'modern',
             menubar: false,
@@ -112,8 +122,4 @@ angular.module('kf6App')
             content_css: '/app/kf.css,/app/kfmce.css',
             inline_styles: true
         };
-
-        // window.onresize = function() {
-
-        // };
     });

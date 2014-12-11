@@ -1,5 +1,5 @@
 <div class="col-md-12">
-    <h3>Note: {{contribution.title}}</h3>
+    <h3>Contribution: {{contribution.title}}</h3>
     <div style="position: absolute; top: 10px; width: 95%; text-align: right;">
         <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
         <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
@@ -7,7 +7,15 @@
     <tabset>
         <tab heading="Read">
             <div style="padding: 10px;">
-                <div ng-bind-html="contribution.body"></div>
+                <div ng-if="contribution.type === 'Note'" ng-bind-html="contribution.body"></div>
+                <div ng-if="contribution.type === 'Attachment'">
+                    <div ng-if="contribution.mime.indexOf('image/') >= 0">
+                        <img ng-attr-src="{{contribution.url}}">
+                    </div>
+                    <div ng-if="contribution.mime.indexOf('image/') < 0">
+                        <a ng-attr-href="{{contribution.url}}">Download</a> ({{contribution.originalName}}, {{contribution.mime}}, {{contribution.size}}Bytes)
+                    </div>
+                </div>
             </div>
         </tab>
 
@@ -61,7 +69,7 @@
             <div>
                 <h3>This note belongs to view:</h3>
                 <ul>
-                    <li ng-repeat="conn in toConnections" ng-if="conn.__t==='Onviewref'">
+                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='onviewref'">
                         <a href="/view/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>({{conn.from}})
                     </li>
                 </ul>
@@ -86,6 +94,21 @@
         </tab>
 
         <tab heading="Attachments">
+            <div>
+                <h3>Attachments:</h3>
+                <ul>
+                    <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
+                        <a href="/contribution/{{conn.to}}" target="_blank">{{conn.titleTo}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h3>Upload:</h3>
+                <div style="padding: 10px;">
+                    <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+                </div>
+            </div>
         </tab>
     </tabset>
 </div>
