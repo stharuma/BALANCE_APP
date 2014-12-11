@@ -17,6 +17,8 @@ function onConnect(socket) {
     });
 
     // Insert sockets below
+    require('../api/community/community.socket').register(socket);
+    require('../api/communities/community.socket').register(socket);
     require('../api/drawing/drawing.socket').register(socket);
     require('../api/attachment/attachment.socket').register(socket);
     require('../api/link/link.socket').register(socket);

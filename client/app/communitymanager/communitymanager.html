@@ -1,0 +1,16 @@
+<div class="col-md-12">
+This is the communitymanager view.
+    <ul>
+        <li ng-repeat="community in communities"><a href='viewmanager/{{community._id}}'>{{community.title}}</a></li>
+    </ul>
+
+    <form class="thing-form">
+        <label></label>        
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="" ng-model="newTitle">
+            <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="addNew()">Add New</button>
+      </span>
+        </p>
+    </form>
+</div>

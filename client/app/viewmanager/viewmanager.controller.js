@@ -6,7 +6,6 @@ angular.module('kf6App')
 
         $http.get('/api/views').success(function(views) {
             $scope.views = views;
-            //socket.syncUpdates('view', $scope.awesomeThings);
         });
 
         $scope.addView = function() {
@@ -20,11 +19,6 @@ angular.module('kf6App')
             $state.reload();
         };
 
-        // $scope.deleteThing = function(thing) {
-        //   $http.delete('/api/views/' + thing._id);
-        // };
-
         $scope.$on('$destroy', function() {
-            //socket.unsyncUpdates('view');
         });
     });
