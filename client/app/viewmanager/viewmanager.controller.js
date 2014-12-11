@@ -1,24 +1,21 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewmanagerCtrl', function($scope, $http, $state) {
-        $scope.views = [];
-
-        $http.get('/api/views').success(function(views) {
-            $scope.views = views;
-        });
+    .controller('ViewmanagerCtrl', function($scope, $http, $community, $state, $stateParams) {
+        var communityId = $stateParams.communityId;
+        $scope.views = $community.getViews();
+        $community.enter(communityId);
 
         $scope.addView = function() {
             if ($scope.newViewTitle === '') {
                 return;
             }
-            $http.post('/api/views', {
-                title: $scope.newViewTitle
+            $community.createView($scope.newViewTitle, function() {
+                $community.refreshViews();
+                $scope.newViewTitle = '';
+                $state.reload();
             });
-            $scope.newViewTitle = '';
-            $state.reload();
         };
 
-        $scope.$on('$destroy', function() {
-        });
+        $scope.$on('$destroy', function() {});
     });

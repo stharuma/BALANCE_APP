@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('AttachmentCtrl', function($scope, $http, $upload, Auth) {
+    .controller('AttachmentCtrl', function($scope, $http, $upload, $community) {
         $scope.updated = function(attachment) {
             console.log('updated to:' + attachment.url);
             console.log('please set updated handler');
@@ -10,20 +10,6 @@ angular.module('kf6App')
         if ($scope.$parent.attachmentUpdated) {
             $scope.updated = $scope.$parent.attachmentUpdated;
         }
-
-        $scope.createContribution = function(url, file) {
-            var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/attachments', {
-                title: file.name + ' (' + file.type + ')',
-                url: url,
-                originalName: file.name,
-                mime: file.type,
-                size: file.size,
-                authors: authors
-            }).success(function(attachment) {
-                $scope.updated(attachment);
-            });
-        };
 
         $scope.onFileSelect = function($files) {
             $files.forEach(function(file) {
@@ -42,9 +28,9 @@ angular.module('kf6App')
                         var path = data.file.path;
                         var filename = path.split('\\').pop().split('/').pop();
                         var url = '/uploads/' + filename;
-                        $scope.createContribution(url, file);
+                        $community.createAttachment(url, file, $scope.updated);
                     }).error(function(data, status) {
-                        console.log(data, status);
+                        console.log(data, status, $scope.updated);
                     });
             });
         };

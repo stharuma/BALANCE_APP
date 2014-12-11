@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $member, $stateParams, Auth) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $stateParams, Auth) {
         var contributionId = $stateParams.contributionId;
 
         $scope.contribution = {};
@@ -19,16 +19,17 @@ angular.module('kf6App')
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
+            $community.enter($scope.contribution.communityId);
             window.contribution = contribution;
             $scope.contribution.authors.forEach(function(authorId) {
-                $scope.authors.push($member.getMember(authorId));
+                $scope.authors.push($community.getMember(authorId));
             });
             window.setTimeout(function() {
                 $http.post('/api/records/read/' + contributionId);
             }, 3000);
             $scope.updateRecords();
-            $scope.communityMembers = $member.getMembers();
-            $member.updateCommunityMembers();
+            $scope.communityMembers = $community.getMembers();
+            $community.updateCommunityMembers();
             $scope.updateToConnections();
             $scope.updateFromConnections($scope.updateAttachments);
             if (Auth.isEditable($scope.contribution) && $scope.contribution.type !== 'Attachment') {
@@ -67,7 +68,7 @@ angular.module('kf6App')
             $http.get('/api/contributions/records/' + contributionId).success(function(records) {
                 $scope.records = records;
                 $scope.records.forEach(function(record) {
-                    record.user = $member.getMember(record.authorId);
+                    record.user = $community.getMember(record.authorId);
                     record.getTime = function() {
                         var d = new Date(record.timestamp);
                         return d.toLocaleString();
@@ -116,20 +117,9 @@ angular.module('kf6App')
         };
 
         $scope.buildson = function() {
-            var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/notes', {
-                title: 'New Note',
-                body: '',
-                authors: authors
-            }).success(function(note) {
-                $http.post('/api/links', {
-                    from: note._id,
-                    to: $scope.contribution._id,
-                    type: 'buildson'
-                }).success(function() {
-                    var url = './contribution/' + note._id;
-                    window.open(url, '_blank');
-                });
+            $community.createNoteOn($scope.contribution._id, function(newContribution) {
+                var url = './contribution/' + newContribution._id;
+                window.open(url, '_blank');
             });
         };
 

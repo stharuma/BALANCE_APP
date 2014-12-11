@@ -107,9 +107,20 @@ exports.showrecords = function(req, res) {
 
 exports.search = function(req, res) {
     var query = req.body.query;
+    var communityId = query.communityId;
+    if (!communityId) {
+        return res.json(400, {
+            'err': 'communityId is necessary'
+        });
+    }
+
     var mongoQuery = {
         $and: []
     };
+
+    mongoQuery.$and.push({
+        communityId: communityId
+    });
 
     if (query.authors.length > 0) {
         var authorIds = [];
@@ -165,35 +176,35 @@ exports.search = function(req, res) {
 
 // not used yet
 // exports.textindexSearch = function(req, res) {
-        //     var text = req.body.searchText;
-        //     Contribution.find({
-        //             $text: {
-        //                 $search: text
-        //             }
-        //         }
-        //         // , {
-        //         //         score: {
-        //         //             $meta: 'textScore'
-        //         //         },
-        //         //         title: 1,
-        //         //         body: 1,
-        //         //         type: 1
-        //         //     }).
-        //         //     sort({
-        //         //         score: {
-        //         //             $meta: 'textScore'
-        //         //         }
-        //         //     }
-        //     ).
-        //     limit(10).
-        //     exec(function(err, posts) {
-        //         if (err) {
-        //             console.log(err);
-        //             return handleError(res, err);
-        //         }
-        //         return res.json(200, posts);
-        //     });
-        // };
+//     var text = req.body.searchText;
+//     Contribution.find({
+//             $text: {
+//                 $search: text
+//             }
+//         }
+//         // , {
+//         //         score: {
+//         //             $meta: 'textScore'
+//         //         },
+//         //         title: 1,
+//         //         body: 1,
+//         //         type: 1
+//         //     }).
+//         //     sort({
+//         //         score: {
+//         //             $meta: 'textScore'
+//         //         }
+//         //     }
+//     ).
+//     limit(10).
+//     exec(function(err, posts) {
+//         if (err) {
+//             console.log(err);
+//             return handleError(res, err);
+//         }
+//         return res.json(200, posts);
+//     });
+// };
 
 exports.upload = function(req, res) {
     return res.json(200, req.files);

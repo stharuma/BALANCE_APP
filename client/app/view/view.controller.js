@@ -3,7 +3,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $member, socket, Auth) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, socket, Auth) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
         $scope.refs = [];
@@ -11,6 +11,7 @@ angular.module('kf6App')
 
         $http.get('/api/views/' + viewId).success(function(view) {
             $scope.view = view;
+            $community.enter(view.communityId);
             $scope.updateCanvas();
         });
 
@@ -35,7 +36,7 @@ angular.module('kf6App')
                 $scope.refs.forEach(function(ref) {
                     $scope.updateRef(ref);
                 });
-                $member.updateCommunityMembers();
+                $community.updateCommunityMembers();
 
                 //update links
                 $scope.updateLinks();
@@ -78,7 +79,7 @@ angular.module('kf6App')
                 return authorString;
             };
             ref.authorsTo.forEach(function(id) {
-                ref.authorObjects.push($member.getMember(id));
+                ref.authorObjects.push($community.getMember(id));
             });
         };
 
@@ -202,29 +203,17 @@ angular.module('kf6App')
         /* ----------- creation --------- */
 
         $scope.createNote = function() {
-            var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/notes', {
-                    title: 'New Note',
-                    body: '',
-                    authors: authors
-                })
-                .success(function(note) {
-                    $scope.createOnViewRef(note._id, 100, 100);
-                    $scope.openContribution(note._id);
-                });
+            $community.createNote(function(note) {
+                $scope.createOnViewRef(note._id, 100, 100);
+                $scope.openContribution(note._id);
+            });
         };
 
         $scope.createDrawing = function() {
-            var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/drawings', {
-                    title: 'a Drawing',
-                    svg: '',
-                    authors: authors
-                })
-                .success(function(drawing) {
-                    $scope.createOnViewRef(drawing._id, 100, 100, 100, 100, false, true);
-                    $scope.openContribution(drawing._id);
-                });
+            $community.createDrawing(function(drawing) {
+                $scope.createOnViewRef(drawing._id, 100, 100, 100, 100, false, true);
+                $scope.openContribution(drawing._id);
+            });
         };
 
         $scope.createOnViewRef = function(contributionId, x, y, w, h, fixed, showInPlace) {
@@ -264,8 +253,8 @@ angular.module('kf6App')
         };
 
         $scope.showInPlace = function() {
-            $scope.contextTarget.showInPlace = true;            
-            $scope.saveRef($scope.contextTarget);            
+            $scope.contextTarget.showInPlace = true;
+            $scope.saveRef($scope.contextTarget);
         };
 
         $scope.onContextOpen = function(childScope) {
@@ -273,7 +262,7 @@ angular.module('kf6App')
         };
 
         $scope.openSearch = function() {
-            var url = '/search';
+            var url = '/search/' + $scope.view.communityId;
             window.open(url, '_blank');
         };
 

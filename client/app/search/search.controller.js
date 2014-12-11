@@ -1,18 +1,22 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('SearchCtrl', function($scope, $http, $member) {
+    .controller('SearchCtrl', function($scope, $http, $community, $stateParams) {
+        var communityId = $stateParams.communityId;
+        $community.enter(communityId);
+
         $scope.query = '';
         $scope.communityMembers = [];
         $scope.isCollapsed = true;
         $scope.selectedAuthor = '';
         $scope.contributions = [];
 
-        $scope.communityMembers = $member.getMembersArray();
-        $member.updateCommunityMembers();
+        $scope.communityMembers = $community.getMembersArray();
+        $community.updateCommunityMembers();
 
         $scope.search = function() {
             var query = {
+                communityId: communityId,
                 words: [],
                 authors: []
             };

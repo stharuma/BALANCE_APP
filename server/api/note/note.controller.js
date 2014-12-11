@@ -2,6 +2,8 @@
 
 var _ = require('lodash');
 var Note = require('./note.model');
+var Link = require('../link/link.model');
+var Onviewref = require('../onviewref/onviewref.model');
 var Record = require('../record/record.model');
 
 // Get list of notes
@@ -27,6 +29,40 @@ exports.show = function(req, res) {
     });
 };
 
+var createBuildsOn = function(req, res, note, buildsonId) {
+    Link.create({
+        from: note._id,
+        to: buildsonId,
+        type: 'buildson'
+    }, function(err, link) {
+        if (err) {
+            return handleError(res, err);
+        }
+        Onviewref.find({
+                to: link.to,
+            },
+            function(err, refs) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                refs.forEach(function(ref) {
+                    Onviewref.create({
+                        from: ref.from,
+                        to: link.from,
+                        type: 'onviewref',
+                        x: ref.x + 50,
+                        y: ref.y + 50
+                    }, function(err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                });
+                return res.json(201, note);
+            });
+    });
+};
+
 // Creates a new note in the DB.
 exports.create = function(req, res) {
     req.body.type = 'Note';
@@ -39,6 +75,9 @@ exports.create = function(req, res) {
             targetId: note._id,
             type: 'create'
         });
+        if (req.body.buildson !== null) {
+            return createBuildsOn(req, res, note, req.body.buildson);
+        }
         return res.json(201, note);
     });
 };
@@ -84,5 +123,6 @@ exports.destroy = function(req, res) {
 };
 
 function handleError(res, err) {
+    console.log(err);
     return res.send(500, err);
 }

@@ -5,6 +5,11 @@ var mongoose = require('mongoose'),
 
 var ContributionSchema = new Schema({
     title: String,
+    communityId: {
+        type: Schema.ObjectId,
+        required: true,
+        index: true        
+    },
     type: {
         type: String,
         required: true,

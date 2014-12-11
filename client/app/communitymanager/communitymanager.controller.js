@@ -9,7 +9,6 @@ angular.module('kf6App')
         });
 
         $scope.addNew = function() {
-        	console.log($scope.newTitle);
             if ($scope.newTitle === '') {
                 return;
             }

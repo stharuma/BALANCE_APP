@@ -100,34 +100,7 @@ exports.create = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-
-        if (link.type === 'buildson') {
-            Onviewref.find({
-                    to: link.to,
-                },
-                function(err, refs) {
-                    if (err) {
-                        return handleError(res, err);
-                    }
-                    refs.forEach(function(ref) {
-                        Onviewref.create({
-                            from: ref.from,
-                            to: link.from,
-                            type: 'onviewref',
-                            x: ref.x + 50,
-                            y: ref.y + 50
-                        }, function(err) {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    });
-                    return res.json(201, link);
-                });
-        }
-
         return res.json(201, link);
-
     });
 };
 
