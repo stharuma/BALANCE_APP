@@ -1,4 +1,5 @@
 /* jshint camelcase: false */
+/* jshint unused: false */
 
 'use strict';
 

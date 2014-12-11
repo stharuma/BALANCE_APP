@@ -57,7 +57,7 @@ angular.module('kf6App')
             $http.get('api/contributions/' + ref.to).success(function(contribution) {
                 ref.contribution = contribution;
             });
-        }
+        };
 
         $scope.loadAsIcon = function(ref) {
             ref.getColor = function() {
@@ -80,7 +80,7 @@ angular.module('kf6App')
             ref.authorsTo.forEach(function(id) {
                 ref.authorObjects.push($member.getMember(id));
             });
-        }
+        };
 
         $scope.refreshRead = function() {
             var uid = Auth.getCurrentUser()._id;
@@ -252,20 +252,21 @@ angular.module('kf6App')
 
         $scope.openInWindow = function() {
             $scope.openContribution($scope.contextTarget.to);
-        }
+        };
 
         $scope.edit = function() {
             $scope.openInWindow();
-        }
+        };
 
         $scope.showAsIcon = function() {
             $scope.contextTarget.showInPlace = false;
             $scope.saveRef($scope.contextTarget);
-        }
+        };
+
         $scope.showInPlace = function() {
             $scope.contextTarget.showInPlace = true;            
             $scope.saveRef($scope.contextTarget);            
-        }
+        };
 
         $scope.onContextOpen = function(childScope) {
             $scope.contextTarget = childScope.ref;
