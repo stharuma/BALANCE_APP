@@ -20,11 +20,11 @@ angular.module('kf6App')
                 var $scope = scope.$parent;
                 var el = element[0];
                 el.draggable = true;
-                el.addEventListener('dragstart', function(e) {
+                el.addEventListener('dragstart', function() {
                     $scope.draggingViewlink = scope.view;
                 });
             }
-        }
+        };
     });
 
 angular.module('kf6App')

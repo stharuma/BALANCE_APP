@@ -243,12 +243,12 @@ angular.module('kf6App')
         };
 
         $scope.createOnViewRef = function(target, refObj) {
-            refObj['from'] = $scope.view._id;
-            refObj['to'] = target._id;
-            refObj['type'] = 'onviewref';
-            refObj['titleTo'] = target.title;
-            refObj['authorsTo'] = target.authors;
-            refObj['typeTo'] = target.type;
+            refObj.from = $scope.view._id;
+            refObj.to = target._id;
+            refObj.type = 'onviewref';
+            refObj.titleTo = target.title;
+            refObj.authorsTo = target.authors;
+            refObj.typeTo = target.type;
             $http.post('/api/onviewrefs', refObj);
         };
 
