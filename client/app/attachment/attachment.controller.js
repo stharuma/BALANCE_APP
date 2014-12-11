@@ -14,7 +14,7 @@ angular.module('kf6App')
         $scope.createContribution = function(url, file) {
             var authors = [Auth.getCurrentUser()._id];
             $http.post('/api/attachments', {
-                title: 'Attachment',
+                title: file.name + ' (' + file.type + ')',
                 url: url,
                 originalName: file.name,
                 mime: file.type,
