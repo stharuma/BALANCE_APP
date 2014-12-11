@@ -13,6 +13,7 @@ router.put('/:id', auth.isAuthenticated(), controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 
+router.post('/search', controller.search);
 router.get('/records/:id', controller.showrecords);
 
 var multipart = require('connect-multiparty');

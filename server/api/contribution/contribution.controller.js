@@ -1,8 +1,9 @@
 'use strict';
 
 var _ = require('lodash');
-var Contribution = require('./contribution.model');
+var mongoose = require('mongoose');
 
+var Contribution = require('./contribution.model');
 var Record = require('../record/record.model');
 
 // Get list of contributions
@@ -90,10 +91,6 @@ exports.destroy = function(req, res) {
     });
 };
 
-function handleError(res, err) {
-    return res.send(500, err);
-}
-
 exports.showrecords = function(req, res) {
     Record.find({
         targetId: req.params.id
@@ -108,6 +105,100 @@ exports.showrecords = function(req, res) {
     });
 };
 
+exports.search = function(req, res) {
+    var query = req.body.query;
+    var mongoQuery = {
+        $and: []
+    };
+
+    if (query.authors.length > 0) {
+        var authorIds = [];
+        query.authors.forEach(function(authorIdStr) {
+            authorIds.push(mongoose.Types.ObjectId(authorIdStr));
+        });
+        mongoQuery.$and.push({
+            authors: {
+                $in: authorIds
+            }
+        });
+    }
+
+    if (query.from !== undefined) {
+        var dateFrom = new Date(query.from);
+        mongoQuery.$and.push({
+            created: {
+                $gte: dateFrom
+            }
+        });
+    }
+
+    if (query.to !== undefined) {
+        var dateTo = new Date(query.to);
+        mongoQuery.$and.push({
+            created: {
+                $lte: dateTo
+            }
+        });
+    }
+
+    //http://stackoverflow.com/questions/10913568/mongoose-how-to-find-3-words-in-any-order-and-in-any-place-in-the-string-sql
+    //(?=.*comp)(?=.*abc)(?=.*300).*
+    var regexpstr = '';
+    query.words.forEach(function(word) {
+        regexpstr += '(?=.*' + word + ')';
+    });
+    regexpstr += '.*';
+    mongoQuery.$and.push({
+        text4search: new RegExp(regexpstr, 'i')
+    });
+
+    Contribution.find(mongoQuery).
+    limit(10).
+    exec(function(err, contributions) {
+        if (err) {
+            console.log(err);
+            return handleError(res, err);
+        }
+        return res.json(200, contributions);
+    });
+};
+
+// not used yet
+// exports.textindexSearch = function(req, res) {
+        //     var text = req.body.searchText;
+        //     Contribution.find({
+        //             $text: {
+        //                 $search: text
+        //             }
+        //         }
+        //         // , {
+        //         //         score: {
+        //         //             $meta: 'textScore'
+        //         //         },
+        //         //         title: 1,
+        //         //         body: 1,
+        //         //         type: 1
+        //         //     }).
+        //         //     sort({
+        //         //         score: {
+        //         //             $meta: 'textScore'
+        //         //         }
+        //         //     }
+        //     ).
+        //     limit(10).
+        //     exec(function(err, posts) {
+        //         if (err) {
+        //             console.log(err);
+        //             return handleError(res, err);
+        //         }
+        //         return res.json(200, posts);
+        //     });
+        // };
+
 exports.upload = function(req, res) {
     return res.json(200, req.files);
 };
+
+function handleError(res, err) {
+    return res.send(500, err);
+}

@@ -102,8 +102,8 @@ angular.module('kf6App')
             if (cont.type === 'Note') {
                 //$scope.note.body = tinymce.activeEditor.getContent();
                 //tinymce.activeEditor.isNotDirty = true;
-                //var text = $(cont.body).text();
-                //cont.text4search = 'title(' + cont.title + ') ' + text;
+                var text = $(cont.body).text();
+                cont.text4search = 'title(' + cont.title + ') ' + text;
             }
             if (cont.type === 'Drawing') {
                 var wnd = document.getElementById('svgedit').contentWindow;

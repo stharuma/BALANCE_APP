@@ -272,6 +272,11 @@ angular.module('kf6App')
             $scope.contextTarget = childScope.ref;
         };
 
+        $scope.openSearch = function() {
+            var url = '/search';
+            window.open(url, '_blank');
+        };
+
         $scope.delete = function() {
             if ($scope.contextTarget === undefined) {
                 window.alert('contextTarget is not set.');

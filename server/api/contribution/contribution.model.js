@@ -21,6 +21,7 @@ var ContributionSchema = new Schema({
     text4search: String
 });
 
+// for text index search
 ContributionSchema.index({
     text4search: 'text'
 });
