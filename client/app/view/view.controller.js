@@ -24,16 +24,16 @@ angular.module('kf6App')
                 });
                 socket.syncUpdates('ref', $scope.refs, function(event, item) {
                     if (event === 'created') {
-                        $scope.addRef(item);
+                        $scope.updateRef(item);
                         $scope.updateLink(item.to);
                     }
                     if (event === 'updated') {
-                        $scope.addRef(item);
+                        $scope.updateRef(item);
                     }
                 });
                 //authors info
                 $scope.refs.forEach(function(ref) {
-                    $scope.addRef(ref);
+                    $scope.updateRef(ref);
                 });
                 $member.updateCommunityMembers();
 
@@ -45,7 +45,21 @@ angular.module('kf6App')
             });
         };
 
-        $scope.addRef = function(ref) {
+        $scope.updateRef = function(ref) {
+            if (ref.showInPlace === true) {
+                $scope.loadAsShowInPlace(ref);
+            } else {
+                $scope.loadAsIcon(ref);
+            }
+        };
+
+        $scope.loadAsShowInPlace = function(ref) {
+            $http.get('api/contributions/' + ref.to).success(function(contribution) {
+                ref.contribution = contribution;
+            });
+        }
+
+        $scope.loadAsIcon = function(ref) {
             ref.getColor = function() {
                 if (ref.read === true) {
                     return '#D80E58';
@@ -66,7 +80,7 @@ angular.module('kf6App')
             ref.authorsTo.forEach(function(id) {
                 ref.authorObjects.push($member.getMember(id));
             });
-        };
+        }
 
         $scope.refreshRead = function() {
             var uid = Auth.getCurrentUser()._id;
@@ -200,17 +214,34 @@ angular.module('kf6App')
                 });
         };
 
-        $scope.createOnViewRef = function(contributionId, x, y) {
+        $scope.createDrawing = function() {
+            var authors = [Auth.getCurrentUser()._id];
+            $http.post('/api/drawings', {
+                    title: 'a Drawing',
+                    svg: '',
+                    authors: authors
+                })
+                .success(function(drawing) {
+                    $scope.createOnViewRef(drawing._id, 100, 100, 100, 100, false, true);
+                    $scope.openContribution(drawing._id);
+                });
+        };
+
+        $scope.createOnViewRef = function(contributionId, x, y, w, h, fixed, showInPlace) {
             $http.post('/api/onviewrefs', {
                 to: contributionId,
                 from: $scope.view._id,
                 type: 'onviewref',
                 x: x,
-                y: y
+                y: y,
+                width: w,
+                height: h,
+                fixed: fixed,
+                showInPlace: showInPlace
             });
         };
 
-        $scope.updateRef = function(ref) {
+        $scope.saveRef = function(ref) {
             $http.put('/api/onviewrefs/' + ref._id, ref);
         };
 
@@ -219,7 +250,24 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
-        $scope.contextOpen = function(childScope) {
+        $scope.openInWindow = function() {
+            $scope.openContribution($scope.contextTarget.to);
+        }
+
+        $scope.edit = function() {
+            $scope.openInWindow();
+        }
+
+        $scope.showAsIcon = function() {
+            $scope.contextTarget.showInPlace = false;
+            $scope.saveRef($scope.contextTarget);
+        }
+        $scope.showInPlace = function() {
+            $scope.contextTarget.showInPlace = true;            
+            $scope.saveRef($scope.contextTarget);            
+        }
+
+        $scope.onContextOpen = function(childScope) {
             $scope.contextTarget = childScope.ref;
         };
 

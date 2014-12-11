@@ -20,8 +20,10 @@ var LinkSchema = new Schema({
         index: true
     },
     /* here are cash to work read faster */
+    typeTo: String,    
     titleTo: String,
     authorsTo: [Schema.ObjectId],
+    typeFrom: String,        
     titleFrom: String,
     authorsFrom: [Schema.ObjectId]
 });
@@ -35,6 +37,7 @@ var updateLinks = function(contribution) {
             return;
         }
         links.forEach(function(link) {
+            link.typeTo = contribution.type;            
             link.titleTo = contribution.title;
             link.markModified('authorsTo');
             link.authorsTo = contribution.authors;
@@ -48,6 +51,7 @@ var updateLinks = function(contribution) {
             return;
         }
         links.forEach(function(link) {
+            link.typeFrom = contribution.type;                        
             link.titleFrom = contribution.title;
             link.markModified('authorsFrom');
             link.authorsFrom = contribution.authors;
@@ -74,8 +78,10 @@ Link.schema.post('save', function(link) {
                     console.log(err);
                     return;
                 }
+                link.typeFrom = fromObj.type;                
                 link.titleFrom = fromObj.title;
                 link.authorsFrom = fromObj.authors;
+                link.typeTo = toObj.type;                
                 link.titleTo = toObj.title;
                 link.authorsTo = toObj.authors;
                 link.save(function(err) {

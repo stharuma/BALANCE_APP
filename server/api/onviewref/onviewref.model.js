@@ -7,7 +7,9 @@ var OnviewrefSchema = new Schema({
     x: Number,
     y: Number,
     width: Number,
-    height: Number
+    height: Number,
+    showInPlace: Boolean,
+    fixed: Boolean
 });
 
 var Link = require('../link/link.model');

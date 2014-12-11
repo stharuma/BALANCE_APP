@@ -19,7 +19,7 @@
             </div>
         </tab>
 
-        <tab heading="Edit" active="editActive">
+        <tab heading="Edit" active="editActive" select="editSelected()">
             <div style="padding: 5px;">
                 <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
                 <div ng-if="contribution.type === 'Note'">
@@ -28,7 +28,7 @@
                         <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
                     </div>
                     <div collapse="isAttachmentCollapsed">
-                        <div class="well">                            
+                        <div class="well">
                             <span ng-repeat="attachment in images">
                                 <img ng-attr-src="{{attachment.url}}" width="50px" height="50px"></img>
                             </span>
@@ -36,7 +36,9 @@
                             <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
                         </div>
                     </div>
-
+                </div>
+                <div ng-if="contribution.type === 'Drawing'">
+                    <div id="svgeditdiv"></div>
                 </div>
             </div>
         </tab>

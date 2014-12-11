@@ -26,18 +26,23 @@
 
     <div id="maincanvas" class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
-            <div id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="contextOpen(this)" data-target="menu-A">
-                <span style="white-space: nowrap; font-size: 12px;"> 
+            <div id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
+                <div ng-if="ref.showInPlace!==true">
+                    <span style="white-space: nowrap; font-size: 12px;"> 
                     <span id="icon{{ref._id}}" class="icon{{ref.to}}"> 
                         <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
                         <img ng-if="ref.read === true" src="assets/images/idea-mark-read.png">
                     </span>
-                <a ng-click="openContribution(ref.to)" ng-style="{'color' : ref.getColor()}">{{ref.titleTo}}</a>
-                </span>
-                <br>
-                <span style="font-size: 10px; color: #777777; white-space: nowrap;">
+                    <a ng-click="openContribution(ref.to)" ng-style="{'color' : ref.getColor()}">{{ref.titleTo}}</a>
+                    </span>
+                    <br>
+                    <span style="font-size: 10px; color: #777777; white-space: nowrap;">
                     {{ref.getAuthorString()}}
-                </span>
+                    </span>
+                    </span>
+                </div>
+                <div ng-if="ref.showInPlace===true" ng-style="{'width': ref.width, 'height': ref.height}" ng-bind-html="ref.contribution.svg">
+                </div>
             </div>
         </div>
         <!-- for selection proxy-->
@@ -48,7 +53,10 @@
     <div class="dropdown position-fixed" id="menu-A" style="position: absolute; z-index: 20;">
         <ul class="dropdown-menu" role="menu">
             <li class="menuitem" ng-click="openInWindow()">Open In Window</li>
+            <li class="menuitem" ng-click="edit()">Edit</li>                     
             <li class="menuitem" ng-click="delete()">Delete</li>
+            <li class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li> 
+            <li class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
         </ul>
     </div>
 

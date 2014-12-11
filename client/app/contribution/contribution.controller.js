@@ -18,6 +18,7 @@ angular.module('kf6App')
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
+            window.contribution = contribution;
             $scope.contribution.authors.forEach(function(authorId) {
                 $scope.authors.push($member.getMember(authorId));
             });
@@ -94,7 +95,22 @@ angular.module('kf6App')
         };
 
         $scope.contribute = function() {
-            $scope.contribution.authors = _.pluck($scope.authors, '_id');
+            var cont = $scope.contribution;
+            cont.authors = _.pluck($scope.authors, '_id');
+
+            if (cont.type === 'Note') {
+                //$scope.note.body = tinymce.activeEditor.getContent();
+                //tinymce.activeEditor.isNotDirty = true;
+                //var text = $(cont.body).text();
+                //cont.text4search = 'title(' + cont.title + ') ' + text;
+            }
+            if (cont.type === 'Drawing') {
+                var wnd = document.getElementById('svgedit').contentWindow;
+                wnd.svgEditor.canvas.setResolution('fit', 100);
+                cont.svg = wnd.svgCanvas.svgCanvasToString();
+                wnd.svgEditor.showSaveWarning = false;
+            }
+
             $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
         };
 
@@ -133,6 +149,8 @@ angular.module('kf6App')
             return attachment.mime.indexOf('image/') === 0;
         };
 
+        /*********** tinymce ************/
+
         $scope.tinymceOptions = {
             theme: 'modern',
             menubar: false,
@@ -150,4 +168,29 @@ angular.module('kf6App')
             content_css: '/app/kf.css,/app/kfmce.css',
             inline_styles: true
         };
+
+        /*********** svg-edit ************/
+        $scope.svgInitialized = false;
+
+        $scope.editSelected = function() {
+            if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
+                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.7/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                $('#svgeditdiv').html(xhtml);
+                $scope.svgInitialized = true;
+            }
+        };
     });
+
+function onSvgInitialized() {
+    var wnd = document.getElementById('svgedit').contentWindow;
+    var doc = wnd.document;
+    var mainButton = doc.getElementById('main_button');
+    mainButton.style.display = 'none';
+    //var example = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
+    var svg = '';
+    if (window.contribution) {
+        svg = window.contribution.svg;
+    }
+    wnd.svgCanvas.setSvgString(svg);
+    wnd.svgEditor.showSaveWarning = false;
+}

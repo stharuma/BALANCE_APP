@@ -218,7 +218,7 @@ angular.module('kf6App')
                         $scope.getSelectedModels().forEach(function(postref) {
                             postref.x += dx;　
                             postref.y += dy;
-                            $scope.updateRef(postref);
+                            $scope.saveRef(postref);
                         });
                     } else {
                         var data = e.dataTransfer.getData('text');
