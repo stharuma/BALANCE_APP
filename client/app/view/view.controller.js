@@ -6,12 +6,16 @@ angular.module('kf6App')
     .controller('ViewCtrl', function($scope, $http, $stateParams, $community, socket, Auth) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
+        $scope.views = $community.getViews();
         $scope.refs = [];
         $scope.dragging = 'none';
+
+        $scope.isViewsCollapsed = true;
 
         $http.get('/api/views/' + viewId).success(function(view) {
             $scope.view = view;
             $community.enter(view.communityId);
+            $community.refreshViews();
             $scope.updateCanvas();
         });
 
@@ -61,13 +65,16 @@ angular.module('kf6App')
         };
 
         $scope.loadAsIcon = function(ref) {
+            ref.authorObjects = [];
+            if (ref.typeTo === 'View') {
+                return;
+            }
             ref.getColor = function() {
                 if (ref.read === true) {
                     return '#D80E58';
                 }
                 return '#0000FF';
             };
-            ref.authorObjects = [];
             ref.getAuthorString = function() {
                 var authorString = '';
                 ref.authorObjects.forEach(function(each) {
@@ -204,30 +211,45 @@ angular.module('kf6App')
 
         $scope.createNote = function() {
             $community.createNote(function(note) {
-                $scope.createOnViewRef(note._id, 100, 100);
+                $scope.createOnViewRef(note, {
+                    x: 100,
+                    y: 100
+                });
                 $scope.openContribution(note._id);
             });
         };
 
         $scope.createDrawing = function() {
             $community.createDrawing(function(drawing) {
-                $scope.createOnViewRef(drawing._id, 100, 100, 100, 100, false, true);
+                $scope.createOnViewRef(drawing, {
+                    x: 100,
+                    y: 100,
+                    width: 100,
+                    height: 100,
+                    showInPlace: true
+                });
                 $scope.openContribution(drawing._id);
             });
         };
 
-        $scope.createOnViewRef = function(contributionId, x, y, w, h, fixed, showInPlace) {
-            $http.post('/api/onviewrefs', {
-                to: contributionId,
-                from: $scope.view._id,
-                type: 'onviewref',
-                x: x,
-                y: y,
-                width: w,
-                height: h,
-                fixed: fixed,
-                showInPlace: showInPlace
+        $scope.createViewlink = function() {
+            $scope.isViewsCollapsed = !$scope.isViewsCollapsed;
+        };
+
+        $scope.createOnViewRefById = function(id, refObj) {
+            $http.get('/api/contributions/' + id).success(function(contribution) {
+                $scope.createOnViewRef(contribution, refObj);
             });
+        };
+
+        $scope.createOnViewRef = function(target, refObj) {
+            refObj['from'] = $scope.view._id;
+            refObj['to'] = target._id;
+            refObj['type'] = 'onviewref';
+            refObj['titleTo'] = target.title;
+            refObj['authorsTo'] = target.authors;
+            refObj['typeTo'] = target.type;
+            $http.post('/api/onviewrefs', refObj);
         };
 
         $scope.saveRef = function(ref) {
@@ -241,6 +263,11 @@ angular.module('kf6App')
 
         $scope.openInWindow = function() {
             $scope.openContribution($scope.contextTarget.to);
+        };
+
+        $scope.openView = function(id) {
+            var url = './view/' + id;
+            window.location = url;
         };
 
         $scope.edit = function() {

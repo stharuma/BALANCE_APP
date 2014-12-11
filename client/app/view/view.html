@@ -1,4 +1,13 @@
 <div class="col-md-12" style="padding: 0px;">
+    <div collapse="isViewsCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; background-color: white; z-index: 100;">
+        <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="createViewlink()">close</button>
+        </div>
+        <div ng-repeat="view in views">
+            <div viewlink><img src="assets/images/viewlink.png">{{view.title}}</div>
+        </div>
+    </div>
+
     <div class="KFViewNavBar">{{view.title}}</div>
 
     <div class='KFViewToolBar'>
@@ -9,12 +18,12 @@
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="assets/images/drawingA.png"></button></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="assets/images/drawingA.png"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="assets/images/viewlinkA.png"></button></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="assets/images/viewlinkA.png"></button>
             </span>
         </span>
         <span class="input-group">
@@ -27,7 +36,7 @@
     <div id="maincanvas" class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
             <div id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
-                <div ng-if="ref.showInPlace!==true">
+                <div ng-if="ref.showInPlace!==true && ref.typeTo !== 'View'">
                     <span style="white-space: nowrap; font-size: 12px;"> 
                     <span id="icon{{ref._id}}" class="icon{{ref.to}}"> 
                         <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
@@ -41,6 +50,10 @@
                     </span>
                     </span>
                 </div>
+                <div ng-if="ref.showInPlace!==true && ref.typeTo === 'View'" style="white-space: nowrap;">
+                    <img src="assets/images/viewlink.png">
+                    <a ng-click="openView(ref.to)" style="color: #0000FF;">{{ref.titleTo}}</a>
+                </div>
                 <div ng-if="ref.showInPlace===true" ng-style="{'width': ref.width, 'height': ref.height}" ng-bind-html="ref.contribution.svg">
                 </div>
             </div>
@@ -53,9 +66,9 @@
     <div class="dropdown position-fixed" id="menu-A" style="position: absolute; z-index: 20;">
         <ul class="dropdown-menu" role="menu">
             <li class="menuitem" ng-click="openInWindow()">Open In Window</li>
-            <li class="menuitem" ng-click="edit()">Edit</li>                     
+            <li class="menuitem" ng-click="edit()">Edit</li>
             <li class="menuitem" ng-click="delete()">Delete</li>
-            <li class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li> 
+            <li class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
             <li class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
         </ul>
     </div>

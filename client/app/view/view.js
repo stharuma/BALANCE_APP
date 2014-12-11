@@ -13,6 +13,21 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
+    .directive('viewlink', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element) {
+                var $scope = scope.$parent;
+                var el = element[0];
+                el.draggable = true;
+                el.addEventListener('dragstart', function(e) {
+                    $scope.draggingViewlink = scope.view;
+                });
+            }
+        }
+    });
+
+angular.module('kf6App')
     .directive('KFViewRef', function() {
         return {
             restrict: 'C',
@@ -209,6 +224,15 @@ angular.module('kf6App')
                 };
 
                 $scope.drop = function(e, x, y) {
+                    if ($scope.draggingViewlink) {
+                        var view = $scope.draggingViewlink;
+                        $scope.createOnViewRef(view, {
+                            x: e.offsetX,
+                            y: e.offsetY
+                        });
+                        $scope.draggingViewlink = null;
+                        return;
+                    }
                     if ($scope.dragging !== 'none') {
                         var postref = $scope.dragging;
                         var rect = $('#dropcanvas').get(0).getBoundingClientRect();　
@@ -229,7 +253,10 @@ angular.module('kf6App')
                         var text = data.replace('postref:', '');
                         var models = JSON.parse(text);
                         models.forEach(function(each) {
-                            $scope.createOnViewRef(each.to, e.offsetX + each.offsetX, e.offsetY + each.offsetY);
+                            $scope.createOnViewRefById(each.to, {
+                                x: e.offsetX + each.offsetX,
+                                y: e.offsetY + each.offsetY
+                            });
                         });
                     }
                 };
