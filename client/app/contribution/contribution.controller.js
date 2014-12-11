@@ -26,7 +26,7 @@ angular.module('kf6App')
             $scope.communityMembers = $member.getMembers();
             $member.updateCommunityMembers();
             $scope.updateConnections();
-            if (_.contains($scope.contribution.authors, Auth.getCurrentUser()._id)) {
+            if (Auth.isEditable($scope.contribution) && $scope.contribution.type !== 'Attachment') {
                 $scope.editActive = true;
             }
         }).error(function() {});
