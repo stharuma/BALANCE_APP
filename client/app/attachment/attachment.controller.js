@@ -7,8 +7,8 @@ angular.module('kf6App')
             console.log('please set updated handler');
         };
 
-        if ($scope.$parent.updated) {
-            $scope.updated = $scope.$parent.updated;
+        if ($scope.$parent.attachmentUpdated) {
+            $scope.updated = $scope.$parent.attachmentUpdated;
         }
 
         $scope.createContribution = function(url, file) {

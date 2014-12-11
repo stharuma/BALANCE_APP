@@ -13,6 +13,8 @@ angular.module('kf6App')
         $scope.toConnections = [];
         $scope.fromConnections = [];
         $scope.editActive = false;
+        $scope.isAttachmentCollapsed = true;
+        $scope.images = [];
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
@@ -25,18 +27,37 @@ angular.module('kf6App')
             $scope.updateRecords();
             $scope.communityMembers = $member.getMembers();
             $member.updateCommunityMembers();
-            $scope.updateConnections();
+            $scope.updateToConnections();
+            $scope.updateFromConnections($scope.updateAttachments);
             if (Auth.isEditable($scope.contribution) && $scope.contribution.type !== 'Attachment') {
                 $scope.editActive = true;
             }
         }).error(function() {});
 
-        $scope.updateConnections = function() {
+        $scope.updateToConnections = function() {
             $http.get('/api/links/to/' + contributionId).success(function(links) {
                 $scope.toConnections = links;
             });
+        };
+        $scope.updateFromConnections = function(next) {
             $http.get('/api/links/from/' + contributionId).success(function(links) {
                 $scope.fromConnections = links;
+                if (next) {
+                    next(links);
+                }
+            });
+        };
+
+        $scope.updateAttachments = function(links) {
+            $scope.images = [];
+            links.forEach(function(each) {
+                if (each.type === 'attach') {
+                    $http.get('/api/contributions/' + each.to).success(function(contribution) {
+                        if ($scope.isImage(contribution)) {
+                            $scope.images.push(contribution);
+                        }
+                    });
+                }
             });
         };
 
@@ -95,14 +116,21 @@ angular.module('kf6App')
             });
         };
 
-        $scope.updated = function(attachment) {
+        $scope.attachmentUpdated = function(attachment) {
             $http.post('/api/links', {
                 from: $scope.contribution._id,
                 to: attachment._id,
                 type: 'attach'
             }).success(function() {
-                $scope.updateConnections();
+                $scope.updateFromConnections($scope.updateAttachments);
             });
+        };
+
+        $scope.isImage = function(attachment) {
+            if (attachment.mime === undefined) {
+                return false;
+            }
+            return attachment.mime.indexOf('image/') === 0;
         };
 
         $scope.tinymceOptions = {
