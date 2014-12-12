@@ -20,6 +20,7 @@ angular.module('kf6App')
 
         var refreshScaffolds = function(handler) {
             $http.get('/api/communities/' + communityId).success(function(community) {
+                scaffolds.length = 0; //clear once
                 var scaffoldIds = community.scaffolds;
                 scaffoldIds.forEach(function(scaffoldId) {
                     $http.get('/api/contributions/' + scaffoldId).success(function(scaffold) {
