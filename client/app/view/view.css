@@ -56,6 +56,14 @@
     z-index: 2;
     /*background-color: rgba(255, 255, 0, 0.3);*/
 }
+.KFViewWindowsCanvas {
+    position: absolute;
+    left: 0pt;
+    top: 0pt;
+    width: 2000px;
+    height: 2000px;
+    z-index: -100;
+}
 .KFViewRef {
     position: absolute;
     z-index: 5;

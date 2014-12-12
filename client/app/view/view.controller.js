@@ -8,6 +8,7 @@ angular.module('kf6App')
         $scope.view = {};
         $scope.views = $community.getViews();
         $scope.refs = [];
+        $scope.conns = {};
         $scope.dragging = 'none';
 
         $scope.isViewsCollapsed = true;
@@ -142,8 +143,6 @@ angular.module('kf6App')
             });
         };
 
-        $scope.conns = {};
-
         $scope.makelink = function(from, to) {
             var fromElements = $('.icon' + from);
             var toElements = $('.icon' + to);
@@ -209,6 +208,42 @@ angular.module('kf6App')
 
         /* ----------- creation --------- */
 
+        var windowIdNum = 1;
+
+        $scope.openByInternalWindow = function(contributionId) {
+            windowIdNum++;
+
+            var url = './contribution/' + contributionId;            
+            var wid = 'window' + windowIdNum;
+            var str = '<iframe style="min-width: 100%;" id="' + wid + '" title="Note" src="' + url + '"></iframe>';
+            $('#windows').html(str);
+            var width = 600;
+            var height = 400;
+            var wmax = window.innerWidth * 0.8;
+            if(width > wmax){
+                width = wmax;
+            }
+            var hmax = window.innerHeight * 0.8;
+            if(height > hmax){
+                height = hmax;
+            }
+            $('#' + wid).dialog({
+                width: width,
+                height: height,
+                create: function(ev, ui) {
+                    $(this).css("padding-left", "1px");
+                    $(this).css("padding-top", "1px");
+                    $(this).css("padding-bottom", "2px");
+                    $(this).css("padding-right", "2px");
+                },
+                close: function() { /*we need to erase element*/
+                    $(this).remove();
+                }
+            });
+        };
+
+        /* ----------- creation --------- */
+
         $scope.createNote = function() {
             $community.createNote(function(note) {
                 $scope.createOnViewRef(note, {
@@ -259,12 +294,12 @@ angular.module('kf6App')
         };
 
         $scope.openContribution = function(id) {
-            var url = './contribution/' + id;
-            window.open(url, '_blank');
+            $scope.openByInternalWindow(id);
         };
 
         $scope.openInWindow = function() {
-            $scope.openContribution($scope.contextTarget.to);
+            var url = './contribution/' + $scope.contextTarget.to;
+            window.open(url, '_blank');
         };
 
         $scope.openView = function(id) {

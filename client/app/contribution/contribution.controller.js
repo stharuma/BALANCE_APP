@@ -120,7 +120,7 @@ angular.module('kf6App')
         $scope.buildson = function() {
             $community.createNoteOn($scope.contribution._id, function(newContribution) {
                 var url = './contribution/' + newContribution._id;
-                window.open(url, '_blank');
+                window.location = url;
             });
         };
 
