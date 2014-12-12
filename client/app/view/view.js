@@ -31,7 +31,7 @@ angular.module('kf6App')
     .directive('KFViewRef', function() {
         return {
             restrict: 'C',
-            link: function(scope, element) {
+            link: function(scope, element, attr) {
                 var ref = scope.ref;
                 var $scope = scope.$parent;
                 var el = element[0];
@@ -182,6 +182,15 @@ angular.module('kf6App')
                             'se': '#segrip',
                             'sw': '#swgrip',
                             'nw': '#nwgrip'
+                        },
+                        stop: function(event, ui) {
+                            $scope.getSelectedModels().forEach(function(ref) {
+                                if (ref._id === id) {
+                                    ref.data.width = target.width();
+                                    ref.data.height = target.height();
+                                    $scope.saveRef(ref);
+                                }
+                            });
                         }
                     });
                     target.resizable();
