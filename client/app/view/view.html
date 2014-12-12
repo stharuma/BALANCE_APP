@@ -55,7 +55,7 @@
                             </span>
                         <a ng-click="openContribution(ref.to)" ng-style="{'color' : ref.getColor()}">{{ref.titleTo}}</a>
                     </div>
-                    <div ng-if "ref.typeTo === 'View'" style="white-space: nowrap;">
+                    <div ng-if="ref.typeTo === 'View'" style="white-space: nowrap;">
                         <span ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}">
                             <img src="assets/images/viewlink.png">
                         </span>
@@ -94,8 +94,8 @@
             <li class="menuitem" ng-click="delete()">Delete</li>
             <li class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
             <li class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
-            <li class="menuitem" ng-click="fix()">Fix</li>            
-            <li class="menuitem" ng-click="unfix()">Unfix</li>                        
+            <li class="menuitem" ng-click="fix()">Fix</li>
+            <li class="menuitem" ng-click="unfix()">Unfix</li>
         </ul>
     </div>
 

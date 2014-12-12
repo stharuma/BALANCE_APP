@@ -31,7 +31,7 @@ angular.module('kf6App')
     .directive('KFViewRef', function() {
         return {
             restrict: 'C',
-            link: function(scope, element, attr) {
+            link: function(scope, element) {
                 var ref = scope.ref;
                 var $scope = scope.$parent;
                 var el = element[0];
@@ -54,7 +54,7 @@ angular.module('kf6App')
                         element.css('z-index', 5);
                         el.draggable = true;
                     }
-                }
+                };
                 ref.refreshFixedStatus();
                 element.on('mousedown', function(e) {
                     var pid = ref._id;
@@ -196,7 +196,7 @@ angular.module('kf6App')
                             'sw': '#swgrip',
                             'nw': '#nwgrip'
                         },
-                        stop: function(event, ui) {
+                        stop: function() {
                             $scope.getSelectedModels().forEach(function(ref) {
                                 if (ref._id === id) {
                                     ref.data.width = target.width();
