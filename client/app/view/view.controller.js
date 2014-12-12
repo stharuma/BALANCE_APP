@@ -3,7 +3,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, socket, Auth, $compile) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, socket, Auth) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
         $scope.views = $community.getViews();
@@ -224,7 +224,7 @@ angular.module('kf6App')
             }
             $scope.openByIFrame(url, width, height);
             //$scope.openInternally(url, width, height);
-        }
+        };
 
         // now investigating
         // $scope.openInternally = function(url, width, height) {
@@ -251,11 +251,11 @@ angular.module('kf6App')
             $('#' + wid).dialog({
                 width: width,
                 height: height,
-                create: function(ev, ui) {
-                    $(this).css("padding-left", "1px");
-                    $(this).css("padding-top", "1px");
-                    $(this).css("padding-bottom", "2px");
-                    $(this).css("padding-right", "2px");
+                create: function() {
+                    $(this).css('padding-left', '1px');
+                    $(this).css('padding-top', '1px');
+                    $(this).css('padding-bottom', '2px');
+                    $(this).css('padding-right', '2px');
                 },
                 close: function() { /*we need to erase element*/
                     $(this).remove();

@@ -69,7 +69,7 @@ angular.module('kf6App')
                     var firefox = (e.offsetX === undefined);
                     var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
                     //var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;                    
-                    var IE = (navigator.userAgent.indexOf('MSIE') !== -1) || (document.documentMode === true);
+                    var IE = (navigator.userAgent.indexOf('MSIE') !== -1 || document.documentMode <= 11); /*IE11*/
 
                     var offset = {
                         x: firefox ? e.layerX : e.offsetX,
