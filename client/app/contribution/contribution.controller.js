@@ -1,5 +1,6 @@
 /* jshint camelcase: false */
 /* jshint unused: false */
+/* global tinymce */
 
 'use strict';
 
@@ -19,7 +20,7 @@ angular.module('kf6App')
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
-            $community.enter($scope.contribution.communityId);
+            $community.enter($scope.contribution.communityId);         
             window.contribution = contribution;
             $scope.contribution.authors.forEach(function(authorId) {
                 $scope.authors.push($community.getMember(authorId));
@@ -158,6 +159,17 @@ angular.module('kf6App')
             toolbar_items_size: 'small',
             content_css: '/app/kf.css,/app/kfmce.css',
             inline_styles: true
+        };
+
+        $scope.tag = '<p><span id="%SUPPORTID%_%UNIQUEID%_start" supportId="%SUPPORTID%" class="kfSupportStartTag mceNonEditable"><span class="kfSupportStartMark">&nbsp; </span><span class="kfSupportStartLabel">%TITLE%</span></span>- enter your idea here -<span supportId="%SUPPORTID%" class="kfSupportEndTag kfSupportEndMark mceNonEditable">&nbsp; </span></p><br/>';
+
+        $scope.addSupport = function(supportRef){
+            var id = supportRef.to;
+            var title = supportRef.titleTo;
+            var tag = $scope.tag;
+            tag = tag.replace('%SUPPORTID%', id);
+            tag = tag.replace('%TITLE%', title);
+            tinymce.activeEditor.insertContent(tag);
         };
 
         /*********** svg-edit ************/
