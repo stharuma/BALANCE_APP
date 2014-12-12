@@ -27,7 +27,6 @@ function onConnect(socket) {
     require('../api/note/note.socket').register(socket);
     require('../api/view/view.socket').register(socket);
     require('../api/contribution/contribution.socket').register(socket);
-    require('../api/thing/thing.socket').register(socket);
 }
 
 module.exports = function(socketio) {

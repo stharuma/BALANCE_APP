@@ -277,12 +277,12 @@ angular.module('kf6App')
         };
 
         $scope.showAsIcon = function() {
-            $scope.contextTarget.showInPlace = false;
+            $scope.contextTarget.data.showInPlace = false;
             $scope.saveRef($scope.contextTarget);
         };
 
         $scope.showInPlace = function() {
-            $scope.contextTarget.showInPlace = true;
+            $scope.contextTarget.data.showInPlace = true;
             $scope.saveRef($scope.contextTarget);
         };
 
@@ -301,7 +301,7 @@ angular.module('kf6App')
                 return;
             }
             var ref = $scope.contextTarget;
-            $http.delete('/api/onviewrefs/' + ref._id);
+            $http.delete('/api/links/' + ref._id);
         };
 
     });

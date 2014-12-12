@@ -35,26 +35,27 @@
 
     <div id="maincanvas" class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
-            <div id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
+            <div ng-attr-id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
                 <div ng-if="ref.data.showInPlace!==true && ref.typeTo !== 'View'">
                     <span style="white-space: nowrap; font-size: 12px;"> 
-                    <span id="icon{{ref._id}}" class="icon{{ref.to}}"> 
-                        <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
-                        <img ng-if="ref.read === true" src="assets/images/idea-mark-read.png">
-                    </span>
+                        <span ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
+                            <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
+                            <img ng-if="ref.read === true" src="assets/images/idea-mark-read.png">
+                        </span>
                     <a ng-click="openContribution(ref.to)" ng-style="{'color' : ref.getColor()}">{{ref.titleTo}}</a>
                     </span>
                     <br>
                     <span style="font-size: 10px; color: #777777; white-space: nowrap;">
-                    {{ref.getAuthorString()}}
-                    </span>
+                        {{ref.getAuthorString()}}
                     </span>
                 </div>
                 <div ng-if="ref.data.showInPlace!==true && ref.typeTo === 'View'" style="white-space: nowrap;">
-                    <img src="assets/images/viewlink.png">
+                    <span ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}">
+                        <img src="assets/images/viewlink.png">
+                    </span>
                     <a ng-click="openView(ref.to)" style="color: #0000FF;">{{ref.titleTo}}</a>
                 </div>
-                <div ng-if="ref.data.showInPlace===true" ng-style="{'width': ref.data.width, 'height': ref.data.height}" ng-bind-html="ref.contribution.svg">
+                <div ng-if="ref.data.showInPlace===true" ng-style="{'width': ref.data.width, 'height': ref.data.height}" ng-bind-html="ref.contribution.svg" ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}">
                 </div>
             </div>
         </div>
