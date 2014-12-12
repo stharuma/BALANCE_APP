@@ -53,6 +53,9 @@ angular.module('kf6App')
         };
 
         $scope.updateRef = function(ref) {
+            if (ref.refreshFixedStatus) {
+                ref.refreshFixedStatus();
+            }
             if (ref.data.showInPlace === true) {
                 $scope.loadAsShowInPlace(ref);
             } else {
@@ -345,6 +348,22 @@ angular.module('kf6App')
 
         $scope.onContextOpen = function(childScope) {
             $scope.contextTarget = childScope.ref;
+        };
+
+        $scope.fix = function() {
+            if ($scope.contextTarget) {
+                var ref = $scope.contextTarget;
+                ref.data.fixed = true;
+                $scope.saveRef(ref);
+            }
+        };
+
+        $scope.unfix = function() {
+            if ($scope.contextTarget) {
+                var ref = $scope.contextTarget;
+                ref.data.fixed = false;
+                $scope.saveRef(ref);
+            }
         };
 
         $scope.openSearch = function() {

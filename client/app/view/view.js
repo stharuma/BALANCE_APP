@@ -46,7 +46,16 @@ angular.module('kf6App')
                     $scope.detachAllConnections('icon' + ref._id);
                 });
 
-                el.draggable = true;
+                ref.refreshFixedStatus = function() {
+                    if (ref.data.fixed === true) {
+                        element.css('z-index', 3);
+                        el.draggable = false;
+                    } else {
+                        element.css('z-index', 5);
+                        el.draggable = true;
+                    }
+                }
+                ref.refreshFixedStatus();
                 element.on('mousedown', function(e) {
                     var pid = ref._id;
                     var selected = $scope.isSelected(pid);
@@ -170,6 +179,10 @@ angular.module('kf6App')
 
                 $scope.select = function(id) {
                     if ($scope.isSelected(id)) {
+                        return;
+                    }
+                    var ref = $scope.searchById($scope.refs, id);
+                    if (ref.data.fixed === true) {
                         return;
                     }
                     $scope.selected.push(id);
