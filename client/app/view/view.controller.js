@@ -3,7 +3,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, socket, Auth) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, socket, Auth, $compile) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
         $scope.views = $community.getViews();
@@ -211,22 +211,43 @@ angular.module('kf6App')
         var windowIdNum = 1;
 
         $scope.openByInternalWindow = function(contributionId) {
-            windowIdNum++;
-
-            var url = './contribution/' + contributionId;            
-            var wid = 'window' + windowIdNum;
-            var str = '<iframe style="min-width: 100%;" id="' + wid + '" title="Note" src="' + url + '"></iframe>';
-            $('#windows').html(str);
+            var url = './contribution/' + contributionId;
             var width = 600;
             var height = 400;
             var wmax = window.innerWidth * 0.8;
-            if(width > wmax){
+            if (width > wmax) {
                 width = wmax;
             }
             var hmax = window.innerHeight * 0.8;
-            if(height > hmax){
+            if (height > hmax) {
                 height = hmax;
             }
+            $scope.openByIFrame(url, width, height);
+            //$scope.openInternally(url, width, height);
+        }
+
+        // now investigating
+        // $scope.openInternally = function(url, width, height) {
+        //     windowIdNum++;
+        //     var wid = 'window' + windowIdNum;
+        //     var str = '<div id="' + wid + '">CONTENT</div>';
+        //     var content = '<ng-include src="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></ng-include>';
+        //     str = str.replace('CONTENT', content);
+        //     $('#windows').append(str);
+        //     $('#' + wid).css('position', 'absolute');
+        //     $('#' + wid).css('width', '200px');
+        //     $('#' + wid).css('height', '200px');
+        //     $('#' + wid).css('border', '1px solid black');
+        //     $('#' + wid).css('pointer-events', 'auto');
+        //     $compile($('#' + wid).contents());
+        //     $('#' + wid).resizable();
+        // }
+
+        $scope.openByIFrame = function(url, width, height) {
+            windowIdNum++;
+            var wid = 'window' + windowIdNum;
+            var str = '<iframe style="min-width: 100%;" id="' + wid + '" title="Note" src="' + url + '"></iframe>';
+            $('#windows').append(str);
             $('#' + wid).dialog({
                 width: width,
                 height: height,
