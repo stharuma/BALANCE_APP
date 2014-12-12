@@ -3,7 +3,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, socket, Auth) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
         $scope.views = $community.getViews();
@@ -12,6 +12,7 @@ angular.module('kf6App')
         $scope.dragging = 'none';
 
         $scope.isViewsCollapsed = true;
+        $scope.isAttachmentCollapsed = true;
 
         $http.get('/api/contributions/' + viewId).success(function(view) {
             $scope.view = view;
@@ -349,6 +350,29 @@ angular.module('kf6App')
         $scope.openSearch = function() {
             var url = '/search/' + $scope.view.communityId;
             window.open(url, '_blank');
+        };
+
+        $scope.openAttachment = function() {
+            $scope.isAttachmentCollapsed = !$scope.isAttachmentCollapsed;
+        };
+
+        $scope.attachmentUpdated = function(attachment) {
+            $timeout(function() {
+                $scope.isAttachmentCollapsed = true;
+            }, 1000);
+            $http.post('/api/links', {
+                from: $scope.view._id,
+                to: attachment._id,
+                type: 'onviewref',
+                data: {
+                    x: 200,
+                    y: 200,
+                    width: 200,
+                    height: 200
+                }
+            }).success(function() {
+
+            });
         };
 
         $scope.delete = function() {

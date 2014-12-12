@@ -8,6 +8,12 @@
         </div>
     </div>
 
+    <div collapse="isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; background-color: white; z-index: 100;">
+        <div style="padding: 10px;">
+            <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+        </div>
+    </div>
+
     <div class="KFViewNavBar">{{view.title}}</div>
 
     <div class='KFViewToolBar'>
@@ -31,6 +37,11 @@
                 <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()">Search</button>
             </span>
         </span>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()">Attach</button>
+            </span>
+        </span>        
     </div>
 
     <div id="maincanvas" class="KFViewMainCanvas">
