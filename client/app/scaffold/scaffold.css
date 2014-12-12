@@ -1,0 +1,25 @@
+.box {
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+}
+.box2 {
+    /*-webkit-appearance: button;*/
+    
+    cursor: pointer;
+    border: 1px solid;
+    border-color: #efb137;
+    border-radius: 10px;
+    overflow: hidden;
+    padding-left: 10px;
+    width: 100px;
+    height: 20px;
+}
+.box2:hover {
+    color: #FFFFFF;
+    background-color: #E48E00;
+}
+.box2:active {
+    color: #000000;
+    background-color: #E48E00;
+}

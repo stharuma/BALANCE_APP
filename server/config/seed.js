@@ -6,6 +6,8 @@
 'use strict';
 
 var User = require('../api/user/user.model');
+//var Community = require('../api/community/community.model');
+//var Contribution = require('../api/contribution/contribution.model');
 
 // User.find({}).remove(function() {
 //   User.create({
@@ -24,3 +26,4 @@ var User = require('../api/user/user.model');
 //     }
 //   );
 // });
+

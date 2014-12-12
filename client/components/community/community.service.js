@@ -7,12 +7,33 @@ angular.module('kf6App')
         var views = [];
         var communityMembers = {};
         var communityMembersArray = [];
+        var scaffolds = [];
 
         var refreshViews = function() {
             $http.get('/api/views/community/' + communityId).success(function(result) {
                 views.length = 0; //clear once
                 result.forEach(function(each) {
                     views.push(each);
+                });
+            });
+        };
+
+        var refreshScaffolds = function(handler) {
+            $http.get('/api/communities/' + communityId).success(function(community) {
+                var scaffoldIds = community.scaffolds;
+                scaffoldIds.forEach(function(scaffoldId) {
+                    $http.get('/api/contributions/' + scaffoldId).success(function(scaffold) {
+                        scaffolds.push(scaffold);
+                        scaffold.supports = [];
+                        $http.get('/api/links/from/' + scaffoldId).success(function(supports) {
+                            supports.forEach(function(support) {
+                                scaffold.supports.push(support);
+                            });
+                        });
+                        if (handler) {
+                            handler();
+                        }
+                    });
                 });
             });
         };
@@ -45,6 +66,7 @@ angular.module('kf6App')
             }
             return communityMembers[id];
         };
+
         var updateCommunityMembers = function() {
             $http.get('/api/users/').success(function(members) {
                 members.forEach(function(each) {
@@ -123,8 +145,12 @@ angular.module('kf6App')
             createDrawing: createDrawing,
             createView: createView,
             refreshViews: refreshViews,
+            refreshScaffolds: refreshScaffolds,
             getViews: function() {
                 return views;
+            },
+            getScaffolds: function() {
+                return scaffolds;
             },
             getMembers: function() {
                 return communityMembers;

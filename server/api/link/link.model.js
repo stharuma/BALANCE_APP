@@ -69,29 +69,29 @@ Contribution.schema.post('save', function(contribution) {
 });
 
 /* thism method should call when create a link */
-Link.createCash = function(link, handler) {
-    if (!link.typeTo || !link.typeFrom) {
-        Contribution.findById(link.from, function(err, fromObj) {
+Link.createWithCash = function(seed, handler) {
+    if (seed.typeTo && seed.typeFrom) {
+        Link.create(seed, handler);
+    } else {
+        Contribution.findById(seed.from, function(err, fromObj) {
             if (err || fromObj === null) {
                 console.log(err);
                 return;
             }
-            Contribution.findById(link.to, function(err, toObj) {
+            Contribution.findById(seed.to, function(err, toObj) {
                 if (err || toObj === null) {
                     console.log(err);
                     return;
                 }
-                link.typeFrom = fromObj.type;
-                link.titleFrom = fromObj.title;
-                link.authorsFrom = fromObj.authors;
-                link.typeTo = toObj.type;
-                link.titleTo = toObj.title;
-                link.authorsTo = toObj.authors;
-                handler(link);
+                seed.typeFrom = fromObj.type;
+                seed.titleFrom = fromObj.title;
+                seed.authorsFrom = fromObj.authors;
+                seed.typeTo = toObj.type;
+                seed.titleTo = toObj.title;
+                seed.authorsTo = toObj.authors;
+                Link.create(seed, handler);
             });
         });
-    } else {
-        handler(link);
     }
 };
 

@@ -18,52 +18,48 @@ exports.create = function(req, res) {
             type: 'create'
         });
         if (req.body.buildson !== null) {
-            return exports.createBuildsOn(req, res, note, req.body.buildson);
+            return exports.createBuildsOn(res, note, req.body.buildson);
         }
         return res.json(201, note);
     });
 };
 
 // this method is painful
-exports.createBuildsOn = function(req, res, note, buildsonId) {
-    Link.createCash({
+exports.createBuildsOn = function(res, note, buildsonId) {
+    Link.createWithCash({
         from: note._id,
         to: buildsonId,
         type: 'buildson'
-    }, function(obj) {
-        Link.create(obj, function(err, link) {
-            if (err) {
-                return handleError(res, err);
-            }
-            Link.find({
-                    to: link.to,
-                    type: 'onviewref'
-                },
-                function(err, refs) {
-                    if (err) {
-                        return handleError(res, err);
-                    }
-                    refs.forEach(function(ref) {
-                        var newref = {
-                            from: ref.from,
-                            to: link.from,
-                            type: 'onviewref',
-                            data: {
-                                x: ref.data.x + 50,
-                                y: ref.data.y + 50
-                            }
-                        };
-                        Link.createCash(newref, function(newref) {
-                            Link.create(newref, function(err) {
-                                if (err) {
-                                    console.log(err);
-                                }
-                            });
-                        });
+    }, function(err, link) {
+        if (err) {
+            return handleError(res, err);
+        }
+        Link.find({
+                to: link.to,
+                type: 'onviewref'
+            },
+            function(err, refs) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                refs.forEach(function(ref) {
+                    var newref = {
+                        from: ref.from,
+                        to: link.from,
+                        type: 'onviewref',
+                        data: {
+                            x: ref.data.x + 50,
+                            y: ref.data.y + 50
+                        }
+                    };
+                    Link.createWithCash(newref, function(err, newref) {
+                        if (err) {
+                            console.log(err);
+                        }
                     });
-                    return res.json(201, note);
                 });
-        });
+                return res.json(201, note);
+            });
     });
 };
 

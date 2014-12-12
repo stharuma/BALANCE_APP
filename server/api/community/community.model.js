@@ -5,7 +5,8 @@ var mongoose = require('mongoose'),
 
 var CommunitySchema = new Schema({
     title: String,
-    registrationKey: String
+    registrationKey: String,
+    scaffolds: [Schema.ObjectId]
 });
 
 module.exports = mongoose.model('Community', CommunitySchema);
