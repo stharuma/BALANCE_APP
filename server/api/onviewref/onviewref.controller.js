@@ -39,13 +39,17 @@ exports.show = function(req, res) {
     });
 };
 
+var Link = require('../link/link.model');
+
 // Creates a new onviewref in the DB.
 exports.create = function(req, res) {
-    Onviewref.create(req.body, function(err, onviewref) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.json(201, onviewref);
+    Link.createCash(req.body, function(link) {
+        Onviewref.create(link, function(err, onviewref) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(201, onviewref);
+        });
     });
 };
 

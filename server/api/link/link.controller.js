@@ -96,14 +96,15 @@ exports.show = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    Link.create(req.body, function(err, link) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.json(201, link);
+    return Link.createCash(req.body, function(link) {
+        Link.create(link, function(err, link) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(201, link);
+        });
     });
 };
-
 
 // Updates an existing link in the DB.
 exports.update = function(req, res) {
