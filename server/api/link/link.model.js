@@ -19,6 +19,7 @@ var LinkSchema = new Schema({
         required: true,
         index: true
     },
+    data: Schema.Types.Mixed,
     /* here are cash to work read faster */
     typeTo: String,
     titleTo: String,
@@ -73,12 +74,12 @@ Link.createCash = function(link, handler) {
         Contribution.findById(link.from, function(err, fromObj) {
             if (err || fromObj === null) {
                 console.log(err);
-                return res.send(400);;
+                return;
             }
             Contribution.findById(link.to, function(err, toObj) {
                 if (err || toObj === null) {
                     console.log(err);
-                    return res.send(400);;
+                    return;
                 }
                 link.typeFrom = fromObj.type;
                 link.titleFrom = fromObj.title;
@@ -86,11 +87,12 @@ Link.createCash = function(link, handler) {
                 link.typeTo = toObj.type;
                 link.titleTo = toObj.title;
                 link.authorsTo = toObj.authors;
-                return handler(link);
+                handler(link);
             });
         });
+    } else {
+        handler(link);
     }
-    return handler(link);
 };
 
 module.exports = Link;

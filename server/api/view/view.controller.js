@@ -16,19 +16,6 @@ exports.index = function(req, res) {
     });
 };
 
-// Get a single view
-exports.show = function(req, res) {
-    View.findById(req.params.id, function(err, view) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!view) {
-            return res.send(404);
-        }
-        return res.json(view);
-    });
-};
-
 // Creates a new view in the DB.
 exports.create = function(req, res) {
     req.body.type = 'View';
@@ -37,46 +24,6 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
         return res.json(201, view);
-    });
-};
-
-// Updates an existing view in the DB.
-exports.update = function(req, res) {
-    if (req.body._id) {
-        delete req.body._id;
-    }
-    View.findById(req.params.id, function(err, view) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!view) {
-            return res.send(404);
-        }
-        var updated = _.merge(view, req.body);
-        updated.save(function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.json(200, view);
-        });
-    });
-};
-
-// Deletes a view from the DB.
-exports.destroy = function(req, res) {
-    View.findById(req.params.id, function(err, view) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!view) {
-            return res.send(404);
-        }
-        view.remove(function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.send(204);
-        });
     });
 };
 

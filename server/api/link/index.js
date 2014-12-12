@@ -6,10 +6,10 @@ var controller = require('./link.controller');
 var router = express.Router();
 
 router.get('/', controller.index);
-router.get('/view/:id', controller.viewindex);
 router.get('/from/:id', controller.fromindex);
 router.get('/to/:id', controller.toindex);
 router.get('/tofrom/:id', controller.tofromindex);
+router.get('/onview/:id', controller.onviewindex);
 
 router.get('/:id', controller.show);
 router.post('/', controller.create);

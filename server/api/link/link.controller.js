@@ -2,8 +2,8 @@
 
 var _ = require('lodash');
 var Link = require('./link.model');
+var Contribution = require('../contribution/contribution.model');
 
-// Get list of links
 exports.index = function(req, res) {
     Link.find(function(err, links) {
         if (err) {
@@ -50,10 +50,9 @@ exports.tofromindex = function(req, res) {
     });
 };
 
-var Onviewref = require('../onviewref/onviewref.model');
-// Get list of postrefs
-exports.viewindex = function(req, res) {
-    Onviewref.find({
+// Get links between contributions on view
+exports.onviewindex = function(req, res) {
+    Link.find({
         from: req.params.id
     }, function(err, refs) {
         if (err) {
@@ -96,7 +95,7 @@ exports.show = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    return Link.createCash(req.body, function(link) {
+    Link.createCash(req.body, function(link) {
         Link.create(link, function(err, link) {
             if (err) {
                 return handleError(res, err);
@@ -119,6 +118,7 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(link, req.body);
+        updated.markModified('data');
         updated.save(function(err) {
             if (err) {
                 return handleError(res, err);

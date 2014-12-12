@@ -35,8 +35,8 @@
 
     <div id="maincanvas" class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
-            <div id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.y, 'left': ref.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
-                <div ng-if="ref.showInPlace!==true && ref.typeTo !== 'View'">
+            <div id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
+                <div ng-if="ref.data.showInPlace!==true && ref.typeTo !== 'View'">
                     <span style="white-space: nowrap; font-size: 12px;"> 
                     <span id="icon{{ref._id}}" class="icon{{ref.to}}"> 
                         <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
@@ -50,11 +50,11 @@
                     </span>
                     </span>
                 </div>
-                <div ng-if="ref.showInPlace!==true && ref.typeTo === 'View'" style="white-space: nowrap;">
+                <div ng-if="ref.data.showInPlace!==true && ref.typeTo === 'View'" style="white-space: nowrap;">
                     <img src="assets/images/viewlink.png">
                     <a ng-click="openView(ref.to)" style="color: #0000FF;">{{ref.titleTo}}</a>
                 </div>
-                <div ng-if="ref.showInPlace===true" ng-style="{'width': ref.width, 'height': ref.height}" ng-bind-html="ref.contribution.svg">
+                <div ng-if="ref.data.showInPlace===true" ng-style="{'width': ref.data.width, 'height': ref.data.height}" ng-bind-html="ref.contribution.svg">
                 </div>
             </div>
         </div>

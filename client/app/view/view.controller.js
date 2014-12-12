@@ -12,7 +12,7 @@ angular.module('kf6App')
 
         $scope.isViewsCollapsed = true;
 
-        $http.get('/api/views/' + viewId).success(function(view) {
+        $http.get('/api/contributions/' + viewId).success(function(view) {
             $scope.view = view;
             $community.enter(view.communityId);
             $community.refreshViews();
@@ -20,7 +20,7 @@ angular.module('kf6App')
         });
 
         $scope.updateCanvas = function() {
-            $http.get('/api/onviewrefs/view/' + viewId).success(function(refs) {
+            $http.get('/api/links/from/' + viewId).success(function(refs) {
                 $scope.refs = refs;
                 socket.socket.emit('subscribe', viewId);
                 $scope.$on('$destroy', function() {
@@ -51,7 +51,7 @@ angular.module('kf6App')
         };
 
         $scope.updateRef = function(ref) {
-            if (ref.showInPlace === true) {
+            if (ref.data.showInPlace === true) {
                 $scope.loadAsShowInPlace(ref);
             } else {
                 $scope.loadAsIcon(ref);
@@ -133,7 +133,7 @@ angular.module('kf6App')
         };
 
         $scope.updateLinks = function() {
-            $http.get('/api/links/view/' + $scope.view._id).success(function(links) {
+            $http.get('/api/links/onview/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
                     if (link.type === 'buildson') {
                         $scope.makelink(link.from, link.to);
@@ -236,24 +236,26 @@ angular.module('kf6App')
             $scope.isViewsCollapsed = !$scope.isViewsCollapsed;
         };
 
-        $scope.createOnViewRefById = function(id, refObj) {
+        $scope.createOnViewRefById = function(id, data) {
             $http.get('/api/contributions/' + id).success(function(contribution) {
-                $scope.createOnViewRef(contribution, refObj);
+                $scope.createOnViewRef(contribution, data);
             });
         };
 
-        $scope.createOnViewRef = function(target, refObj) {
+        $scope.createOnViewRef = function(target, data) {
+            var refObj = {};
             refObj.from = $scope.view._id;
             refObj.to = target._id;
             refObj.type = 'onviewref';
             refObj.titleTo = target.title;
             refObj.authorsTo = target.authors;
             refObj.typeTo = target.type;
-            $http.post('/api/onviewrefs', refObj);
+            refObj.data = data;
+            $http.post('/api/links', refObj);
         };
 
         $scope.saveRef = function(ref) {
-            $http.put('/api/onviewrefs/' + ref._id, ref);
+            $http.put('/api/links/' + ref._id, ref);
         };
 
         $scope.openContribution = function(id) {

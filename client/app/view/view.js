@@ -36,10 +36,10 @@ angular.module('kf6App')
                 var $scope = scope.$parent;
                 var el = element[0];
 
-                scope.$watch('ref.x', function() {
+                scope.$watch('ref.data.x', function() {
                     jsPlumb.repaintEverything();
                 });
-                scope.$watch('ref.y', function() {
+                scope.$watch('ref.data.y', function() {
                     jsPlumb.repaintEverything();
                 });
                 scope.$on('$destroy', function() {
@@ -85,8 +85,8 @@ angular.module('kf6App')
 
                     var models = $scope.getSelectedModels();
                     models.forEach(function(each) {
-                        each.offsetX = each.x - ref.x;
-                        each.offsetY = each.y - ref.y;
+                        each.offsetX = each.x - ref.data.x;
+                        each.offsetY = each.y - ref.data.y;
                     });
                     e.dataTransfer.setData('text', 'postref:' + JSON.stringify(models));
                     var hrefs = '';
@@ -236,12 +236,12 @@ angular.module('kf6App')
                     if ($scope.dragging !== 'none') {
                         var postref = $scope.dragging;
                         var rect = $('#dropcanvas').get(0).getBoundingClientRect();　
-                        var dx = (x - rect.left - $scope.dragpoint.x) - postref.x;
-                        var dy = (y - rect.top - $scope.dragpoint.y) - postref.y;
+                        var dx = (x - rect.left - $scope.dragpoint.x) - postref.data.x;
+                        var dy = (y - rect.top - $scope.dragpoint.y) - postref.data.y;
 
                         $scope.getSelectedModels().forEach(function(postref) {
-                            postref.x += dx;　
-                            postref.y += dy;
+                            postref.data.x += dx;
+                            postref.data.y += dy;
                             $scope.saveRef(postref);
                         });
                     } else {
