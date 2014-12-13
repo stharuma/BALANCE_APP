@@ -5,6 +5,7 @@ angular.module('kf6App')
         var communityId = $stateParams.communityId;
         $scope.views = $community.getViews();
         $community.enter(communityId);
+        $community.refreshViews();
 
         $scope.addView = function() {
             if ($scope.newViewTitle === '') {
