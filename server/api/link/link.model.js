@@ -4,6 +4,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var LinkSchema = new Schema({
+    communityId: {
+        type: Schema.ObjectId,
+        required: false, //temporary
+        index: true
+    },
     from: {
         type: Schema.ObjectId,
         required: true,
@@ -67,6 +72,29 @@ var Contribution = require('../contribution/contribution.model');
 Contribution.schema.post('save', function(contribution) {
     updateLinks(contribution);
 });
+
+/* thism method should call when create a link */
+Link.updateCash = function(link) {
+    Contribution.findById(link.from, function(err, fromObj) {
+        if (err || fromObj === null) {
+            console.log(err);
+            return;
+        }
+        Contribution.findById(link.to, function(err, toObj) {
+            if (err || toObj === null) {
+                console.log(err);
+                return;
+            }
+            link.typeFrom = fromObj.type;
+            link.titleFrom = fromObj.title;
+            link.authorsFrom = fromObj.authors;
+            link.typeTo = toObj.type;
+            link.titleTo = toObj.title;
+            link.authorsTo = toObj.authors;
+            link.save();
+        });
+    });
+};
 
 /* thism method should call when create a link */
 Link.createWithCash = function(seed, handler) {

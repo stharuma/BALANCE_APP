@@ -1,5 +1,5 @@
 <div class="col-md-12">
-    <h3>Contribution: {{contribution.title}}</h3>
+    <h3>{{contribution.type}}: {{contribution.title}}</h3>
     <div style="position: absolute; top: 10px; width: 95%; text-align: right;">
         <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
         <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
@@ -52,6 +52,9 @@
                 </div>
                 <div ng-if="contribution.type === 'Drawing'">
                     <div id="svgeditdiv"></div>
+                </div>
+                <div ng-if="contribution.type === 'View'">
+                    <button type="submit" class="btn btn-primary" ng-click="updateAllCash()">UpdateAllCash</button>
                 </div>
             </div>
         </tab>

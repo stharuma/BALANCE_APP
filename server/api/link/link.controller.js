@@ -82,6 +82,19 @@ exports.onviewindex = function(req, res) {
 };
 
 // Get a single link
+exports.updateAllCash = function(req, res) {
+    Link.find({communityId: req.params.communityId}, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        links.forEach(function(link){
+            Link.updateCash(link);
+        });
+        return res.send(200);
+    });
+};
+
+// Get a single link
 exports.show = function(req, res) {
     Link.findById(req.params.id, function(err, link) {
         if (err) {

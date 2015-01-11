@@ -23,7 +23,14 @@ angular.module('kf6App')
 
         $scope.updateCanvas = function() {
             $http.get('/api/links/from/' + viewId).success(function(refs) {
-                $scope.refs = refs;
+                //temporary get rid of others from onviewref
+                var onviewrefs = [];
+                refs.forEach(function(ref){
+                    if(ref.type === 'onviewref'){
+                        onviewrefs.push(ref);
+                    }
+                });
+                $scope.refs = onviewrefs;
                 socket.socket.emit('subscribe', viewId);
                 $scope.$on('$destroy', function() {
                     socket.socket.emit('unsubscribe', viewId);
@@ -373,6 +380,11 @@ angular.module('kf6App')
 
         $scope.openAttachment = function() {
             $scope.isAttachmentCollapsed = !$scope.isAttachmentCollapsed;
+        };
+
+        $scope.openViewProperty = function() {
+            var url = './contribution/' + viewId;
+            window.open(url, '_blank');
         };
 
         $scope.attachmentUpdated = function(attachment) {

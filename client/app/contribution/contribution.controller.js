@@ -20,7 +20,7 @@ angular.module('kf6App')
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
-            $community.enter($scope.contribution.communityId);         
+            $community.enter($scope.contribution.communityId);
             window.contribution = contribution;
             $scope.contribution.authors.forEach(function(authorId) {
                 $scope.authors.push($community.getMember(authorId));
@@ -163,7 +163,7 @@ angular.module('kf6App')
 
         $scope.tag = '<p><span id="%SUPPORTID%_%UNIQUEID%_start" supportId="%SUPPORTID%" class="kfSupportStartTag mceNonEditable"><span class="kfSupportStartMark">&nbsp; </span><span class="kfSupportStartLabel">%TITLE%</span></span>- enter your idea here -<span supportId="%SUPPORTID%" class="kfSupportEndTag kfSupportEndMark mceNonEditable">&nbsp; </span></p><br/>';
 
-        $scope.addSupport = function(supportRef){
+        $scope.addSupport = function(supportRef) {
             var id = supportRef.to;
             var title = supportRef.titleTo;
             var tag = $scope.tag;
@@ -182,18 +182,28 @@ angular.module('kf6App')
                 $scope.svgInitialized = true;
             }
         };
+
+        /*********** view ************/
+        $scope.updateAllCash = function() {
+            $http.get('/api/links/updateallcash/' + $scope.contribution.communityId).
+            success(function() {
+                window.alert('updateing cash successed.');
+            });
+        }
     });
 
 function onSvgInitialized() {
+    //console.log('svg initialized');
     var wnd = document.getElementById('svgedit').contentWindow;
     var doc = wnd.document;
     var mainButton = doc.getElementById('main_button');
     mainButton.style.display = 'none';
-    //var example = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
+    //var svg = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
     var svg = '';
     if (window.contribution) {
         svg = window.contribution.svg;
     }
+    //console.log(svg);
     wnd.svgCanvas.setSvgString(svg);
     wnd.svgEditor.showSaveWarning = false;
 }
