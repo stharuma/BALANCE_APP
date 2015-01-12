@@ -523,7 +523,7 @@ button.ui-button::-moz-focus-inner {
 	background-image: none;
 }
 .ui-resizable {
-	position: relative;
+	/*position: relative;*/
 }
 .ui-resizable-handle {
 	position: absolute;
