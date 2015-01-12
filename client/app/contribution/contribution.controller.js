@@ -189,7 +189,7 @@ angular.module('kf6App')
             success(function() {
                 window.alert('updateing cash successed.');
             });
-        }
+        };
     });
 
 function onSvgInitialized() {
