@@ -19,34 +19,34 @@
     <div class='KFViewToolBar'>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createNote()"><img src="assets/images/noteA.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createNote()"><img src="assets/kf4images/toolbar-newnote-small.png"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="assets/images/drawingA.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="assets/kf4images/toolbar-palette-small.png"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="assets/images/viewlinkA.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="assets/kf4images/toolbar-newviewlink-small.png"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()">Search</button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()"><img src="assets/kf4images/toolbar-search-small.png"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()">Attach</button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()"><img src="assets/kf4images/toolbar-newattachment-small.png"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
                 <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openViewProperty()">Property</button>
             </span>
-        </span>        
+        </span>
     </div>
 
     <div id="maincanvas" class="KFViewMainCanvas">
@@ -55,14 +55,13 @@
                 <div ng-if="ref.data.showInPlace!==true" style="white-space: nowrap; font-size: 12px;">
                     <div ng-if="ref.typeTo !== 'View'">
                         <span ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
-                                <img ng-if="ref.read !== true" src="assets/images/idea-mark-unread.png">
-                                <img ng-if="ref.read === true" src="assets/images/idea-mark-read.png">
-                            </span>
-                        <a ng-click="openContribution(ref.to)" ng-style="{'color' : ref.getColor()}">{{ref.titleTo}}</a>
+                            <img ng-src="{{ref.getIcon()}}">
+                        </span>
+                        <a class='kfIcon' ng-click="openContribution(ref.to)">{{ref.titleTo}}</a>
                     </div>
                     <div ng-if="ref.typeTo === 'View'" style="white-space: nowrap;">
                         <span ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}">
-                            <img src="assets/images/viewlink.png">
+                            <img ng-src="{{ref.getIcon()}}">
                         </span>
                         <a ng-click="openView(ref.to)" style="color: #0000FF;">{{ref.titleTo}}</a>
                     </div>

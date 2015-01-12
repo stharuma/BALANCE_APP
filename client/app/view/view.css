@@ -1,3 +1,13 @@
+.kfIcon:visited{
+    color: black;
+}
+.kfIcon:hover{
+    color: black;
+}
+.kfIcon{
+    color: black;
+}
+
 .kfbutton {
     border-color: #FFFFFF;
     background-color: #AAAAAA;
