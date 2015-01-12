@@ -71,22 +71,22 @@ exports.createScaffold = function(req, res, community) {
             Link.createWithCash({
                 from: s1._id,
                 to: s11,
-                type: 'owns'
+                type: 'contains'
             });
             Link.createWithCash({
                 from: s1._id,
                 to: s12,
-                type: 'owns'
+                type: 'contains'
             });
             Link.createWithCash({
                 from: s2._id,
                 to: s21,
-                type: 'owns'
+                type: 'contains'
             });
             Link.createWithCash({
                 from: s2._id,
                 to: s22,
-                type: 'owns'
+                type: 'contains'
             });
             return res.json(201, community);
         });
