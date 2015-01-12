@@ -4,6 +4,10 @@
     Author     : Raphael   
 */
 
+.KFReference{
+	font-style: italic;	
+}
+
 body {
     font-size: 12px;
 }

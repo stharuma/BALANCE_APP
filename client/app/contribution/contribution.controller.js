@@ -143,6 +143,25 @@ angular.module('kf6App')
 
         /*********** tinymce ************/
 
+        $scope.mcesetupHandler = function(ed) {
+            ed.on('change', function(e) {
+                //do dirty status management
+                //console.log('changed');
+            });
+            ed.on('dragover', function(e) {
+                // important to keep caret
+                e.preventDefault();
+                e.stopPropagation();
+                ed.focus();
+            });
+            ed.on('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();                
+                var data = e.dataTransfer.getData('text/html');
+                tinymce.execCommand('mceInsertContent', true, data);
+            });
+        };
+
         $scope.tinymceOptions = {
             theme: 'modern',
             menubar: false,
@@ -158,7 +177,9 @@ angular.module('kf6App')
             custom_elements: '~kf-[a-zA-Z0-9]+$',
             toolbar_items_size: 'small',
             content_css: '/app/kf.css,/app/kfmce.css',
-            inline_styles: true
+            inline_styles: true,
+            //setup: function(ed){}// dont use this, angular plugin use this.
+            init_instance_callback: $scope.mcesetupHandler
         };
 
         $scope.tag = '<p><span id="%SUPPORTID%_%UNIQUEID%_start" supportId="%SUPPORTID%" class="kfSupportStartTag mceNonEditable"><span class="kfSupportStartMark">&nbsp; </span><span class="kfSupportStartLabel">%TITLE%</span></span>- enter your idea here -<span supportId="%SUPPORTID%" class="kfSupportEndTag kfSupportEndMark mceNonEditable">&nbsp; </span></p><br/>';

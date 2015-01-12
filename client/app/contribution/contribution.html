@@ -7,7 +7,7 @@
     <tabset>
         <tab heading="Read">
             <div style="padding: 10px;">
-                <div ng-if="contribution.type === 'Note'" ng-bind-html="contribution.body"></div>
+                <div class="KFDragSource" ng-if="contribution.type === 'Note'" ng-bind-html="contribution.body"></div>
                 <div ng-if="contribution.type === 'Attachment'">
                     <div ng-if="isImage(contribution)">
                         <img ng-attr-src="{{contribution.url}}">
