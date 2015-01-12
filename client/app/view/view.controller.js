@@ -25,8 +25,8 @@ angular.module('kf6App')
             $http.get('/api/links/from/' + viewId).success(function(refs) {
                 //temporary get rid of others from onviewref
                 var onviewrefs = [];
-                refs.forEach(function(ref){
-                    if(ref.type === 'onviewref'){
+                refs.forEach(function(ref) {
+                    if (ref.type === 'onviewref') {
                         onviewrefs.push(ref);
                     }
                 });
