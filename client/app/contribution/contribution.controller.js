@@ -7,8 +7,9 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $stateParams, Auth) {
         var contributionId = $stateParams.contributionId;
-        
+
         $scope.contribution = {};
+        $scope.copy = {};
         $scope.authors = [];
         $scope.selected = {};
         $scope.records = [];
@@ -21,6 +22,7 @@ angular.module('kf6App')
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
+            $scope.copy.body = contribution.body;
             $community.enter($scope.contribution.communityId);
             window.contribution = contribution;
             $scope.contribution.authors.forEach(function(authorId) {
@@ -79,7 +81,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.addAuthor = function(author) {           
+        $scope.addAuthor = function(author) {
             if (_.contains($scope.authors, author)) {
                 window.alert('already included');
                 return;
@@ -105,7 +107,9 @@ angular.module('kf6App')
             if (cont.type === 'Note') {
                 //$scope.note.body = tinymce.activeEditor.getContent();
                 //tinymce.activeEditor.isNotDirty = true;
-                var text = $(cont.body).text();
+                var jq = $scope.postProcess($scope.copy.body);
+                cont.body = jq.html();
+                var text = jq.text();
                 cont.text4search = 'title(' + cont.title + ') ' + text;
             }
             if (cont.type === 'Drawing') {
@@ -116,6 +120,31 @@ angular.module('kf6App')
             }
 
             $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
+        };
+
+        $scope.postProcess = function(text) {
+            var doc = '<div>' + text + '</div>';
+            var jq = $(doc);
+            // var refs = jq.get(0).getElementsByClassName('KFReference');
+            // var reflen = refs.length;
+            // for (var i = 0; i < reflen; i++) {
+            //     var ref = refs[i];
+            //     var id = ref.getAttribute('id');
+            //     ref.outerHTML = '<kf-reference contributionId="' + id + '">' + ref.innerHTML + '</kf-reference>';
+            // }
+            return jq;
+        };
+
+        $scope.getReferenceTag = function(text) {
+            var cont = $scope.contribution;
+            var author = $community.makeAuthorStringByIds(cont.authors);
+            var tag = '<span class="mceNonEditable KFReference" id="' + cont._id + '">';
+            tag = tag + '<span class="KFReferenceQuote"><span>"</span><span class="KFReferenceText">' + text + '</span><span>"</span></span>';
+            tag = tag + '<span> (<a href="contribution/' + cont._id + '">';
+            tag = tag + '<img src="/assets/kf4images/icon-note-unread-othr-.gif">"' + cont.title + '"</a>';
+            tag = tag + '<span class="KFReferenceAuthor"> by ' + author + '</span>)</span>';
+            tag = tag + '</span>';
+            return tag;
         };
 
         $scope.buildson = function() {
@@ -157,7 +186,7 @@ angular.module('kf6App')
             });
             ed.on('drop', function(e) {
                 e.preventDefault();
-                e.stopPropagation();                
+                e.stopPropagation();
                 var data = e.dataTransfer.getData('text/html');
                 tinymce.execCommand('mceInsertContent', true, data);
             });

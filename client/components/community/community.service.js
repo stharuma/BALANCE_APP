@@ -136,6 +136,25 @@ angular.module('kf6App')
             });
         };
 
+        var makeAuthorString = function(authorObjects) {
+            var authorString = '';
+            authorObjects.forEach(function(each) {
+                if (authorString.length !== 0) {
+                    authorString += ', ';
+                }
+                authorString += each.name;
+            });
+            return authorString;
+        };
+
+        var makeAuthorStringByIds = function(authorIds) {
+            var authorObjects = [];
+            authorIds.forEach(function(id) {
+                authorObjects.push(getMember(id));
+            });
+            return makeAuthorString(authorObjects);
+        };
+
         return {
             enter: enter,
             getMember: getMember,
@@ -158,6 +177,8 @@ angular.module('kf6App')
             },
             getMembersArray: function() {
                 return communityMembersArray;
-            }
+            },
+            makeAuthorString: makeAuthorString,
+            makeAuthorStringByIds: makeAuthorStringByIds
         };
     });

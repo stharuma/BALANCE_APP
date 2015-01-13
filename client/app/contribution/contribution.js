@@ -21,7 +21,7 @@ angular.module('kf6App')
                 el.addEventListener('dragstart', function(e) {
                     var dt = e.dataTransfer;
                     var original = dt.getData('text/plain');
-                    var html = '<span class="mceNonEditable KFReference" id="' + $scope.contribution._id + '">"' + original + '"</span>';
+                    var html = $scope.getReferenceTag(original);
                     dt.setData('kf', 'true');
                     dt.setData('kfid', $scope.contribution._id);
                     dt.setData('text/html', html);
@@ -30,7 +30,7 @@ angular.module('kf6App')
                 el.addEventListener('copy', function(e) {
                     var dt = e.clipboardData;
                     var original = getSelected();
-                    var html = '<span class="mceNonEditable KFReference" id="' + $scope.contribution._id + '">"' + original + '"</span>';
+                    var html = $scope.getReferenceTag(original);                    
                     dt.setData('kf', 'true');
                     dt.setData('kfid', $scope.contribution._id);
                     dt.setData('text/html', html);

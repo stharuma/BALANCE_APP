@@ -4,10 +4,17 @@
     Author     : Raphael   
 */
 
-.KFReference{
-	font-style: italic;	
+.KFReferenceQuote {
+    font-style: italic;
 }
-
+.KFReference {
+    color: black;
+}
+.KFReferenceAuthor {
+    font-size: 10px;
+    color: #777777;
+    white-space: nowrap;
+}
 body {
     font-size: 12px;
 }

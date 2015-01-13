@@ -102,14 +102,7 @@ angular.module('kf6App')
             }
 
             ref.getAuthorString = function() {
-                var authorString = '';
-                ref.authorObjects.forEach(function(each) {
-                    if (authorString.length !== 0) {
-                        authorString += ', ';
-                    }
-                    authorString += each.name;
-                });
-                return authorString;
+                return $community.makeAuthorString(ref.authorObjects);
             };
             ref.authorsTo.forEach(function(id) {
                 ref.authorObjects.push($community.getMember(id));

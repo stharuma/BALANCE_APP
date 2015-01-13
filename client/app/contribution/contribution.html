@@ -7,7 +7,7 @@
     <tabset>
         <tab heading="Read">
             <div style="padding: 10px;">
-                <div class="KFDragSource" ng-if="contribution.type === 'Note'" ng-bind-html="contribution.body"></div>
+                <div class="KFDragSource" ng-if="contribution.type === 'Note'" ng-bind-html="copy.body"></div>
                 <div ng-if="contribution.type === 'Attachment'">
                     <div ng-if="isImage(contribution)">
                         <img ng-attr-src="{{contribution.url}}">
@@ -32,7 +32,7 @@
                             </td>
                             <td valign="top">
                                 <div>
-                                    <textarea style="height: 100%;" ui-tinymce="tinymceOptions" ng-model="contribution.body"></textarea>
+                                    <textarea style="height: 100%;" ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
                                 </div>
                             </td>
                         </tr>
