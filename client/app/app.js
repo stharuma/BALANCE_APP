@@ -10,7 +10,8 @@ angular.module('kf6App', [
         'ui.tinymce',
         'ui.sortable',
         'angularFileUpload',
-        'ng-context-menu'
+        'ng-context-menu',
+        'ui.select'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');

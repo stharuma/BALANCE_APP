@@ -59,26 +59,34 @@
             </div>
         </tab>
 
+        <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"> -->
+        <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css">
         <tab heading="Authors">
             <div style="height: 100%;">
-                <div>
-                    <h4>Authors:</h4>
-                    <ul ui-sortable ng-model="authors">
-                        <li style="cursor: move;" ng-repeat="author in authors">
-                            {{author.name}}
-                            <button type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Community Members:</h4>
-                    <ul ng-repeat="member in communityMembers">
-                        <li>
-                            {{member.name}}
-                            <button type="submit" class="btn btn-primary" ng-click="addAuthor(member)">Add</button>
-                        </li>
-                    </ul>
-                </div>
+                <table style="width: 100%;">
+                    <tr>
+                        <td width="50%" valign="top">
+                            <h4>Authors:</h4>
+                            <ul ui-sortable ng-model="authors">
+                                <li style="cursor: move;" ng-repeat="author in authors">
+                                    {{author.name}}
+                                    <button type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
+                                </li>
+                            </ul>
+                        </td>
+                        <td width="100%" valign="top">
+                            <h4>Add to authors:</h4>
+                            <ui-select ng-model="selected.author" theme="select2" ng-disabled="disabled" style="width: 80%;">
+                                <ui-select-match placeholder="Select author...">{{selected.author.name}} &lt;{{selected.author.email}}&gt;</ui-select-match>
+                                <ui-select-choices repeat="author in communityMembers | filter: {name: $select.search, email: $select.search} | orderBy:'name'| limitTo:12">
+                                    <div ng-bind-html="author.name | highlight: $select.search"></div>
+                                    <small><div ng-bind-html="author.email | highlight: $select.search"></div></small>
+                                </ui-select-choices>
+                            </ui-select>
+                            <button type="submit" class="btn btn-primary" ng-click="addAuthor(selected.author)">Add</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </tab>
 

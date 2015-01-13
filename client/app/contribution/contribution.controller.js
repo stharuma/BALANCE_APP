@@ -7,9 +7,10 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $stateParams, Auth) {
         var contributionId = $stateParams.contributionId;
-
+        
         $scope.contribution = {};
         $scope.authors = [];
+        $scope.selected = {};
         $scope.records = [];
         $scope.communityMembers = [];
         $scope.toConnections = [];
@@ -29,7 +30,7 @@ angular.module('kf6App')
                 $http.post('/api/records/read/' + contributionId);
             }, 3000);
             $scope.updateRecords();
-            $scope.communityMembers = $community.getMembers();
+            $scope.communityMembers = $community.getMembersArray();
             $community.updateCommunityMembers();
             $scope.updateToConnections();
             $scope.updateFromConnections($scope.updateAttachments);
@@ -78,7 +79,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.addAuthor = function(author) {
+        $scope.addAuthor = function(author) {           
             if (_.contains($scope.authors, author)) {
                 window.alert('already included');
                 return;
