@@ -76,13 +76,27 @@ Contribution.schema.post('save', function(contribution) {
 /* thism method should call when create a link */
 Link.updateCash = function(link) {
     Contribution.findById(link.from, function(err, fromObj) {
-        if (err || fromObj === null) {
+        if (err) {
             console.log(err);
             return;
         }
         Contribution.findById(link.to, function(err, toObj) {
-            if (err || toObj === null) {
+            if (err) {
                 console.log(err);
+                return;
+            }
+            if (fromObj === null || toObj === null) {
+                var msg = 'updateCash missinglink';
+                msg += ', type=' + link.type;
+                msg += ', from=' + link.from;
+                if (fromObj) {
+                    msg += ', fromType=' + fromObj.type;
+                }
+                msg += ', to=' + link.to;
+                if (toObj) {
+                    msg += ', toType=' + toObj.type;
+                }
+                console.log(msg);
                 return;
             }
             link.typeFrom = fromObj.type;
