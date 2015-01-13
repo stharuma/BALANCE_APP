@@ -9,12 +9,17 @@ angular.module('kf6App')
         var communityMembersArray = [];
         var scaffolds = [];
 
-        var refreshViews = function() {
+        var refreshViews = function(handler) {
             $http.get('/api/communities/' + communityId + '/views').success(function(result) {
                 views.length = 0; //clear once
                 result.forEach(function(each) {
                     views.push(each);
                 });
+                if (handler) {
+                    handler();
+                }
+            }).error(function() {
+                console.log('view retrieving error');
             });
         };
 
@@ -164,7 +169,7 @@ angular.module('kf6App')
         return {
             enter: enter,
             getMember: getMember,
-            updateCommunityMembers: updateCommunityMembers,    
+            updateCommunityMembers: updateCommunityMembers,
             createAttachment: createAttachment,
             createNote: createNote,
             createNoteOn: createNoteOn,

@@ -1,14 +1,20 @@
 <div class="col-md-12">
     This is the communitymanager view.
-    <ul>
-        <li ng-repeat="community in myCommunities"><a href='viewmanager/{{community._id}}'>{{community.title}}</a>
-        </li>
-    </ul>
+    <table>
+        <tr ng-repeat="community in myCommunities">
+            <td style="padding-left: 20px;">{{community.title}}</td>
+            <td style="padding-left: 5px;">(created: {{toTimeString(community.created)}})</td>
+            <td style="padding-left: 20px;"><a href='communitytop/{{community._id}}'>Enter</a>
+            </td>
+            <td style="padding-left: 20px;"><a href='viewmanager/{{community._id}}'>Manager</a>
+            </td>
+        </tr>
+    </table>
 
     <h4>Join:</h4>
     <ui-select ng-model="selected.community" theme="bootstrap" ng-disabled="disabled" style="width: 400px;">
         <ui-select-match placeholder="Select community...">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
-        <ui-select-choices repeat="community in communities | filter: {title: $select.search} | orderBy:'created':false | orderBy:'title'">
+        <ui-select-choices repeat="community in communities | filter: {title: $select.search} | orderBy:'created':true | orderBy:'title'">
             <div ng-bind-html="community.title | highlight: $select.search"></div>
             <small><div ng-bind-html="toTimeString(community.created)"></div></small>
         </ui-select-choices>
@@ -18,7 +24,7 @@
     <p>{{communities.length}} possible communities.</p>
 
     <form class="thing-form">
-        <label>New Community:</label>        
+        <label>New Community:</label>
         <p class="input-group">
             <input type="text" class="form-control" placeholder="" ng-model="newTitle">
             <span class="input-group-btn">
