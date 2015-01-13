@@ -69,7 +69,7 @@ angular.module('kf6App')
         };
 
         var updateCommunityMembers = function() {
-            $http.get('/api/communities/' + communityId + '/authors/').success(function(authors) {
+            $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
                 authors.forEach(function(each) {
                     getMember(each._id).name = each.name;
                     getMember(each._id).email = each.email;
@@ -164,7 +164,7 @@ angular.module('kf6App')
         return {
             enter: enter,
             getMember: getMember,
-            updateCommunityMembers: updateCommunityMembers,
+            updateCommunityMembers: updateCommunityMembers,    
             createAttachment: createAttachment,
             createNote: createNote,
             createNoteOn: createNoteOn,
