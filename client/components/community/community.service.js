@@ -135,7 +135,7 @@ angular.module('kf6App')
                 var url = 'api/communities/' + communityId;
                 $http.get(url).success(function(community) {
                     community.views.push(view._id);
-                    $http.put(url, community).success(function(community) {
+                    $http.put(url, community).success(function() {
                         success(view);
                     });
                 });
