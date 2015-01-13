@@ -37,6 +37,9 @@ angular.module('kf6App')
         };
 
         $scope.toTimeString = function(time) {
+            if(!time){
+                return '';
+            }
             var d = new Date(time);
             return d.toLocaleString();
         };
