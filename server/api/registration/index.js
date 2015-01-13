@@ -1,15 +1,12 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./community.controller');
-var auth = require('../../auth/auth.service');
+var controller = require('./registration.controller');
 
 var router = express.Router();
 
 router.get('/', controller.index);
 router.get('/:id', controller.show);
-router.get('/:id/views', auth.isAuthenticated(), controller.showviews);
-router.get('/:id/authors', auth.isAuthenticated(), controller.showauthors);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.patch('/:id', controller.update);

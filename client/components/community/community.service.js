@@ -69,8 +69,8 @@ angular.module('kf6App')
         };
 
         var updateCommunityMembers = function() {
-            $http.get('/api/users/').success(function(members) {
-                members.forEach(function(each) {
+            $http.get('/api/communities/' + communityId + '/authors/').success(function(authors) {
+                authors.forEach(function(each) {
                     getMember(each._id).name = each.name;
                     getMember(each._id).email = each.email;
                 });

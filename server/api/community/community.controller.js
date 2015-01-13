@@ -1,9 +1,12 @@
 'use strict';
 
+var mongoose = require('mongoose');
 var _ = require('lodash');
 var Community = require('./community.model');
 var Contribution = require('../contribution/contribution.model');
 var Link = require('../link/link.model');
+var Registration = require('../registration/registration.model');
+var User = require('../user/user.model');
 
 // Get list of communitys
 exports.index = function(req, res) {
@@ -47,6 +50,37 @@ exports.showviews = function(req, res) {
                 return handleError(res, err);
             }
             return res.json(views);
+        });
+    });
+};
+
+function toIds(array, paramName) {
+    var ids = [];
+    array.forEach(function(each) {
+        var id = mongoose.Types.ObjectId(each[paramName]);
+        ids.push(id);
+    });
+    return ids;
+}
+
+// Get authors of the community
+exports.showauthors = function(req, res) {
+    Registration.find({
+        communityId: req.params.id
+    }, function(err, registrations) {
+        if (err) {
+            return handleError(res, err);
+        }
+        var ids = toIds(registrations, 'authorId');
+        User.find({
+            '_id': {
+                $in: ids
+            }
+        }, function(err, objects) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(objects);
         });
     });
 };
@@ -129,8 +163,6 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(community, req.body);
-        updated.authors = req.body.authors;
-        updated.markModified('authors');
         updated.views = req.body.views;
         updated.markModified('views');
         updated.scaffolds = req.body.scaffolds;

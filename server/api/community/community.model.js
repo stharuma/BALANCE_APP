@@ -7,8 +7,7 @@ var CommunitySchema = new Schema({
     title: String,
     registrationKey: String,
     scaffolds: [Schema.ObjectId],
-    views: [Schema.ObjectId],        
-    authors: [Schema.ObjectId],    
+    views: [Schema.ObjectId]
 });
 
 module.exports = mongoose.model('Community', CommunitySchema);
