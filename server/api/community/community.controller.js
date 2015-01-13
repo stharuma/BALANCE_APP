@@ -28,6 +28,29 @@ exports.show = function(req, res) {
     });
 };
 
+// Get views of the community
+exports.showviews = function(req, res) {
+    Community.findById(req.params.id, function(err, community) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!community) {
+            return res.send(404);
+        }
+        var ids = community.views;
+        Contribution.find({
+            '_id': {
+                $in: ids
+            }
+        }, function(err, views) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(views);
+        });
+    });
+};
+
 // Creates a new community in the DB.
 exports.create = function(req, res) {
     Community.create(req.body, function(err, community) {
@@ -106,6 +129,12 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(community, req.body);
+        updated.authors = req.body.authors;
+        updated.markModified('authors');
+        updated.views = req.body.views;
+        updated.markModified('views');
+        updated.scaffolds = req.body.scaffolds;
+        updated.markModified('scaffolds');
         updated.save(function(err) {
             if (err) {
                 return handleError(res, err);

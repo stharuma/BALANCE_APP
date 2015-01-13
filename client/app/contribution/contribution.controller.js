@@ -174,10 +174,10 @@ angular.module('kf6App')
         /*********** tinymce ************/
 
         $scope.mcesetupHandler = function(ed) {
-            ed.on('change', function(e) {
-                //do dirty status management
-                //console.log('changed');
-            });
+            // ed.on('change', function(e) {
+            //     //do dirty status management
+            //     //console.log('changed');
+            // });
             ed.on('dragover', function(e) {
                 // important to keep caret
                 e.preventDefault();

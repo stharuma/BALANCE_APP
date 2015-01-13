@@ -10,7 +10,7 @@ angular.module('kf6App')
         var scaffolds = [];
 
         var refreshViews = function() {
-            $http.get('/api/views/community/' + communityId).success(function(result) {
+            $http.get('/api/communities/' + communityId + '/views').success(function(result) {
                 views.length = 0; //clear once
                 result.forEach(function(each) {
                     views.push(each);
@@ -132,7 +132,13 @@ angular.module('kf6App')
                 communityId: communityId,
                 title: title
             }).success(function(view) {
-                success(view);
+                var url = 'api/communities/' + communityId;
+                $http.get(url).success(function(community) {
+                    community.views.push(view._id);
+                    $http.put(url, community).success(function(community) {
+                        success(view);
+                    });
+                });
             });
         };
 
