@@ -1,11 +1,12 @@
 <div class="col-md-12">
     This is the viewmanager view.
     <ul>
-        <li ng-repeat="view in views"><a href='view/{{view._id}}'>{{view.title}}</a></li>
+        <li ng-repeat="view in views"><a href='view/{{view._id}}'>{{view.title}}</a>
+        </li>
     </ul>
 
     <form class="thing-form">
-        <label></label>        
+        <label></label>
         <p class="input-group">
             <input type="text" class="form-control" placeholder="" ng-model="newViewTitle">
             <span class="input-group-btn">
@@ -13,5 +14,10 @@
       </span>
         </p>
     </form>
+
+    <div>
+        <label>Administration</label>
+        <button type="submit" class="btn btn-primary" ng-click="updateAllCash()">UpdateAllCash</button>
+    </div>
 
 </div>

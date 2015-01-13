@@ -233,14 +233,6 @@ angular.module('kf6App')
                 $scope.svgInitialized = true;
             }
         };
-
-        /*********** view ************/
-        $scope.updateAllCash = function() {
-            $http.get('/api/links/updateallcash/' + $scope.contribution.communityId).
-            success(function() {
-                window.alert('updateing cash successed.');
-            });
-        };
     });
 
 function onSvgInitialized() {

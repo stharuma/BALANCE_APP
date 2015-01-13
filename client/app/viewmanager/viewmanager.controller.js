@@ -11,10 +11,18 @@ angular.module('kf6App')
             if ($scope.newViewTitle === '') {
                 return;
             }
-            $community.createView($scope.newViewTitle, function() {                
+            $community.createView($scope.newViewTitle, function() {
                 $community.refreshViews();
                 $scope.newViewTitle = '';
                 //$state.reload();
+            });
+        };
+
+        /*********** view ************/
+        $scope.updateAllCash = function() {
+            $http.get('/api/links/updateallcash/' + communityId).
+            success(function() {
+                window.alert('updateing cash successed.');
             });
         };
 
