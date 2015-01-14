@@ -83,30 +83,34 @@ exports.onviewindex = function(req, res) {
 
 // Get a single link
 exports.updateAllCash = function(req, res) {
+    exports.updateAllCashRec(req, res);
+}
+
+exports.updateAllCashRec = function(req, res) {
     var query = Link.find({
         communityId: req.params.communityId,
         typeTo: null
-    }).limit(20000);
+    }).limit(5000);
     query.exec(function(err, links) {
         if (err) {
             return handleError(res, err);
         }
         var len = links.length;
+        console.log(len + ' links to update!');
         if (len <= 0) {
             console.log('no links to update!');
-            return;
+            return res.send(200);
         }
         var numFinished = 0;
         links.forEach(function(link) {
             Link.updateCash(link, function() {
                 numFinished++;
                 if (numFinished >= len) {
-                    console.log('finished');
+                    exports.updateAllCashRec(req, res);
                 }
             });
         });
     });
-    return res.send(200);
 };
 
 // Get a single link
