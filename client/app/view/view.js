@@ -117,7 +117,7 @@ angular.module('kf6App')
                 });
                 el.addEventListener('drop', function(e) {
                     e.preventDefault();
-                    $scope.drop(e, e.clientX, e.clientY);
+                    $scope.drop(e, ref);
                 });
                 el.addEventListener('dragend', function() {
                     $scope.dragging = 'none';
@@ -245,28 +245,34 @@ angular.module('kf6App')
                     }
                 };
 
-                $scope.drop = function(e, x, y) {
+                $scope.drop = function(e, ref) {
+                    var newX = e.offsetX;
+                    var newY = e.offsetY;
+                    if(ref){
+                        newX = newX + ref.data.x;
+                        newY = newY + ref.data.y;
+                    }
+
                     if ($scope.draggingViewlink) {
                         var view = $scope.draggingViewlink;
                         $scope.createOnViewRef(view, {
-                            x: e.offsetX,
-                            y: e.offsetY
+                            x: newX,
+                            y: newY
                         });
                         $scope.draggingViewlink = null;
                         return;
                     }
-                    if ($scope.dragging !== 'none') {
+                    if ($scope.dragging !== 'none') {//Internal DnD
                         var postref = $scope.dragging;
-                        var rect = $('#dropcanvas').get(0).getBoundingClientRect();　
-                        var dx = (x - rect.left - $scope.dragpoint.x) - postref.data.x;
-                        var dy = (y - rect.top - $scope.dragpoint.y) - postref.data.y;
+                        var dx = newX - postref.data.x - $scope.dragpoint.x;
+                        var dy = newY - postref.data.y - $scope.dragpoint.y;                       
 
                         $scope.getSelectedModels().forEach(function(postref) {
                             postref.data.x += dx;
                             postref.data.y += dy;
                             $scope.saveRef(postref);
                         });
-                    } else {
+                    } else {//External DnD
                         var data = e.dataTransfer.getData('text');
                         var index = data.indexOf('postref:');
                         if (index !== 0) {
@@ -276,8 +282,8 @@ angular.module('kf6App')
                         var models = JSON.parse(text);
                         models.forEach(function(each) {
                             $scope.createOnViewRefById(each.to, {
-                                x: e.offsetX + each.offsetX,
-                                y: e.offsetY + each.offsetY
+                                x: newX + each.offsetX,
+                                y: newY + each.offsetY
                             });
                         });
                     }
@@ -291,7 +297,7 @@ angular.module('kf6App')
                 });
                 el.addEventListener('drop', function(e) {
                     e.preventDefault();
-                    $scope.drop(e, e.clientX, e.clientY);
+                    $scope.drop(e, null);
                 });
             }
         };
