@@ -83,15 +83,30 @@ exports.onviewindex = function(req, res) {
 
 // Get a single link
 exports.updateAllCash = function(req, res) {
-    Link.find({communityId: req.params.communityId}, function(err, links) {
+    var query = Link.find({
+        communityId: req.params.communityId,
+        typeTo: null
+    }).limit(20000);
+    query.exec(function(err, links) {
         if (err) {
             return handleError(res, err);
         }
-        links.forEach(function(link){
-            Link.updateCash(link);
+        var len = links.length;
+        if (len <= 0) {
+            console.log('no links to update!');
+            return;
+        }
+        var numFinished = 0;
+        links.forEach(function(link) {
+            Link.updateCash(link, function() {
+                numFinished++;
+                if (numFinished >= len) {
+                    console.log('finished');
+                }
+            });
         });
-        return res.send(200);
     });
+    return res.send(200);
 };
 
 // Get a single link

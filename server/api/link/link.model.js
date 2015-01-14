@@ -74,7 +74,7 @@ Contribution.schema.post('save', function(contribution) {
 });
 
 /* thism method should call when create a link */
-Link.updateCash = function(link) {
+Link.updateCash = function(link, handler) {
     Contribution.findById(link.from, function(err, fromObj) {
         if (err) {
             console.log(err);
@@ -97,6 +97,12 @@ Link.updateCash = function(link) {
                     msg += ', toType=' + toObj.type;
                 }
                 console.log(msg);
+                link.typeFrom = 'missing';
+                link.typeTo = 'missing';
+                link.save();
+                if (handler) {
+                    handler();
+                }
                 return;
             }
             link.typeFrom = fromObj.type;
@@ -106,6 +112,9 @@ Link.updateCash = function(link) {
             link.titleTo = toObj.title;
             link.authorsTo = toObj.authors;
             link.save();
+            if (handler) {
+                handler();
+            }
         });
     });
 };
