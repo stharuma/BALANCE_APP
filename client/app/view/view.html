@@ -1,14 +1,19 @@
 <div class="col-md-12" style="padding: 0px;">
-    <div collapse="isViewsCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; background-color: white; z-index: 100;">
+    <div collapse="isViewsCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; height: 400px; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <button type="submit" class="btn btn-primary kfbutton" ng-click="createViewlink()">close</button>
         </div>
-        <div ng-repeat="view in views">
-            <div viewlink><img src="assets/images/viewlink.png">{{view.title}}</div>
+        <div style="height: 400px; overflow: scroll;">
+            <div ng-repeat="view in views">
+                <div viewlink><img src="assets/images/viewlink.png">{{view.title}}</div>
+            </div>
         </div>
     </div>
 
-    <div collapse="isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; background-color: white; z-index: 100;">
+    <div collapse="isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
+        <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="isAttachmentCollapsed = true;">close</button>
+        </div>        
         <div style="padding: 10px;">
             <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
         </div>
