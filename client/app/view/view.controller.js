@@ -3,7 +3,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location) {
         var viewId = $stateParams.viewId;
         $scope.view = {};
         $scope.views = $community.getViews();
@@ -354,16 +354,21 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+        $scope.doExit = function() {
+            var url = 'communitymanager';
+            $scope.gotoURL(url);
+        };
+
         /* ----------- open window --------- */
 
         $scope.openContribution = function(id) {
-            var url = './contribution/' + id;
+            var url = 'contribution/' + id;
             $scope.openByInternalWindow(url);
         };
 
         $scope.openView = function(id) {
-            var url = './view/' + id;
-            window.location = url;
+            var url = 'view/' + id;
+            $scope.gotoURL(url);
         };
 
         $scope.mOpenContribution = function() {
@@ -371,12 +376,12 @@ angular.module('kf6App')
         };
 
         $scope.mOpenContributionInTab = function() {
-            var url = './contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to;
             window.open(url, '_blank');
         };
 
         $scope.mOpenContributionInPopup = function() {
-            var url = './contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to;
             $scope.openInPopup(url);
         };
 
@@ -385,13 +390,17 @@ angular.module('kf6App')
         };
 
         $scope.mOpenViewInInternal = function() {
-            var url = './view/' + $scope.contextTarget.to;
+            var url = 'view/' + $scope.contextTarget.to;
             $scope.openByInternalWindow(url);
         };
 
         $scope.mOpenViewInPopup = function() {
-            var url = './view/' + $scope.contextTarget.to;
+            var url = 'view/' + $scope.contextTarget.to;
             $scope.openInPopup(url);
+        };
+
+        $scope.gotoURL = function(url) {
+            $location.path(url);
         };
 
         $scope.openInPopup = function(url) {
