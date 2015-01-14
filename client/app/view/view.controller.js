@@ -81,19 +81,19 @@ angular.module('kf6App')
 
             ref.getIcon = function() {
                 if (ref.typeTo === 'View') {
-                    return 'assets/kf4images/icon-view.gif';
+                    return 'manual_assets/kf4images/icon-view.gif';
                 }
                 if (ref.typeTo === 'Attachment') {
-                    return 'assets/kf4images/icon-attachment.gif';
+                    return 'manual_assets/kf4images/icon-attachment.gif';
                 }
                 if (ref.typeTo === 'Drawing') {
-                    return 'assets/kf4images/icon-drawing.gif';
+                    return 'manual_assets/kf4images/icon-drawing.gif';
                 }
 
                 if (ref.read === true) {
-                    return 'assets/kf4images/icon-note-read-othr-.gif';
+                    return 'manual_assets/kf4images/icon-note-read-othr-.gif';
                 } else {
-                    return 'assets/kf4images/icon-note-unread-othr-.gif';
+                    return 'manual_assets/kf4images/icon-note-unread-othr-.gif';
                 }
             };
 
