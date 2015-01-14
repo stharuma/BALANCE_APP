@@ -166,6 +166,20 @@ angular.module('kf6App')
             return makeAuthorString(authorObjects);
         };
 
+        var amIAuthor = function(obj) {
+            if (obj.to) { //link
+                return amIAuthor0(obj.authorsTo);
+            } else if (obj.title) { //contrib
+                return amIAuthor0(obj.authors);
+            } else {
+                console.log('unsupported object=' + obj);
+            }
+        };
+
+        var amIAuthor0 = function(authorIds) {
+            return _.contains(authorIds, Auth.getCurrentUser()._id);
+        };
+
         return {
             enter: enter,
             getMember: getMember,
@@ -177,6 +191,7 @@ angular.module('kf6App')
             createView: createView,
             refreshViews: refreshViews,
             refreshScaffolds: refreshScaffolds,
+            amIAuthor: amIAuthor,
             getViews: function() {
                 return views;
             },

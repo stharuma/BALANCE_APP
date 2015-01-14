@@ -90,10 +90,19 @@ angular.module('kf6App')
                     return 'manual_assets/kf4images/icon-drawing.gif';
                 }
 
+                var author = ref.amIAuthor();
                 if (ref.read === true) {
-                    return 'manual_assets/kf4images/icon-note-read-othr-.gif';
+                    if (author === true) {
+                        return 'manual_assets/kf4images/icon-note-read-auth-.gif';
+                    } else {
+                        return 'manual_assets/kf4images/icon-note-read-othr-.gif';
+                    }
                 } else {
-                    return 'manual_assets/kf4images/icon-note-unread-othr-.gif';
+                    if (author === true) {
+                        return 'manual_assets/kf4images/icon-note-unread-auth-.gif';
+                    } else {
+                        return 'manual_assets/kf4images/icon-note-unread-othr-.gif';
+                    }
                 }
             };
 
@@ -103,6 +112,9 @@ angular.module('kf6App')
 
             ref.getAuthorString = function() {
                 return $community.makeAuthorString(ref.authorObjects);
+            };
+            ref.amIAuthor = function() {
+                return $community.amIAuthor(ref);
             };
             ref.authorsTo.forEach(function(id) {
                 ref.authorObjects.push($community.getMember(id));
