@@ -13,7 +13,7 @@
     <div collapse="isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <button type="submit" class="btn btn-primary kfbutton" ng-click="isAttachmentCollapsed = true;">close</button>
-        </div>        
+        </div>
         <div style="padding: 10px;">
             <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
         </div>
@@ -24,32 +24,37 @@
     <div class='KFViewToolBar'>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createNote()"><img src="assets/kf4images/toolbar-newnote-small.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createNote()"><img src="assets/kf4images/toolbar-newnote-small.png" title="Note"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="assets/kf4images/toolbar-palette-small.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="assets/kf4images/toolbar-palette-small.png" title="Drawing"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="assets/kf4images/toolbar-newviewlink-small.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="assets/kf4images/toolbar-newviewlink-small.png" title="Views"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()"><img src="assets/kf4images/toolbar-search-small.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()"><img src="assets/kf4images/toolbar-search-small.png" title="Search"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()"><img src="assets/kf4images/toolbar-newattachment-small.png"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()"><img src="assets/kf4images/toolbar-newattachment-small.png" title="Attachment"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openViewProperty()">Property</button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openBackpack()"><img src="assets/kf4images/toolbar-workspace-small.png" title="Backpack"></button>
+            </span>
+        </span>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openViewProperty()"><img src="assets/kf4images/toolbar-viewlist-small.png" title="Property"></button>
             </span>
         </span>
     </div>
@@ -100,13 +105,17 @@
 
     <div class="dropdown position-fixed" id="menu-A" style="position: absolute; z-index: 20;">
         <ul class="dropdown-menu" role="menu">
-            <li class="menuitem" ng-click="openInWindow()">Open In Window</li>
-            <li class="menuitem" ng-click="edit()">Edit</li>
-            <li class="menuitem" ng-click="delete()">Delete</li>
-            <li class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
-            <li class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
-            <li class="menuitem" ng-click="fix()">Fix</li>
-            <li class="menuitem" ng-click="unfix()">Unfix</li>
+            <li ng-if="contextTarget.data !== null && contextTarget.typeTo !== 'View'" class="menuitem" ng-click="mOpenContribution()">Open</li>
+            <li ng-if="contextTarget.data !== null && contextTarget.typeTo !== 'View'" class="menuitem" ng-click="mOpenContributionInTab()">Open In Tab</li>
+            <li ng-if="contextTarget.data !== null && contextTarget.typeTo !== 'View'" class="menuitem" ng-click="mOpenContributionInPopup()">Open In Window</li>
+            <li ng-if="contextTarget.data !== null && contextTarget.typeTo === 'View'" class="menuitem" ng-click="mOpenView()">Open</li>
+            <li ng-if="contextTarget.data !== null && contextTarget.typeTo === 'View'" class="menuitem" ng-click="mOpenViewInInternal()">Open In Internal</li>
+            <li ng-if="contextTarget.data !== null && contextTarget.typeTo === 'View'" class="menuitem" ng-click="mOpenViewInPopup()">Open In Window</li>
+            <li ng-if="contextTarget.data !== null" class="menuitem" ng-click="delete()">Delete</li>
+            <li ng-if="contextTarget.data.showInPlace === true" class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
+            <li ng-if="contextTarget.data.showInPlace !== true" class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
+            <li ng-if="contextTarget.data.fixed !== true" class="menuitem" ng-click="fix()">Fix</li>
+            <li ng-if="contextTarget.data.fixed === true" class="menuitem" ng-click="unfix()">Unfix</li>
         </ul>
     </div>
 

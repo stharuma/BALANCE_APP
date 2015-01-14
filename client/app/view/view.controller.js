@@ -226,63 +226,6 @@ angular.module('kf6App')
 
         /* ----------- creation --------- */
 
-        var windowIdNum = 1;
-
-        $scope.openByInternalWindow = function(contributionId) {
-            var url = './contribution/' + contributionId;
-            var width = 600;
-            var height = 400;
-            var wmax = window.innerWidth * 0.8;
-            if (width > wmax) {
-                width = wmax;
-            }
-            var hmax = window.innerHeight * 0.8;
-            if (height > hmax) {
-                height = hmax;
-            }
-            $scope.openByIFrame(url, width, height);
-            //$scope.openInternally(url, width, height);
-        };
-
-        // now investigating
-        // $scope.openInternally = function(url, width, height) {
-        //     windowIdNum++;
-        //     var wid = 'window' + windowIdNum;
-        //     var str = '<div id="' + wid + '">CONTENT</div>';
-        //     var content = '<ng-include src="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></ng-include>';
-        //     str = str.replace('CONTENT', content);
-        //     $('#windows').append(str);
-        //     $('#' + wid).css('position', 'absolute');
-        //     $('#' + wid).css('width', '200px');
-        //     $('#' + wid).css('height', '200px');
-        //     $('#' + wid).css('border', '1px solid black');
-        //     $('#' + wid).css('pointer-events', 'auto');
-        //     $compile($('#' + wid).contents());
-        //     $('#' + wid).resizable();
-        // }
-
-        $scope.openByIFrame = function(url, width, height) {
-            windowIdNum++;
-            var wid = 'window' + windowIdNum;
-            var str = '<iframe style="min-width: 100%;" id="' + wid + '" title="Note" src="' + url + '"></iframe>';
-            $('#windows').append(str);
-            $('#' + wid).dialog({
-                width: width,
-                height: height,
-                create: function() {
-                    $(this).css('padding-left', '1px');
-                    $(this).css('padding-top', '1px');
-                    $(this).css('padding-bottom', '2px');
-                    $(this).css('padding-right', '2px');
-                },
-                close: function() { /*we need to erase element*/
-                    $(this).remove();
-                }
-            });
-        };
-
-        /* ----------- creation --------- */
-
         $scope.createNote = function() {
             $community.createNote(function(note) {
                 $scope.createOnViewRef(note, {
@@ -332,66 +275,8 @@ angular.module('kf6App')
             $http.put('/api/links/' + ref._id, ref);
         };
 
-        $scope.openContribution = function(id) {
-            $scope.openByInternalWindow(id);
-        };
-
-        $scope.openInWindow = function() {
-            var url = './contribution/' + $scope.contextTarget.to;
-            window.open(url, '_blank');
-        };
-
-        $scope.openView = function(id) {
-            var url = './view/' + id;
-            window.location = url;
-        };
-
-        $scope.edit = function() {
-            $scope.openInWindow();
-        };
-
-        $scope.showAsIcon = function() {
-            $scope.contextTarget.data.showInPlace = false;
-            $scope.saveRef($scope.contextTarget);
-        };
-
-        $scope.showInPlace = function() {
-            $scope.contextTarget.data.showInPlace = true;
-            $scope.saveRef($scope.contextTarget);
-        };
-
-        $scope.onContextOpen = function(childScope) {
-            $scope.contextTarget = childScope.ref;
-        };
-
-        $scope.fix = function() {
-            if ($scope.contextTarget) {
-                var ref = $scope.contextTarget;
-                ref.data.fixed = true;
-                $scope.saveRef(ref);
-            }
-        };
-
-        $scope.unfix = function() {
-            if ($scope.contextTarget) {
-                var ref = $scope.contextTarget;
-                ref.data.fixed = false;
-                $scope.saveRef(ref);
-            }
-        };
-
-        $scope.openSearch = function() {
-            var url = '/search/' + $scope.view.communityId;
-            window.open(url, '_blank');
-        };
-
         $scope.openAttachment = function() {
             $scope.isAttachmentCollapsed = !$scope.isAttachmentCollapsed;
-        };
-
-        $scope.openViewProperty = function() {
-            var url = './contribution/' + viewId;
-            window.open(url, '_blank');
         };
 
         $scope.attachmentUpdated = function(attachment) {
@@ -411,6 +296,154 @@ angular.module('kf6App')
             }).success(function() {
 
             });
+        };
+
+        $scope.openSearch = function() {
+            var url = '/search/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openViewProperty = function() {
+            var url = './contribution/' + viewId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openBackpack = function() {
+            //$scope.openInPopup(viewId);
+            window.alert('not implemented yet.');
+        };
+
+        /* ----------- open window --------- */
+
+        $scope.openContribution = function(id) {
+            var url = './contribution/' + id;
+            $scope.openByInternalWindow(url);
+        };
+
+        $scope.openView = function(id) {
+            var url = './view/' + id;
+            window.location = url;
+        };
+
+        $scope.mOpenContribution = function() {
+            $scope.openContribution($scope.contextTarget.to);
+        };
+
+        $scope.mOpenContributionInTab = function() {
+            var url = './contribution/' + $scope.contextTarget.to;
+            window.open(url, '_blank');
+        };
+
+        $scope.mOpenContributionInPopup = function() {
+            var url = './contribution/' + $scope.contextTarget.to;
+            $scope.openInPopup(url);
+        };
+
+        $scope.mOpenView = function() {
+            $scope.openView($scope.contextTarget.to);
+        };
+
+        $scope.mOpenViewInInternal = function() {
+            var url = './view/' + $scope.contextTarget.to;
+            $scope.openByInternalWindow(url);
+        };
+
+        $scope.mOpenViewInPopup = function() {
+            var url = './view/' + $scope.contextTarget.to;
+            $scope.openInPopup(url);
+        };
+
+        $scope.openInPopup = function(url) {
+            var width = screen.width * 0.5;
+            var height = screen.height * 0.8;
+            var w = window.open(url, 'view', 'width=' + width + ',height=' + height);
+            w.moveTo(100, 100);
+        };
+
+        var windowIdNum = 1;
+
+        $scope.openByInternalWindow = function(url) {
+            var width = 600;
+            var height = 400;
+            var wmax = window.innerWidth * 0.8;
+            if (width > wmax) {
+                width = wmax;
+            }
+            var hmax = window.innerHeight * 0.8;
+            if (height > hmax) {
+                height = hmax;
+            }
+            $scope.openByIFrame(url, width, height);
+            //$scope.openInternally(url, width, height);
+        };
+
+        // now investigating
+        // $scope.openInternally = function(url, width, height) {
+        //     windowIdNum++;
+        //     var wid = 'window' + windowIdNum;
+        //     var str = '<div id="' + wid + '">CONTENT</div>';
+        //     var content = '<ng-include src="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></ng-include>';
+        //     str = str.replace('CONTENT', content);
+        //     $('#windows').append(str);
+        //     $('#' + wid).css('position', 'absolute');
+        //     $('#' + wid).css('width', '200px');
+        //     $('#' + wid).css('height', '200px');
+        //     $('#' + wid).css('border', '1px solid black');
+        //     $('#' + wid).css('pointer-events', 'auto');
+        //     $compile($('#' + wid).contents());
+        //     $('#' + wid).resizable();
+        // }
+
+        $scope.openByIFrame = function(url, width, height) {
+            windowIdNum++;
+            var wid = 'window' + windowIdNum;
+            var str = '<iframe style="min-width: 100%;" id="' + wid + '" title="Contribution" src="' + url + '"></iframe>';
+            $('#windows').append(str);
+            $('#' + wid).dialog({
+                width: width,
+                height: height,
+                create: function() {
+                    $(this).css('padding-left', '1px');
+                    $(this).css('padding-top', '1px');
+                    $(this).css('padding-bottom', '2px');
+                    $(this).css('padding-right', '2px');
+                },
+                close: function() { /*we need to erase element*/
+                    $(this).remove();
+                }
+            });
+        };
+
+        /* ----------- context menu --------- */
+
+        $scope.onContextOpen = function(childScope) {
+            $scope.contextTarget = childScope.ref;
+        };
+
+        $scope.showAsIcon = function() {
+            $scope.contextTarget.data.showInPlace = false;
+            $scope.saveRef($scope.contextTarget);
+        };
+
+        $scope.showInPlace = function() {
+            $scope.contextTarget.data.showInPlace = true;
+            $scope.saveRef($scope.contextTarget);
+        };
+
+        $scope.fix = function() {
+            if ($scope.contextTarget) {
+                var ref = $scope.contextTarget;
+                ref.data.fixed = true;
+                $scope.saveRef(ref);
+            }
+        };
+
+        $scope.unfix = function() {
+            if ($scope.contextTarget) {
+                var ref = $scope.contextTarget;
+                ref.data.fixed = false;
+                $scope.saveRef(ref);
+            }
         };
 
         $scope.delete = function() {
