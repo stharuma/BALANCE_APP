@@ -320,9 +320,38 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
-        $scope.openBackpack = function() {
-            //$scope.openInPopup(viewId);
-            window.alert('not implemented yet.');
+        $scope.openWorkspace = function() {
+            $community.getRegistration(function(reg) {
+                if (reg.workspaces && reg.workspaces.length > 0) {
+                    $scope.openWorkspace0(reg.workspaces[0]);
+                } else {
+                    $scope.createWorkspace(reg, function(workspace) {
+                        $scope.openWorkspace0(workspace._id);
+                    });
+                }
+            });
+            //
+            //window.alert('not implemented yet.');
+        };
+
+        $scope.createWorkspace = function(reg, handler) {
+            var title = Auth.getCurrentUser().name + '\'s workspace';
+            $community.createView(title, function(view) {
+                if (!reg.workspaces) {
+                    reg.workspaces = [];
+                }
+                reg.workspaces.push(view._id);
+                $community.saveRegistration(reg, function() {
+                    if (handler) {
+                        handler(view);
+                    }
+                });
+            });
+        };
+
+        $scope.openWorkspace0 = function(viewId) {
+            var url = './view/' + viewId;
+            $scope.openInPopup(url);
         };
 
         /* ----------- open window --------- */

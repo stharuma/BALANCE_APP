@@ -8,6 +8,7 @@ angular.module('kf6App')
         var communityMembers = {};
         var communityMembersArray = [];
         var scaffolds = [];
+        var registration = null;
 
         var refreshViews = function(handler) {
             $http.get('/api/communities/' + communityId + '/views').success(function(result) {
@@ -71,6 +72,34 @@ angular.module('kf6App')
                 communityMembersArray.push(user);
             }
             return communityMembers[id];
+        };
+
+        var getRegistration = function(handler) {
+            if (!registration) {
+                $http.get('/api/registrations/' + communityId + '/' + Auth.getCurrentUser()._id).success(function(results) {
+                    if(results.length <= 0){
+                        console.log('registration size must be more than 1.');
+                        return;
+                    }
+                    registration = results[0];
+                    handler(registration);
+                });
+            } else {
+                handler(registration);
+            }
+        };
+
+        var saveRegistration = function(reg, handler) {
+            if (reg._id !== registration._id) {
+                console.log('error : reg._id !== registration._id.');
+                return;
+            }
+            $http.put('/api/registrations/' + reg._id, reg).success(function(dbReg) {
+                registration = dbReg;
+                if (handler) {                    
+                    handler(registration);
+                }
+            });
         };
 
         var updateCommunityMembers = function() {
@@ -192,6 +221,8 @@ angular.module('kf6App')
             refreshViews: refreshViews,
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
+            getRegistration: getRegistration,
+            saveRegistration: saveRegistration,
             getViews: function() {
                 return views;
             },

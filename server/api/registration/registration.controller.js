@@ -1,5 +1,6 @@
 'use strict';
 
+var mongoose = require('mongoose');
 var _ = require('lodash');
 var Registration = require('./registration.model');
 
@@ -23,6 +24,24 @@ exports.show = function(req, res) {
             return res.send(404);
         }
         return res.json(registration);
+    });
+};
+
+exports.showByCommunityUser = function(req, res) {
+    var communityId = mongoose.Types.ObjectId(req.params.communityId);
+    var authorId = mongoose.Types.ObjectId(req.params.authorId);
+    Registration.find({
+        communityId: communityId,
+        authorId: authorId
+    }, function(err, registrations) {
+        console.log(registrations);
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!registrations) {
+            return res.send(404);
+        }
+        return res.json(registrations);
     });
 };
 

@@ -17,7 +17,8 @@ var RegistrationSchema = new Schema({
     role: {
         type: String,
         index: true
-    }
+    },
+    workspaces: [Schema.ObjectId] // elements in this supposed to be viewId
     /* here are cash to work read faster */
     //community: Schema.Types.Mixed,
     //author: Schema.Types.Mixed
