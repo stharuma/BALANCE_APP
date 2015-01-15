@@ -34,7 +34,6 @@ exports.showByCommunityUser = function(req, res) {
         communityId: communityId,
         authorId: authorId
     }, function(err, registrations) {
-        console.log(registrations);
         if (err) {
             return handleError(res, err);
         }
