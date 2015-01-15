@@ -186,10 +186,11 @@ angular.module('kf6App')
             var todos = [];
             var endtags = {};
             var supportLinks = getLinks($scope.toConnections, 'supports');
+            var dSupportLinks = getLinks($scope.toConnections, 'supports'); //TODO we need two to support duplication the algorithm problem         
 
             elemLoop(jq.find('.KFSupportStart'), function(elem) {
                 elem.innerHTML = '';
-                processOneElement(todos, elem, supportLinks, 'supports', elem.id, contributionId, endtags);
+                processOneElement(todos, elem, supportLinks, dSupportLinks, 'supports', elem.id, contributionId, endtags);
             });
 
             elemLoop(jq.find('.KFSupportEnd'), function(elem) {
@@ -198,16 +199,17 @@ angular.module('kf6App')
                 endtags[id] = elem;
             });
 
-            deleteLinks(todos, _.map(supportLinks));
+            deleteLinks(todos, _.map(dSupportLinks));
 
             var referenceLinks = getLinks($scope.fromConnections, 'references');
+            var dReferenceLinks = getLinks($scope.fromConnections, 'references');            
 
             elemLoop(jq.find('.KFReference'), function(elem) {
                 elem.innerHTML = '';
-                processOneElement(todos, elem, referenceLinks, 'references', contributionId, elem.id, {});
+                processOneElement(todos, elem, referenceLinks, dReferenceLinks, 'references', contributionId, elem.id, {});
             });
 
-            deleteLinks(todos, _.map(referenceLinks));
+            deleteLinks(todos, _.map(dReferenceLinks));
 
             processTodo(todos, function() {
                 handler(jq);
@@ -218,13 +220,17 @@ angular.module('kf6App')
             });
         };
 
-        function processOneElement(todos, elem, links, type, fromId, toId, endtags) {
+        function processOneElement(todos, elem, links, deleteLinks, type, fromId, toId, endtags) {
             if (links[elem.id]) {
-                delete links[elem.id];
+                delete deleteLinks[elem.id];
             } else {
-                console.log('create:' + type + ', ' + elem.id);
                 todos.push(function(handler) {
                     $scope.createLink(type, fromId, toId, null, function(link) {
+                        if (!link) {
+                            console.log('failure');
+                            handler();
+                            return;
+                        }
                         var oldId = elem.id;
                         var newId = link._id;
                         elem.id = newId;
@@ -252,6 +258,8 @@ angular.module('kf6App')
                 todos.push(function(handler) {
                     $http.delete('/api/links/' + each._id).success(function() {
                         handler();
+                    }).error(function() {
+                        handler();
                     });
                 });
             });
@@ -265,6 +273,8 @@ angular.module('kf6App')
             refObj.data = data;
             $http.post('/api/links', refObj).success(function(ref) {
                 handler(ref)
+            }).error(function() {
+                handler();
             });
         };
 

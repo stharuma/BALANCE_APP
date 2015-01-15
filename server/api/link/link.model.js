@@ -77,26 +77,21 @@ Contribution.schema.post('save', function(contribution) {
 Link.updateCash = function(link, handler) {
     Contribution.findById(link.from, function(err, fromObj) {
         if (err) {
-            console.log(err);
+            if (handler) {
+                handler();
+            }
             return;
         }
         Contribution.findById(link.to, function(err, toObj) {
             if (err) {
-                console.log(err);
+                if (handler) {
+                    handler();
+                }
                 return;
             }
             if (fromObj === null || toObj === null) {
-                var msg = 'updateCash missinglink';
-                msg += ', type=' + link.type;
-                msg += ', from=' + link.from;
-                if (fromObj) {
-                    msg += ', fromType=' + fromObj.type;
-                }
-                msg += ', to=' + link.to;
-                if (toObj) {
-                    msg += ', toType=' + toObj.type;
-                }
-                console.log(msg);
+                console.log('updateCash missingLink');
+                showMissinglinkLog(link, fromObj, toObj);
                 link.typeFrom = 'missing';
                 link.typeTo = 'missing';
                 link.save();
@@ -119,19 +114,48 @@ Link.updateCash = function(link, handler) {
     });
 };
 
+function showMissingLinkMsg(link, fromObj, toObj) {
+    var msg = 'missinglink';
+    msg += ', type=' + link.type;
+    msg += ', from=' + link.from;
+    if (fromObj) {
+        msg += ', fromType=' + fromObj.type;
+    }
+    msg += ', to=' + link.to;
+    if (toObj) {
+        msg += ', toType=' + toObj.type;
+    }
+    console.log(msg);
+}
+
+
 /* thism method should call when create a link */
 Link.createWithCash = function(seed, handler) {
     if (seed.typeTo && seed.typeFrom) {
         Link.create(seed, handler);
     } else {
         Contribution.findById(seed.from, function(err, fromObj) {
-            if (err || fromObj === null) {
-                console.log(err);
+            if (err) {
+                if (handler) {
+                    handler();
+                }
                 return;
             }
             Contribution.findById(seed.to, function(err, toObj) {
-                if (err || toObj === null) {
-                    console.log(err);
+                if (err) {
+                    if (handler) {
+                        handler();
+                    }
+                    return;
+                }
+                if (fromObj === null || toObj === null) {
+                    console.log('createWithCash missingLink');
+                    showMissingLinkMsg(seed, fromObj, toObj);
+                    seed.typeFrom = 'missing';
+                    seed.typeTo = 'missing';
+                    if (handler) {
+                        handler();
+                    }
                     return;
                 }
                 seed.typeFrom = fromObj.type;
