@@ -19,7 +19,23 @@
         </div>
     </div>
 
-    <div class="KFViewNavBar">{{view.title}}</div>
+    <div collapse="setting.isclosed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
+        <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="setting.isclosed = true">close</button>
+        </div>
+        <div style="padding: 10px;">
+            <input type="checkbox" ng-model="setting.buildson" ng-change="settingChanged()">buildson
+            <input type="checkbox" ng-model="setting.references" ng-change="settingChanged()">reference
+        </div>
+    </div>
+
+    <div class="KFViewNavBar" ng-click="setting.isclosed = !setting.isclosed">
+        <table style="width: 100%;">
+            <tr>
+                <td>{{view.title}}</td>
+            </tr>
+        </table>
+    </div>
 
     <div class='KFViewToolBar'>
         <span class="input-group">

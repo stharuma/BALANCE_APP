@@ -13,6 +13,11 @@ angular.module('kf6App')
 
         $scope.isViewsCollapsed = true;
         $scope.isAttachmentCollapsed = true;
+        $scope.setting = {
+            isclosed: true,
+            buildson: true,
+            references: false
+        };
 
         $http.get('/api/contributions/' + viewId).success(function(view) {
             $scope.view = view;
@@ -57,6 +62,10 @@ angular.module('kf6App')
                 //read
                 $scope.refreshRead();
             });
+        };
+
+        $scope.settingChanged = function() {
+            $scope.updateLinks();
         };
 
         $scope.updateRef = function(ref) {
@@ -157,23 +166,39 @@ angular.module('kf6App')
             $http.get('/api/links/tofrom/' + id).success(function(links) {
                 links.forEach(function(link) {
                     if (link.type === 'buildson') {
-                        $scope.makelink(link.from, link.to);
+                        $scope.makeArrow(link);
                     }
                 });
             });
         };
 
         $scope.updateLinks = function() {
+            jsPlumb.detachEveryConnection();
             $http.get('/api/links/onview/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
-                    if (link.type === 'buildson') {
-                        $scope.makelink(link.from, link.to);
-                    }
+                    $scope.makeArrow(link);
                 });
             });
         };
 
-        $scope.makelink = function(from, to) {
+        $scope.makeArrow = function(link) {
+            if (link.type === 'buildson' && $scope.setting.buildson) {
+                $scope.makeArrow0(link.from, link.to, 'blue', '');
+            }
+            if (link.type === 'references' && $scope.setting.references) {
+                var text = '';
+                if (link.data && link.data.text && link.data.text.length > 0) {
+                    text = link.data.text;
+                    if (text.length > 24) {
+                        text = text.substring(0, 24) + '...';
+                    }
+                    text = '"' + text + '"';
+                }
+                $scope.makeArrow0(link.from, link.to, 'black', text);
+            }
+        };
+
+        $scope.makeArrow0 = function(from, to, color, label) {
             var fromElements = $('.icon' + from);
             var toElements = $('.icon' + to);
             fromElements.each(function() {
@@ -184,7 +209,12 @@ angular.module('kf6App')
                     var toId = toElement.attr('id');
                     var conn = jsPlumb.connect({
                         source: fromId,
-                        target: toId
+                        target: toId,
+                        type: 'kfarrow',
+                        data: {
+                            color: color,
+                            label: label
+                        }
                     });
                     $scope.registerConn(fromId, conn);
                     $scope.registerConn(toId, conn);
@@ -234,6 +264,25 @@ angular.module('kf6App')
                     strokeStyle: 'rgba(180,180,180,0.7)'
                 }
             });
+            jsPlumb.registerConnectionTypes({
+                'kfarrow': {
+                    overlays: [
+                        ['Arrow', {
+                            width: 7,
+                            length: 7,
+                            location: 1
+                        }],
+                        ['Label', {
+                            label: '${label}'
+                        }]
+                    ],
+                    paintStyle: {
+                        strokeStyle: '${color}',
+                        lineWidth: 1
+                    }
+                },
+            });
+
         });
 
         /* ----------- creation --------- */
