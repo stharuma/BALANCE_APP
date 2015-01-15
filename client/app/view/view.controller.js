@@ -406,7 +406,7 @@ angular.module('kf6App')
         $scope.openInPopup = function(url) {
             var width = screen.width * 0.5;
             var height = screen.height * 0.8;
-            var w = window.open(url, 'view', 'width=' + width + ',height=' + height);
+            var w = window.open(url, '_blank', 'width=' + width + ',height=' + height);
             w.moveTo(100, 100);
         };
 
