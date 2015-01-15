@@ -172,7 +172,11 @@ angular.module('kf6App')
                     return conn._id === elem.id;
                 });
                 if (ref) {
-                    elem.innerHTML = $kftag.createReferenceTag(ref.to, ref.titleTo, ref.authorsTo, '');
+                    var text = '';
+                    if (ref.data) {
+                        text = ref.data.text;
+                    }
+                    elem.innerHTML = $kftag.createReferenceTag(ref.to, ref.titleTo, ref.authorsTo, text);
                 } else {
                     elem.innerHTML = $kftag.createReferenceTag('', '(missing link)', '', '');
                 }
@@ -190,7 +194,7 @@ angular.module('kf6App')
 
             elemLoop(jq.find('.KFSupportStart'), function(elem) {
                 elem.innerHTML = '';
-                processOneElement(todos, elem, supportLinks, dSupportLinks, 'supports', elem.id, contributionId, endtags);
+                processOneElement(todos, elem, supportLinks, dSupportLinks, 'supports', elem.id, contributionId, endtags, {});
             });
 
             elemLoop(jq.find('.KFSupportEnd'), function(elem) {
@@ -202,11 +206,13 @@ angular.module('kf6App')
             deleteLinks(todos, _.map(dSupportLinks));
 
             var referenceLinks = getLinks($scope.fromConnections, 'references');
-            var dReferenceLinks = getLinks($scope.fromConnections, 'references');            
+            var dReferenceLinks = getLinks($scope.fromConnections, 'references');
 
             elemLoop(jq.find('.KFReference'), function(elem) {
+                var data = {};
+                data.text = $(elem).find('.KFReferenceText').html();
                 elem.innerHTML = '';
-                processOneElement(todos, elem, referenceLinks, dReferenceLinks, 'references', contributionId, elem.id, {});
+                processOneElement(todos, elem, referenceLinks, dReferenceLinks, 'references', contributionId, elem.id, {}, data);
             });
 
             deleteLinks(todos, _.map(dReferenceLinks));
@@ -220,12 +226,12 @@ angular.module('kf6App')
             });
         };
 
-        function processOneElement(todos, elem, links, deleteLinks, type, fromId, toId, endtags) {
+        function processOneElement(todos, elem, links, deleteLinks, type, fromId, toId, endtags, data) {
             if (links[elem.id]) {
                 delete deleteLinks[elem.id];
             } else {
                 todos.push(function(handler) {
-                    $scope.createLink(type, fromId, toId, null, function(link) {
+                    $scope.createLink(type, fromId, toId, data, function(link) {
                         if (!link) {
                             console.log('failure');
                             handler();
