@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $stateParams, Auth) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth) {
         var contributionId = $stateParams.contributionId;
 
         $scope.contribution = {};
@@ -34,16 +34,23 @@ angular.module('kf6App')
             $scope.updateRecords();
             $scope.communityMembers = $community.getMembersArray();
             $community.updateCommunityMembers();
-            $scope.updateToConnections();
-            $scope.updateFromConnections($scope.updateAttachments);
+            $scope.updateToConnections(function() {
+                $scope.updateFromConnections(function(links) {
+                    $scope.preProcess();
+                    $scope.updateAttachments(links);
+                });
+            });
             if (Auth.isEditable($scope.contribution) && $scope.contribution.type !== 'Attachment') {
                 $scope.editActive = true;
             }
         }).error(function() {});
 
-        $scope.updateToConnections = function() {
+        $scope.updateToConnections = function(next) {
             $http.get('/api/links/to/' + contributionId).success(function(links) {
                 $scope.toConnections = links;
+                if (next) {
+                    next();
+                }
             });
         };
         $scope.updateFromConnections = function(next) {
@@ -122,29 +129,66 @@ angular.module('kf6App')
             $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
         };
 
+        function elemLoop(jq, func) {
+            var len = jq.size();
+            for (var i = 0; i < len; i++) {
+                var elem = jq.get(i);
+                func(elem);
+            }
+        }
+
+        $scope.preProcess = function() {
+            var doc = '<div>' + $scope.copy.body + '</div>';
+            var jq = $(doc);
+
+            jq.find('.KFSupportStart').addClass('mceNonEditable');
+            elemLoop(jq.find('.KFSupportStart'), function(elem) {
+                var ref = _.find($scope.toConnections, function(conn) {
+                    return conn._id === elem.id;
+                });
+                if (ref) {
+                    elem.innerHTML = $kftag.createScaffoldStartTag(ref.titleFrom);
+                } else {
+                    elem.innerHTML = $kftag.createScaffoldStartTag('(missing link)');
+                }
+            });
+
+            jq.find('.KFSupportEnd').addClass('mceNonEditable');
+            elemLoop(jq.find('.KFSupportEnd'), function(elem) {
+                elem.innerHTML = $kftag.createScaffoldEndTag();
+            });
+
+            jq.find('.KFReference').addClass('mceNonEditable');
+            elemLoop(jq.find('.KFReference'), function(elem) {
+                var ref = _.find($scope.fromConnections, function(conn) {
+                    return conn._id === elem.id;
+                });
+                if (ref) {
+                    elem.innerHTML = $kftag.createReferenceTag(ref.to, ref.titleTo, ref.authorsTo, '');
+                } else {
+                    elem.innerHTML = $kftag.createReferenceTag('', '(missing link)', '', '');
+                }
+            });
+            $scope.copy.body = jq.html();
+        };
+
         $scope.postProcess = function(text) {
             var doc = '<div>' + text + '</div>';
             var jq = $(doc);
-            // var refs = jq.get(0).getElementsByClassName('KFReference');
-            // var reflen = refs.length;
-            // for (var i = 0; i < reflen; i++) {
-            //     var ref = refs[i];
-            //     var id = ref.getAttribute('id');
-            //     ref.outerHTML = '<kf-reference contributionId="' + id + '">' + ref.innerHTML + '</kf-reference>';
-            // }
-            return jq;
-        };
 
-        $scope.getReferenceTag = function(text) {
-            var cont = $scope.contribution;
-            var author = $community.makeAuthorStringByIds(cont.authors);
-            var tag = '<span class="mceNonEditable KFReference" id="' + cont._id + '">';
-            tag = tag + '<span class="KFReferenceQuote"><span>"</span><span class="KFReferenceText">' + text + '</span><span>"</span></span>';
-            tag = tag + '<span> (<a href="contribution/' + cont._id + '">';
-            tag = tag + '<img src="/assets/kf4images/icon-note-unread-othr-.gif">"' + cont.title + '"</a>';
-            tag = tag + '<span class="KFReferenceAuthor"> by ' + author + '</span>)</span>';
-            tag = tag + '</span>';
-            return tag;
+            // elemLoop(jq.find('.KFSupportStart'), function(elem) {
+            //     elem.innerHTML = '';
+            // });
+
+            // elemLoop(jq.find('.KFSupportEnd'), function(elem) {
+            //     elem.innerHTML = '';
+            // });
+
+            // elemLoop(jq.find('.KFReference'), function(elem) {
+            //     elem.innerHTML = '';
+            // });
+
+            return jq;
         };
 
         $scope.buildson = function() {
@@ -212,14 +256,10 @@ angular.module('kf6App')
             init_instance_callback: $scope.mcesetupHandler
         };
 
-        $scope.tag = '<p><span id="%SUPPORTID%_%UNIQUEID%_start" supportId="%SUPPORTID%" class="kfSupportStartTag mceNonEditable"><span class="kfSupportStartMark">&nbsp; </span><span class="kfSupportStartLabel">%TITLE%</span></span>- enter your idea here -<span supportId="%SUPPORTID%" class="kfSupportEndTag kfSupportEndMark mceNonEditable">&nbsp; </span></p><br/>';
-
         $scope.addSupport = function(supportRef) {
             var id = supportRef.to;
             var title = supportRef.titleTo;
-            var tag = $scope.tag;
-            tag = tag.replace('%SUPPORTID%', id);
-            tag = tag.replace('%TITLE%', title);
+            var tag = $kftag.createNewScaffoldTag(id, title);
             tinymce.activeEditor.insertContent(tag);
         };
 
