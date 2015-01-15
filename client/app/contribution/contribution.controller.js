@@ -278,7 +278,7 @@ angular.module('kf6App')
             refObj.type = type;
             refObj.data = data;
             $http.post('/api/links', refObj).success(function(ref) {
-                handler(ref)
+                handler(ref);
             }).error(function() {
                 handler();
             });

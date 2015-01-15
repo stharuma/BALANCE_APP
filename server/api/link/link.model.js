@@ -73,6 +73,20 @@ Contribution.schema.post('save', function(contribution) {
     updateLinks(contribution);
 });
 
+function showMissingLinkMsg(link, fromObj, toObj) {
+    var msg = 'missinglink';
+    msg += ', type=' + link.type;
+    msg += ', from=' + link.from;
+    if (fromObj) {
+        msg += ', fromType=' + fromObj.type;
+    }
+    msg += ', to=' + link.to;
+    if (toObj) {
+        msg += ', toType=' + toObj.type;
+    }
+    console.log(msg);
+}
+
 /* thism method should call when create a link */
 Link.updateCash = function(link, handler) {
     Contribution.findById(link.from, function(err, fromObj) {
@@ -91,7 +105,7 @@ Link.updateCash = function(link, handler) {
             }
             if (fromObj === null || toObj === null) {
                 console.log('updateCash missingLink');
-                showMissinglinkLog(link, fromObj, toObj);
+                showMissingLinkMsg(link, fromObj, toObj);
                 link.typeFrom = 'missing';
                 link.typeTo = 'missing';
                 link.save();
@@ -113,21 +127,6 @@ Link.updateCash = function(link, handler) {
         });
     });
 };
-
-function showMissingLinkMsg(link, fromObj, toObj) {
-    var msg = 'missinglink';
-    msg += ', type=' + link.type;
-    msg += ', from=' + link.from;
-    if (fromObj) {
-        msg += ', fromType=' + fromObj.type;
-    }
-    msg += ', to=' + link.to;
-    if (toObj) {
-        msg += ', toType=' + toObj.type;
-    }
-    console.log(msg);
-}
-
 
 /* thism method should call when create a link */
 Link.createWithCash = function(seed, handler) {

@@ -190,7 +190,7 @@ angular.module('kf6App')
         var makeAuthorStringByIds = function(authorIds) {
             var authorObjects = [];
             if (!authorIds) {
-                return "(missing authors)";
+                return '(missing authors)';
             }
             authorIds.forEach(function(id) {
                 authorObjects.push(getMember(id));
