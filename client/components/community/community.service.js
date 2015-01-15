@@ -77,7 +77,7 @@ angular.module('kf6App')
         var getRegistration = function(handler) {
             if (!registration) {
                 $http.get('/api/registrations/' + communityId + '/' + Auth.getCurrentUser()._id).success(function(results) {
-                    if(results.length <= 0){
+                    if (results.length <= 0) {
                         console.log('registration size must be more than 1.');
                         return;
                     }
@@ -96,7 +96,7 @@ angular.module('kf6App')
             }
             $http.put('/api/registrations/' + reg._id, reg).success(function(dbReg) {
                 registration = dbReg;
-                if (handler) {                    
+                if (handler) {
                     handler(registration);
                 }
             });
@@ -189,6 +189,9 @@ angular.module('kf6App')
 
         var makeAuthorStringByIds = function(authorIds) {
             var authorObjects = [];
+            if (!authorIds) {
+                return "(missing authors)";
+            }
             authorIds.forEach(function(id) {
                 authorObjects.push(getMember(id));
             });

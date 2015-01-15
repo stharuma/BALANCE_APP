@@ -15,7 +15,9 @@ angular.module('kf6App')
         obj.createReferenceTag = function(contId, title, authors, text) {
             var authorText = $community.makeAuthorStringByIds(authors);
             var tag = '';
-            tag = tag + '<span class="KFReferenceQuote"><span>"</span><span class="KFReferenceText">' + text + '</span><span>"</span></span>';
+            if (text && text.length > 0) {
+                tag = tag + '<span class="KFReferenceQuote"><span>"</span><span class="KFReferenceText">' + text + '</span><span>"</span></span>';
+            }
             tag = tag + '<span> (<a href="contribution/' + contId + '">';
             tag = tag + '<img src="/manual_assets/kf4images/icon-note-unread-othr-.gif">"' + title + '"</a>';
             tag = tag + '<span class="KFReferenceAuthor"> by ' + authorText + '</span>)</span>';

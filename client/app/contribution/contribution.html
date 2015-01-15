@@ -91,7 +91,7 @@
 
         <tab heading="Connections">
             <div>
-                <h3>This note builds onto:</h3>
+                <label>This note builds onto:</label>
                 <ul>
                     <li ng-repeat="conn in fromConnections" ng-if="conn.type==='buildson'">
                         <a href="/contribution/{{conn.to}}" target="_blank">{{conn.titleTo}}</a>
@@ -99,7 +99,7 @@
                 </ul>
             </div>
             <div>
-                <h3>This note is built onto by:</h3>
+                <label>This note is built onto by:</label>
                 <ul>
                     <li ng-repeat="conn in toConnections" ng-if="conn.type==='buildson'">
                         <a href="/contribution/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>
@@ -107,10 +107,32 @@
                 </ul>
             </div>
             <div>
-                <h3>This note belongs to view:</h3>
+                <label>Views for this note:</label>
                 <ul>
                     <li ng-repeat="conn in toConnections" ng-if="conn.type==='onviewref'">
                         <a href="/view/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <label>This note is supported by:</label>
+                <ul>
+                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='supports'">
+                        <a href="/contribution/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <label>This note references:</label>
+                <ul>
+                    <li ng-repeat="conn in fromConnections" ng-if="conn.type==='references'">
+                        <a href="/contribution/{{conn.to}}" target="_blank">{{conn.titleTo}}</a>
+                    </li>
+                </ul>
+                <label>This note is referenced by:</label>
+                <ul>
+                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='references'">
+                        <a href="/contribution/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>
                     </li>
                 </ul>
             </div>

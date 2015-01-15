@@ -114,10 +114,14 @@ angular.module('kf6App')
             if (cont.type === 'Note') {
                 //$scope.note.body = tinymce.activeEditor.getContent();
                 //tinymce.activeEditor.isNotDirty = true;
-                var jq = $scope.postProcess($scope.copy.body);
-                cont.body = jq.html();
-                var text = jq.text();
-                cont.text4search = 'title(' + cont.title + ') ' + text;
+                $scope.postProcess($scope.copy.body, function(jq) {
+                    cont.body = jq.html();
+                    var text = jq.text();
+                    cont.text4search = 'title(' + cont.title + ') ' + text;
+                    $scope.sendContribute();
+                });
+
+                return;
             }
             if (cont.type === 'Drawing') {
                 var wnd = document.getElementById('svgedit').contentWindow;
@@ -126,6 +130,10 @@ angular.module('kf6App')
                 wnd.svgEditor.showSaveWarning = false;
             }
 
+            $scope.sendContribute();
+        };
+
+        $scope.sendContribute = function() {
             $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
         };
 
@@ -172,24 +180,110 @@ angular.module('kf6App')
             $scope.copy.body = jq.html();
         };
 
-        $scope.postProcess = function(text) {
+        $scope.postProcess = function(text, handler) {
             var doc = '<div>' + text + '</div>';
             var jq = $(doc);
+            var todos = [];
+            var endtags = {};
+            var supportLinks = getLinks($scope.toConnections, 'supports');
 
-            // elemLoop(jq.find('.KFSupportStart'), function(elem) {
-            //     elem.innerHTML = '';
-            // });
+            elemLoop(jq.find('.KFSupportStart'), function(elem) {
+                elem.innerHTML = '';
+                processOneElement(todos, elem, supportLinks, 'supports', elem.id, contributionId, endtags);
+            });
 
-            // elemLoop(jq.find('.KFSupportEnd'), function(elem) {
-            //     elem.innerHTML = '';
-            // });
+            elemLoop(jq.find('.KFSupportEnd'), function(elem) {
+                elem.innerHTML = '';
+                var id = elem.id;
+                endtags[id] = elem;
+            });
 
-            // elemLoop(jq.find('.KFReference'), function(elem) {
-            //     elem.innerHTML = '';
-            // });
+            deleteLinks(todos, _.map(supportLinks));
 
-            return jq;
+            var referenceLinks = getLinks($scope.fromConnections, 'references');
+
+            elemLoop(jq.find('.KFReference'), function(elem) {
+                elem.innerHTML = '';
+                processOneElement(todos, elem, referenceLinks, 'references', contributionId, elem.id, {});
+            });
+
+            deleteLinks(todos, _.map(referenceLinks));
+
+            processTodo(todos, function() {
+                handler(jq);
+                // not effecient
+                // we need a way of to reflect changes to the copy text
+                $scope.updateToConnections();
+                $scope.updateFromConnections();
+            });
         };
+
+        function processOneElement(todos, elem, links, type, fromId, toId, endtags) {
+            if (links[elem.id]) {
+                delete links[elem.id];
+            } else {
+                console.log('create:' + type + ', ' + elem.id);
+                todos.push(function(handler) {
+                    $scope.createLink(type, fromId, toId, null, function(link) {
+                        var oldId = elem.id;
+                        var newId = link._id;
+                        elem.id = newId;
+                        if (endtags[oldId]) {
+                            endtags[oldId].id = newId;
+                        }
+                        handler();
+                    });
+                });
+            }
+        }
+
+        function getLinks(sourceLinks, type) {
+            var links = {};
+            sourceLinks.forEach(function(each) {
+                if (each.type === type) {
+                    links[each._id] = each;
+                }
+            });
+            return links;
+        }
+
+        function deleteLinks(todos, links) {
+            links.forEach(function(each) {
+                todos.push(function(handler) {
+                    $http.delete('/api/links/' + each._id).success(function() {
+                        handler();
+                    });
+                });
+            });
+        }
+
+        $scope.createLink = function(type, fromId, toId, data, handler) {
+            var refObj = {};
+            refObj.from = fromId;
+            refObj.to = toId;
+            refObj.type = type;
+            refObj.data = data;
+            $http.post('/api/links', refObj).success(function(ref) {
+                handler(ref)
+            });
+        };
+
+        function processTodo(todos, handler) {
+            var len = todos.length;
+            var numFinished = 0;
+            if (len <= 0) {
+                handler();
+                return;
+            }
+            todos.forEach(function(func) {
+                func(function() {
+                    numFinished++;
+                    if (numFinished >= len) {
+                        handler();
+                    }
+                });
+            });
+        }
 
         $scope.buildson = function() {
             $community.createNoteOn($scope.contribution._id, function(newContribution) {
