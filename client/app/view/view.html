@@ -86,13 +86,13 @@
                 <div ng-if="ref.data.showInPlace!==true" style="white-space: nowrap; font-size: 12px;">
                     <div ng-if="ref.typeTo !== 'View'">
                         <span ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
-                            <img ng-src="{{ref.getIcon()}}">
+                            <img ng-src="{{ref.getIcon()}}" draggable="false">
                         </span>
                         <a class='kfIcon' ng-click="openContribution(ref.to)">{{ref.titleTo}}</a>
                     </div>
                     <div ng-if="ref.typeTo === 'View'" style="white-space: nowrap;">
                         <span ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}">
-                            <img ng-src="{{ref.getIcon()}}">
+                            <img ng-src="{{ref.getIcon()}}" draggable="false">
                         </span>
                         <a ng-click="openView(ref.to)" style="color: #0000FF;">{{ref.titleTo}}</a>
                     </div>
