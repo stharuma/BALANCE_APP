@@ -100,8 +100,8 @@ angular.module('kf6App')
 
                     var models = $scope.getSelectedModels();
                     models.forEach(function(each) {
-                        each.offsetX = each.x - ref.data.x;
-                        each.offsetY = each.y - ref.data.y;
+                        each.offsetX = each.data.x - ref.data.x;
+                        each.offsetY = each.data.y - ref.data.y;
                     });
                     e.dataTransfer.setData('text', 'postref:' + JSON.stringify(models));
                     var hrefs = '';
