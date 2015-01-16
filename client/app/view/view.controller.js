@@ -73,6 +73,10 @@ angular.module('kf6App')
         };
 
         $scope.updateRef = function(ref) {
+            //assure data
+            if (!ref.data) {
+                ref.data = {};
+            }
             if (ref.refreshFixedStatus) {
                 ref.refreshFixedStatus();
             }
