@@ -1,5 +1,5 @@
-<div class="col-md-12">
-    This is the communitymanager view.
+<div class="col-md-12" style="padding-left: 50px;">
+    <label>Communities:</label>
     <table>
         <tr ng-repeat="community in myCommunities">
             <td style="padding-left: 20px;">{{community.title}}</td>
@@ -11,25 +11,32 @@
         </tr>
     </table>
 
-    <h4>Join:</h4>
-    <ui-select ng-model="selected.community" theme="bootstrap" ng-disabled="disabled" style="width: 400px;">
-        <ui-select-match placeholder="Select community...">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
-        <ui-select-choices repeat="community in communities | filter: {title: $select.search} | orderBy:'created':true | orderBy:'title'">
-            <div ng-bind-html="community.title | highlight: $select.search"></div>
-            <small><div ng-bind-html="toTimeString(community.created)"></div></small>
-        </ui-select-choices>
-    </ui-select>
-    <button type="submit" class="btn btn-primary" ng-click="addRegistration()">Join</button>
     <br>
-    <p>{{communities.length}} possible communities.</p>
+    <br>
+
+    <label>Join Community:</label>
+    <div style="padding-left: 50px;">
+        <ui-select ng-model="selected.community" theme="bootstrap" ng-disabled="disabled" style="width: 400px;">
+            <ui-select-match placeholder="Select community...">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
+            <ui-select-choices repeat="community in communities | filter: {title: $select.search} | orderBy:'created':true | orderBy:'title'">
+                <div ng-bind-html="community.title | highlight: $select.search"></div>
+                <small><div ng-bind-html="toTimeString(community.created)"></div></small>
+            </ui-select-choices>
+        </ui-select>
+        <p>{{communities.length}} possible communities.</p>
+        <button type="submit" class="btn btn-primary" ng-click="addRegistration()">Join</button>
+        <br>
+    </div>
 
     <form class="thing-form">
         <label>New Community:</label>
-        <p class="input-group">
-            <input type="text" class="form-control" placeholder="" ng-model="newTitle">
-            <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="addNew()">Add New</button>
-      </span>
-        </p>
+        <div style="padding-left: 50px;">
+            <p class="input-group">
+                <input type="text" class="form-control" placeholder="" ng-model="newTitle">
+                <!-- <span class="input-group-btn"> -->
+                    <button type="submit" class="btn btn-primary" ng-click="addNew()">Add New</button>
+                <!-- </span> -->
+            </p>
+        </div>
     </form>
 </div>

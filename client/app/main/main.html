@@ -1,13 +1,11 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<header class="hero-unit" id="banner">
-    <div class="container">
-        <h1>kf6</h1>
-        <p class="lead"><a class="x" href="/communitymanager">Enter from here.</a>
-        </p>
+<div ng-if="isLoggedIn" ng-include="'app/communitymanager/communitymanager.html'" ng-controller="CommunitymanagerCtrl"></div>
+
+<div ng-if="!isLoggedIn">
+    <p class="lead"><a href="/login">Login here.</a>
         <img src="assets/images/yeoman.png" alt="I'm Yeoman">
-    </div>
-</header>
+</div>
 
 <!-- <footer class="footer">
     <div class="container">
