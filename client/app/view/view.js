@@ -252,8 +252,9 @@ angular.module('kf6App')
                 };
 
                 $scope.drop = function(e, ref) {
-                    var newX = e.offsetX;
-                    var newY = e.offsetY;
+                    var firefox = (e.offsetX === undefined);
+                    var newX = firefox ? e.layerX : e.offsetX;
+                    var newY = firefox ? e.layerY : e.offsetY;
                     if (ref) {
                         newX = newX + ref.data.x;
                         newY = newY + ref.data.y;
