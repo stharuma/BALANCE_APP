@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="KFViewNavBar" ng-click="setting.isclosed = !setting.isclosed">
+    <div class="KFViewNavBar" ng-click="setting.isclosed = !setting.isclosed" ng-if="!menuStatus">
         <table style="width: 100%;">
             <tr>
                 <td>{{view.title}}</td>
@@ -37,7 +37,7 @@
         </table>
     </div>
 
-    <div class='KFViewToolBar'>
+    <div class='KFViewToolBar' ng-if="!menuStatus">
         <span class="input-group">
             <span class="input-group-btn">
                 <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createNote()"><img src="manual_assets/kf4images/toolbar-newnote-small.png" title="Note"></button>
@@ -137,6 +137,7 @@
             <li ng-if="contextTarget.data.showInPlace !== true" class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
             <li ng-if="contextTarget.data.fixed !== true" class="menuitem" ng-click="fix()">Fix</li>
             <li ng-if="contextTarget.data.fixed === true" class="menuitem" ng-click="unfix()">Unfix</li>
+            <li ng-if="true" class="menuitem" ng-click="createRiseabove()">Riseabove</li>
         </ul>
     </div>
 

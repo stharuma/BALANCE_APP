@@ -148,6 +148,19 @@ angular.module('kf6App')
             createNoteCommon(fromId, success);
         };
 
+        var makeRiseabove = function(note, viewId, success) {
+            var riseabove = {
+                viewId: viewId
+            };
+            if (!note.data) {
+                note.data = {};
+            }
+            note.data.riseabove = riseabove;
+            $http.put('/api/contributions/' + note._id, note).success(function(note) {
+                success(note);
+            });
+        };
+
         var createDrawing = function(success) {
             var authors = [Auth.getCurrentUser()._id];
             $http.post('/api/drawings', {
@@ -226,6 +239,7 @@ angular.module('kf6App')
             createDrawing: createDrawing,
             createView: createView,
             refreshViews: refreshViews,
+            makeRiseabove: makeRiseabove,
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
             getRegistration: getRegistration,

@@ -5,6 +5,10 @@
 angular.module('kf6App')
     .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location) {
         var viewId = $stateParams.viewId;
+        $scope.menuStatus = $stateParams.menuStatus;
+        if ($scope.menuStatus) {
+            $('#maincanvas').addClass('KFViewMainCanvasWithoutMenu');
+        }
         $scope.view = {};
         $scope.views = $community.getViews();
         $scope.refs = [];
@@ -320,16 +324,59 @@ angular.module('kf6App')
             });
         };
 
-        $scope.createOnViewRef = function(target, data) {
+        $scope.createOnViewRef = function(target, data, handler) {
+            $scope.createOnViewRef0($scope.view, target._id, target, data, handler);
+        };
+
+        $scope.createOnViewRef0 = function(view, targetId, target, data, handler) {
             var refObj = {};
-            refObj.from = $scope.view._id;
-            refObj.to = target._id;
+            refObj.from = view._id;
+            refObj.to = targetId;
             refObj.type = 'onviewref';
-            refObj.titleTo = target.title;
-            refObj.authorsTo = target.authors;
-            refObj.typeTo = target.type;
+            if (target) {
+                refObj.titleTo = target.title;
+                refObj.authorsTo = target.authors;
+                refObj.typeTo = target.type;
+            }
             refObj.data = data;
-            $http.post('/api/links', refObj);
+            $http.post('/api/links', refObj).success(function() {
+                if (handler) {
+                    handler();
+                }
+            });
+        };
+
+        $scope.createRiseabove = function() {
+            var selected = $scope.getSelectedModels();
+            var topleft = {
+                x: 10000,
+                y: 10000
+            };
+            selected.forEach(function(ref) {
+                topleft.x = Math.min(topleft.x, ref.data.x);
+                topleft.y = Math.min(topleft.y, ref.data.y);
+            });
+            $community.createView('riseabove:', function(view) {
+                $community.createNote(function(note) {
+                    note.title = 'Riseabove';
+                    $community.makeRiseabove(note, view._id, function(note) {
+                        selected.forEach(function(each) {
+                            $scope.createOnViewRef0(view, each.to, null, {
+                                x: each.data.x - topleft.x + 20,
+                                y: each.data.y - topleft.y + 20
+                            });
+                        });
+                        selected.forEach(function(each) {
+                            $http.delete('/api/links/' + each._id);
+                        });
+                        //timing? need investigation
+                        $scope.createOnViewRef(note, {
+                            x: topleft.x + 50,
+                            y: topleft.y + 50
+                        }, function() {});
+                    });
+                });
+            }, true);
         };
 
         $scope.saveRef = function(ref) {

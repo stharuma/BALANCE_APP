@@ -10,6 +10,12 @@ angular.module('kf6App')
                 templateUrl: 'app/view/view.html',
                 controller: 'ViewCtrl'
             });
+        $stateProvider
+            .state('viewWithMenuStatus', {
+                url: '/view/:viewId/:menuStatus',
+                templateUrl: 'app/view/view.html',
+                controller: 'ViewCtrl'
+            });
     });
 
 angular.module('kf6App')
@@ -248,7 +254,7 @@ angular.module('kf6App')
                 $scope.drop = function(e, ref) {
                     var newX = e.offsetX;
                     var newY = e.offsetY;
-                    if(ref){
+                    if (ref) {
                         newX = newX + ref.data.x;
                         newY = newY + ref.data.y;
                     }
@@ -262,17 +268,17 @@ angular.module('kf6App')
                         $scope.draggingViewlink = null;
                         return;
                     }
-                    if ($scope.dragging !== 'none') {//Internal DnD
+                    if ($scope.dragging !== 'none') { //Internal DnD
                         var postref = $scope.dragging;
                         var dx = newX - postref.data.x - $scope.dragpoint.x;
-                        var dy = newY - postref.data.y - $scope.dragpoint.y;                       
+                        var dy = newY - postref.data.y - $scope.dragpoint.y;
 
                         $scope.getSelectedModels().forEach(function(postref) {
                             postref.data.x += dx;
                             postref.data.y += dy;
                             $scope.saveRef(postref);
                         });
-                    } else {//External DnD
+                    } else { //External DnD
                         var data = e.dataTransfer.getData('text');
                         var index = data.indexOf('postref:');
                         if (index !== 0) {
