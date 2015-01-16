@@ -164,7 +164,7 @@ exports.search = function(req, res) {
     });
 
     Contribution.find(mongoQuery).
-    limit(10).
+    limit(50).
     exec(function(err, contributions) {
         if (err) {
             console.log(err);
