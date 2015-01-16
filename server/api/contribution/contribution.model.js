@@ -8,7 +8,7 @@ var ContributionSchema = new Schema({
     communityId: {
         type: Schema.ObjectId,
         required: true,
-        index: true        
+        index: true
     },
     type: {
         type: String,
@@ -23,7 +23,14 @@ var ContributionSchema = new Schema({
         type: [Schema.ObjectId],
         default: []
     },
-    text4search: String
+    permission: {//public or private
+        type: String,
+        //required: true,//temporary not required
+        index: true,
+        default: 'public'
+    },
+    text4search: String,
+    data: Schema.Types.Mixed
 });
 
 // for text index search

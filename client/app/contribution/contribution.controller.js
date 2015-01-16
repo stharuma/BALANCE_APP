@@ -19,10 +19,16 @@ angular.module('kf6App')
         $scope.editActive = false;
         $scope.isAttachmentCollapsed = true;
         $scope.images = [];
+        $scope.property = {};
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
             $scope.copy.body = contribution.body;
+            $scope.property.isPublic = !contribution.permission || contribution.permission === 'public';
+            $scope.property.isRiseabove = function() {
+                return contribution.type === 'Note' && contribution.data && contribution.data.riseabove && contribution.data.riseabove.viewId;
+            };
+            $scope.prepareRiseabove();
             $community.enter($scope.contribution.communityId);
             window.contribution = contribution;
             $scope.contribution.authors.forEach(function(authorId) {
@@ -110,6 +116,11 @@ angular.module('kf6App')
         $scope.contribute = function() {
             var cont = $scope.contribution;
             cont.authors = _.pluck($scope.authors, '_id');
+            if ($scope.property.isPublic) {
+                cont.permission = 'public';
+            } else {
+                cont.permission = 'private';
+            }
 
             if (cont.type === 'Note') {
                 //$scope.note.body = tinymce.activeEditor.getContent();
@@ -306,6 +317,29 @@ angular.module('kf6App')
                 var url = './contribution/' + newContribution._id;
                 window.location = url;
             });
+        };
+
+        $scope.makeRiseabove = function() {
+            $community.createView('riseabove:' + $scope.contribution._id, function(view) {
+                var riseabove = {
+                    viewId: view._id
+                };
+                if (!$scope.contribution.data) {
+                    $scope.contribution.data = {};
+                }
+                $scope.contribution.data.riseabove = riseabove;
+                $scope.contribute();
+                $scope.prepareRiseabove();
+            }, true);
+        };
+
+        $scope.prepareRiseabove = function() {
+            if ($scope.property.isRiseabove()) {
+                var url = 'view/' + $scope.contribution.data.riseabove.viewId;
+                var xhtml = '<iframe style="display: block;" height="500px" width="100%" src="%SRC%" ></iframe>';
+                xhtml = xhtml.replace('%SRC%', url);
+                $('#riseabovediv').html(xhtml);
+            }
         };
 
         $scope.attachmentUpdated = function(attachment) {

@@ -5,7 +5,7 @@
         <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
     </div>
     <tabset>
-        <tab heading="Read">
+        <tab heading="Read" select="readSelected()">
             <div style="padding: 10px;">
                 <div class="KFDragSource" ng-if="contribution.type === 'Note'" ng-bind-html="copy.body"></div>
                 <div ng-if="contribution.type === 'Attachment'">
@@ -16,9 +16,9 @@
                         <a ng-attr-href="{{contribution.url}}">Download</a> ({{contribution.originalName}}, {{contribution.mime}}, {{contribution.size}}Bytes)
                     </div>
                 </div>
+                <div id="riseabovediv"></div>
             </div>
         </tab>
-
         <tab heading="Edit" active="editActive" select="editSelected()">
             <div style="padding: 5px;">
                 <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
@@ -140,13 +140,13 @@
 
         <tab heading="Logs">
             <div>
-                <h2>edit logs:</h2>
+                <label>edit logs:</label>
                 <ul ng-repeat="record in records">
                     <li ng-if="record.type!=='read'">
                         {{record.type}} by {{record.user.name}} at {{record.getTime()}}
                     </li>
                 </ul>
-                <h2>read logs:</h2>
+                <label>read logs:</label>
                 <ul ng-repeat="record in records">
                     <li ng-if="record.type==='read'">
                         {{record.type}} by {{record.user.name}} at {{record.getTime()}}
@@ -155,9 +155,9 @@
             </div>
         </tab>
 
-        <tab heading="Attachments">
+        <tab heading="Attach">
             <div>
-                <h3>Attachments:</h3>
+                <label>Attachments:</label>
                 <ul>
                     <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
                         <a href="/contribution/{{conn.to}}" target="_blank">{{conn.titleTo}}</a>
@@ -166,9 +166,30 @@
             </div>
 
             <div>
-                <h3>Upload:</h3>
+                <label>Upload:</label>
                 <div style="padding: 10px;">
                     <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+                </div>
+            </div>
+        </tab>
+
+        <tab heading="Prop">
+            <div>
+                <label>Properties:</label>
+                <div style="padding: 10px;">
+                    <label>Permission:</label>
+                    <ul>
+                        <input type="checkbox" ng-model="property.isPublic">public
+                    </ul>
+                </div>
+                <div style="padding: 10px;" ng-if="contribution.type === 'Note'">
+                    <label>Riseabove:</label>
+                    <ul ng-if="property.isRiseabove()">
+                        This is riseabove.
+                    </ul>
+                    <ul ng-if="!property.isRiseabove()">
+                        <button type="submit" class="btn btn-primary" ng-click="makeRiseabove()">MakeRiseabove</button>
+                    </ul>
                 </div>
             </div>
         </tab>

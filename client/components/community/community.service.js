@@ -161,18 +161,22 @@ angular.module('kf6App')
                 });
         };
 
-        var createView = function(title, success) {
+        var createView = function(title, success, noregistration) {
             $http.post('/api/views', {
                 communityId: communityId,
                 title: title
             }).success(function(view) {
-                var url = 'api/communities/' + communityId;
-                $http.get(url).success(function(community) {
-                    community.views.push(view._id);
-                    $http.put(url, community).success(function() {
-                        success(view);
+                if (noregistration === true) {
+                    success(view);
+                } else {
+                    var url = 'api/communities/' + communityId;
+                    $http.get(url).success(function(community) {
+                        community.views.push(view._id);
+                        $http.put(url, community).success(function() {
+                            success(view);
+                        });
                     });
-                });
+                }
             });
         };
 
