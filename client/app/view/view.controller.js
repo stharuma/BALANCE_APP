@@ -455,7 +455,7 @@ angular.module('kf6App')
         };
 
         $scope.doExit = function() {
-            var url = 'communitymanager';
+            var url = '';
             $scope.gotoURL(url);
         };
 
