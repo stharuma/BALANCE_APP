@@ -6,6 +6,7 @@ angular.module('kf6App')
         $scope.selected = {};
         $scope.myCommunities = [];
         $scope.communities = [];
+        $scope.newCommunity = {};
 
         $http.get('/api/communities/my').success(function(myCommunities) {
             $scope.myCommunities = myCommunities;
@@ -14,17 +15,6 @@ angular.module('kf6App')
         $http.get('/api/communities').success(function(communities) {
             $scope.communities = communities;
         });
-
-        $scope.addNew = function() {
-            if ($scope.newTitle === '') {
-                return;
-            }
-            $http.post('/api/communities', {
-                title: $scope.newTitle
-            });
-            $scope.newTitle = '';
-            $state.reload();
-        };
 
         $scope.addRegistration = function() {
             var registration = {};
@@ -36,8 +26,20 @@ angular.module('kf6App')
             });
         };
 
+        $scope.addNewCommunity = function() {
+            if ($scope.newCommunity.title === '' || $scope.newCommunity.code === '') {
+                return;
+            }
+            $http.post('/api/communities', {
+                title: $scope.newCommunity.title,
+                registrationKey: $scope.newCommunity.code
+            });
+            $scope.newCommunity = {};
+            $state.reload();
+        };
+
         $scope.toTimeString = function(time) {
-            if(!time){
+            if (!time) {
                 return '';
             }
             var d = new Date(time);

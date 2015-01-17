@@ -28,15 +28,28 @@
         <br>
     </div>
 
-    <form class="thing-form">
-        <label>New Community:</label>
-        <div style="padding-left: 50px;">
-            <p class="input-group">
-                <input type="text" class="form-control" placeholder="" ng-model="newTitle">
-                <!-- <span class="input-group-btn"> -->
-                    <button type="submit" class="btn btn-primary" ng-click="addNew()">Add New</button>
-                <!-- </span> -->
-            </p>
-        </div>
-    </form>
+    <label>New Community:</label>
+    <div style="padding-left: 50px;">
+        <table>
+            <tr>
+                <td style="text-align: right;">Title:</td>
+                <td style="width: 400px;">
+                    <input type="text" class="form-control" placeholder="Enter title of new community" ng-model="newCommunity.title">
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">RegistrationCode:</td>
+                <td>
+                    <input type="text" class="form-control" placeholder="Enter registrationCode" ng-model="newCommunity.code">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary" ng-click="addNewCommunity()">Add New</button>
+                    </span>
+                </td>
+        </table>
+    </div>
 </div>
