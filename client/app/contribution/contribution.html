@@ -25,7 +25,7 @@
                 <div ng-if="contribution.type === 'Note'">
                     <table>
                         <tr>
-                            <td valign="top" style="width: 150px; padding: 5px; overflow: hidden;">
+                            <td collapse="isScaffoldCollapsed" valign="top" style="width: 150px; padding: 5px; overflow: hidden;">
                                 <div>
                                     <div ng-include="'app/scaffold/scaffold.html'" ng-controller="ScaffoldCtrl"></div>
                                 </div>
@@ -38,6 +38,7 @@
                         </tr>
                     </table>
                     <div style="text-align: right;">
+                        <button class="btn btn-default" ng-click="isScaffoldCollapsed = !isScaffoldCollapsed">Hide Scaffold</button>
                         <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
                     </div>
                     <div collapse="isAttachmentCollapsed">
@@ -47,6 +48,10 @@
                             </span>
                             <p ng-if="images.length !== 0">You can drag and drop to the editor!</p>
                             <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
+                        </div>
+                        <div class="well">
+                            <label>Upload:</label>
+                            <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
                         </div>
                     </div>
                 </div>
@@ -166,9 +171,11 @@
             </div>
 
             <div>
-                <label>Upload:</label>
-                <div style="padding: 10px;">
-                    <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+                <div class="well">
+                    <label>Upload:</label>
+                    <div style="padding: 10px;">
+                        <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+                    </div>
                 </div>
             </div>
         </tab>
