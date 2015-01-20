@@ -17,22 +17,34 @@ angular.module('kf6App')
         });
 
         $scope.addRegistration = function() {
+            if (!$scope.selected.community) {
+                window.alert('Community must be selected');
+                return;
+            }
             var registration = {};
             registration.authorId = $scope.author._id;
             registration.communityId = $scope.selected.community._id;
+            registration.registrationKey = $scope.selected.key;
             registration.role = 'Writer';
             $http.post('/api/registrations', registration).success(function() {
                 $state.reload();
+            }).error(function(msg) { //function(data, status, headers, config)
+                window.alert('Error: ' + msg);
             });
         };
 
         $scope.addNewCommunity = function() {
-            if ($scope.newCommunity.title === '' || $scope.newCommunity.code === '') {
+            if (!$scope.newCommunity.title || $scope.newCommunity.title === '') {
+                window.alert('Title must be input');
+                return;
+            }
+            if (!$scope.newCommunity.key || $scope.newCommunity.key === '') {
+                window.alert('RegistrationKey must be input');
                 return;
             }
             $http.post('/api/communities', {
                 title: $scope.newCommunity.title,
-                registrationKey: $scope.newCommunity.code
+                registrationKey: $scope.newCommunity.key
             });
             $scope.newCommunity = {};
             $state.reload();

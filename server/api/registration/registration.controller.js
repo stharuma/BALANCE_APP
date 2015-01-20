@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Registration = require('./registration.model');
+var Community = require('../community/community.model');
 
 // Get list of registrations
 exports.index = function(req, res) {
@@ -46,12 +47,43 @@ exports.showByCommunityUser = function(req, res) {
 
 // Creates a new registration in the DB.
 exports.create = function(req, res) {
-    Registration.create(req.body, function(err, registration) {
+    var communityId = mongoose.Types.ObjectId(req.body.communityId);
+    var authorId = mongoose.Types.ObjectId(req.body.authorId);
+
+    if (authorId.toString() !== req.user._id.toString()) {
+        return res.send(400, 'Illegal Authentication: authorId and authorIdByAuth are different.');
+    }
+
+    //check key
+    Community.findById(communityId, function(err, community) {
         if (err) {
-            console.log(err);
             return handleError(res, err);
         }
-        return res.json(201, registration);
+
+        if (community.registrationKey !== req.body.registrationKey) {
+            return res.send(400, 'RegistrationKey does not match.');
+        }
+
+        //check if already registered
+        Registration.find({
+            communityId: communityId,
+            authorId: authorId
+        }, function(err, regs) {
+            if (err) {
+                return handleError(res, err);
+            }
+
+            if (regs.length > 0) {
+                return res.send(400, 'You have already registered.'); //already exists
+            }
+
+            Registration.create(req.body, function(err, registration) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                return res.json(201, registration);
+            });
+        });
     });
 };
 

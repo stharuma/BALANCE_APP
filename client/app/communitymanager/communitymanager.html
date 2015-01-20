@@ -16,17 +16,37 @@
 
     <label>Join Community:</label>
     <div style="padding-left: 50px;">
-        <ui-select ng-model="selected.community" theme="bootstrap" ng-disabled="disabled" style="width: 400px;">
-            <ui-select-match placeholder="Select community...">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
-            <ui-select-choices repeat="community in communities | filter: {title: $select.search} | orderBy:'created':true | orderBy:'title'">
-                <div ng-bind-html="community.title | highlight: $select.search"></div>
-                <small><div ng-bind-html="toTimeString(community.created)"></div></small>
-            </ui-select-choices>
-        </ui-select>
-        <p>{{communities.length}} possible communities.</p>
-        <button type="submit" class="btn btn-primary" ng-click="addRegistration()">Join</button>
-        <br>
+        <table>
+            <tr>
+                <td style="text-align: right;">Community:</td>
+                <td>
+                    <ui-select ng-model="selected.community" theme="bootstrap" ng-disabled="disabled" style="width: 400px;">
+                        <ui-select-match placeholder="Select community...">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
+                        <ui-select-choices repeat="community in communities | filter: {title: $select.search} | orderBy:'created':true | orderBy:'title'">
+                            <div ng-bind-html="community.title | highlight: $select.search"></div>
+                            <small><div ng-bind-html="toTimeString(community.created)"></div></small>
+                        </ui-select-choices>
+                    </ui-select>
+                    <p style="text-align: right;">{{communities.length}} possible communities.</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">RegistrationKey:</td>
+                <td>
+                    <input type="text" class="form-control" placeholder="Enter registrationKey" ng-model="selected.key">
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="float: right;">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary" ng-click="addRegistration()">Join</button>
+                    </span>
+                </td>
+        </table>
     </div>
+
+    <br>
 
     <label>New Community:</label>
     <div style="padding-left: 50px;">
@@ -38,16 +58,16 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right;">RegistrationCode:</td>
+                <td style="text-align: right;">RegistrationKey:</td>
                 <td>
-                    <input type="text" class="form-control" placeholder="Enter registrationCode" ng-model="newCommunity.code">
+                    <input type="text" class="form-control" placeholder="Enter registrationCode" ng-model="newCommunity.key">
                 </td>
             </tr>
             <tr>
                 <td></td>
-                <td>
+                <td style="float: right;">
                     <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary" ng-click="addNewCommunity()">Add New</button>
+                        <button type="submit" class="btn btn-primary" ng-click="addNewCommunity()">Add</button>
                     </span>
                 </td>
         </table>
