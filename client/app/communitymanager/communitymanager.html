@@ -48,28 +48,32 @@
 
     <br>
 
-    <label>New Community:</label>
-    <div style="padding-left: 50px;">
-        <table>
-            <tr>
-                <td style="text-align: right;">Title:</td>
-                <td style="width: 400px;">
-                    <input type="text" class="form-control" placeholder="Enter title of new community" ng-model="newCommunity.title">
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align: right;">RegistrationKey:</td>
-                <td>
-                    <input type="text" class="form-control" placeholder="Enter registrationCode" ng-model="newCommunity.key">
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td style="float: right;">
-                    <span class="input-group-btn">
+    <div ng-show="isAdmin()">
+
+        <label>New Community:</label>
+        <div style="padding-left: 50px;">
+            <table>
+                <tr>
+                    <td style="text-align: right;">Title:</td>
+                    <td style="width: 400px;">
+                        <input type="text" class="form-control" placeholder="Enter title of new community" ng-model="newCommunity.title">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">RegistrationKey:</td>
+                    <td>
+                        <input type="text" class="form-control" placeholder="Enter registrationCode" ng-model="newCommunity.key">
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="float: right;">
+                        <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary" ng-click="addNewCommunity()">Add</button>
                     </span>
-                </td>
-        </table>
+                    </td>
+            </table>
+        </div>
+
     </div>
 </div>

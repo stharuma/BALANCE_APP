@@ -27,3 +27,16 @@ var User = require('../api/user/user.model');
 //   );
 // });
 
+User.find({
+    email: 'admin@admin.com'
+}, function(err, data) {
+    if (data.length <= 0) {
+        User.create({
+            provider: 'local',
+            role: 'admin',
+            name: 'Admin',
+            email: 'admin@admin.com',
+            password: 'admin'
+        });
+    }
+});

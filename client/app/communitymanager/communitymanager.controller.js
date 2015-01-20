@@ -7,6 +7,7 @@ angular.module('kf6App')
         $scope.myCommunities = [];
         $scope.communities = [];
         $scope.newCommunity = {};
+        $scope.isAdmin = Auth.isAdmin;
 
         $http.get('/api/communities/my').success(function(myCommunities) {
             $scope.myCommunities = myCommunities;
