@@ -187,14 +187,14 @@
         <tab heading="Logs">
             <div>
                 <label>edit logs:</label>
-                <ul ng-repeat="record in records">
-                    <li ng-if="record.type!=='read'">
+                <ul>
+                    <li ng-repeat="record in records" ng-if="record.type!=='read'">
                         {{record.type}} by {{record.user.name}} at {{record.getTime()}}
                     </li>
                 </ul>
                 <label>read logs:</label>
-                <ul ng-repeat="record in records">
-                    <li ng-if="record.type==='read'">
+                <ul>
+                    <li ng-repeat="record in records" ng-if="record.type==='read'">
                         {{record.type}} by {{record.user.name}} at {{record.getTime()}}
                     </li>
                 </ul>
