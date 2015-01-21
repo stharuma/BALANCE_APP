@@ -9,6 +9,8 @@ angular.module('kf6App')
         var contributionId = $stateParams.contributionId;
 
         $ac.mixIn($scope, null);
+        $scope.isContributionCollapsed = true;
+        $scope.contributionStatus = '';
 
         $scope.contribution = {};
         $scope.copy = {};
@@ -118,6 +120,9 @@ angular.module('kf6App')
         };
 
         $scope.contribute = function() {
+            $scope.isContributionCollapsed = false;
+            $scope.contributionStatus = 'saving';
+
             var cont = $scope.contribution;
             cont.authors = _.pluck($scope.authors, '_id');
             if ($scope.property.isPublic) {
@@ -149,7 +154,11 @@ angular.module('kf6App')
         };
 
         $scope.sendContribute = function() {
-            $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {}).error(function() {});
+            $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {
+                $scope.contributionStatus = 'success';
+            }).error(function() {
+                $scope.contributionStatus = 'failure';
+            });
         };
 
         function elemLoop(jq, func) {
@@ -159,6 +168,14 @@ angular.module('kf6App')
                 func(elem);
             }
         }
+
+        $scope.closeRequest = function() {
+            if (window.wid) {
+                window.parent.closeDialog(window.wid);
+            } else {
+                window.close();
+            }
+        };
 
         $scope.preProcess = function() {
             var doc = '<div>' + $scope.copy.body + '</div>';

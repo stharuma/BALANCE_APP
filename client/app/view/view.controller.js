@@ -1,4 +1,5 @@
 /* global jsPlumb */
+/* jshint unused: false */
 
 'use strict';
 
@@ -557,6 +558,7 @@ angular.module('kf6App')
                     $(this).css('padding-top', '1px');
                     $(this).css('padding-bottom', '2px');
                     $(this).css('padding-right', '2px');
+                    document.getElementById(wid).contentWindow.wid = wid;
                 },
                 close: function() { /*we need to erase element*/
                     $(this).remove();
@@ -606,3 +608,7 @@ angular.module('kf6App')
         };
 
     });
+
+function closeDialog(wid) {
+    $('#' + wid).dialog('close');
+}
