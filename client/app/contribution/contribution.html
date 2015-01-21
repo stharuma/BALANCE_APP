@@ -48,7 +48,7 @@
                             <tr>
                     </table>
                 </div>
-                <div ng-if="contribution.type === 'Note'" >
+                <div ng-if="contribution.type === 'Note'">
                     <table style="width: 100%;">
                         <tr>
                             <td collapse="isScaffoldCollapsed" valign="top" style="width: 150px; padding: 5px; overflow: hidden;">
@@ -63,7 +63,16 @@
                             </td>
                         </tr>
                     </table>
-
+                    <div style="padding: 6px 0px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td class="KFTableTitle" style="width: 100px; text-align: right;">keywords:</td>
+                                <td>
+                                    <input type="text" class="form-control" placeholder="" ng-model="copy.keywords">
+                                </td>
+                                <tr>
+                        </table>
+                    </div>
                     <div style="text-align: right;">
                         <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
                         <button class="btn btn-default" ng-click="isScaffoldCollapsed = !isScaffoldCollapsed">Hide Scaffold</button>

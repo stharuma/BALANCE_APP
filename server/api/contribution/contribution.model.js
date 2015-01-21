@@ -29,6 +29,7 @@ var ContributionSchema = new Schema({
         index: true,
         default: 'public'
     },
+    keywords:[String],
     text4search: String,
     data: Schema.Types.Mixed
 });

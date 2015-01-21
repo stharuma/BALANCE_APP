@@ -55,6 +55,8 @@ exports.update = function(req, res) {
         var updated = _.merge(contribution, req.body);
         updated.authors = req.body.authors;
         updated.markModified('authors');
+        updated.keywords = req.body.keywords;
+        updated.markModified('keywords');        
         updated.save(function(err) {
             if (err) {
                 console.log(err);

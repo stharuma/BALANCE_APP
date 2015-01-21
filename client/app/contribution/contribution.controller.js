@@ -35,6 +35,16 @@ angular.module('kf6App')
                 }
             }
             $scope.contribution = contribution;
+            if ($scope.contribution.keywords) {
+                var keywordsStr = '';
+                $scope.contribution.keywords.forEach(function(keyword) {
+                    if (keywordsStr.length !== 0) {
+                        keywordsStr += '; ';
+                    }
+                    keywordsStr += keyword;
+                });
+                $scope.copy.keywords = keywordsStr;
+            }
             $ac.mixIn($scope, contribution);
             $scope.copy.body = contribution.body;
             $scope.property.isPublic = !contribution.permission || contribution.permission === 'public';
@@ -138,6 +148,18 @@ angular.module('kf6App')
                 cont.permission = 'public';
             } else {
                 cont.permission = 'private';
+            }
+
+            $scope.contribution.keywords = [];
+            if ($scope.copy.keywords) {
+                var keywordsArray = $scope.copy.keywords.split(';');
+                keywordsArray.forEach(function(keyword) {
+                    var word = keyword.trim();
+                    if(word.length <= 0){
+                        return;
+                    }
+                    $scope.contribution.keywords.push(word);
+                });
             }
 
             if (cont.type === 'Note') {
