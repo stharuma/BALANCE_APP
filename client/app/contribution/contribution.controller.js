@@ -168,7 +168,7 @@ angular.module('kf6App')
                 $scope.postProcess($scope.copy.body, function(jq) {
                     cont.body = jq.html();
                     var text = jq.text();
-                    cont.text4search = 'title(' + cont.title + ') ' + text;
+                    cont.text4search = '( ' + cont.title + ' ) ' + text + ' ( ' + $scope.copy.keywords + ' )';
                     $scope.sendContribute();
                 });
 
@@ -500,7 +500,7 @@ angular.module('kf6App')
             }
 
             var original = $scope.copy.keywords;
-            if(original && original.length >= 0){
+            if (original && original.length >= 0) {
                 original += '; ';
             }
             $scope.copy.keywords = original + selectedText;
