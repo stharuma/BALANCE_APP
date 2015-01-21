@@ -2,7 +2,7 @@
     <h3>{{contribution.type}}: {{contribution.title}}</h3>
     <div style="position: absolute; top: 10px; width: 95%; text-align: right;">
         <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
-        <button type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
+        <button ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
     </div>
     <tabset>
         <tab heading="Read" select="readSelected()">
@@ -19,7 +19,7 @@
                 <div id="riseabovediv"></div>
             </div>
         </tab>
-        <tab heading="Edit" active="editActive" select="editSelected()">
+        <tab ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
             <div style="padding: 5px;">
                 <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
                 <div ng-if="contribution.type === 'Note'">
@@ -77,17 +77,19 @@
                             </ul>
                         </td>
                         <td width="100%" valign="top">
-                            <h4>Add to authors:</h4>
-                            <ui-select ng-model="selected.author" theme="select2" ng-disabled="disabled" style="width: 80%;">
-                                <ui-select-match placeholder="Select author...">{{selected.author.name}} &lt;{{selected.author.email}}&gt;</ui-select-match>
-                                <ui-select-choices repeat="author in communityMembers | filter: {name: $select.search, email: $select.search} | orderBy:'name'| limitTo:12">
-                                    <div ng-bind-html="author.name | highlight: $select.search"></div>
-                                    <small><div ng-bind-html="author.email | highlight: $select.search"></div></small>
-                                </ui-select-choices>
-                            </ui-select>
-                            <button type="submit" class="btn btn-primary" ng-click="addAuthor(selected.author)">Add</button>
-                            <br>
-                            <p>{{communityMembers.length}} possible authors in this community.</p>
+                            <div ng-show="isEditable()">
+                                <h4>Add to authors:</h4>
+                                <ui-select ng-model="selected.author" theme="select2" ng-disabled="disabled" style="width: 80%;">
+                                    <ui-select-match placeholder="Select author...">{{selected.author.name}} &lt;{{selected.author.email}}&gt;</ui-select-match>
+                                    <ui-select-choices repeat="author in communityMembers | filter: {name: $select.search, email: $select.search} | orderBy:'name'| limitTo:12">
+                                        <div ng-bind-html="author.name | highlight: $select.search"></div>
+                                        <small><div ng-bind-html="author.email | highlight: $select.search"></div></small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <button type="submit" class="btn btn-primary" ng-click="addAuthor(selected.author)">Add</button>
+                                <br>
+                                <p>{{communityMembers.length}} possible authors in this community.</p>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -170,7 +172,7 @@
                 </ul>
             </div>
 
-            <div>
+            <div ng-show="isEditable()">
                 <div class="well">
                     <label>Upload:</label>
                     <div style="padding: 10px;">
@@ -180,7 +182,7 @@
             </div>
         </tab>
 
-        <tab heading="Prop">
+        <tab ng-show="isEditable()" heading="Prop">
             <div>
                 <label>Properties:</label>
                 <div style="padding: 10px;">

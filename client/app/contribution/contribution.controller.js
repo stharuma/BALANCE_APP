@@ -5,8 +5,10 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth, $ac) {
         var contributionId = $stateParams.contributionId;
+
+        $ac.mixIn($scope, null);
 
         $scope.contribution = {};
         $scope.copy = {};
@@ -21,8 +23,10 @@ angular.module('kf6App')
         $scope.images = [];
         $scope.property = {};
 
+
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             $scope.contribution = contribution;
+            $ac.mixIn($scope, contribution);
             $scope.copy.body = contribution.body;
             $scope.property.isPublic = !contribution.permission || contribution.permission === 'public';
             $scope.property.isRiseabove = function() {
