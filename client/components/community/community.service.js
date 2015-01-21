@@ -218,7 +218,7 @@ angular.module('kf6App')
         var amIAuthor = function(obj) {
             if (obj.to) { //link
                 return amIAuthor0(obj.authorsTo);
-            } else if (obj.title) { //contrib
+            } else if (obj.authors) { //contrib
                 return amIAuthor0(obj.authors);
             } else {
                 console.log('unsupported object=' + obj);

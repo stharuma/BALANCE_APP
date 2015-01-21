@@ -12,6 +12,8 @@ angular.module('kf6App')
         $scope.isContributionCollapsed = true;
         $scope.contributionStatus = '';
         $scope.recoverable = false;
+        $scope.dirty = true;
+        $scope.initializing = 'true';
 
         $scope.contribution = {};
         $scope.copy = {};
@@ -35,6 +37,9 @@ angular.module('kf6App')
                 }
             }
             $scope.contribution = contribution;
+            $scope.$watch('contribution.title', function() {
+                $scope.updateDirtyStatus();
+            });
             if ($scope.contribution.keywords) {
                 var keywordsStr = '';
                 $scope.contribution.keywords.forEach(function(keyword) {
@@ -45,18 +50,33 @@ angular.module('kf6App')
                 });
                 $scope.copy.keywords = keywordsStr;
             }
+            $scope.$watch('copy.keywords', function() {
+                $scope.updateDirtyStatus();
+            });
             $ac.mixIn($scope, contribution);
             $scope.copy.body = contribution.body;
+            $scope.$watch('copy.body', function() {
+                $scope.updateDirtyStatus();
+            });
             $scope.property.isPublic = !contribution.permission || contribution.permission === 'public';
+            $scope.$watch('property.isPublic', function() {
+                $scope.updateDirtyStatus();
+            });
             $scope.property.isRiseabove = function() {
                 return contribution.type === 'Note' && contribution.data && contribution.data.riseabove && contribution.data.riseabove.viewId;
             };
+            $scope.$watch('property.isRiseabove', function() {
+                $scope.updateDirtyStatus();
+            });
             $scope.prepareRiseabove();
             $community.enter($scope.contribution.communityId);
             window.contribution = contribution;
             $scope.contribution.authors.forEach(function(authorId) {
                 $scope.authors.push($community.getMember(authorId));
             });
+            $scope.$watch('authors', function() {
+                $scope.updateDirtyStatus();
+            }, true);
             window.setTimeout(function() {
                 $http.post('/api/records/read/' + contributionId);
             }, 3000);
@@ -139,10 +159,16 @@ angular.module('kf6App')
         };
 
         $scope.contribute = function() {
+            var cont = $scope.contribution;
+
+            if (cont.title.length === 0 || cont.title === 'New Note') {
+                window.alert('You must input the title.');
+                return;
+            }
+
             $scope.isContributionCollapsed = false;
             $scope.contributionStatus = 'saving';
 
-            var cont = $scope.contribution;
             cont.authors = _.pluck($scope.authors, '_id');
             if ($scope.property.isPublic) {
                 cont.permission = 'public';
@@ -186,6 +212,9 @@ angular.module('kf6App')
 
         $scope.sendContribute = function() {
             $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {
+                if ($scope.contribution.type === 'Note') {
+                    $scope.dirty = false;
+                }
                 $scope.contributionStatus = 'success';
             }).error(function() {
                 $scope.contributionStatus = 'failure';
@@ -257,6 +286,7 @@ angular.module('kf6App')
                     elem.innerHTML = $kftag.createReferenceTag('', '(missing link)', '', '');
                 }
             });
+            $scope.initializing = 'lastone';
             $scope.copy.body = jq.html();
         };
 
@@ -376,6 +406,24 @@ angular.module('kf6App')
                 });
             });
         }
+
+        $scope.updateDirtyStatus = function() {
+            if ($scope.initializing === 'true') {
+                return;
+            }
+            if ($scope.initializing === 'lastone') {
+                $scope.initializing = 'false';
+                $scope.dirty = false;
+                return;
+            }
+            $scope.dirty = true;
+        };
+
+        $(window).bind('beforeunload', function(e) {
+            if ($scope.dirty) {
+                return 'The contribution is not contributed. Are you sure to leave?';
+            }
+        });
 
         $scope.buildson = function() {
             $community.createNoteOn($scope.contribution._id, function(newContribution) {
