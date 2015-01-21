@@ -405,6 +405,8 @@ angular.module('kf6App')
         /*********** tinymce ************/
 
         $scope.mcesetupHandler = function(ed) {
+            $scope.mceEditor = ed;
+            $scope.mceResize();
             // ed.on('change', function(e) {
             //     //do dirty status management
             //     //console.log('changed');
@@ -422,6 +424,15 @@ angular.module('kf6App')
                 tinymce.execCommand('mceInsertContent', true, data);
             });
         };
+
+        $scope.mceResize = function() {
+            if ($scope.mceEditor) {
+                var height = ($(window).height() - 150) * 0.8;
+                $scope.mceEditor.theme.resizeTo('100%', height);
+            }
+        };
+
+        window.onresize = $scope.mceResize;
 
         $scope.tinymceOptions = {
             theme: 'modern',

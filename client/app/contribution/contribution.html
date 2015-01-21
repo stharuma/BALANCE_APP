@@ -1,4 +1,4 @@
-<div class="col-md-12">
+<div class="col-md-12" style="padding: 8px;">
 
     <!-- dialog -->
     <div class="well" collapse="isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
@@ -14,13 +14,15 @@
         </div>
     </div>
 
-    <h3>{{contribution.type}}: {{contribution.title}}</h3>
-    <div style="position: absolute; top: 10px; width: 95%; text-align: right;">
-        <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
+    <p class="KFTitle">{{contribution.type}}: {{contribution.title}}</p>
+    <div style="position: absolute; left: 0px; top: 0px; padding: 10px; width: 100%; text-align: right;">
         <button ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
     </div>
     <tabset>
         <tab heading="Read" select="readSelected()">
+            <div style="padding-top: 5px; text-align: right;">
+                <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
+            </div>
             <div style="padding: 10px;">
                 <div class="KFDragSource" ng-if="contribution.type === 'Note'" ng-bind-html="copy.body"></div>
                 <div ng-if="contribution.type === 'Attachment'">
@@ -36,9 +38,18 @@
         </tab>
         <tab ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
             <div style="padding: 5px;">
-                <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
-                <div ng-if="contribution.type === 'Note'">
-                    <table>
+                <div style="padding-bottom: 6px;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td class="KFTableTitle" style="width: 100px; text-align: right;">title:</td>
+                            <td>
+                                <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
+                            </td>
+                            <tr>
+                    </table>
+                </div>
+                <div ng-if="contribution.type === 'Note'" >
+                    <table style="width: 100%;">
                         <tr>
                             <td collapse="isScaffoldCollapsed" valign="top" style="width: 150px; padding: 5px; overflow: hidden;">
                                 <div>
@@ -52,6 +63,7 @@
                             </td>
                         </tr>
                     </table>
+
                     <div style="text-align: right;">
                         <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
                         <button class="btn btn-default" ng-click="isScaffoldCollapsed = !isScaffoldCollapsed">Hide Scaffold</button>
