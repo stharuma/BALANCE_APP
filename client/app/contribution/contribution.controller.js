@@ -155,7 +155,7 @@ angular.module('kf6App')
                 var keywordsArray = $scope.copy.keywords.split(';');
                 keywordsArray.forEach(function(keyword) {
                     var word = keyword.trim();
-                    if(word.length <= 0){
+                    if (word.length <= 0) {
                         return;
                     }
                     $scope.contribution.keywords.push(word);
@@ -477,10 +477,33 @@ angular.module('kf6App')
         };
 
         $scope.addSupport = function(supportRef) {
+            if (!$scope.mceEditor) {
+                window.alert('$scope.mceEditor is not set.');
+                return;
+            }
             var id = supportRef.to;
             var title = supportRef.titleTo;
             var tag = $kftag.createNewScaffoldTag(id, title);
-            tinymce.activeEditor.insertContent(tag);
+            $scope.mceEditor.insertContent(tag);
+        };
+
+        $scope.addKeyword = function() {
+            if (!$scope.mceEditor) {
+                window.alert('$scope.mceEditor is not set.');
+                return;
+            }
+
+            var selectedText = $scope.mceEditor.selection.getContent();
+            if (!selectedText) {
+                window.alert('You need to select word(s) in the editor.');
+                return;
+            }
+
+            var original = $scope.copy.keywords;
+            if(original && original.length >= 0){
+                original += '; ';
+            }
+            $scope.copy.keywords = original + selectedText;
         };
 
         /*********** svg-edit ************/
