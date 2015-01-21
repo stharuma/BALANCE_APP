@@ -11,6 +11,7 @@ angular.module('kf6App')
         $ac.mixIn($scope, null);
         $scope.isContributionCollapsed = true;
         $scope.contributionStatus = '';
+        $scope.recoverable = false;
 
         $scope.contribution = {};
         $scope.copy = {};
@@ -27,6 +28,12 @@ angular.module('kf6App')
 
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
+            if (window.localStorage) {
+                var item = window.localStorage.getItem('kfdoc');
+                if (item) {
+                    $scope.recoverable = true;
+                }
+            }
             $scope.contribution = contribution;
             $ac.mixIn($scope, contribution);
             $scope.copy.body = contribution.body;
@@ -55,7 +62,9 @@ angular.module('kf6App')
             if (Auth.isEditable($scope.contribution) && $scope.contribution.type !== 'Attachment') {
                 $scope.editActive = true;
             }
-        }).error(function() {});
+        }).error(function(msg) {
+            console.log(msg);
+        });
 
         $scope.updateToConnections = function(next) {
             $http.get('/api/links/to/' + contributionId).success(function(links) {
@@ -158,7 +167,20 @@ angular.module('kf6App')
                 $scope.contributionStatus = 'success';
             }).error(function() {
                 $scope.contributionStatus = 'failure';
+                if (window.localStorage) {
+                    window.localStorage.setItem('kfdoc', $scope.copy.body);
+                    $scope.contributionStatus = 'stored';
+                }
             });
+        };
+
+        $scope.recover = function() {
+            if (window.localStorage) {
+                var item = window.localStorage.getItem('kfdoc');
+                if (item) {
+                    $scope.copy.body = item;
+                }
+            }
         };
 
         function elemLoop(jq, func) {

@@ -5,7 +5,8 @@
         <div>
             <span ng-if="contributionStatus==='saving'">Saving...</span>
             <span ng-if="contributionStatus==='success'">Contribution Succeeded.</span>
-            <span ng-if="contributionStatus==='failure'">Contribution Failed.</span>                        
+            <span ng-if="contributionStatus==='failure'">Contribution Failed.</span>
+            <span ng-if="contributionStatus==='stored'">Contribution Failed. <br>Your writing temporary saved to the localstorage. Please recover the writing by "Recovery" button on the new note.</span>
         </div>
         <div style="text-align: right; padding-right: 100px; padding-top: 5px;">
             <button ng-show="contributionStatus!=='saving'" type="submit" class="btn btn-primary kfbutton" ng-click="isContributionCollapsed=true">Continue editing</button>
@@ -52,6 +53,7 @@
                         </tr>
                     </table>
                     <div style="text-align: right;">
+                        <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
                         <button class="btn btn-default" ng-click="isScaffoldCollapsed = !isScaffoldCollapsed">Hide Scaffold</button>
                         <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
                     </div>
