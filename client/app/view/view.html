@@ -5,7 +5,7 @@
         </div>
         <div style="height: 400px; overflow: scroll;">
             <div ng-repeat="view in views">
-                <div viewlink><img src="manual_assets/kf4images/icon-view.gif">{{view.title}}</div>
+                <div viewlink style="white-space: nowrap;"><img draggable="false" src="manual_assets/kf4images/icon-view.gif"><a ng-click="openView(view._id)" style="color: #0000FF;">{{view.title}}</a></div>
             </div>
         </div>
     </div>
