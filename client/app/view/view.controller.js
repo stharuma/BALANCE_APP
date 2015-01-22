@@ -24,6 +24,8 @@ angular.module('kf6App')
             references: false
         };
 
+        $scope.jsPlumb = jsPlumb.getInstance();
+
         $http.get('/api/contributions/' + viewId).success(function(view) {
             $scope.view = view;
             $community.enter(view.communityId);
@@ -182,7 +184,7 @@ angular.module('kf6App')
         };
 
         $scope.updateLinks = function() {
-            jsPlumb.detachEveryConnection();
+            $scope.detachAllConnections();
             $http.get('/api/links/onview/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
                     $scope.makeArrow(link);
@@ -216,7 +218,7 @@ angular.module('kf6App')
                 toElements.each(function() {
                     var toElement = $(this);
                     var toId = toElement.attr('id');
-                    var conn = jsPlumb.connect({
+                    var conn = $scope.jsPlumb.connect({
                         source: fromId,
                         target: toId,
                         type: 'kfarrow',
@@ -246,16 +248,17 @@ angular.module('kf6App')
             }
             $scope.conns[id].forEach(function(conn) {
                 if (conn.detached !== true) {
-                    jsPlumb.detach(conn);
+                    $scope.jsPlumb.detach(conn);
                     conn.detached = true;
                 }
             });
             $scope.conns[id] = [];
         };
 
-        jsPlumb.ready(function() {
-            jsPlumb.setContainer($('#maincanvas'));
-            jsPlumb.importDefaults({
+        $scope.jsPlumb.ready(function() {
+            $scope.jsPlumb.detachEveryConnection();
+            $scope.jsPlumb.setContainer($('#maincanvas'));
+            $scope.jsPlumb.importDefaults({
                 Connector: ['Straight'],
                 Endpoints: ['Blank', 'Blank'],
                 Overlays: [
@@ -273,7 +276,7 @@ angular.module('kf6App')
                     strokeStyle: 'rgba(180,180,180,0.7)'
                 }
             });
-            jsPlumb.registerConnectionTypes({
+            $scope.jsPlumb.registerConnectionTypes({
                 'kfarrow': {
                     overlays: [
                         ['Arrow', {

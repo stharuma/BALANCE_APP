@@ -1,5 +1,3 @@
-/* global jsPlumb */
-
 'use strict';
 
 angular.module('kf6App')
@@ -43,10 +41,10 @@ angular.module('kf6App')
                 var el = element[0];
 
                 scope.$watch('ref.data.x', function() {
-                    jsPlumb.repaintEverything();
+                    $scope.jsPlumb.repaintEverything();
                 });
                 scope.$watch('ref.data.y', function() {
-                    jsPlumb.repaintEverything();
+                    $scope.jsPlumb.repaintEverything();
                 });
                 scope.$on('$destroy', function() {
                     $scope.detachAllConnections('icon' + ref._id);
