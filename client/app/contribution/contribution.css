@@ -25,9 +25,14 @@ html, body {
 }
 /* override bootstrap */
 
-.nav > li > a {
+/*.nav > li > a {
+    padding: 5px 10px;
+}*/
+
+.nav > .KFTab > a{
     padding: 5px 10px;
 }
+
 /*table, th, td {
     border: 1px solid black;
 }*/

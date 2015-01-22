@@ -19,7 +19,7 @@
         <button ng-disabled="!dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
     </div>
     <tabset>
-        <tab heading="Read" select="readSelected()">
+        <tab heading="Read" class="KFTab" select="readSelected()">
             <div style="padding-top: 5px; text-align: right;">
                 <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
             </div>
@@ -36,7 +36,7 @@
                 <div id="riseabovediv"></div>
             </div>
         </tab>
-        <tab ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
+        <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
             <div style="padding: 5px;">
                 <div style="padding-bottom: 6px;">
                     <table style="width: 100%;">
@@ -102,7 +102,7 @@
 
         <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"> -->
         <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css">
-        <tab heading="Authors">
+        <tab class="KFTab" heading="Authors">
             <div style="height: 100%;">
                 <table style="width: 100%;">
                     <tr>
@@ -135,7 +135,7 @@
             </div>
         </tab>
 
-        <tab heading="Connections">
+        <tab class="KFTab" heading="Connections">
             <div>
                 <label>This note builds onto:</label>
                 <ul>
@@ -184,7 +184,7 @@
             </div>
         </tab>
 
-        <tab heading="Logs">
+        <tab class="KFTab" heading="Logs">
             <div>
                 <label>edit logs:</label>
                 <ul>
@@ -201,7 +201,7 @@
             </div>
         </tab>
 
-        <tab heading="Attach">
+        <tab class="KFTab" heading="Attach">
             <div>
                 <label>Attachments:</label>
                 <ul>
@@ -221,7 +221,7 @@
             </div>
         </tab>
 
-        <tab ng-show="isEditable()" heading="Prop">
+        <tab class="KFTab" ng-show="isEditable()" heading="Prop">
             <div>
                 <label>Properties:</label>
                 <div style="padding: 10px;">
