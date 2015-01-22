@@ -24,7 +24,10 @@
                 <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
             </div>
             <div style="padding: 10px;">
-                <div class="KFDragSource" ng-if="contribution.type === 'Note'" ng-bind-html="copy.body"></div>
+                <div ng-if="contribution.type === 'Note'">
+                    <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css"/>  
+                    <div class="KFDragSource" ng-bind-html="copy.body"></div>
+                </div>
                 <div ng-if="contribution.type === 'Attachment'">
                     <div ng-if="isImage(contribution)">
                         <img ng-attr-src="{{contribution.url}}">

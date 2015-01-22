@@ -518,7 +518,7 @@ angular.module('kf6App')
             extended_valid_elements: 'kf-*[*]',
             custom_elements: '~kf-[a-zA-Z0-9]+$',
             toolbar_items_size: 'small',
-            content_css: '/app/kf.css,/app/kfmce.css',
+            content_css: '/manual_assets/kfmce.css',
             inline_styles: true,
             //setup: function(ed){}// dont use this, angular plugin use this.
             init_instance_callback: $scope.mcesetupHandler
