@@ -121,11 +121,23 @@ exports.create = function(req, res) {
 exports.createScaffold = function(req, res, community) {
     Contribution.create({
         communityId: community._id,
-        title: 'Knowledge Building',
+        title: 'Theory Building',
         type: 'Scaffold'
     }, {
         communityId: community._id,
-        title: 'My Theory',
+        title: 'My theory',
+        type: 'Support'
+    }, {
+        communityId: community._id,
+        title: 'A better theory',
+        type: 'Support'
+    }, {
+        communityId: community._id,
+        title: 'New information',
+        type: 'Support'
+    }, {
+        communityId: community._id,
+        title: 'This theory cannot explain',
         type: 'Support'
     }, {
         communityId: community._id,
@@ -133,40 +145,20 @@ exports.createScaffold = function(req, res, community) {
         type: 'Support'
     }, {
         communityId: community._id,
-        title: 'Science Learning',
-        type: 'Scaffold'
-    }, {
-        communityId: community._id,
-        title: 'My Hypothesis',
+        title: 'Putting our knowledge together',
         type: 'Support'
-    }, {
-        communityId: community._id,
-        title: 'Result of examination',
-        type: 'Support'
-    }, function(err, s1, s11, s12, s2, s21, s22) {
-        community.scaffolds = [s1._id, s2._id];
+    }, function(err, sc1, s1, s2, s3, s4, s5, s6) {
+        community.scaffolds = [sc1._id];
+        var supports = [s1, s2, s3, s4, s5, s6];
         community.save(function(err) {
-            Link.createWithCash({
-                from: s1._id,
-                to: s11,
-                type: 'contains'
+            supports.forEach(function(each) {
+                Link.createWithCash({
+                    from: sc1._id,
+                    to: each._id,
+                    type: 'contains'
+                });
+                return res.json(201, community);
             });
-            Link.createWithCash({
-                from: s1._id,
-                to: s12,
-                type: 'contains'
-            });
-            Link.createWithCash({
-                from: s2._id,
-                to: s21,
-                type: 'contains'
-            });
-            Link.createWithCash({
-                from: s2._id,
-                to: s22,
-                type: 'contains'
-            });
-            return res.json(201, community);
         });
     });
 };
