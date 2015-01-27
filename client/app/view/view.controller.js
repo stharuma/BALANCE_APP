@@ -24,14 +24,16 @@ angular.module('kf6App')
             references: false
         };
 
-        $scope.jsPlumb = jsPlumb.getInstance();
+        $scope.jsPlumb = undefined;
 
-        $http.get('/api/contributions/' + viewId).success(function(view) {
-            $scope.view = view;
-            $community.enter(view.communityId);
-            $community.refreshViews();
-            $scope.updateCanvas();
-        });
+        $scope.initialize = function() {
+            $http.get('/api/contributions/' + viewId).success(function(view) {
+                $scope.view = view;
+                $community.enter(view.communityId);
+                $community.refreshViews();
+                $scope.updateCanvas();
+            });
+        };
 
         $scope.updateCanvas = function() {
             $http.get('/api/links/from/' + viewId).success(function(refs) {
@@ -242,10 +244,10 @@ angular.module('kf6App')
             $scope.conns[id].push(conn);
         };
 
-        $scope.detachEveryConnection = function() {            
+        $scope.detachEveryConnection = function() {
             $scope.jsPlumb.detachEveryConnection();
             $scope.conns = [];
-        }
+        };
 
         $scope.detachAllConnections = function(id) {
             if ($scope.conns[id] === undefined) {
@@ -260,8 +262,8 @@ angular.module('kf6App')
             $scope.conns[id] = [];
         };
 
-        $scope.jsPlumb.ready(function() {
-            $scope.jsPlumb.detachEveryConnection();
+        jsPlumb.ready(function() {
+            $scope.jsPlumb = jsPlumb.getInstance();
             $scope.jsPlumb.setContainer($('#maincanvas'));
             $scope.jsPlumb.importDefaults({
                 Connector: ['Straight'],
@@ -299,7 +301,7 @@ angular.module('kf6App')
                     }
                 },
             });
-
+            $scope.initialize();
         });
 
         /* ----------- creation --------- */
