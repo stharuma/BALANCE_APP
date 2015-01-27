@@ -95,7 +95,7 @@ angular.module('kf6App')
                 return;
             }
             $http.put('/api/registrations/' + reg._id, reg).success(function(dbReg) {
-                registration = dbReg;
+                registration = dbReg;                
                 if (handler) {
                     handler(registration);
                 }

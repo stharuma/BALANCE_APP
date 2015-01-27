@@ -100,6 +100,8 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(registration, req.body);
+        updated.workspaces = req.body.workspaces;
+        updated.markModified('workspaces');
         updated.save(function(err) {
             if (err) {
                 return handleError(res, err);

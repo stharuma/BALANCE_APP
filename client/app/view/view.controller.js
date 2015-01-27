@@ -441,8 +441,6 @@ angular.module('kf6App')
                     });
                 }
             });
-            //
-            //window.alert('not implemented yet.');
         };
 
         $scope.createWorkspace = function(reg, handler) {
@@ -457,7 +455,7 @@ angular.module('kf6App')
                         handler(view);
                     }
                 });
-            });
+            }, false);
         };
 
         $scope.openWorkspace0 = function(viewId) {
