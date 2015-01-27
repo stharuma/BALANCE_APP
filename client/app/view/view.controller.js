@@ -184,7 +184,7 @@ angular.module('kf6App')
         };
 
         $scope.updateLinks = function() {
-            $scope.detachAllConnections();
+            $scope.detachEveryConnection();
             $http.get('/api/links/onview/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
                     $scope.makeArrow(link);
@@ -241,6 +241,11 @@ angular.module('kf6App')
             }
             $scope.conns[id].push(conn);
         };
+
+        $scope.detachEveryConnection = function() {            
+            $scope.jsPlumb.detachEveryConnection();
+            $scope.conns = [];
+        }
 
         $scope.detachAllConnections = function(id) {
             if ($scope.conns[id] === undefined) {
