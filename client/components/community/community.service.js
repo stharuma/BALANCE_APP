@@ -31,22 +31,46 @@ angular.module('kf6App')
             $http.get('/api/communities/' + communityId).success(function(community) {
                 scaffolds.length = 0; //clear once
                 var scaffoldIds = community.scaffolds;
+                var len = scaffoldIds.length;
+                var numOfFinished = 0;
+                if (numOfFinished >= len) {
+                    if (handler) {
+                        handler();
+                    }
+                }
                 scaffoldIds.forEach(function(scaffoldId) {
                     var newScaffold = {};
                     scaffolds.push(newScaffold);
                     $http.get('/api/contributions/' + scaffoldId).success(function(scaffold) {
                         _.extend(newScaffold, scaffold);
-                        newScaffold.supports = [];
-                        $http.get('/api/links/from/' + scaffoldId).success(function(supports) {
-                            supports.forEach(function(support) {
-                                newScaffold.supports.push(support);
-                            });
+                        fillSupport(newScaffold, function() {
+                            numOfFinished++;
+                            if (numOfFinished >= len) {
+                                if (handler) {
+                                    handler();
+                                }
+                            }
                         });
-                        if (handler) {
-                            handler();
+                    }).error(function() {
+                        if (numOfFinished >= len) {
+                            if (handler) {
+                                handler();
+                            }
                         }
                     });
                 });
+            });
+        };
+
+        var fillSupport = function(scaffold, handler) {
+            scaffold.supports = [];
+            $http.get('/api/links/from/' + scaffold._id).success(function(supports) {
+                supports.forEach(function(support) {
+                    scaffold.supports.push(support);
+                });
+                if (handler) {
+                    handler();
+                }
             });
         };
 
@@ -287,6 +311,7 @@ angular.module('kf6App')
             createDrawing: createDrawing,
             createView: createView,
             createScaffold: createScaffold,
+            fillSupport: fillSupport,
             removeView: removeView,
             updateCommunity: updateCommunity,
             refreshViews: refreshViews,

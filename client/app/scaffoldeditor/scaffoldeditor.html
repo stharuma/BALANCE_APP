@@ -1,0 +1,39 @@
+<div class="col-md-12">
+    <label>Scaffold Editor</label>
+    <br>
+    <div>
+        title:
+        <input type="text" class="form-control" placeholder="" ng-model="selected.scaffold.title">
+        <div style="text-align: right;">
+            <button type="submit" class="btn btn-primary" ng-click="saveScaffold()">Save</button>
+        </div>
+    </div>
+
+
+    <div>
+        <label>Supports</label>
+        <ul>
+            <li ng-repeat="supportref in selected.scaffold.supports">
+                <a ng-click="selectSupport(supportref)">{{supportref.titleTo}}</a> &nbsp;&nbsp;
+                <button type="submit" class="btn btn-primary" ng-click="removeSupport(supportref)">x</button>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <label>New Support</label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="Input New Support Title" ng-model="input.supportTitle">
+            <span class="input-group-btn">
+        		<button type="submit" class="btn btn-primary" ng-click="addSupport()">Add New Support</button>
+     		 </span>
+        </p>
+    </div>
+
+    <div ng-if="selected.support">
+        <hr>
+        <div ng-include="'app/supporteditor/supporteditor.html'" ng-controller="SupporteditorCtrl">
+        </div>
+    </div>
+
+</div>

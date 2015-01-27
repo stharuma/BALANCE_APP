@@ -5,8 +5,21 @@ angular.module('kf6App')
         if ($stateParams.communityId) {
             $community.enter($stateParams.communityId);
         }
+
+        $scope.status = {};
+        $scope.status.isSavingProgressMonitorCollapsed = true;
+
         $scope.scaffolds = $community.getScaffolds();
+        $scope.selected = {};
         $community.refreshScaffolds(function() {});
+
+        $scope.showSaved = function() {
+            $scope.status.isSavingProgressMonitorCollapsed = false;
+            window.setTimeout(function() {
+                $scope.status.isSavingProgressMonitorCollapsed = true;
+                $scope.$digest($scope.status.isSavingProgressMonitorCollapsed);
+            }, 2000);
+        };
 
         $scope.addScaffold = function() {
             if ($scope.input.scaffoldTitle === '') {
@@ -30,6 +43,10 @@ angular.module('kf6App')
             $scope.save();
         };
 
+        $scope.editScaffold = function(scaffold) {
+            $scope.selected.scaffold = scaffold;
+        };
+
         $scope.saveOrder = function() {
             $scope.save();
         };
@@ -39,6 +56,7 @@ angular.module('kf6App')
             community.scaffolds = _.pluck($scope.scaffolds, '_id');
             $community.updateCommunity(community, function() {
                 $community.refreshScaffolds(function() {});
+                $scope.showSaved();
             });
         };
     });
