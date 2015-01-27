@@ -457,7 +457,7 @@ angular.module('kf6App')
                         handler(view);
                     }
                 });
-            }, false);
+            }, true);
         };
 
         $scope.openWorkspace0 = function(viewId) {
