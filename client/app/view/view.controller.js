@@ -521,7 +521,7 @@ angular.module('kf6App')
             if (w) {                
                 w.moveTo(100, 100);
             }else{
-                alert("Failed to open popup on your browser. (You may open the second time on safari.)");
+                window.alert('Failed to open popup on your browser. (You may open the second time on safari.)');
             }
         };
 

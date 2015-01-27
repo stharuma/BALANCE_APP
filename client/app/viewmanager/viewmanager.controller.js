@@ -1,4 +1,3 @@
-/* global confirm */
 'use strict';
 
 angular.module('kf6App')
@@ -23,7 +22,7 @@ angular.module('kf6App')
         };
 
         $scope.removeView = function(view) {
-            var confirmation = confirm('Are you sure to delete ' + view.title + '?');
+            var confirmation = window.confirm('Are you sure to delete ' + view.title + '?');
             if (!confirmation) {
                 return;
             }
