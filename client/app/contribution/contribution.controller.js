@@ -286,7 +286,7 @@ angular.module('kf6App')
                     elem.innerHTML = $kftag.createReferenceTag('', '(missing link)', '', '');
                 }
             });
-            $scope.initializing = 'lastone';
+            $scope.initializing = 'lasttwo'; // rethink
             $scope.copy.body = jq.html();
         };
 
@@ -408,21 +408,34 @@ angular.module('kf6App')
         }
 
         $scope.updateDirtyStatus = function() {
-            if ($scope.initializing === 'true') {
+            if (!$scope.isEditable()) {
+                $scope.dirty = false;
                 return;
             }
-            if ($scope.initializing === 'lastone') {
-                $scope.initializing = 'false';
+            if ($scope.contribution.type !== 'Note') {
+                $scope.dirty = true;
+                return;
+            }
+            if ($scope.initializing === 'true') {
                 $scope.dirty = false;
+                return;
+            }
+            if ($scope.initializing === 'lasttwo') { // rethink depending on tinyMCE
+                $scope.initializing = 'lastone';
+                return;
+            }
+            if ($scope.initializing === 'lastone') { // rethink depending on tinyMCE
+                $scope.initializing = 'false';
                 return;
             }
             $scope.dirty = true;
         };
 
         $(window).bind('beforeunload', function(e) {
-            if ($scope.dirty) {
+            if ($scope.dirty && $scope.contribution.type === 'Note') {
                 return 'The contribution is not contributed. Are you sure to leave?';
             }
+            return;
         });
 
         $scope.buildson = function() {
