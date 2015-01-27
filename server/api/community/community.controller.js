@@ -114,7 +114,24 @@ exports.create = function(req, res) {
         }
 
         //return res.json(201, community);
-        return exports.createScaffold(req, res, community);
+        exports.createView(req, res, community, function() {
+            exports.createScaffold(req, res, community);
+        });
+    });
+};
+
+exports.createView = function(req, res, community, handler) {
+    Contribution.create({
+        communityId: community._id,
+        title: 'Welcome',
+        type: 'View'
+    }, function(err, view) {
+        community.views.push(view._id);
+        community.save(function(err) {
+            if (handler) {
+                handler();
+            }
+        });
     });
 };
 
