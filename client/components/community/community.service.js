@@ -32,12 +32,14 @@ angular.module('kf6App')
                 scaffolds.length = 0; //clear once
                 var scaffoldIds = community.scaffolds;
                 scaffoldIds.forEach(function(scaffoldId) {
+                    var newScaffold = {};
+                    scaffolds.push(newScaffold);
                     $http.get('/api/contributions/' + scaffoldId).success(function(scaffold) {
-                        scaffolds.push(scaffold);
-                        scaffold.supports = [];
+                        _.extend(newScaffold, scaffold);
+                        newScaffold.supports = [];
                         $http.get('/api/links/from/' + scaffoldId).success(function(supports) {
                             supports.forEach(function(support) {
-                                scaffold.supports.push(support);
+                                newScaffold.supports.push(support);
                             });
                         });
                         if (handler) {
@@ -213,6 +215,32 @@ angular.module('kf6App')
             });
         };
 
+        var createScaffold = function(title, success) {
+            $http.post('/api/contributions', {
+                communityId: communityId,
+                title: title,
+                type: 'Scaffold'
+            }).success(function(scaffold) {
+                var url = 'api/communities/' + communityId;
+                $http.get(url).success(function(community) {
+                    community.scaffolds.push(scaffold._id);
+                    $http.put(url, community).success(function() {
+                        success(scaffold);
+                    });
+                });
+            });
+        };
+
+        var updateCommunity = function(obj, success) {
+            var url = 'api/communities/' + communityId;
+            $http.get(url).success(function(community) {
+                var newCommunity = _.extend(community, obj); /* dont use merge, for overriding array */
+                $http.put(url, newCommunity).success(function() {
+                    success();
+                });
+            });
+        };
+
         var makeAuthorString = function(authorObjects) {
             var authorString = '';
             authorObjects.forEach(function(each) {
@@ -258,7 +286,9 @@ angular.module('kf6App')
             createNoteOn: createNoteOn,
             createDrawing: createDrawing,
             createView: createView,
+            createScaffold: createScaffold,
             removeView: removeView,
+            updateCommunity: updateCommunity,
             refreshViews: refreshViews,
             makeRiseabove: makeRiseabove,
             refreshScaffolds: refreshScaffolds,

@@ -445,6 +445,11 @@ angular.module('kf6App')
             });
         };
 
+        $scope.openScaffolds = function() {
+            var url = '/scaffoldmanager/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
         $scope.createWorkspace = function(reg, handler) {
             var title = Auth.getCurrentUser().name + '\'s workspace';
             $community.createView(title, function(view) {
@@ -518,9 +523,9 @@ angular.module('kf6App')
             var width = screen.width * 0.5;
             var height = screen.height * 0.8;
             var w = window.open(url, '_blank', 'width=' + width + ',height=' + height);
-            if (w) {                
+            if (w) {
                 w.moveTo(100, 100);
-            }else{
+            } else {
                 window.alert('Failed to open popup on your browser. (You may open the second time on safari.)');
             }
         };

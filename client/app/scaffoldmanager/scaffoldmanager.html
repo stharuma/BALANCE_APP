@@ -1,0 +1,27 @@
+<div class="col-md-12">
+    <div>
+        <label>Scaffolds</label>
+        <div style="text-align: right;">
+            <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">edit</button>
+        </div>
+        <ul ui-sortable style="cursor: move;" ng-model="scaffolds">
+            <li ng-repeat="scaffold in scaffolds">
+                {{scaffold.title}} &nbsp;&nbsp;
+                <button ng-show="input.editMode" type="submit" class="btn btn-primary" ng-click="removeScaffold(scaffold)">x</button>
+            </li>
+        </ul>
+        <div ng-if="input.editMode" style="text-align: right;">
+            <button type="submit" class="btn btn-primary" ng-click="saveOrder()">Save Order</button>
+        </div>
+    </div>
+
+    <div>
+        <label>New Scaffold</label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="Input New Scaffold Title" ng-model="input.scaffoldTitle">
+            <span class="input-group-btn">
+        		<button type="submit" class="btn btn-primary" ng-click="addScaffold()">Add New Scaffold</button>
+     		 </span>
+        </p>
+    </div>
+</div>

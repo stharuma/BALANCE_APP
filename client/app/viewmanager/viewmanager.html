@@ -4,20 +4,20 @@
     <label>Views in this Community</label>
     <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">edit</button>
     <ul>
-        <li ng-repeat="view in views"><a href='view/{{view._id}}'>{{view.title}}</a> &nbsp;&nbsp;
+        <li ng-repeat="view in views"><a href='view/{{view._id}}'>{{view.title}}</a>&nbsp;&nbsp;
             <button ng-show="input.editMode" type="submit" class="btn btn-primary" ng-click="removeView(view)">x</button>
         </li>
     </ul>
 
     <br>
 
-    <div ng-show="input.editMode">
+    <div>
         <label>New View</label>
         <p class="input-group">
             <input type="text" class="form-control" placeholder="Input New View Title" ng-model="input.title">
             <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="addView()">Add New View</button>
-      </span>
+                <button type="submit" class="btn btn-primary" ng-click="addView()">Add New View</button>
+            </span>
         </p>
     </div>
 
