@@ -18,7 +18,7 @@ angular.module('kf6App')
 
         $scope.isViewsCollapsed = true;
         $scope.status = {};
-        $scope.status.isViewManagerCollapsed = true;        
+        $scope.status.isViewManagerCollapsed = true;
         $scope.isAttachmentCollapsed = true;
         $scope.setting = {
             isclosed: true,
@@ -518,7 +518,11 @@ angular.module('kf6App')
             var width = screen.width * 0.5;
             var height = screen.height * 0.8;
             var w = window.open(url, '_blank', 'width=' + width + ',height=' + height);
-            w.moveTo(100, 100);
+            if (w) {                
+                w.moveTo(100, 100);
+            }else{
+                alert("Failed to open popup on your browser. (You may open the second time on safari.)");
+            }
         };
 
         var windowIdNum = 1;
