@@ -46,6 +46,7 @@ angular.module('kf6App')
         };
 
         var enter = function(newId) {
+            registration = null;
             if (!newId) {
                 console.log('bad newId: ' + newId);
                 return;
