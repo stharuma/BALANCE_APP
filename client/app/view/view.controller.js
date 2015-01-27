@@ -17,6 +17,8 @@ angular.module('kf6App')
         $scope.dragging = 'none';
 
         $scope.isViewsCollapsed = true;
+        $scope.status = {};
+        $scope.status.isViewManagerCollapsed = true;        
         $scope.isAttachmentCollapsed = true;
         $scope.setting = {
             isclosed: true,
@@ -426,10 +428,10 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
-        $scope.openViewProperty = function() {
-            var url = './contribution/' + viewId;
-            window.open(url, '_blank');
-        };
+        // $scope.openViewProperty = function() {
+        //     var url = './contribution/' + viewId;
+        //     window.open(url, '_blank');
+        // };
 
         $scope.openWorkspace = function() {
             $community.getRegistration(function(reg) {

@@ -1,25 +1,31 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
+<!-- <div ng-include="'components/navbar/navbar.html'"></div> -->
 
 <div class="col-md-12">
-    This is the viewmanager view.
+    <label>Views in this Community</label>
+    <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">edit</button>
     <ul>
-        <li ng-repeat="view in views"><a href='view/{{view._id}}'>{{view.title}}</a>
+        <li ng-repeat="view in views"><a href='view/{{view._id}}'>{{view.title}}</a> &nbsp;&nbsp;
+            <button ng-show="input.editMode" type="submit" class="btn btn-primary" ng-click="removeView(view)">x</button>
         </li>
     </ul>
 
-    <form class="thing-form">
-        <label></label>
+    <br>
+
+    <div ng-show="input.editMode">
+        <label>New View</label>
         <p class="input-group">
-            <input type="text" class="form-control" placeholder="" ng-model="newViewTitle">
+            <input type="text" class="form-control" placeholder="Input New View Title" ng-model="input.title">
             <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="addView()">Add New</button>
+        <button type="submit" class="btn btn-primary" ng-click="addView()">Add New View</button>
       </span>
         </p>
-    </form>
-
-    <div>
-        <label>Administration</label>
-        <button type="submit" class="btn btn-primary" ng-click="updateAllCash()">UpdateAllCash</button>
     </div>
+
+    <!--     <div>
+        <label>Administration</label>
+        <br>
+        (don't use this.)
+        <button type="submit" class="btn btn-primary" ng-click="updateAllCash()">UpdateAllCash</button>
+    </div> -->
 
 </div>

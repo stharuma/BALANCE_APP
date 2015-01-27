@@ -95,7 +95,7 @@ angular.module('kf6App')
                 return;
             }
             $http.put('/api/registrations/' + reg._id, reg).success(function(dbReg) {
-                registration = dbReg;                
+                registration = dbReg;
                 if (handler) {
                     handler(registration);
                 }
@@ -193,6 +193,22 @@ angular.module('kf6App')
             });
         };
 
+        var removeView = function(view, success) {
+            var url = 'api/communities/' + communityId;
+            $http.get(url).success(function(community) {
+                var newViews = [];
+                community.views.forEach(function(each) {
+                    if (each !== view._id) {
+                        newViews.push(each);
+                    }
+                });
+                community.views = newViews;
+                $http.put(url, community).success(function() {
+                    success();
+                });
+            });
+        };
+
         var makeAuthorString = function(authorObjects) {
             var authorString = '';
             authorObjects.forEach(function(each) {
@@ -238,6 +254,7 @@ angular.module('kf6App')
             createNoteOn: createNoteOn,
             createDrawing: createDrawing,
             createView: createView,
+            removeView: removeView,
             refreshViews: refreshViews,
             makeRiseabove: makeRiseabove,
             refreshScaffolds: refreshScaffolds,
