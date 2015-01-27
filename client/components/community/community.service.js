@@ -11,6 +11,9 @@ angular.module('kf6App')
         var registration = null;
 
         var refreshViews = function(handler) {
+            if (!communityId) {
+                return;
+            }
             $http.get('/api/communities/' + communityId + '/views').success(function(result) {
                 views.length = 0; //clear once
                 result.forEach(function(each) {
