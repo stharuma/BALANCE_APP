@@ -24,8 +24,12 @@ angular.module('kf6App')
                 var $scope = scope.$parent;
                 var el = element[0];
                 el.draggable = true;
-                el.addEventListener('dragstart', function() {
+                el.addEventListener('dragstart', function(e) {
                     $scope.draggingViewlink = scope.view;
+                    e.dataTransfer.setData('Text', el.id);
+                });
+                el.addEventListener('dragend', function() {
+                    $scope.draggingViewlink = null;
                 });
             }
         };
@@ -258,15 +262,6 @@ angular.module('kf6App')
                         newY = newY + ref.data.y;
                     }
 
-                    if ($scope.draggingViewlink) {
-                        var view = $scope.draggingViewlink;
-                        $scope.createOnViewRef(view, {
-                            x: newX,
-                            y: newY
-                        });
-                        $scope.draggingViewlink = null;
-                        return;
-                    }
                     if ($scope.dragging !== 'none') { //Internal DnD
                         var postref = $scope.dragging;
                         var dx = newX - postref.data.x - $scope.dragpoint.x;
@@ -276,6 +271,12 @@ angular.module('kf6App')
                             postref.data.x += dx;
                             postref.data.y += dy;
                             $scope.saveRef(postref);
+                        });
+                    } else if ($scope.draggingViewlink) {
+                        var view = $scope.draggingViewlink;
+                        $scope.createOnViewRef(view, {
+                            x: newX,
+                            y: newY
                         });
                     } else { //External DnD
                         var data = e.dataTransfer.getData('text');
@@ -292,6 +293,7 @@ angular.module('kf6App')
                             });
                         });
                     }
+                    $scope.draggingViewlink = null;
                 };
 
                 var el = element[0];

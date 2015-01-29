@@ -3,9 +3,10 @@
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <button type="submit" class="btn btn-primary kfbutton" ng-click="createViewlink()">close</button>
         </div>
+        Please drag and drop to view to make a view link.
         <div style="height: 400px; overflow: scroll;">
             <div ng-repeat="view in views">
-                <div viewlink style="white-space: nowrap;"><img draggable="false" src="manual_assets/kf4images/icon-view.gif"><a ng-click="openView(view._id)" style="color: #0000FF;">{{view.title}}</a>
+                <div viewlink style="white-space: nowrap;"><img draggable="false" src="manual_assets/kf4images/icon-view.gif">{{view.title}}
                 </div>
             </div>
         </div>
