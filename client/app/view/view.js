@@ -222,10 +222,10 @@ angular.module('kf6App')
                     if ($scope.isSelected(id) === false) {
                         return;
                     }
-                    var target = $('#' + id);
-                    target.resizable('destroy');
-                    $('#viewcanvas').append(target);
                     $scope.remove($scope.selected, id);
+                    var target = $('#' + id);
+                    $('#viewcanvas').append(target);
+                    target.resizable('destroy');
                 };
 
                 $scope.clearSelection = function() {
