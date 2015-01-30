@@ -31,14 +31,5 @@ angular.module('kf6App')
             });
         };
 
-        /*********** view ************/
-        $scope.updateAllCash = function() {
-            $http.get('/api/links/updateallcash/' + communityId).
-            success(function() {
-                window.alert('updateing cash successed.');
-            });
-        };
-
-
         $scope.$on('$destroy', function() {});
     });

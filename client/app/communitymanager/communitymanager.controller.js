@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth) {
+    .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location) {
         $scope.author = Auth.getCurrentUser();
         $scope.selected = {};
         $scope.myCommunities = [];
@@ -57,6 +57,16 @@ angular.module('kf6App')
             }
             var d = new Date(time);
             return d.toLocaleString();
+        };
+
+        $scope.openManager = function() {
+            if (!$scope.selected.community) {
+                window.alert('Error: please select community.');
+                return;
+            }
+            var id = $scope.selected.community._id;
+            var url = 'communityeditor/' + id;
+            $location.path(url);
         };
 
         $scope.$on('$destroy', function() {});
