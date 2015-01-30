@@ -2,8 +2,15 @@
 
     <label>Administration</label>
     <div>
-        <label>title:</label>  	
-        {{community.title}}
+        <label>title:</label>
+        <input type="text" class="form-control" placeholder="" ng-model="community.title">
+        <br>
+        <label>key:</label>
+        <input type="text" class="form-control" placeholder="" ng-model="community.registrationKey">
+
+        <div style="text-align: right;">
+            <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
+        </div>
     </div>
     <div>
         <label>updateCash</label>

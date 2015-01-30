@@ -10,7 +10,15 @@ angular.module('kf6App')
             $scope.community = community;
         });
 
-        /*********** view ************/
+        $scope.save = function() {
+            $http.put('api/communities/' + communityId, $scope.community).success(function() {
+                window.alert('successed.');
+            }).error(function() {
+                window.alert('failed.');
+            });
+        };
+
+
         $scope.updateAllCash = function() {
             $http.get('/api/links/updateallcash/' + communityId).
             success(function() {
