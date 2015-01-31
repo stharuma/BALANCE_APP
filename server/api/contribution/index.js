@@ -18,7 +18,7 @@ router.get('/records/:id', controller.showrecords);
 
 var multipart = require('connect-multiparty');
 var config = require('../../config/environment');
-var multipartMiddleware = multipart({ uploadDir: config.uploadpath });
+var multipartMiddleware = multipart({ uploadDir: config.attachmentsPath });
 router.post('/upload', multipartMiddleware, controller.upload);
 
 module.exports = router;

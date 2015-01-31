@@ -61,12 +61,11 @@ module.exports = function(app) {
         app.use(errorHandler()); // Error handler - has to be last
     }
 
-    /* for upload */
+    /* for attachments upload */
     var fs = require('fs');
-    config.uploadpath = path.join(config.root, 'uploads');
     config.uploadurl = '/uploads';
-    if (fs.existsSync(config.uploadpath) === false) {
-        var res = fs.mkdirSync(config.uploadpath);
+    if (fs.existsSync(config.attachmentsPath) === false) {
+        var res = fs.mkdirSync(config.attachmentsPath);
     }
-    app.use('/uploads', express.static(config.uploadpath));
+    app.use('/uploads', express.static(config.attachmentsPath));
 };
