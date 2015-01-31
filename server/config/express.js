@@ -60,12 +60,5 @@ module.exports = function(app) {
         app.use(morgan('dev'));
         app.use(errorHandler()); // Error handler - has to be last
     }
-
-    /* for attachments upload */
-    var fs = require('fs');
-    config.uploadurl = '/uploads';
-    if (fs.existsSync(config.attachmentsPath) === false) {
-        var res = fs.mkdirSync(config.attachmentsPath);
-    }
-    app.use('/uploads', express.static(config.attachmentsPath));
+    
 };

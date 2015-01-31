@@ -19,6 +19,9 @@ if(config.seedDB) { require('./config/seed'); }
 
 // Setup server
 var app = express();
+// Expose app
+exports = module.exports = app;
+
 var server = require('http').createServer(app);
 var socketio = require('socket.io')(server, {
   serveClient: (config.env === 'production') ? false : true,
@@ -32,6 +35,3 @@ require('./routes')(app);
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
 });
-
-// Expose app
-exports = module.exports = app;

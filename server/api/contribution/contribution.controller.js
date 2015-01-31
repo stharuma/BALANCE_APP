@@ -8,12 +8,13 @@ var Record = require('../record/record.model');
 
 // Get list of contributions
 exports.index = function(req, res) {
-    Contribution.find(function(err, contributions) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.json(200, contributions);
-    });
+    // Contribution.find(function(err, contributions) {
+    //     if (err) {
+    //         return handleError(res, err);
+    //     }
+    //     return res.json(200, contributions);
+    // });
+    return res.json(200, []);
 };
 
 // Get a single contribution
@@ -56,7 +57,7 @@ exports.update = function(req, res) {
         updated.authors = req.body.authors;
         updated.markModified('authors');
         updated.keywords = req.body.keywords;
-        updated.markModified('keywords');        
+        updated.markModified('keywords');
         updated.save(function(err) {
             if (err) {
                 console.log(err);
