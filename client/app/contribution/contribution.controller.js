@@ -28,13 +28,15 @@ angular.module('kf6App')
         $scope.images = [];
         $scope.property = {};
 
-
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             if (window.localStorage) {
                 var item = window.localStorage.getItem('kfdoc');
                 if (item) {
                     $scope.recoverable = true;
                 }
+            }
+            if (!contribution.data) {
+                contribution.data = {};
             }
             $scope.contribution = contribution;
             $scope.$watch('contribution.title', function() {
@@ -54,7 +56,7 @@ angular.module('kf6App')
                 $scope.updateDirtyStatus();
             });
             $ac.mixIn($scope, contribution);
-            $scope.copy.body = contribution.body;
+            $scope.copy.body = contribution.data.body;
             $scope.$watch('copy.body', function() {
                 $scope.updateDirtyStatus();
             });
@@ -193,7 +195,7 @@ angular.module('kf6App')
                 //$scope.note.body = tinymce.activeEditor.getContent();
                 //tinymce.activeEditor.isNotDirty = true;
                 $scope.postProcess($scope.copy.body, function(jq) {
-                    cont.body = jq.html();
+                    cont.data.body = jq.html();
                     var text = jq.text();
                     cont.text4search = '( ' + cont.title + ' ) ' + text + ' ( ' + $scope.copy.keywords + ' )';
                     $scope.sendContribute();
@@ -204,7 +206,7 @@ angular.module('kf6App')
             if (cont.type === 'Drawing') {
                 var wnd = document.getElementById('svgedit').contentWindow;
                 wnd.svgEditor.canvas.setResolution('fit', 100);
-                if(!cont.data){
+                if (!cont.data) {
                     cont.data = {};
                 }
                 cont.data.svg = wnd.svgCanvas.svgCanvasToString();

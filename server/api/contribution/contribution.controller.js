@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 
 var Contribution = require('./contribution.model');
 var Record = require('../record/record.model');
+var Link = require('../link/link.model');
 
 // Get list of contributions
 exports.index = function(req, res) {
@@ -35,6 +36,20 @@ exports.create = function(req, res) {
     Contribution.create(req.body, function(err, contribution) {
         if (err) {
             return handleError(res, err);
+        }
+        Record.create({
+            authorId: req.user._id,
+            targetId: contribution._id,
+            type: 'create'
+        });
+        if (req.body.buildson !== null) {
+            exports.createBuildsOn(res, contribution, req.body.buildson, function(err) {
+                if (err) {
+                    return handlerError(res, err);
+                }
+                return res.json(201, contribution);
+            });
+            return;
         }
         return res.json(201, contribution);
     });
@@ -260,6 +275,53 @@ exports.upload = function(req, res) {
     obj.size = file.size;
     obj.type = file.type;
     return res.json(200, obj);
+};
+
+// this method is painful
+exports.createBuildsOn = function(res, note, buildsonId, handler) {
+    Link.createWithCash({
+        from: note._id,
+        to: buildsonId,
+        type: 'buildson'
+    }, function(err, link) {
+        if (err) {
+            if (handler) {
+                handler(err);
+            }
+            return;
+        }
+        Link.find({
+                to: link.to,
+                type: 'contains'
+            },
+            function(err, refs) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                refs.forEach(function(ref) {
+                    var newref = {
+                        from: ref.from,
+                        to: link.from,
+                        type: 'contains',
+                        data: {
+                            x: ref.data.x + 50,
+                            y: ref.data.y + 50
+                        }
+                    };
+                    Link.createWithCash(newref, function(err, newref) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                    });
+                });
+            });
+        if (handler) {
+            handler(err, link);
+        }
+        return;
+    });
 };
 
 function handleError(res, err) {

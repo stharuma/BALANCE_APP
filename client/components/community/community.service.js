@@ -157,11 +157,14 @@ angular.module('kf6App')
 
         var createNoteCommon = function(fromId, success) {
             var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/notes', {
+            var data = {};
+            data.body = '';
+            $http.post('/api/contributions', {
                     communityId: communityId,
+                    type: 'Note',
                     title: 'New Note',
-                    body: '',
                     authors: authors,
+                    data: data,
                     buildson: fromId
                 })
                 .success(function(note) {
