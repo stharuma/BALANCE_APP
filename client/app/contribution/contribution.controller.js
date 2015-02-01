@@ -286,7 +286,8 @@ angular.module('kf6App')
                     elem.innerHTML = $kftag.createReferenceTag('', '(missing link)', '', '');
                 }
             });
-            $scope.initializing = 'lasttwo'; // rethink
+            //$scope.initializing = 'lasttwo'; // rethink
+            $scope.initializing = 'lastone'; // rethink need            
             $scope.copy.body = jq.html();
         };
 
