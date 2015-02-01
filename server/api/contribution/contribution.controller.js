@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var Contribution = require('./contribution.model');
 var Record = require('../record/record.model');
 var Link = require('../link/link.model');
+var LinkController = require('../link/link.controller.js');
 
 // Get list of contributions
 exports.index = function(req, res) {
@@ -282,11 +283,13 @@ exports.upload = function(req, res) {
 
 // this method is painful
 exports.createBuildsOn = function(res, note, buildsonId, handler) {
-    Link.createWithCash({
+    var seed = {
+        communityId: note.communityId,
         from: note._id,
         to: buildsonId,
         type: 'buildson'
-    }, function(err, link) {
+    };
+    LinkController.checkAndCreate(seed, function(err, link) {
         if (err) {
             if (handler) {
                 handler(err);
@@ -312,7 +315,7 @@ exports.createBuildsOn = function(res, note, buildsonId, handler) {
                             y: ref.data.y + 50
                         }
                     };
-                    Link.createWithCash(newref, function(err, newref) {
+                    LinkController.checkAndCreate(newref, function(err, newref) {
                         if (err) {
                             console.log(err);
                             return;
