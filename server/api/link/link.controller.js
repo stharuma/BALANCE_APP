@@ -155,7 +155,7 @@ function getFromToContributions(fromId, toId, handler) {
             handler(from, to);
         });
     });
-};
+}
 
 // Updates an existing link in the DB.
 exports.update = function(req, res) {
@@ -263,7 +263,7 @@ function updateCash(link, handler) {
         link.markModified('_to');
         return link.save(handler);
     });
-};
+}
 
 function showMissingLinkMsg(link, fromObj, toObj) {
     var msg = 'missinglink';

@@ -83,7 +83,7 @@ angular.module('kf6App')
 
             //assure data
             if (!ref._to) {
-                console.log("ref._to not found");
+                console.log('ref._to not found');
                 ref._to = {};
             }
             if (!ref.data) {

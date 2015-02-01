@@ -68,7 +68,7 @@ exports.update = function(req, res) {
         try {
             processAttachment(newobj);
         } catch (e) {
-            return res.send(500);
+            return res.send(500, e);
         }
     }
 
@@ -115,7 +115,7 @@ exports.update = function(req, res) {
 function processAttachment(newobj) {
     var tmpFile = path.join(config.attachmentsPath, newobj.data.tmpFilename);
     if (fs.existsSync(tmpFile) === false) {
-        return res.send(404);
+        throw 'tmpfile not found.';
     }
 
     // this part use recursive mkdir future
