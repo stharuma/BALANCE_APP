@@ -39,10 +39,10 @@ angular.module('kf6App')
 
         $scope.updateCanvas = function() {
             $http.get('/api/links/from/' + viewId).success(function(refs) {
-                //temporary get rid of others from onviewref
+                //temporary get rid of others from contains
                 var onviewrefs = [];
                 refs.forEach(function(ref) {
-                    if (ref.type === 'onviewref') {
+                    if (ref.type === 'contains') {
                         onviewrefs.push(ref);
                     }
                 });
@@ -349,7 +349,7 @@ angular.module('kf6App')
             var refObj = {};
             refObj.from = view._id;
             refObj.to = targetId;
-            refObj.type = 'onviewref';
+            refObj.type = 'contains';
             if (target) {
                 refObj.titleTo = target.title;
                 refObj.authorsTo = target.authors;
@@ -412,7 +412,7 @@ angular.module('kf6App')
             $http.post('/api/links', {
                 from: $scope.view._id,
                 to: attachment._id,
-                type: 'onviewref',
+                type: 'contains',
                 data: {
                     x: 200,
                     y: 200,

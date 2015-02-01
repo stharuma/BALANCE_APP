@@ -158,7 +158,7 @@
             <div>
                 <label>Views for this note:</label>
                 <ul>
-                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='onviewref'">
+                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='contains'">
                         <a href="/view/{{conn.from}}" target="_blank">{{conn.titleFrom}}</a>
                     </li>
                 </ul>
