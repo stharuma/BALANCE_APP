@@ -25,13 +25,13 @@ var ContributionSchema = new Schema({
     },
     status: { //unsaved, active or inactive
         type: String,
-        required: true,
+        required: false,//this should be true in the future
         index: true,
         default: 'unsaved'
     },
     permission: { //public or private
         type: String,
-        required: true,
+        required: false,//this should be true in the future
         index: true,
         default: 'public'
     },

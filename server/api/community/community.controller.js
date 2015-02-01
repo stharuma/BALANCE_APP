@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 var Community = require('./community.model');
 var Contribution = require('../contribution/contribution.model');
-var Link = require('../link/link.model');
+var LinkController = require('../link/link.controller.js');
 var Registration = require('../registration/registration.model');
 var User = require('../user/user.model');
 
@@ -165,17 +165,28 @@ exports.createScaffold = function(req, res, community) {
         title: 'Putting our knowledge together',
         type: 'Support'
     }, function(err, sc1, s1, s2, s3, s4, s5, s6) {
+        if (err) {
+            return handleError(res, err);
+        }
         community.scaffolds = [sc1._id];
-        var supports = [s1, s2, s3, s4, s5, s6];
         community.save(function(err) {
-            supports.forEach(function(each) {
-                Link.createWithCash({
+            if (err) {
+                return handleError(res, err);
+            }
+            var supports = [s1, s2, s3, s4, s5, s6];
+            supports.forEach(function(each, i) {
+                var seed = {
+                    communityId: community._id,
                     from: sc1._id,
                     to: each._id,
-                    type: 'contains'
-                });
-                return res.json(201, community);
+                    type: 'contains',
+                    data: {
+                        order: i
+                    }
+                };
+                LinkController.checkAndCreate(seed);
             });
+            return res.json(201, community);
         });
     });
 };

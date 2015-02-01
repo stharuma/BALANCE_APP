@@ -96,15 +96,28 @@ exports.show = function(req, res) {
 
 exports.create = function(req, res) {
     var seed = req.body;
-    checkAndPrepareSeed(seed, function(err) {
+    exports.checkAndCreate(seed, function(err, link) {
         if (err) {
             return handleError(res, err);
         }
-        Link.create(seed, function(err, link) {
-            if (err) {
-                return handleError(res, err);
+        return res.json(201, link);
+    });
+};
+
+// this function is used by community.controller create.
+exports.checkAndCreate = function(seed, handler) {
+    checkAndPrepareSeed(seed, function(err) {
+        if (err) {
+            if (handler) {
+                handler(err);
             }
-            return res.json(201, link);
+            return;
+        }
+        Link.create(seed, function(err, link) {
+            if (handler) {
+                handler(err, link);
+            }
+            return;
         });
     });
 };
@@ -192,11 +205,6 @@ exports.destroy = function(req, res) {
 
 // Get a single link
 exports.updateAllCash = function(req, res) {
-    Link.find({
-        communityId: req.params.communityId,
-    }, function(err, x) {
-        console.log(x);
-    });
     Link.update({
         communityId: req.params.communityId,
     }, {
