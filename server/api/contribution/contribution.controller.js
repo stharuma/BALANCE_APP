@@ -91,11 +91,17 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(contribution, newobj);
-        updated.authors = newobj.authors;
-        updated.markModified('authors');
-        updated.keywords = newobj.keywords;
-        updated.markModified('keywords');
-        updated.markModified('data');
+        if (newobj.authors) {
+            updated.authors = newobj.authors;
+            updated.markModified('authors');
+        }
+        if (newobj.keywords) {
+            updated.keywords = newobj.keywords;
+            updated.markModified('keywords');
+        }
+        if (newobj.data) {
+            updated.markModified('data');
+        }
         updated.save(function(err, newContribution) {
             if (err) {
                 console.log(err);

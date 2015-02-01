@@ -148,7 +148,9 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(link, req.body);
-        updated.markModified('data');
+        if (req.body.data) {
+            updated.markModified('data');
+        }
         updated.save(function(err) {
             if (err) {
                 return handleError(res, err);
