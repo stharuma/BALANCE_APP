@@ -82,38 +82,6 @@ exports.onviewindex = function(req, res) {
 };
 
 // Get a single link
-exports.updateAllCash = function(req, res) {
-    exports.updateAllCashRec(req, res);
-}
-
-exports.updateAllCashRec = function(req, res) {
-    var query = Link.find({
-        communityId: req.params.communityId,
-        typeTo: null
-    }).limit(5000);
-    query.exec(function(err, links) {
-        if (err) {
-            return handleError(res, err);
-        }
-        var len = links.length;
-        console.log(len + ' links to update!');
-        if (len <= 0) {
-            console.log('no links to update!');
-            return res.send(200);
-        }
-        var numFinished = 0;
-        links.forEach(function(link) {
-            Link.updateCash(link, function() {
-                numFinished++;
-                if (numFinished >= len) {
-                    exports.updateAllCashRec(req, res);
-                }
-            });
-        });
-    });
-};
-
-// Get a single link
 exports.show = function(req, res) {
     Link.findById(req.params.id, function(err, link) {
         if (err) {
@@ -127,11 +95,52 @@ exports.show = function(req, res) {
 };
 
 exports.create = function(req, res) {
-    Link.createWithCash(req.body, function(err, link) {
+    var seed = req.body;
+    checkAndPrepareSeed(seed, function(err) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(201, link);
+        Link.create(seed, function(err, link) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(201, link);
+        });
+    });
+};
+
+function checkAndPrepareSeed(seed, handler) {
+    getFromToContributions(seed.from, seed.to, function(from, to) {
+        if (!seed.type) {
+            return handler("no seed type." + seed);
+        }
+        if (from === null || to === null) {
+            return handler("missing link in seed: " + seed);
+        }
+        if (!seed.communityId) {
+            seed.communityId = from.communityId;
+            console.log('communityId missing automatically complimented:' + seed);
+        }
+        if (from.communityId.toString() !== to.communityId.toString()) {
+            return handler('from.communityId !== to.communityId');
+        }
+        if (seed.communityId.toString() !== from.communityId.toString()) {
+            return handler('seed.communityId !== from.communityId');
+        }
+        if (seed.communityId.toString() !== to.communityId.toString()) {
+            return handler('seed.communityId !== from.communityId');
+        }
+        seed._from = Link.createCashObj(from);
+        seed._to = Link.createCashObj(to);
+        return handler(); //OK
+    });
+}
+
+function getFromToContributions(fromId, toId, handler) {
+    Contribution.findById(fromId, function(err, from) {
+        Contribution.findById(toId, function(err, to) {
+            handler(from, to);
+        });
     });
 };
 
@@ -178,6 +187,92 @@ exports.destroy = function(req, res) {
     });
 };
 
+// ----- cash remaking function ------
+// ----- cash remaking is unnecessary in normal usage ------
+
+// Get a single link
+exports.updateAllCash = function(req, res) {
+    Link.find({
+        communityId: req.params.communityId,
+    }, function(err, x) {
+        console.log(x);
+    });
+    Link.update({
+        communityId: req.params.communityId,
+    }, {
+        $set: {
+            _to: null
+        }
+    }, {
+        upsert: false,
+        multi: true
+    }, function(err, x) {
+        if (err) {
+            return handleError(res, err);
+        }
+        exports.updateAllCashRec(req, res);
+    });
+}
+
+exports.updateAllCashRec = function(req, res) {
+    var query = Link.find({
+        communityId: req.params.communityId,
+        _to: null
+    }).limit(5000);
+    query.exec(function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        var len = links.length;
+        console.log(len + ' links to update!');
+        if (len <= 0) {
+            console.log('no links to update!');
+            return res.send(200);
+        }
+        var numFinished = 0;
+        links.forEach(function(link) {
+            updateCash(link, function() {
+                numFinished++;
+                if (numFinished >= len) {
+                    exports.updateAllCashRec(req, res);
+                }
+            });
+        });
+    });
+};
+
+function updateCash(link, handler) {
+    getFromToContributions(link.from, link.to, function(from, to) {
+        if (from === null || to === null) {
+            showMissingLinkMsg(link, from, to);
+            link._from = 'missing';
+            link._to = 'missing';
+            return link.save(handler);
+        }
+        link._from = Link.createCashObj(from);
+        link.markModified('_from');
+        link._to = Link.createCashObj(to);
+        link.markModified('_to');
+        return link.save(handler);
+    });
+};
+
+function showMissingLinkMsg(link, fromObj, toObj) {
+    var msg = 'missinglink';
+    msg += ', type=' + link.type;
+    msg += ', from=' + link.from;
+    if (fromObj) {
+        msg += ', fromType=' + fromObj.type;
+    }
+    msg += ', to=' + link.to;
+    if (toObj) {
+        msg += ', toType=' + toObj.type;
+    }
+    console.log(msg);
+}
+
+//--------------------------------------------
 function handleError(res, err) {
+    console.log(err);
     return res.send(500, err);
 }

@@ -23,13 +23,19 @@ var ContributionSchema = new Schema({
         type: [Schema.ObjectId],
         default: []
     },
-    permission: {//public or private
+    status: { //unsaved, active or inactive
         type: String,
-        //required: true,//temporary not required
+        required: true,
+        index: true,
+        default: 'unsaved'
+    },
+    permission: { //public or private
+        type: String,
+        required: true,
         index: true,
         default: 'public'
     },
-    keywords:[String],
+    keywords: [String],
     text4search: String,
     data: Schema.Types.Mixed
 });
