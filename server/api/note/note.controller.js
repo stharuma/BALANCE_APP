@@ -36,7 +36,7 @@ exports.createBuildsOn = function(res, note, buildsonId) {
         }
         Link.find({
                 to: link.to,
-                type: 'onviewref'
+                type: 'contains'
             },
             function(err, refs) {
                 if (err) {
@@ -46,7 +46,7 @@ exports.createBuildsOn = function(res, note, buildsonId) {
                     var newref = {
                         from: ref.from,
                         to: link.from,
-                        type: 'onviewref',
+                        type: 'contains',
                         data: {
                             x: ref.data.x + 50,
                             y: ref.data.y + 50
