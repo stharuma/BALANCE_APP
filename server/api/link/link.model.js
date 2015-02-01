@@ -24,14 +24,30 @@ var LinkSchema = new Schema({
         required: true,
         index: true
     },
-    data: Schema.Types.Mixed,
+    data: {
+        type: Schema.Types.Mixed,
+        required: true,
+        default: {}
+    },
     /* here are cash to work read faster */
+    _to: {
+        type: Schema.Types.Mixed,
+        required: true,
+        default: {}
+    },
+    _from: {
+        type: Schema.Types.Mixed,
+        required: true,
+        default: {}
+    }
+    /*
     typeTo: String,
     titleTo: String,
     authorsTo: [Schema.ObjectId],
     typeFrom: String,
     titleFrom: String,
     authorsFrom: [Schema.ObjectId]
+    */
 });
 
 
@@ -44,10 +60,8 @@ var updateLinks = function(contribution) {
             return;
         }
         links.forEach(function(link) {
-            link.typeTo = contribution.type;
-            link.titleTo = contribution.title;
-            link.markModified('authorsTo');
-            link.authorsTo = contribution.authors;
+            link._to = createCash(contribution);
+            link.markModified('_to');
             link.save();
         });
     });
@@ -58,10 +72,8 @@ var updateLinks = function(contribution) {
             return;
         }
         links.forEach(function(link) {
-            link.typeFrom = contribution.type;
-            link.titleFrom = contribution.title;
-            link.markModified('authorsFrom');
-            link.authorsFrom = contribution.authors;
+            link._from = createCash(contribution);
+            link.markModified('_from');
             link.save();
         });
     });
@@ -72,6 +84,52 @@ var Contribution = require('../contribution/contribution.model');
 Contribution.schema.post('save', function(contribution) {
     updateLinks(contribution);
 });
+
+/* thism method should call when create a link */
+Link.createWithCash = function(seed, handler) {
+    Link.create(seed, function(err, link) {
+        Link.updateCash(link, handler);
+    });
+};
+
+/* thism method should call when create a link */
+Link.updateCash = function(link, handler) {
+    Contribution.findById(link.from, function(err, from) {
+        if (err) {
+            if (handler) {
+                handler(err);
+            }
+            return;
+        }
+        Contribution.findById(link.to, function(err, to) {
+            if (err) {
+                if (handler) {
+                    handler(err);
+                }
+                return;
+            }
+            if (from === null || to === null) {
+                showMissingLinkMsg(link, from, to);
+                link._from = 'missing';
+                link._to = 'missing';
+                return link.save(handler);
+            }
+            link._from = createCash(from);
+            link.markModified('_from');
+            link._to = createCash(to);
+            link.markModified('_to');
+            return link.save(handler);
+        });
+    });
+};
+
+function createCash(seed) {
+    var cash = {};
+    cash.type = seed.type;
+    cash.title = seed.title;
+    cash.authors = seed.authors;
+    return cash;
+}
 
 function showMissingLinkMsg(link, fromObj, toObj) {
     var msg = 'missinglink';
@@ -86,87 +144,5 @@ function showMissingLinkMsg(link, fromObj, toObj) {
     }
     console.log(msg);
 }
-
-/* thism method should call when create a link */
-Link.updateCash = function(link, handler) {
-    Contribution.findById(link.from, function(err, fromObj) {
-        if (err) {
-            if (handler) {
-                handler();
-            }
-            return;
-        }
-        Contribution.findById(link.to, function(err, toObj) {
-            if (err) {
-                if (handler) {
-                    handler();
-                }
-                return;
-            }
-            if (fromObj === null || toObj === null) {
-                console.log('updateCash missingLink');
-                showMissingLinkMsg(link, fromObj, toObj);
-                link.typeFrom = 'missing';
-                link.typeTo = 'missing';
-                link.save();
-                if (handler) {
-                    handler();
-                }
-                return;
-            }
-            link.typeFrom = fromObj.type;
-            link.titleFrom = fromObj.title;
-            link.authorsFrom = fromObj.authors;
-            link.typeTo = toObj.type;
-            link.titleTo = toObj.title;
-            link.authorsTo = toObj.authors;
-            link.save();
-            if (handler) {
-                handler();
-            }
-        });
-    });
-};
-
-/* thism method should call when create a link */
-Link.createWithCash = function(seed, handler) {
-    if (seed.typeTo && seed.typeFrom) {
-        Link.create(seed, handler);
-    } else {
-        Contribution.findById(seed.from, function(err, fromObj) {
-            if (err) {
-                if (handler) {
-                    handler();
-                }
-                return;
-            }
-            Contribution.findById(seed.to, function(err, toObj) {
-                if (err) {
-                    if (handler) {
-                        handler();
-                    }
-                    return;
-                }
-                if (fromObj === null || toObj === null) {
-                    console.log('createWithCash missingLink');
-                    showMissingLinkMsg(seed, fromObj, toObj);
-                    seed.typeFrom = 'missing';
-                    seed.typeTo = 'missing';
-                    if (handler) {
-                        handler();
-                    }
-                    return;
-                }
-                seed.typeFrom = fromObj.type;
-                seed.titleFrom = fromObj.title;
-                seed.authorsFrom = fromObj.authors;
-                seed.typeTo = toObj.type;
-                seed.titleTo = toObj.title;
-                seed.authorsTo = toObj.authors;
-                Link.create(seed, handler);
-            });
-        });
-    }
-};
 
 module.exports = Link;

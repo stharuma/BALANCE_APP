@@ -260,7 +260,7 @@ angular.module('kf6App')
                     return conn._id === elem.id;
                 });
                 if (ref) {
-                    elem.innerHTML = $kftag.createScaffoldStartTag(ref.titleFrom);
+                    elem.innerHTML = $kftag.createScaffoldStartTag(ref._from.title);
                 } else {
                     elem.innerHTML = $kftag.createScaffoldStartTag('(missing link)');
                 }
@@ -281,7 +281,7 @@ angular.module('kf6App')
                     if (ref.data) {
                         text = ref.data.text;
                     }
-                    elem.innerHTML = $kftag.createReferenceTag(ref.to, ref.titleTo, ref.authorsTo, text);
+                    elem.innerHTML = $kftag.createReferenceTag(ref.to, ref._to.title, ref._to.authors, text);
                 } else {
                     elem.innerHTML = $kftag.createReferenceTag('', '(missing link)', '', '');
                 }
@@ -486,7 +486,7 @@ angular.module('kf6App')
             return attachment.data.type.indexOf('image/') === 0;
         };
 
-        $scope.downloadAttachment = function(attachment){
+        $scope.downloadAttachment = function(attachment) {
             window.location = attachment.data.url;
         };
 
@@ -548,7 +548,7 @@ angular.module('kf6App')
                 return;
             }
             var id = supportRef.to;
-            var title = supportRef.titleTo;
+            var title = supportRef._to.title;
             var tag = $kftag.createNewScaffoldTag(id, title);
             $scope.mceEditor.insertContent(tag);
         };

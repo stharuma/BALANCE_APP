@@ -3,7 +3,7 @@
     </select>
     <div class="box" style="padding-top: 10px; height: 200px; overflow-y: auto;">
         <div class="box2" ng-click="addSupport(s);" ng-repeat="s in current.supports" context-menu="onContextOpen(this)" data-target="menu-A">
-            {{s.titleTo}}
+            {{s._to.title}}
         </div>
     </div>
     <div class="dropdown position-fixed" id="menu-A">

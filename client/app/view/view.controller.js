@@ -80,10 +80,16 @@ angular.module('kf6App')
         };
 
         $scope.updateRef = function(ref) {
+
             //assure data
+            if (!ref._to) {
+                console.log("ref._to not found");
+                ref._to = {};
+            }
             if (!ref.data) {
                 ref.data = {};
             }
+
             if (ref.refreshFixedStatus) {
                 ref.refreshFixedStatus();
             }
@@ -104,13 +110,13 @@ angular.module('kf6App')
             ref.authorObjects = [];
 
             ref.getIcon = function() {
-                if (ref.typeTo === 'View') {
+                if (ref._to.type === 'View') {
                     return 'manual_assets/kf4images/icon-view.gif';
                 }
-                if (ref.typeTo === 'Attachment') {
+                if (ref._to.type === 'Attachment') {
                     return 'manual_assets/kf4images/icon-attachment.gif';
                 }
-                if (ref.typeTo === 'Drawing') {
+                if (ref._to.type === 'Drawing') {
                     return 'manual_assets/kf4images/icon-drawing.gif';
                 }
 
@@ -130,7 +136,7 @@ angular.module('kf6App')
                 }
             };
 
-            if (ref.typeTo === 'View') {
+            if (ref._to.type === 'View') {
                 return;
             }
 
@@ -140,9 +146,11 @@ angular.module('kf6App')
             ref.amIAuthor = function() {
                 return $community.amIAuthor(ref);
             };
-            ref.authorsTo.forEach(function(id) {
-                ref.authorObjects.push($community.getMember(id));
-            });
+            if (ref._to.authors) {
+                ref._to.authors.forEach(function(id) {
+                    ref.authorObjects.push($community.getMember(id));
+                });
+            }
         };
 
         $scope.refreshRead = function() {
@@ -350,11 +358,6 @@ angular.module('kf6App')
             refObj.from = view._id;
             refObj.to = targetId;
             refObj.type = 'contains';
-            if (target) {
-                refObj.titleTo = target.title;
-                refObj.authorsTo = target.authors;
-                refObj.typeTo = target.type;
-            }
             refObj.data = data;
             $http.post('/api/links', refObj).success(function() {
                 if (handler) {
