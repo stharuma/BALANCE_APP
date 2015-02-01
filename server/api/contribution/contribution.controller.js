@@ -43,10 +43,10 @@ exports.create = function(req, res) {
             targetId: contribution._id,
             type: 'create'
         });
-        if (req.body.buildson !== null) {
+        if (req.body.buildson) {
             exports.createBuildsOn(res, contribution, req.body.buildson, function(err) {
                 if (err) {
-                    return handlerError(res, err);
+                    return handleError(res, err);
                 }
                 return res.json(201, contribution);
             });
