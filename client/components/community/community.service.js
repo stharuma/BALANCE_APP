@@ -206,8 +206,9 @@ angular.module('kf6App')
         };
 
         var createView = function(title, success, noregistration) {
-            $http.post('/api/views', {
+            $http.post('/api/contributions', {
                 communityId: communityId,
+                type: 'View',
                 title: title
             }).success(function(view) {
                 if (noregistration === true) {
