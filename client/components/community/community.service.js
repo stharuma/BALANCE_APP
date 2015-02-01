@@ -191,13 +191,15 @@ angular.module('kf6App')
         };
 
         var createDrawing = function(success) {
-            var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/drawings', {
-                    communityId: communityId,
-                    title: 'a Drawing',
-                    svg: '<svg width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><\/g><\/svg>',
-                    authors: authors
-                })
+            var newData = {};
+            newData.svg = '<svg width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><\/g><\/svg>';
+            var newDrawing = {};
+            newDrawing.communityId = communityId;
+            newDrawing.type = 'Drawing';
+            newDrawing.title = 'a Drawing';
+            newDrawing.authors = [Auth.getCurrentUser()._id];
+            newDrawing.data = newData;
+            $http.post('/api/contributions', newDrawing)
                 .success(function(drawing) {
                     success(drawing);
                 });

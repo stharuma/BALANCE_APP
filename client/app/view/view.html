@@ -122,7 +122,7 @@
                     </span>
                 </div>
                 <div ng-if="ref.data.showInPlace===true" ng-style="{'width': ref.data.width, 'height': ref.data.height}" ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}">
-                    <div ng-if="ref._to.type === 'Drawing'" ng-bind-html="ref.contribution.svg"></div>
+                    <div ng-if="ref._to.type === 'Drawing'" ng-bind-html="ref.contribution.data.svg"></div>
                     <div ng-if="ref._to.type === 'Attachment'">
                         <div ng-if="ref.contribution.data.type.indexOf('image/')>=0">
                             <img ng-attr-src="{{ref.contribution.data.url}}" ng-style="{'width': ref.data.width, 'height': ref.data.height}">

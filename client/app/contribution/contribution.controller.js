@@ -93,6 +93,7 @@ angular.module('kf6App')
                 $scope.editActive = true;
             }
         }).error(function(msg) {
+            console.log('error');
             console.log(msg);
         });
 
@@ -203,7 +204,10 @@ angular.module('kf6App')
             if (cont.type === 'Drawing') {
                 var wnd = document.getElementById('svgedit').contentWindow;
                 wnd.svgEditor.canvas.setResolution('fit', 100);
-                cont.svg = wnd.svgCanvas.svgCanvasToString();
+                if(!cont.data){
+                    cont.data = {};
+                }
+                cont.data.svg = wnd.svgCanvas.svgCanvasToString();
                 wnd.svgEditor.showSaveWarning = false;
             }
 
@@ -593,7 +597,7 @@ function onSvgInitialized() {
     //var svg = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
     var svg = '';
     if (window.contribution) {
-        svg = window.contribution.svg;
+        svg = window.contribution.data.svg;
     }
     //console.log(svg);
     wnd.svgCanvas.setSvgString(svg);

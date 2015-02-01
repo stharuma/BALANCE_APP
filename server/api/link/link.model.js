@@ -88,12 +88,19 @@ Contribution.schema.post('save', function(contribution) {
 /* thism method should call when create a link */
 Link.createWithCash = function(seed, handler) {
     Link.create(seed, function(err, link) {
+        if (err) {
+            return handler(err);
+        }
         Link.updateCash(link, handler);
     });
 };
 
 /* thism method should call when create a link */
 Link.updateCash = function(link, handler) {
+    if (!link || !link.from || !link.to) {
+        console.log('error link = ' + JSON.stringify(link));
+        return handler();
+    }
     Contribution.findById(link.from, function(err, from) {
         if (err) {
             if (handler) {
