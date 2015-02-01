@@ -1,4 +1,4 @@
-<div class="col-md-12" style="padding: 8px;">
+<div class="col-md-12" style="padding: 2px;">
 
     <!-- dialog -->
     <div class="well" collapse="isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
@@ -15,6 +15,7 @@
     </div>
 
     <p class="KFTitle">{{contribution.type}}: {{contribution.title}}</p>
+    <p class="KFModified">Last modified: {{getTimeString(contribution.modified)}}</p>    
     <div style="position: absolute; left: 0px; top: 0px; padding: 10px; width: 100%; text-align: right;">
         <button ng-disabled="!dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
     </div>

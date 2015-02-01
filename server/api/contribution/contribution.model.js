@@ -19,19 +19,23 @@ var ContributionSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    modified: {
+        type: Date,
+        default: Date.now
+    },
     authors: {
         type: [Schema.ObjectId],
         default: []
     },
     status: { //unsaved, active or inactive
         type: String,
-        required: false,//this should be true in the future
+        required: false, //this should be true in the future
         index: true,
-        default: 'unsaved'
+        default: 'active' //this should be unsaved in the future
     },
     permission: { //public or private
         type: String,
-        required: false,//this should be true in the future
+        required: false, //this should be true in the future
         index: true,
         default: 'public'
     },

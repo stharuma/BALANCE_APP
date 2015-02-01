@@ -29,7 +29,7 @@ var LinkSchema = new Schema({
         required: true,
         default: {}
     },
-    /* here are cash to work read faster */
+    /* here are cash in order to work faster for reading */
     _to: {
         type: Schema.Types.Mixed,
         required: true,
@@ -85,6 +85,8 @@ Link.createCashObj = function(contribution) {
     cash.authors = contribution.authors;
     cash.permission = contribution.permission;
     cash.status = contribution.status;
+    cash.created = contribution.created;
+    cash.modified = contribution.modified;    
     return cash;
 }
 

@@ -65,29 +65,7 @@ exports.update = function(req, res) {
 
     if (newobj.type === 'Attachment') {
         try {
-            var tmpFile = path.join(config.attachmentsPath, newobj.data.tmpFilename);
-            if (fs.existsSync(tmpFile) === false) {
-                return res.send(404);
-            }
-
-            // this part use recursive mkdir future
-            var commDir = path.join(config.attachmentsPath, newobj.communityId);
-            if (fs.existsSync(commDir) === false) {
-                fs.mkdirSync(commDir);
-            }
-            var contribDir = path.join(commDir, newobj._id);
-            if (fs.existsSync(contribDir) === false) {
-                fs.mkdirSync(contribDir);
-            }
-            var versionDir = path.join(contribDir, newobj.data.version.toString());
-            if (fs.existsSync(versionDir) === false) {
-                fs.mkdirSync(versionDir);
-            }
-            var newFile = path.join(versionDir, newobj.data.filename);
-            fs.renameSync(tmpFile, newFile);
-
-            delete newobj.data.tmpFilename;
-            newobj.data.url = path.join(config.attachmentsURL, newobj.communityId, newobj._id, newobj.data.version.toString(), newobj.data.filename);
+            processAttachment(newobj);
         } catch (e) {
             return res.send(500);
         }
@@ -117,6 +95,7 @@ exports.update = function(req, res) {
         if (newobj.data) {
             updated.markModified('data');
         }
+        updated.modified = Date.now();
         updated.save(function(err, newContribution) {
             if (err) {
                 console.log(err);
@@ -132,7 +111,31 @@ exports.update = function(req, res) {
     });
 };
 
+function processAttachment(newobj) {
+    var tmpFile = path.join(config.attachmentsPath, newobj.data.tmpFilename);
+    if (fs.existsSync(tmpFile) === false) {
+        return res.send(404);
+    }
 
+    // this part use recursive mkdir future
+    var commDir = path.join(config.attachmentsPath, newobj.communityId);
+    if (fs.existsSync(commDir) === false) {
+        fs.mkdirSync(commDir);
+    }
+    var contribDir = path.join(commDir, newobj._id);
+    if (fs.existsSync(contribDir) === false) {
+        fs.mkdirSync(contribDir);
+    }
+    var versionDir = path.join(contribDir, newobj.data.version.toString());
+    if (fs.existsSync(versionDir) === false) {
+        fs.mkdirSync(versionDir);
+    }
+    var newFile = path.join(versionDir, newobj.data.filename);
+    fs.renameSync(tmpFile, newFile);
+
+    delete newobj.data.tmpFilename;
+    newobj.data.url = path.join(config.attachmentsURL, newobj.communityId, newobj._id, newobj.data.version.toString(), newobj.data.filename);
+}
 
 // Deletes a contribution from the DB.
 exports.destroy = function(req, res) {

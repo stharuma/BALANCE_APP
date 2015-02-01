@@ -135,11 +135,15 @@ angular.module('kf6App')
                 $scope.records.forEach(function(record) {
                     record.user = $community.getMember(record.authorId);
                     record.getTime = function() {
-                        var d = new Date(record.timestamp);
-                        return d.toLocaleString();
+                        return $scope.getTimeString(record.timestamp);
                     };
                 });
             });
+        };
+
+        $scope.getTimeString = function(time) {
+            var d = new Date(time);
+            return d.toLocaleString();
         };
 
         $scope.addAuthor = function(author) {
