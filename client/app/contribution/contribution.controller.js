@@ -58,7 +58,9 @@ angular.module('kf6App')
             $ac.mixIn($scope, contribution);
             $scope.copy.body = contribution.data.body;
             $scope.$watch('copy.body', function() {
-                $scope.updateDirtyStatus();
+                if ($scope.mceEditor) {
+                    $scope.updateDirtyStatus();
+                }
             });
             $scope.property.isPublic = !contribution.permission || contribution.permission === 'public';
             $scope.$watch('property.isPublic', function() {
@@ -244,14 +246,6 @@ angular.module('kf6App')
             }
         };
 
-        function elemLoop(jq, func) {
-            var len = jq.size();
-            for (var i = 0; i < len; i++) {
-                var elem = jq.get(i);
-                func(elem);
-            }
-        }
-
         $scope.closeRequest = function() {
             if (window.wid) {
                 window.parent.closeDialog(window.wid);
@@ -261,162 +255,20 @@ angular.module('kf6App')
         };
 
         $scope.preProcess = function() {
-            var doc = '<div>' + $scope.copy.body + '</div>';
-            var jq = $(doc);
-
-            jq.find('.KFSupportStart').addClass('mceNonEditable');
-            elemLoop(jq.find('.KFSupportStart'), function(elem) {
-                var ref = _.find($scope.toConnections, function(conn) {
-                    return conn._id === elem.id;
-                });
-                if (ref) {
-                    elem.innerHTML = $kftag.createScaffoldStartTag(ref._from.title);
-                } else {
-                    elem.innerHTML = $kftag.createScaffoldStartTag('(missing link)');
-                }
-            });
-
-            jq.find('.KFSupportEnd').addClass('mceNonEditable');
-            elemLoop(jq.find('.KFSupportEnd'), function(elem) {
-                elem.innerHTML = $kftag.createScaffoldEndTag();
-            });
-
-            jq.find('.KFReference').addClass('mceNonEditable');
-            elemLoop(jq.find('.KFReference'), function(elem) {
-                var ref = _.find($scope.fromConnections, function(conn) {
-                    return conn._id === elem.id;
-                });
-                if (ref) {
-                    var text = '';
-                    if (ref.data) {
-                        text = ref.data.text;
-                    }
-                    elem.innerHTML = $kftag.createReferenceTag(ref.to, ref._to.title, ref._to.authors, text);
-                } else {
-                    elem.innerHTML = $kftag.createReferenceTag('', '(missing link)', '', '');
-                }
-            });
-            //$scope.initializing = 'lasttwo'; // rethink
-            $scope.initializing = 'lastone'; // rethink need            
-            $scope.copy.body = jq.html();
+            $scope.copy.body = $kftag.preProcess($scope.copy.body, $scope.toConnections, $scope.fromConnections);
+            $scope.initializing = false;
         };
 
         $scope.postProcess = function(text, handler) {
-            var doc = '<div>' + text + '</div>';
-            var jq = $(doc);
-            var todos = [];
-            var endtags = {};
-            var supportLinks = getLinks($scope.toConnections, 'supports');
-            var dSupportLinks = getLinks($scope.toConnections, 'supports'); //TODO we need two to support duplication the algorithm problem         
-
-            elemLoop(jq.find('.KFSupportStart'), function(elem) {
-                elem.innerHTML = '';
-                processOneElement(todos, elem, supportLinks, dSupportLinks, 'supports', elem.id, contributionId, endtags, {});
-            });
-
-            elemLoop(jq.find('.KFSupportEnd'), function(elem) {
-                elem.innerHTML = '';
-                var id = elem.id;
-                endtags[id] = elem;
-            });
-
-            deleteLinks(todos, _.map(dSupportLinks));
-
-            var referenceLinks = getLinks($scope.fromConnections, 'references');
-            var dReferenceLinks = getLinks($scope.fromConnections, 'references');
-
-            elemLoop(jq.find('.KFReference'), function(elem) {
-                var data = {};
-                data.text = $(elem).find('.KFReferenceText').html();
-                elem.innerHTML = '';
-                processOneElement(todos, elem, referenceLinks, dReferenceLinks, 'references', contributionId, elem.id, {}, data);
-            });
-
-            deleteLinks(todos, _.map(dReferenceLinks));
-
-            processTodo(todos, function() {
-                handler(jq);
-                // not effecient
-                // we need a way of to reflect changes to the copy text
-                $scope.updateToConnections();
-                $scope.updateFromConnections();
-            });
+            $kftag.postProcess(text, contributionId, $scope.toConnections, $scope.fromConnections,
+                function(jq) {
+                    handler(jq);
+                    // not effecient
+                    // we need a way of to reflect changes to the copy text
+                    $scope.updateToConnections();
+                    $scope.updateFromConnections();
+                });
         };
-
-        function processOneElement(todos, elem, links, deleteLinks, type, fromId, toId, endtags, data) {
-            if (links[elem.id]) {
-                delete deleteLinks[elem.id];
-            } else {
-                todos.push(function(handler) {
-                    $scope.createLink(type, fromId, toId, data, function(link) {
-                        if (!link) {
-                            console.log('failure');
-                            handler();
-                            return;
-                        }
-                        var oldId = elem.id;
-                        var newId = link._id;
-                        elem.id = newId;
-                        if (endtags[oldId]) {
-                            endtags[oldId].id = newId;
-                        }
-                        handler();
-                    });
-                });
-            }
-        }
-
-        function getLinks(sourceLinks, type) {
-            var links = {};
-            sourceLinks.forEach(function(each) {
-                if (each.type === type) {
-                    links[each._id] = each;
-                }
-            });
-            return links;
-        }
-
-        function deleteLinks(todos, links) {
-            links.forEach(function(each) {
-                todos.push(function(handler) {
-                    $http.delete('/api/links/' + each._id).success(function() {
-                        handler();
-                    }).error(function() {
-                        handler();
-                    });
-                });
-            });
-        }
-
-        $scope.createLink = function(type, fromId, toId, data, handler) {
-            var refObj = {};
-            refObj.from = fromId;
-            refObj.to = toId;
-            refObj.type = type;
-            refObj.data = data;
-            $http.post('/api/links', refObj).success(function(ref) {
-                handler(ref);
-            }).error(function() {
-                handler();
-            });
-        };
-
-        function processTodo(todos, handler) {
-            var len = todos.length;
-            var numFinished = 0;
-            if (len <= 0) {
-                handler();
-                return;
-            }
-            todos.forEach(function(func) {
-                func(function() {
-                    numFinished++;
-                    if (numFinished >= len) {
-                        handler();
-                    }
-                });
-            });
-        }
 
         $scope.updateDirtyStatus = function() {
             if (!$scope.isEditable()) {
@@ -429,14 +281,6 @@ angular.module('kf6App')
             }
             if ($scope.initializing === 'true') {
                 $scope.dirty = false;
-                return;
-            }
-            if ($scope.initializing === 'lasttwo') { // rethink depending on tinyMCE
-                $scope.initializing = 'lastone';
-                return;
-            }
-            if ($scope.initializing === 'lastone') { // rethink depending on tinyMCE
-                $scope.initializing = 'false';
                 return;
             }
             $scope.dirty = true;
