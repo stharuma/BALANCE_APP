@@ -40,12 +40,49 @@ exports.create = function(req, res) {
     });
 };
 
+var fs = require('fs');
+var path = require('path');
+var config = require('../../config/environment');
+
 // Updates an existing contribution in the DB.
 exports.update = function(req, res) {
-    if (req.body._id) {
-        delete req.body._id;
-        delete req.body.__v; /* by using this, we can avoid conflict of editing multi users*/
+    var newobj = req.body;
+
+    if (newobj.type === 'Attachment') {
+        try {
+            var tmpFile = path.join(config.attachmentsPath, newobj.data.tmpFilename);
+            if (fs.existsSync(tmpFile) === false) {
+                return res.send(404);
+            }
+
+            // this part use recursive mkdir future
+            var commDir = path.join(config.attachmentsPath, newobj.communityId);
+            if (fs.existsSync(commDir) === false) {
+                fs.mkdirSync(commDir);
+            }
+            var contribDir = path.join(commDir, newobj._id);
+            if (fs.existsSync(contribDir) === false) {
+                fs.mkdirSync(contribDir);
+            }
+            var versionDir = path.join(contribDir, newobj.data.version.toString());
+            if (fs.existsSync(versionDir) === false) {
+                fs.mkdirSync(versionDir);
+            }
+            var newFile = path.join(versionDir, newobj.data.filename);
+            fs.renameSync(tmpFile, newFile);
+
+            delete newobj.data.tmpFilename;
+            newobj.data.url = path.join(config.attachmentsURL, newobj.communityId, newobj._id, newobj.data.version.toString(), newobj.data.filename);
+        } catch (e) {
+            return res.send(500);
+        }
     }
+
+    if (newobj._id) {
+        delete newobj._id;
+        delete newobj.__v; /* by using this, we can avoid conflict of editing multi users*/
+    }
+
     Contribution.findById(req.params.id, function(err, contribution) {
         if (err) {
             return handleError(res, err);
@@ -53,12 +90,13 @@ exports.update = function(req, res) {
         if (!contribution) {
             return res.send(404);
         }
-        var updated = _.merge(contribution, req.body);
-        updated.authors = req.body.authors;
+        var updated = _.merge(contribution, newobj);
+        updated.authors = newobj.authors;
         updated.markModified('authors');
-        updated.keywords = req.body.keywords;
+        updated.keywords = newobj.keywords;
         updated.markModified('keywords');
-        updated.save(function(err) {
+        updated.markModified('data');
+        updated.save(function(err, newContribution) {
             if (err) {
                 console.log(err);
                 return handleError(res, err);
@@ -68,8 +106,7 @@ exports.update = function(req, res) {
                 targetId: contribution._id,
                 type: 'update'
             });
-            //exports.updateRefs(contribution);
-            return res.json(200, contribution);
+            return res.json(200, newContribution);
         });
     });
 };
@@ -210,7 +247,13 @@ exports.search = function(req, res) {
 // };
 
 exports.upload = function(req, res) {
-    return res.json(200, req.files);
+    var file = req.files.file;
+    var obj = {};
+    obj.filename = file.originalFilename;
+    obj.tmpFilename = file.path.split('\\').pop().split('/').pop();
+    obj.size = file.size;
+    obj.type = file.type;
+    return res.json(200, obj);
 };
 
 function handleError(res, err) {

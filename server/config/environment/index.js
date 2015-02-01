@@ -61,7 +61,8 @@ var all = {
 };
 
 // Add path to save attachments for KF
-all.attachmentsPath = process.env.ATTACHMENTS_PATH || path.join(all.root, 'attachments'),
+all.attachmentsPath = process.env.ATTACHMENTS_PATH || path.join(all.root, 'attachments');
+all.attachmentsURL = '/attachments';
 
 // Export the config object based on the NODE_ENV
 // ==============================================

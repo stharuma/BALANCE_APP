@@ -25,7 +25,7 @@ if (fs.existsSync(config.attachmentsPath) === false) {
 var app = require('../../app');
 //auth does not work because img will be retrieved the browser auth, not angular $http auth
 //app.use('/uploads', auth.isAuthenticated(), express.static(config.attachmentsPath));
-app.use('/uploads', express.static(config.attachmentsPath));
+app.use(config.attachmentsURL, express.static(config.attachmentsPath));
 
 /* for attachments upload */
 var multipart = require('connect-multiparty');

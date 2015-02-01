@@ -30,10 +30,10 @@
                 </div>
                 <div ng-if="contribution.type === 'Attachment'">
                     <div ng-if="isImage(contribution)">
-                        <img ng-attr-src="{{contribution.url}}">
+                        <img ng-attr-src="{{contribution.data.url}}">
                     </div>
                     <div ng-if="!isImage(contribution)">
-                        <a ng-attr-href="{{contribution.url}}">Download</a> ({{contribution.originalName}}, {{contribution.mime}}, {{contribution.size}}Bytes)
+                        <a ng-click="downloadAttachment(contribution)">Download</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
                     </div>
                 </div>
                 <div id="riseabovediv"></div>

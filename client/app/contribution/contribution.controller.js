@@ -479,10 +479,14 @@ angular.module('kf6App')
         };
 
         $scope.isImage = function(attachment) {
-            if (attachment.mime === undefined) {
+            if (!attachment.data || !attachment.data.type) {
                 return false;
             }
-            return attachment.mime.indexOf('image/') === 0;
+            return attachment.data.type.indexOf('image/') === 0;
+        };
+
+        $scope.downloadAttachment = function(attachment){
+            window.location = attachment.data.url;
         };
 
         /*********** tinymce ************/

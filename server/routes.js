@@ -12,7 +12,6 @@ module.exports = function(app) {
   app.use('/api/registrations', require('./api/registration'));
   app.use('/api/communities', require('./api/community'));
   app.use('/api/drawings', require('./api/drawing'));
-  app.use('/api/attachments', require('./api/attachment'));
   app.use('/api/links', require('./api/link'));
   app.use('/api/records', require('./api/record'));
   app.use('/api/notes', require('./api/note'));

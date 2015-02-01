@@ -407,6 +407,7 @@ angular.module('kf6App')
         $scope.attachmentUpdated = function(attachment) {
             $timeout(function() {
                 $scope.isAttachmentCollapsed = true;
+                $scope.$digest($scope.isAttachmentCollapsed);
             }, 1000);
             $http.post('/api/links', {
                 from: $scope.view._id,

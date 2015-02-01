@@ -124,8 +124,8 @@
                 <div ng-if="ref.data.showInPlace===true" ng-style="{'width': ref.data.width, 'height': ref.data.height}" ng-attr-id="icon{{ref._id}}" ng-attr-class="icon{{ref.to}}">
                     <div ng-if="ref.typeTo === 'Drawing'" ng-bind-html="ref.contribution.svg"></div>
                     <div ng-if="ref.typeTo === 'Attachment'">
-                        <div ng-if="ref.contribution.mime.indexOf('image/')>=0">
-                            <img ng-attr-src="{{ref.contribution.url}}" ng-style="{'width': ref.data.width, 'height': ref.data.height}">
+                        <div ng-if="ref.contribution.data.type.indexOf('image/')>=0">
+                            <img ng-attr-src="{{ref.contribution.data.url}}" ng-style="{'width': ref.data.width, 'height': ref.data.height}">
                         </div>
                         <div ng-if="ref.contribution.mime.indexOf('image/')<0">
                             <a ng-attr-href="{{ref.contribution.url}}">{{ref.contribution.title}}</a>

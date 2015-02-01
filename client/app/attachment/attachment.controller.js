@@ -13,24 +13,29 @@ angular.module('kf6App')
 
         $scope.onFileSelect = function($files) {
             $files.forEach(function(file) {
+                $scope.createAttachment(file);
+            });
+        };
+
+        $scope.createAttachment = function(file) {
+            $community.createAttachment(function(attachment) {
                 $scope.upload = $upload.upload({
                         url: 'api/contributions/upload',
                         method: 'POST',
-                        data: {
-                            myObj: $scope.myModelObj
-                        },
                         file: file
                     })
                     .progress(function(evt) {
                         var percent = parseInt(100.0 * evt.loaded / evt.total);
                         $scope.progress = percent;
                     }).success(function(data) {
-                        var path = data.file.path;
-                        var filename = path.split('\\').pop().split('/').pop();
-                        var url = '/uploads/' + filename;
-                        $community.createAttachment(url, file, $scope.updated);
-                    }).error(function(data, status) {
-                        console.log(data, status, $scope.updated);
+                        attachment.title = data.filename;
+                        data.version = attachment.data.version + 1;
+                        attachment.data = data;
+                        $http.put('api/contributions/' + attachment._id, attachment).success(function(newAttachment) {
+                            $scope.updated(newAttachment);
+                        });
+                    }).error(function(/*data, status*/) {
+                        window.alert('error on uploading');
                     });
             });
         };

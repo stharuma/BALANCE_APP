@@ -141,16 +141,15 @@ angular.module('kf6App')
             });
         };
 
-        var createAttachment = function(url, file, success) {
+        var createAttachment = function(success) {
             var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/attachments', {
+            $http.post('/api/contributions', {
                 communityId: communityId,
-                title: file.name + ' (' + file.type + ')',
-                url: url,
-                originalName: file.name,
-                mime: file.type,
-                size: file.size,
-                authors: authors
+                type: 'Attachment',
+                authors: authors,
+                data: {
+                    version: 0
+                }
             }).success(function(attachment) {
                 success(attachment);
             });
