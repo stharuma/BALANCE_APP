@@ -104,7 +104,6 @@ exports.create = function(req, res) {
     });
 };
 
-// this function is used by community.controller create.
 exports.checkAndCreate = function(seed, handler) {
     checkAndPrepareSeed(seed, function(err) {
         if (err) {

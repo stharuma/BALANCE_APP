@@ -24,8 +24,8 @@ angular.module('kf6App')
             if ($scope.input.supportTitle === '') {
                 return;
             }
-            var scaffold = $scope.selected.scaffold;        
-            $community.createSupport(scaffold, $scope.input.supportTitle, 100, function(support) {
+            var scaffold = $scope.selected.scaffold;
+            $community.createSupport(scaffold, $scope.input.supportTitle, 100, function() {
                 $community.fillSupport(scaffold, function() {
                     $scope.supports = scaffold.supports;
                 });

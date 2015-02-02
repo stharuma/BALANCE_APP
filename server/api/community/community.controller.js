@@ -2,9 +2,9 @@
 
 var mongoose = require('mongoose');
 var _ = require('lodash');
+
 var Community = require('./community.model');
 var Contribution = require('../contribution/contribution.model');
-var LinkController = require('../link/link.controller.js');
 var Registration = require('../registration/registration.model');
 var User = require('../user/user.model');
 
@@ -162,5 +162,6 @@ exports.destroy = function(req, res) {
 };
 
 function handleError(res, err) {
+    console.log(err);
     return res.send(500, err);
 }
