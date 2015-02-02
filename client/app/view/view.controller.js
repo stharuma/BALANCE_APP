@@ -62,7 +62,8 @@ angular.module('kf6App')
                     }
                 });
                 //authors info
-                $scope.refs.forEach(function(ref) {
+                var refscopy = _.clone($scope.refs);
+                refscopy.forEach(function(ref) {
                     $scope.updateRef(ref);
                 });
                 $community.updateCommunityMembers();
@@ -81,7 +82,7 @@ angular.module('kf6App')
 
         $scope.updateRef = function(ref) {
 
-            //assure data
+            // assure data
             if (!ref._to) {
                 console.log('ref._to not found');
                 ref._to = {};
@@ -90,8 +91,8 @@ angular.module('kf6App')
                 ref.data = {};
             }
 
-            ref.active = ref._to.status === 'active';
-            if (!ref.active) {
+            // show only active
+            if (ref._to.status !== 'active') {
                 _.remove($scope.refs, function(obj) {
                     return obj === ref;
                 });
