@@ -141,32 +141,20 @@ angular.module('kf6App')
             });
         };
 
-        var createAttachment = function(success) {
-            var authors = [Auth.getCurrentUser()._id];
-            $http.post('/api/contributions', {
-                communityId: communityId,
-                type: 'Attachment',
-                authors: authors,
-                data: {
-                    version: 0
-                }
-            }).success(function(attachment) {
-                success(attachment);
-            });
-        };
-
         var createNoteCommon = function(fromId, success) {
-            var authors = [Auth.getCurrentUser()._id];
-            var data = {};
-            data.body = '';
-            $http.post('/api/contributions', {
-                    communityId: communityId,
-                    type: 'Note',
-                    title: 'New Note',
-                    authors: authors,
-                    data: data,
-                    buildson: fromId
-                })
+            var newobj = {
+                communityId: communityId,
+                type: 'Note',
+                title: 'New Note',
+                authors: [Auth.getCurrentUser()._id],
+                status: 'unsaved',
+                permission: 'protected',
+                data: {
+                    body: ''
+                },
+                buildson: fromId
+            };
+            $http.post('/api/contributions', newobj)
                 .success(function(note) {
                     success(note);
                 });
@@ -194,26 +182,33 @@ angular.module('kf6App')
         };
 
         var createDrawing = function(success) {
-            var newData = {};
-            newData.svg = '<svg width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><\/g><\/svg>';
-            var newDrawing = {};
-            newDrawing.communityId = communityId;
-            newDrawing.type = 'Drawing';
-            newDrawing.title = 'a Drawing';
-            newDrawing.authors = [Auth.getCurrentUser()._id];
-            newDrawing.data = newData;
-            $http.post('/api/contributions', newDrawing)
+            var newobj = {
+                communityId: communityId,
+                type: 'Drawing',
+                title: 'a Drawing',
+                authors: [Auth.getCurrentUser()._id],
+                status: 'unsaved',
+                permission: 'protected',
+                data: {
+                    svg: '<svg width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><\/g><\/svg>',
+                }
+            };
+            $http.post('/api/contributions', newobj)
                 .success(function(drawing) {
                     success(drawing);
                 });
         };
 
         var createView = function(title, success, noregistration) {
-            $http.post('/api/contributions', {
+            var newobj = {
                 communityId: communityId,
                 type: 'View',
-                title: title
-            }).success(function(view) {
+                title: title,
+                authors: [Auth.getCurrentUser()._id],
+                status: 'active',
+                permission: 'public',
+            };
+            $http.post('/api/contributions', newobj).success(function(view) {
                 if (noregistration === true) {
                     success(view);
                 } else {
@@ -245,11 +240,15 @@ angular.module('kf6App')
         };
 
         var createScaffold = function(title, success) {
-            $http.post('/api/contributions', {
+            var newobj = {
                 communityId: communityId,
+                type: 'Scaffold',
                 title: title,
-                type: 'Scaffold'
-            }).success(function(scaffold) {
+                authors: [Auth.getCurrentUser()._id],
+                status: 'active',
+                permission: 'protected'
+            };
+            $http.post('/api/contributions', newobj).success(function(scaffold) {
                 var url = 'api/communities/' + communityId;
                 $http.get(url).success(function(community) {
                     community.scaffolds.push(scaffold._id);
@@ -257,6 +256,46 @@ angular.module('kf6App')
                         success(scaffold);
                     });
                 });
+            });
+        };
+
+        var createSupport = function(scaffold, title, order, success) {
+            var newobj = {
+                communityId: communityId,
+                type: 'Support',
+                title: title,
+                authors: [Auth.getCurrentUser()._id],
+                status: 'active',
+                permission: 'protected'
+            };
+            $http.post('/api/contributions', newobj).success(function(support) {
+                var link = {};
+                link.to = support._id;
+                link.from = scaffold._id;
+                link.type = 'contains';
+                link.data = {
+                    order: order
+                };
+                $http.post('/api/links', link).success(function() {
+                    success(support);
+                });
+            });
+        };
+
+        var createAttachment = function(success) {
+            var newobj = {
+                communityId: communityId,
+                type: 'Attachment',
+                title: 'an Attachment',
+                authors: [Auth.getCurrentUser()._id],
+                status: 'unsaved',
+                permission: 'protected',
+                data: {
+                    version: 0
+                }
+            };
+            $http.post('/api/contributions', newobj).success(function(attachment) {
+                success(attachment);
             });
         };
 
@@ -306,6 +345,18 @@ angular.module('kf6App')
             return _.contains(authorIds, Auth.getCurrentUser()._id);
         };
 
+        var createDefaultScaffold = function(handler) {
+            createScaffold('Theory Building', function(scaffold) {
+                createSupport(scaffold, 'My theory', 0, function() {});
+                createSupport(scaffold, 'A better theory', 1, function() {});
+                createSupport(scaffold, 'New Information', 2, function() {});
+                createSupport(scaffold, 'This theory cannot explain', 2, function() {});
+                createSupport(scaffold, 'I need to understand', 2, function() {});
+                createSupport(scaffold, 'Putting our knowledge together', 2, function() {});
+                handler();
+            });
+        };
+
         return {
             enter: enter,
             getMember: getMember,
@@ -316,6 +367,8 @@ angular.module('kf6App')
             createDrawing: createDrawing,
             createView: createView,
             createScaffold: createScaffold,
+            createSupport: createSupport,
+            createDefaultScaffold: createDefaultScaffold,
             fillSupport: fillSupport,
             removeView: removeView,
             updateCommunity: updateCommunity,

@@ -200,6 +200,7 @@ angular.module('kf6App')
             if (cont.type === 'Note') {
                 //$scope.note.body = tinymce.activeEditor.getContent();
                 //tinymce.activeEditor.isNotDirty = true;
+                cont.status = 'active';
                 $scope.postProcess($scope.copy.body, function(jq) {
                     cont.data.body = jq.html();
                     var text = jq.text();
@@ -210,6 +211,7 @@ angular.module('kf6App')
                 return;
             }
             if (cont.type === 'Drawing') {
+                cont.status = 'active';
                 var wnd = document.getElementById('svgedit').contentWindow;
                 wnd.svgEditor.canvas.setResolution('fit', 100);
                 if (!cont.data) {

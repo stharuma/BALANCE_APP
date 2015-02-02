@@ -90,6 +90,14 @@ angular.module('kf6App')
                 ref.data = {};
             }
 
+            ref.active = ref._to.status === 'active';
+            if (!ref.active) {
+                _.remove($scope.refs, function(obj) {
+                    return obj === ref;
+                });
+                return;
+            }
+
             if (ref.refreshFixedStatus) {
                 ref.refreshFixedStatus();
             }
@@ -188,9 +196,7 @@ angular.module('kf6App')
         $scope.updateLink = function(id) {
             $http.get('/api/links/tofrom/' + id).success(function(links) {
                 links.forEach(function(link) {
-                    if (link.type === 'buildson') {
-                        $scope.makeArrow(link);
-                    }
+                    $scope.makeArrow(link);
                 });
             });
         };

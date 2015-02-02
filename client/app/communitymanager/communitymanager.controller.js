@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location) {
+    .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location, $community) {
         $scope.author = Auth.getCurrentUser();
         $scope.selected = {};
         $scope.myCommunities = [];
@@ -46,9 +46,17 @@ angular.module('kf6App')
             $http.post('/api/communities', {
                 title: $scope.newCommunity.title,
                 registrationKey: $scope.newCommunity.key
+            }).success(function(community) {
+                $community.enter(community._id);
+                $community.createView('Welcome', function() {
+                    $community.createDefaultScaffold(function() {
+                        $state.reload();
+                    });
+                });
+            }).error(function() {
+                console.log('error in creating community');
             });
             $scope.newCommunity = {};
-            $state.reload();
         };
 
         $scope.toTimeString = function(time) {

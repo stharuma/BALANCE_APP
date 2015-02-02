@@ -29,12 +29,13 @@ angular.module('kf6App')
                         $scope.progress = percent;
                     }).success(function(data) {
                         attachment.title = data.filename;
+                        attachment.status = 'active';
                         data.version = attachment.data.version + 1;
                         attachment.data = data;
                         $http.put('api/contributions/' + attachment._id, attachment).success(function(newAttachment) {
                             $scope.updated(newAttachment);
                         });
-                    }).error(function(/*data, status*/) {
+                    }).error(function( /*data, status*/ ) {
                         window.alert('error on uploading');
                     });
             });

@@ -24,18 +24,9 @@ angular.module('kf6App')
             if ($scope.input.supportTitle === '') {
                 return;
             }
-            var scaffold = $scope.selected.scaffold;
-            $http.post('/api/contributions', {
-                communityId: scaffold.communityId,
-                title: $scope.input.supportTitle,
-                type: 'Support'
-            }).success(function(support) {
-                var ref = {};
-                ref.to = support._id;
-                ref.from = scaffold._id;
-                ref.type = 'contains';
-                $http.post('/api/links', ref).success(function() {
-                    $community.fillSupport(scaffold);
+            var scaffold = $scope.selected.scaffold;        
+            $community.createSupport(scaffold, $scope.input.supportTitle, 100, function(support) {
+                $community.fillSupport(scaffold, function() {
                     $scope.supports = scaffold.supports;
                 });
             });
