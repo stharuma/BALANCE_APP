@@ -3,11 +3,12 @@
 var _ = require('lodash');
 var Record = require('./record.model');
 
+var Contribution = require('../contribution/contribution.model');
 var Link = require('../link/link.model');
 var mongoose = require('mongoose');
 
 exports.read = function(req, res) {
-    Record.create({
+    exports.createInternal({
             authorId: req.user._id,
             targetId: req.params.contributionId,
             type: 'read'
@@ -60,11 +61,21 @@ exports.count = function(req, res) {
 
 // Get list of records
 exports.index = function(req, res) {
-    Record.find(function(err, records) {
+    //shuold not be used
+    return res.json(200, []);
+};
+
+exports.indexOfContribution = function(req, res) {
+    Record.find({
+        targetId: req.params.contributionId
+    }, function(err, records) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, records);
+        if (!records) {
+            return res.send(404);
+        }
+        return res.json(records);
     });
 };
 
@@ -83,7 +94,7 @@ exports.show = function(req, res) {
 
 // Creates a new record in the DB.
 exports.create = function(req, res) {
-    Record.create(req.body, function(err, record) {
+    exports.createInternal(req.body, function(err, record) {
         if (err) {
             return handleError(res, err);
         }
@@ -91,44 +102,21 @@ exports.create = function(req, res) {
     });
 };
 
-// Updates an existing record in the DB.
-exports.update = function(req, res) {
-    if (req.body._id) {
-        delete req.body._id;
+exports.createInternal = function(seed, handler) {
+    if (seed.communityId) {
+        Record.create(seed, handler);
+    } else {
+        Contribution.findById(seed.targetId, function(err, contribution) {
+            if (err) {
+                if (handler) {
+                    handler(err);
+                }
+                return;
+            }
+            seed.communityId = contribution.communityId;
+            Record.create(seed, handler);
+        });
     }
-    Record.findById(req.params.id, function(err, record) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!record) {
-            return res.send(404);
-        }
-        var updated = _.merge(record, req.body);
-        updated.save(function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.json(200, record);
-        });
-    });
-};
-
-// Deletes a record from the DB.
-exports.destroy = function(req, res) {
-    Record.findById(req.params.id, function(err, record) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!record) {
-            return res.send(404);
-        }
-        record.remove(function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.send(204);
-        });
-    });
 };
 
 function handleError(res, err) {

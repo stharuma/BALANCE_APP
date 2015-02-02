@@ -4,8 +4,8 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 
 var Contribution = require('./contribution.model');
-var Record = require('../record/record.model');
 var Link = require('../link/link.model');
+var RecordController = require('../record/record.controller.js');
 var LinkController = require('../link/link.controller.js');
 
 // Get list of contributions
@@ -38,10 +38,10 @@ exports.create = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        Record.create({
+        RecordController.createInternal({
             authorId: req.user._id,
             targetId: contribution._id,
-            type: 'create'
+            type: 'created'
         });
         if (req.body.buildson) {
             exports.createBuildsOn(res, contribution, req.body.buildson, function(err) {
@@ -102,10 +102,10 @@ exports.update = function(req, res) {
                 console.log(err);
                 return handleError(res, err);
             }
-            Record.create({
+            RecordController.createInternal({
                 authorId: req.user._id,
                 targetId: contribution._id,
-                type: 'update'
+                type: 'modified'
             });
             return res.json(200, newContribution);
         });
@@ -153,20 +153,6 @@ exports.destroy = function(req, res) {
             }
             return res.send(204);
         });
-    });
-};
-
-exports.showrecords = function(req, res) {
-    Record.find({
-        targetId: req.params.id
-    }, function(err, records) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!records) {
-            return res.send(404);
-        }
-        return res.json(records);
     });
 };
 

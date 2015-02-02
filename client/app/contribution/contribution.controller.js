@@ -132,7 +132,7 @@ angular.module('kf6App')
         };
 
         $scope.updateRecords = function() {
-            $http.get('/api/contributions/records/' + contributionId).success(function(records) {
+            $http.get('/api/records/contribution/' + contributionId).success(function(records) {
                 $scope.records = records;
                 $scope.records.forEach(function(record) {
                     record.user = $community.getMember(record.authorId);

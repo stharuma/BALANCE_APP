@@ -14,7 +14,6 @@ router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 
 router.post('/search', controller.search);
-router.get('/records/:id', controller.showrecords);
 
 /* for attachments */
 var fs = require('fs');

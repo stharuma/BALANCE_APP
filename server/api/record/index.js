@@ -10,10 +10,7 @@ router.post('/read/:contributionId', auth.isAuthenticated(), controller.read);
 router.get('/count/:viewId/:authorId', auth.isAuthenticated(), controller.count);
 
 router.get('/', controller.index);
+router.get('/contribution/:contributionId', auth.isAuthenticated(), controller.indexOfContribution);
 router.get('/:id', controller.show);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);
 
 module.exports = router;

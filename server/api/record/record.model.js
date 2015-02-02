@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 var RecordSchema = new Schema({
     communityId: {
         type: Schema.ObjectId,
-        required: false, /*temporary false*/
+        required: true,
         index: true
     },
     authorId: {
