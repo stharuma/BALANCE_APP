@@ -393,8 +393,49 @@ angular.module('kf6App')
             theme: 'modern',
             menubar: false,
             statusbar: false,
+            style_formats_merge: true,
+            style_formats: [{
+                title: "Font Size",
+                items: [{
+                    title: '8pt',
+                    inline: 'span',
+                    styles: {
+                        fontSize: '12px',
+                        'font-size': '8px'
+                    }
+                }, {
+                    title: '10pt',
+                    inline: 'span',
+                    styles: {
+                        fontSize: '12px',
+                        'font-size': '10px'
+                    }
+                }, {
+                    title: '12pt',
+                    inline: 'span',
+                    styles: {
+                        fontSize: '12px',
+                        'font-size': '12px'
+                    }
+                }, {
+                    title: '14pt',
+                    inline: 'span',
+                    styles: {
+                        fontSize: '12px',
+                        'font-size': '14px'
+                    }
+                }, {
+                    title: '16pt',
+                    inline: 'span',
+                    styles: {
+                        fontSize: '12px',
+                        'font-size': '16px'
+                    }
+                }]
+            }],
             plugins: ['advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table directionality emoticons template textcolor paste textcolor noneditable fullpage'],
-            toolbar: 'undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code',
+            toolbar: 'styleselect | bold italic underline strikethrough | forecolor backcolor bullist numlist link | code',
+            //toolbar: 'undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code',            
             //toolbar1: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
             //toolbar2: 'forecolor backcolor | emotions link unlink image media | code | styleselect fontselect fontsizeselect',
             forced_root_block: false,
