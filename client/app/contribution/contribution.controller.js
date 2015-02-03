@@ -42,6 +42,7 @@ angular.module('kf6App')
             $scope.$watch('contribution.title', function() {
                 $scope.updateDirtyStatus();
             });
+            $scope.setTitle($scope.contribution.title);
             if ($scope.contribution.keywords) {
                 var keywordsStr = '';
                 $scope.contribution.keywords.forEach(function(keyword) {
@@ -344,6 +345,16 @@ angular.module('kf6App')
 
         $scope.downloadAttachment = function(attachment) {
             window.location = attachment.data.url;
+        };
+
+        /*********** title ************/
+
+        $scope.setTitle = function(title) {
+            if (window.setInternalWindowTitle) {
+                window.setInternalWindowTitle(title);
+            } else {
+                document.title = title;
+            }
         };
 
         /*********** tinymce ************/

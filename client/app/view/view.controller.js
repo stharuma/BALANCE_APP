@@ -578,7 +578,7 @@ angular.module('kf6App')
         $scope.openByIFrame = function(url, width, height) {
             windowIdNum++;
             var wid = 'window' + windowIdNum;
-            var str = '<iframe style="min-width: 100%;" id="' + wid + '" title="Contribution" src="' + url + '"></iframe>';
+            var str = '<iframe style="min-width: 100%;" id="' + wid + '" title="*" src="' + url + '"></iframe>';
             $('#windows').append(str);
             $('#' + wid).dialog({
                 width: width,
@@ -588,7 +588,11 @@ angular.module('kf6App')
                     $(this).css('padding-top', '1px');
                     $(this).css('padding-bottom', '2px');
                     $(this).css('padding-right', '2px');
-                    document.getElementById(wid).contentWindow.wid = wid;
+                    var contentWindow = document.getElementById(wid).contentWindow;
+                    contentWindow.wid = wid;
+                    contentWindow.setInternalWindowTitle = function(title) {
+                        $('#' + wid).dialog("option", "title", title);
+                    };
                 },
                 close: function() { /*we need to erase element*/
                     $(this).remove();
