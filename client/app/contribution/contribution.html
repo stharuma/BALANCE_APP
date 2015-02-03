@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <p class="KFTitle">{{contribution.type}}: {{contribution.title}}</p>
+    <p class="KFTitle">{{contribution.title}}</p>
     <p class="KFModified">Last modified: {{getTimeString(contribution.modified)}}</p>
     <div style="position: absolute; left: 0px; top: 0px; padding: 10px; width: 100%; text-align: right;">
         <button ng-disabled="!dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>

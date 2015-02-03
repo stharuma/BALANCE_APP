@@ -42,7 +42,7 @@ angular.module('kf6App')
             $scope.$watch('contribution.title', function() {
                 $scope.updateDirtyStatus();
             });
-            $scope.setTitle($scope.contribution.title);
+            $scope.setTitle();
             if ($scope.contribution.keywords) {
                 var keywordsStr = '';
                 $scope.contribution.keywords.forEach(function(keyword) {

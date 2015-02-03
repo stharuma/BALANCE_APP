@@ -33,14 +33,19 @@ html, body {
     padding: 4px 7px;
     font-size: 12px;
 }
+/* tab related */
+
+.nav > .KFTab > a {
+    padding: 1px 10px;
+    cursor: pointer;
+}
+
+
 /* override bootstrap */
 /*.nav > li > a {
     padding: 5px 10px;
 }*/
 
-.nav > .KFTab > a {
-    padding: 5px 10px;
-}
 /*table, th, td {
     border: 1px solid black;
 }*/

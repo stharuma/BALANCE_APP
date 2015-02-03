@@ -6,7 +6,7 @@
         Please drag and drop to view to make a view link.
         <div style="height: 400px; overflow: scroll;">
             <div ng-repeat="view in views">
-                <div viewlink style="white-space: nowrap;"><img draggable="false" src="manual_assets/kf4images/icon-view.gif">{{view.title}}
+                <div viewlink style="white-space: nowrap;"><img draggable="false" src="manual_assets/kf4images/icon-view.gif"><a ng-href="view/{{view._id}}">{{view.title}}</a>
                 </div>
             </div>
         </div>
@@ -56,7 +56,12 @@
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="manual_assets/kf4images/toolbar-palette-small.png" title="Drawing"></button>
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="manual_assets/kf4images/toolbar-palette-small.png" title="Graphic Note"></button>
+            </span>
+        </span>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()"><img src="manual_assets/kf4images/toolbar-newattachment-small.png" title="Attachment"></button>
             </span>
         </span>
         <span class="input-group">
@@ -67,11 +72,6 @@
         <span class="input-group">
             <span class="input-group-btn">
                 <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()"><img src="manual_assets/kf4images/toolbar-search-small.png" title="Search"></button>
-            </span>
-        </span>
-        <span class="input-group">
-            <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()"><img src="manual_assets/kf4images/toolbar-newattachment-small.png" title="Attachment"></button>
             </span>
         </span>
         <span class="input-group">
