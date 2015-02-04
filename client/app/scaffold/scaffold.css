@@ -1,26 +1,34 @@
-.box {
-    overflow: hidden;
-    /*width: 100px;*/
-    height: 100px;
+.KFScaffoldMenu {
+    font-size: 10px;
+    /*text-align: center; no effect*/   
 }
-.box2 {
+
+.KFSupportButton {
     /*-webkit-appearance: button;*/
-    
+
+    margin-left: 2px;    
+    margin-right: 2px;        
+    margin-top: 1px;
+    margin-bottom: 1px;
     cursor: pointer;
     border: 1px solid;
     border-color: #efb137;
-    border-radius: 10px;
-    overflow: hidden;
-    padding-left: 10px;
-    margin-top: 3px;    
+    border-radius: 9px;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 0px;
+    padding-bottom: 0px;
     /*width: 100px;*/
-    height: 20px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 10px;
+    height: 16px;
 }
-.box2:hover {
+.KFSupportButton:hover {
     color: #FFFFFF;
     background-color: #E48E00;
 }
-.box2:active {
+.KFSupportButton:active {
     color: #000000;
     background-color: #E48E00;
 }

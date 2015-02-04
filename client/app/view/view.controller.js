@@ -544,7 +544,7 @@ angular.module('kf6App')
         var windowIdNum = 1;
 
         $scope.openByInternalWindow = function(url) {
-            var width = 600;
+            var width = 640;
             var height = 400;
             var wmax = window.innerWidth * 0.8;
             if (width > wmax) {
@@ -584,10 +584,7 @@ angular.module('kf6App')
                 width: width,
                 height: height,
                 create: function() {
-                    $(this).css('padding-left', '1px');
-                    $(this).css('padding-top', '1px');
-                    $(this).css('padding-bottom', '2px');
-                    $(this).css('padding-right', '2px');
+                    $(this).css('padding', '1px');
                     var contentWindow = document.getElementById(wid).contentWindow;
                     contentWindow.wid = wid;
                     contentWindow.setInternalWindowTitle = function(title) {

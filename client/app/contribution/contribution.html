@@ -1,5 +1,4 @@
-<div class="col-md-12" style="padding: 2px;">
-
+<div class="col-md-12 KFContribution" style="height: 100%;">
     <!-- dialog -->
     <div class="well" collapse="isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
         <div>
@@ -14,240 +13,248 @@
         </div>
     </div>
 
-    <p class="KFTitle">{{contribution.title}}</p>
-    <p class="KFModified">Last modified: {{getTimeString(contribution.modified)}}</p>
-    <div style="position: absolute; left: 0px; top: 0px; padding: 10px; width: 100%; text-align: right;">
-        <button ng-disabled="!dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
+    <div style="overflow: hidden;">
+        <div style="float: left; overflow: hidden;">
+            <span class="KFTitle">&nbsp;{{contribution.title}}</span>
+        </div>
+        <div style="float: right; padding-right: 20px;">
+            <p class="KFModified">created by: {{getAuthorString()}}</p>
+            <p class="KFModified">Last modified: {{getTimeString(contribution.modified)}}</p>
+        </div>
     </div>
-    <tabset>
-        <tab heading="Read" class="KFTab" select="readSelected()">
-            <div style="padding-top: 5px; text-align: right;">
-                <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
-            </div>
-            <div style="padding: 10px;">
-                <div ng-if="contribution.type === 'Note'">
-                    <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
-                    <div class="KFDragSource" ng-bind-html="copy.body"></div>
-                </div>
-                <div ng-if="contribution.type === 'Attachment'">
-                    <div ng-if="isImage(contribution)">
-                        <img ng-attr-src="{{contribution.data.url}}">
+
+    <div class="KFTabSet">
+        <tabset>
+            <tab heading="Read" class="KFTab" select="readSelected()">
+                <div style="padding: 10px;">
+                    <div ng-if="contribution.type === 'Note'">
+                        <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
+                        <div class="KFDragSource" ng-bind-html="copy.body"></div>
                     </div>
-                    <div ng-if="!isImage(contribution)">
-                        <a ng-click="downloadAttachment(contribution)">Download</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
+                    <div ng-if="contribution.type === 'Attachment'">
+                        <div ng-if="isImage(contribution)">
+                            <img ng-attr-src="{{contribution.data.url}}">
+                        </div>
+                        <div ng-if="!isImage(contribution)">
+                            <a ng-click="downloadAttachment(contribution)">Download</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
+                        </div>
+                    </div>
+                    <div id="riseabovediv"></div>
+                </div>
+            </tab>
+            <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
+                <div style="padding: 2px;">
+                    <div>
+                        <div ng-if="contribution.type === 'Note'" style="float: left;">
+                            <button class="btn btn-default" ng-click="status.isScaffoldCollapsed = !status.isScaffoldCollapsed">
+                                <>
+                            </button>
+                        </div>
+                        <div style="float: left; width: 10px;">&nbsp;</div>
+                        <div style="overflow: hidden;">
+                            <!-- <div style="float: left;">title:</div> -->
+                            <div style="overflow: hidden;">
+                                <input type="text" class="form-control" style="overflow: hidden;" placeholder="put your title here." ng-model="contribution.title">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height: 5px;"></div>
+                    <div ng-if="contribution.type === 'Note'">
+                        <div style="float: left;" collapse="status.isScaffoldCollapsed" valign="top" style="max-width: 150px; padding: 5px; overflow: scroll;">
+                            <div style="max-width: 175px; max-height: 200px; overflow: auto;">
+                                <label>Scaffolds:</label>
+                                <div ng-include="'app/scaffold/scaffold.html'" ng-controller="ScaffoldCtrl"></div>
+                            </div>
+                            <div style="height: 10px;"></div>
+                            <div>
+                                <label>Keywords:</label>
+                                <button class="btn btn-default" ng-click="addKeyword()"><img src="manual_assets/kf4images/button-key-on.png">
+                                </button>
+                                <input type="text" class="form-control" style="max-width: 150px;" placeholder="" ng-model="copy.keywords">
+                            </div>
+                            <div style="height: 10px;"></div>
+                            <div>
+                                <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
+                                <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
+                            </div>
+                        </div>
+                        <div style="overflow: hidden;">
+                            <textarea ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
+                        </div>
+                        <div collapse="isAttachmentCollapsed">
+                            <div class="well">
+                                <span ng-repeat="attachment in images">
+                                <img ng-attr-src="{{attachment.url}}" width="50px" height="50px"></img>
+                            </span>
+                                <p ng-if="images.length !== 0">You can drag and drop to the editor!</p>
+                                <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
+                            </div>
+                            <div class="well">
+                                <label>Upload:</label>
+                                <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="contribution.type === 'Drawing'">
+                        <div id="svgeditdiv"></div>
                     </div>
                 </div>
-                <div id="riseabovediv"></div>
-            </div>
-        </tab>
-        <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
-            <div style="padding: 5px;">
-                <div style="padding-bottom: 6px;">
+            </tab>
+
+            <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"> -->
+            <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css">
+            <tab class="KFTab" heading="Authors">
+                <div style="height: 100%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td class="KFTableTitle" style="width: 100px; text-align: right;">title:</td>
-                            <td>
-                                <input type="text" class="form-control" placeholder="" ng-model="contribution.title">
+                            <td width="50%" valign="top">
+                                <h4>Authors:</h4>
+                                <ul ui-sortable ng-model="authors">
+                                    <li style="cursor: move;" ng-repeat="author in authors">
+                                        {{author.name}}
+                                        <button type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
+                                    </li>
+                                </ul>
                             </td>
-                            <tr>
-                    </table>
-                </div>
-                <div ng-if="contribution.type === 'Note'">
-                    <table style="width: 100%;">
-                        <tr>
-                            <td collapse="isScaffoldCollapsed" valign="top" style="width: 150px; padding: 5px; overflow: hidden;">
-                                <div>
-                                    <div ng-include="'app/scaffold/scaffold.html'" ng-controller="ScaffoldCtrl"></div>
-                                </div>
-                            </td>
-                            <td valign="top">
-                                <div>
-                                    <textarea style="height: 100%;" ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
+                            <td width="100%" valign="top">
+                                <div ng-show="isEditable()">
+                                    <h4>Add to authors:</h4>
+                                    <ui-select ng-model="selected.author" theme="select2" ng-disabled="disabled" style="width: 80%;">
+                                        <ui-select-match placeholder="Select author...">{{selected.author.name}} &lt;{{selected.author.email}}&gt;</ui-select-match>
+                                        <ui-select-choices repeat="author in communityMembers | filter: {name: $select.search, email: $select.search} | orderBy:'name'| limitTo:12">
+                                            <div ng-bind-html="author.name | highlight: $select.search"></div>
+                                            <small><div ng-bind-html="author.email | highlight: $select.search"></div></small>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <button type="submit" class="btn btn-primary" ng-click="addAuthor(selected.author)">Add</button>
+                                    <br>
+                                    <p>{{communityMembers.length}} possible authors in this community.</p>
                                 </div>
                             </td>
                         </tr>
                     </table>
-                    <div style="padding: 6px 0px;">
-                        <table style="width: 100%;">
-                            <tr>
-                                <td class="KFTableTitle" style="width: 100px; text-align: right;">
-                                    <button class="btn btn-default" ng-click="addKeyword()">Keywords:</button>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" placeholder="" ng-model="copy.keywords">
-                                </td>
-                                <tr>
-                        </table>
-                    </div>
-                    <div style="text-align: right;">
-                        <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
-                        <button class="btn btn-default" ng-click="isScaffoldCollapsed = !isScaffoldCollapsed">Hide Scaffold</button>
-                        <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
-                    </div>
-                    <div collapse="isAttachmentCollapsed">
-                        <div class="well">
-                            <span ng-repeat="attachment in images">
-                                <img ng-attr-src="{{attachment.url}}" width="50px" height="50px"></img>
-                            </span>
-                            <p ng-if="images.length !== 0">You can drag and drop to the editor!</p>
-                            <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
-                        </div>
-                        <div class="well">
-                            <label>Upload:</label>
+                </div>
+            </tab>
+
+            <tab class="KFTab" heading="Connections">
+                <div>
+                    <label>This note builds onto:</label>
+                    <ul>
+                        <li ng-repeat="conn in fromConnections" ng-if="conn.type==='buildson'">
+                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <label>This note is built onto by:</label>
+                    <ul>
+                        <li ng-repeat="conn in toConnections" ng-if="conn.type==='buildson'">
+                            <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <label>Views for this note:</label>
+                    <ul>
+                        <li ng-repeat="conn in toConnections" ng-if="conn.type==='contains'">
+                            <a href="/view/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <label>This note is supported by:</label>
+                    <ul>
+                        <li ng-repeat="conn in toConnections" ng-if="conn.type==='supports'">
+                            <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <label>This note references:</label>
+                    <ul>
+                        <li ng-repeat="conn in fromConnections" ng-if="conn.type==='references'">
+                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
+                        </li>
+                    </ul>
+                    <label>This note is referenced by:</label>
+                    <ul>
+                        <li ng-repeat="conn in toConnections" ng-if="conn.type==='references'">
+                            <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </tab>
+
+            <tab class="KFTab" heading="Logs">
+                <div>
+                    <label>edit logs:</label>
+                    <ul>
+                        <li ng-repeat="record in records" ng-if="record.type!=='read'">
+                            {{record.type}} by {{record.user.name}} at {{record.getTime()}}
+                        </li>
+                    </ul>
+                    <label>read logs:</label>
+                    <ul>
+                        <li ng-repeat="record in records" ng-if="record.type==='read'">
+                            {{record.type}} by {{record.user.name}} at {{record.getTime()}}
+                        </li>
+                    </ul>
+                </div>
+            </tab>
+
+            <tab class="KFTab" heading="Attach">
+                <div>
+                    <label>Attachments:</label>
+                    <ul>
+                        <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
+                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div ng-show="isEditable()">
+                    <div class="well">
+                        <label>Upload:</label>
+                        <div style="padding: 10px;">
                             <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
                         </div>
                     </div>
                 </div>
-                <div ng-if="contribution.type === 'Drawing'">
-                    <div id="svgeditdiv"></div>
-                </div>
-            </div>
-        </tab>
+            </tab>
 
-        <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"> -->
-        <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css">
-        <tab class="KFTab" heading="Authors">
-            <div style="height: 100%;">
-                <table style="width: 100%;">
-                    <tr>
-                        <td width="50%" valign="top">
-                            <h4>Authors:</h4>
-                            <ul ui-sortable ng-model="authors">
-                                <li style="cursor: move;" ng-repeat="author in authors">
-                                    {{author.name}}
-                                    <button type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
-                                </li>
-                            </ul>
-                        </td>
-                        <td width="100%" valign="top">
-                            <div ng-show="isEditable()">
-                                <h4>Add to authors:</h4>
-                                <ui-select ng-model="selected.author" theme="select2" ng-disabled="disabled" style="width: 80%;">
-                                    <ui-select-match placeholder="Select author...">{{selected.author.name}} &lt;{{selected.author.email}}&gt;</ui-select-match>
-                                    <ui-select-choices repeat="author in communityMembers | filter: {name: $select.search, email: $select.search} | orderBy:'name'| limitTo:12">
-                                        <div ng-bind-html="author.name | highlight: $select.search"></div>
-                                        <small><div ng-bind-html="author.email | highlight: $select.search"></div></small>
-                                    </ui-select-choices>
-                                </ui-select>
-                                <button type="submit" class="btn btn-primary" ng-click="addAuthor(selected.author)">Add</button>
-                                <br>
-                                <p>{{communityMembers.length}} possible authors in this community.</p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </tab>
-
-        <tab class="KFTab" heading="Connections">
-            <div>
-                <label>This note builds onto:</label>
-                <ul>
-                    <li ng-repeat="conn in fromConnections" ng-if="conn.type==='buildson'">
-                        <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <label>This note is built onto by:</label>
-                <ul>
-                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='buildson'">
-                        <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <label>Views for this note:</label>
-                <ul>
-                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='contains'">
-                        <a href="/view/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <label>This note is supported by:</label>
-                <ul>
-                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='supports'">
-                        <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <label>This note references:</label>
-                <ul>
-                    <li ng-repeat="conn in fromConnections" ng-if="conn.type==='references'">
-                        <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
-                    </li>
-                </ul>
-                <label>This note is referenced by:</label>
-                <ul>
-                    <li ng-repeat="conn in toConnections" ng-if="conn.type==='references'">
-                        <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
-                    </li>
-                </ul>
-            </div>
-        </tab>
-
-        <tab class="KFTab" heading="Logs">
-            <div>
-                <label>edit logs:</label>
-                <ul>
-                    <li ng-repeat="record in records" ng-if="record.type!=='read'">
-                        {{record.type}} by {{record.user.name}} at {{record.getTime()}}
-                    </li>
-                </ul>
-                <label>read logs:</label>
-                <ul>
-                    <li ng-repeat="record in records" ng-if="record.type==='read'">
-                        {{record.type}} by {{record.user.name}} at {{record.getTime()}}
-                    </li>
-                </ul>
-            </div>
-        </tab>
-
-        <tab class="KFTab" heading="Attach">
-            <div>
-                <label>Attachments:</label>
-                <ul>
-                    <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
-                        <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div ng-show="isEditable()">
-                <div class="well">
-                    <label>Upload:</label>
+            <tab class="KFTab" ng-show="isEditable()" heading="Prop">
+                <div>
+                    <label>Properties:</label>
                     <div style="padding: 10px;">
-                        <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+                        <label>Permission:</label>
+                        <ul>
+                            <input type="checkbox" ng-model="property.isPublic">public
+                        </ul>
+                        <label>Status:</label>
+                        <ul>
+                            {{contribution.status}}
+                        </ul>
+                    </div>
+                    <div style="padding: 10px;" ng-if="contribution.type === 'Note'">
+                        <label>Riseabove:</label>
+                        <ul ng-if="property.isRiseabove()">
+                            This is riseabove.
+                        </ul>
+                        <ul ng-if="!property.isRiseabove()">
+                            <button type="submit" class="btn btn-primary" ng-click="makeRiseabove()">MakeRiseabove</button>
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </tab>
+            </tab>
+        </tabset>
+    </div>
 
-        <tab class="KFTab" ng-show="isEditable()" heading="Prop">
-            <div>
-                <label>Properties:</label>
-                <div style="padding: 10px;">
-                    <label>Permission:</label>
-                    <ul>
-                        <input type="checkbox" ng-model="property.isPublic">public
-                    </ul>
-                    <label>Status:</label>
-                    <ul>
-                        {{contribution.status}}
-                    </ul>
-                </div>
-                <div style="padding: 10px;" ng-if="contribution.type === 'Note'">
-                    <label>Riseabove:</label>
-                    <ul ng-if="property.isRiseabove()">
-                        This is riseabove.
-                    </ul>
-                    <ul ng-if="!property.isRiseabove()">
-                        <button type="submit" class="btn btn-primary" ng-click="makeRiseabove()">MakeRiseabove</button>
-                    </ul>
-                </div>
-            </div>
-        </tab>
-    </tabset>
+    <div>
+        <div style="float: right; padding-top: 0px; padding-right: 10px;">
+            <button ng-disabled="!dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
+        </div>
+        <div style="float: right; padding-top: 0px; padding-right: 10px;">
+            <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
+        </div>
+    </div>
 </div>

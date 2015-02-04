@@ -9,6 +9,8 @@ angular.module('kf6App')
         var contributionId = $stateParams.contributionId;
 
         $ac.mixIn($scope, null);
+        $scope.status = {};
+        $scope.status.isScaffoldCollapsed = false;
         $scope.isContributionCollapsed = true;
         $scope.contributionStatus = '';
         $scope.recoverable = false;
@@ -101,6 +103,10 @@ angular.module('kf6App')
             console.log('error');
             console.log(msg);
         });
+
+        $scope.getAuthorString = function() {
+            return $community.makeAuthorString($scope.authors);
+        };
 
         $scope.updateToConnections = function(next) {
             $http.get('/api/links/to/' + contributionId).success(function(links) {
@@ -382,7 +388,7 @@ angular.module('kf6App')
 
         $scope.mceResize = function() {
             if ($scope.mceEditor) {
-                var height = ($(window).height() - 150) * 0.8;
+                var height = ($(window).height() - 140);
                 $scope.mceEditor.theme.resizeTo('100%', height);
             }
         };

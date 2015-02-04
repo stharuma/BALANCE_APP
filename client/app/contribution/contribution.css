@@ -1,5 +1,5 @@
-html, body {
-    height: 100%;
+.KFContribution {
+    padding: 2px;
 }
 .KFTitle {
     font-weight: 500;
@@ -16,36 +16,28 @@ html, body {
     padding-bottom: 1px;
     margin-bottom: 0px;
 }
-.KFTableTitle {
-    font-size: 12px;
-}
-.form-control {
-    font-size: 12px;
-    height: inherit;
-    padding: 2px 7px;
-}
-.ng-scope {
-    font-size: 11px;
-}
-/*.tab-content, .ng-isolate-scope*/
-
-.btn {
-    padding: 4px 7px;
-    font-size: 12px;
-}
 /* tab related */
 
+.KFTabSet {
+    height: 100%;
+    height: calc(100% - 50px);
+}
+.KFTabSet .ng-isolate-scope {
+    height: 100%;
+}
+.tab-content {
+    overflow: auto;
+    vertical-align: top;
+    height: calc(100% - 19px);
+}
 .nav > .KFTab > a {
     padding: 1px 10px;
     cursor: pointer;
 }
-
-
 /* override bootstrap */
 /*.nav > li > a {
     padding: 5px 10px;
 }*/
-
 /*table, th, td {
     border: 1px solid black;
 }*/
