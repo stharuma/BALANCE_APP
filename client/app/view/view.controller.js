@@ -588,7 +588,7 @@ angular.module('kf6App')
                     var contentWindow = document.getElementById(wid).contentWindow;
                     contentWindow.wid = wid;
                     contentWindow.setInternalWindowTitle = function(title) {
-                        $('#' + wid).dialog("option", "title", title);
+                        $('#' + wid).dialog('option', 'title', title);
                     };
                 },
                 close: function() { /*we need to erase element*/

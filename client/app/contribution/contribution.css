@@ -25,10 +25,13 @@
 .KFTabSet .ng-isolate-scope {
     height: 100%;
 }
-.tab-content {
+.KFTabSet .tab-content {
     overflow: auto;
     vertical-align: top;
     height: calc(100% - 19px);
+}
+.KFTabSet .tab-pane {
+    height: 100%;
 }
 .nav > .KFTab > a {
     padding: 1px 10px;

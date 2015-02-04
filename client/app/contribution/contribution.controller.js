@@ -401,7 +401,7 @@ angular.module('kf6App')
             statusbar: false,
             style_formats_merge: true,
             style_formats: [{
-                title: "Font Size",
+                title: 'Font Size',
                 items: [{
                     title: '8pt',
                     inline: 'span',

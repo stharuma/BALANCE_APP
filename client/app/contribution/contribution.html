@@ -43,12 +43,10 @@
                 </div>
             </tab>
             <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
-                <div style="padding: 2px;">
+                <div style="padding: 2px; height: 100%;">
                     <div>
                         <div ng-if="contribution.type === 'Note'" style="float: left;">
-                            <button class="btn btn-default" ng-click="status.isScaffoldCollapsed = !status.isScaffoldCollapsed">
-                                <>
-                            </button>
+                            <button class="btn btn-default" ng-click="status.isScaffoldCollapsed = !status.isScaffoldCollapsed">&lt;&gt;</button>
                         </div>
                         <div style="float: left; width: 10px;">&nbsp;</div>
                         <div style="overflow: hidden;">
@@ -59,23 +57,26 @@
                         </div>
                     </div>
                     <div style="height: 5px;"></div>
-                    <div ng-if="contribution.type === 'Note'">
-                        <div style="float: left;" collapse="status.isScaffoldCollapsed" valign="top" style="max-width: 150px; padding: 5px; overflow: scroll;">
-                            <div style="max-width: 175px; max-height: 200px; overflow: auto;">
-                                <label>Scaffolds:</label>
-                                <div ng-include="'app/scaffold/scaffold.html'" ng-controller="ScaffoldCtrl"></div>
-                            </div>
-                            <div style="height: 10px;"></div>
-                            <div>
-                                <label>Keywords:</label>
-                                <button class="btn btn-default" ng-click="addKeyword()"><img src="manual_assets/kf4images/button-key-on.png">
-                                </button>
-                                <input type="text" class="form-control" style="max-width: 150px;" placeholder="" ng-model="copy.keywords">
-                            </div>
-                            <div style="height: 10px;"></div>
-                            <div>
-                                <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
-                                <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
+                    <div ng-if="contribution.type === 'Note'" style="height: calc(100% - 24px);">
+                        <div style="float: left; height: 100%; overflow-y: auto; overflow-x: hidden;">
+                            <div collapse="status.isScaffoldCollapsed" valign="top" style="width: 195px; padding: 5px;">
+                                <div style="max-width: 175px;">
+                                    <label>Scaffolds:</label>
+                                    <div ng-include="'app/scaffold/scaffold.html'" ng-controller="ScaffoldCtrl"></div>
+                                </div>
+                                <div style="height: 7px;"></div>
+                                <div>
+                                    <label>Keywords:</label>
+                                    <button class="btn btn-default" ng-click="addKeyword()"><img src="manual_assets/kf4images/button-key-on.png">
+                                    </button>
+                                    <input type="text" class="form-control" style="max-width: 175px;" placeholder="" ng-model="copy.keywords">
+                                </div>
+                                <div style="height: 3px;"></div>
+                                <div>
+                                    <label>Tools:</label><br>              
+                                    <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
+                                    <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
+                                </div>
                             </div>
                         </div>
                         <div style="overflow: hidden;">
