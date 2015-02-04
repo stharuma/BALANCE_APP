@@ -368,22 +368,21 @@ angular.module('kf6App')
         $scope.mcesetupHandler = function(ed) {
             $scope.mceEditor = ed;
             $scope.mceResize();
-            // ed.on('change', function(e) {
-            //     //do dirty status management
-            //     //console.log('changed');
-            // });
+
             ed.on('dragover', function(e) {
                 // important to keep caret
+                // this was workable 4.0.0 but cannot keep caret on 4.1.7
                 e.preventDefault();
                 e.stopPropagation();
                 ed.focus();
             });
-            ed.on('drop', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var data = e.dataTransfer.getData('text/html');
-                tinymce.execCommand('mceInsertContent', true, data);
-            });
+            //this was necessary 4.0.0 not necessary on 4.1.7
+            // ed.on('drop', function(e) {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            //     var data = e.dataTransfer.getData('text/html');
+            //     tinymce.execCommand('mceInsertContent', true, data);
+            // });
         };
 
         $scope.mceResize = function() {

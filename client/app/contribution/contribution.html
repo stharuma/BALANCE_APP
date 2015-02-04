@@ -71,29 +71,32 @@
                                     </button>
                                     <input type="text" class="form-control" style="max-width: 175px;" placeholder="" ng-model="copy.keywords">
                                 </div>
+                                <div style="height: 7px;"></div>
+                                <label>Attachments:</label>
+                                <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Upload</button>
+                                <div class="well">
+                                    <span ng-repeat="attachment in images">
+                                    <img ng-attr-src="{{attachment.data.url}}" width="50px" height="50px"></img>
+                                            </span>
+                                    <p ng-if="images.length !== 0">You can drag and drop to the editor!</p>
+                                    <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
+                                </div>
+                                <div collapse="isAttachmentCollapsed">
+                                    <label>Upload:</label>
+                                    <div class="well">
+                                        <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+                                    </div>
+                                </div>
                                 <div style="height: 3px;"></div>
                                 <div>
-                                    <label>Tools:</label><br>              
+                                    <label>Tools:</label>
+                                    <br>
                                     <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
-                                    <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Attachments</button>
                                 </div>
                             </div>
                         </div>
                         <div style="overflow: hidden;">
                             <textarea ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
-                        </div>
-                        <div collapse="isAttachmentCollapsed">
-                            <div class="well">
-                                <span ng-repeat="attachment in images">
-                                <img ng-attr-src="{{attachment.url}}" width="50px" height="50px"></img>
-                            </span>
-                                <p ng-if="images.length !== 0">You can drag and drop to the editor!</p>
-                                <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
-                            </div>
-                            <div class="well">
-                                <label>Upload:</label>
-                                <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
-                            </div>
                         </div>
                     </div>
                     <div ng-if="contribution.type === 'Drawing'">
