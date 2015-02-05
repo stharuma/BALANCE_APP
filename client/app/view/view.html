@@ -3,10 +3,15 @@
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <button type="submit" class="btn btn-primary kfbutton" ng-click="createViewlink()">close</button>
         </div>
-        Please drag and drop to view to make a view link.
+        <label>View Link</label>
+        <ul>
+            <li>Click to go to view.</li>
+            <li>Drag and drop to create a link.</li>
+        </ul>
+
         <div style="height: 400px; overflow: scroll;">
             <div ng-repeat="view in views">
-                <div viewlink style="white-space: nowrap;"><img draggable="false" src="manual_assets/kf4images/icon-view.gif"><a ng-href="view/{{view._id}}">{{view.title}}</a>
+                <div viewlink style="white-space: nowrap;"><img draggable="false" src="manual_assets/kf4images/icon-view.gif"><a draggable="false" ng-href="view/{{view._id}}">{{view.title}}</a>
                 </div>
             </div>
         </div>
@@ -81,7 +86,7 @@
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img src="manual_assets/kf4images/toolbar-viewlist-small.png" title="View List"></button>            
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img src="manual_assets/kf4images/toolbar-viewlist-small.png" title="View Manager"></button>            
             </span>
         </span>
         <span class="input-group">
