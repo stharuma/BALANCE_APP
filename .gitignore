@@ -7,4 +7,5 @@ dist
 /server/config/local.env.js
 attachments/
 *.bak
+*.log
 
