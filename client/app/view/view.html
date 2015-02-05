@@ -155,7 +155,7 @@
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInPopup()">Open In Window</li>
             <li ng-if="contextTarget.data !== null" class="menuitem" ng-click="delete()">Delete</li>
             <li ng-if="contextTarget.data.showInPlace === true" class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
-            <li ng-if="contextTarget.data.showInPlace !== true" class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
+            <li ng-if="contextTarget.data.showInPlace !== true && contextTarget._to.type !== 'Note'" class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
             <li ng-if="contextTarget.data.fixed !== true" class="menuitem" ng-click="fix()">Fix</li>
             <li ng-if="contextTarget.data.fixed === true" class="menuitem" ng-click="unfix()">Unfix</li>
             <li ng-if="true" class="menuitem" ng-click="createRiseabove()">Riseabove</li>
