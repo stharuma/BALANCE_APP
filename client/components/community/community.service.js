@@ -333,8 +333,8 @@ angular.module('kf6App')
         };
 
         var amIAuthor = function(obj) {
-            if (obj.to) { //link
-                return amIAuthor0(obj.authorsTo);
+            if (obj._to) { //link
+                return amIAuthor0(obj._to.authors);
             } else if (obj.authors) { //contrib
                 return amIAuthor0(obj.authors);
             } else {
