@@ -175,6 +175,7 @@ angular.module('kf6App')
             if (!note.data) {
                 note.data = {};
             }
+            note.status = 'active';
             note.data.riseabove = riseabove;
             $http.put('/api/contributions/' + note._id, note).success(function(note) {
                 success(note);
