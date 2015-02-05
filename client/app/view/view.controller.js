@@ -544,8 +544,8 @@ angular.module('kf6App')
         var windowIdNum = 1;
 
         $scope.openByInternalWindow = function(url) {
-            var width = 640;
-            var height = 400;
+            var width = 650;
+            var height = 410;
             var wmax = window.innerWidth * 0.8;
             if (width > wmax) {
                 width = wmax;
