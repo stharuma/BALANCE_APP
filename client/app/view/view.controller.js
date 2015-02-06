@@ -629,13 +629,15 @@ angular.module('kf6App')
             }
         };
 
-        $scope.delete = function() {
-            if ($scope.contextTarget === undefined) {
-                window.alert('contextTarget is not set.');
+        $scope.delete = function(ref) {
+            var selected = $scope.getSelectedModels();
+            var confirmation = window.confirm('Are you sure to delete ' + selected.length + ' links?');
+            if (!confirmation) {
                 return;
             }
-            var ref = $scope.contextTarget;
-            $http.delete('/api/links/' + ref._id);
+            selected.forEach(function(each) {
+                $http.delete('/api/links/' + each._id);
+            });
         };
 
     });
