@@ -16,14 +16,14 @@ angular.module('kf6App')
         $scope.conns = {};
         $scope.dragging = 'none';
 
-        $scope.isViewsCollapsed = true;
         $scope.status = {};
+        $scope.status.isViewlinkCollapsed = true;
         $scope.status.isViewManagerCollapsed = true;
-        $scope.isAttachmentCollapsed = true;
+        $scope.status.isAttachmentCollapsed = true;
+        $scope.status.isSettingCollapsed = true;
         $scope.setting = {
-            isclosed: true,
             buildson: true,
-            references: false
+            references: true
         };
 
         $scope.jsPlumb = undefined;
@@ -347,7 +347,7 @@ angular.module('kf6App')
         };
 
         $scope.createViewlink = function() {
-            $scope.isViewsCollapsed = !$scope.isViewsCollapsed;
+            $scope.status.isViewlinkCollapsed = !$scope.status.isViewlinkCollapsed;
         };
 
         $scope.createOnViewRefById = function(id, data) {
@@ -411,13 +411,13 @@ angular.module('kf6App')
         };
 
         $scope.openAttachment = function() {
-            $scope.isAttachmentCollapsed = !$scope.isAttachmentCollapsed;
+            $scope.status.isAttachmentCollapsed = !$scope.status.isAttachmentCollapsed;
         };
 
         $scope.attachmentUpdated = function(attachment) {
             $timeout(function() {
-                $scope.isAttachmentCollapsed = true;
-                $scope.$digest($scope.isAttachmentCollapsed);
+                $scope.status.isAttachmentCollapsed = true;
+                $scope.$digest($scope.status.isAttachmentCollapsed);
             }, 1500);
             $http.post('/api/links', {
                 from: $scope.view._id,

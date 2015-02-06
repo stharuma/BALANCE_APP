@@ -1,5 +1,5 @@
 <div class="col-md-12" style="padding: 0px;">
-    <div class="well" collapse="isViewsCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; height: 400px; background-color: white; z-index: 100;">
+    <div class="well" collapse="status.isViewlinkCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; height: 400px; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <button type="submit" class="btn btn-primary kfbutton" ng-click="createViewlink()">close</button>
         </div>
@@ -26,20 +26,21 @@
         </div>
     </div>
 
-    <div class="well" collapse="isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
+    <div class="well" collapse="status.isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="isAttachmentCollapsed = true;">close</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isAttachmentCollapsed = true;">close</button>
         </div>
         <div style="padding: 10px;">
             <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
         </div>
     </div>
 
-    <div class="well" collapse="setting.isclosed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
+    <div class="well" collapse="status.isSettingCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="setting.isclosed = true">close</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isSettingCollapsed = true">close</button>
         </div>
         <div style="padding: 10px;">
+            <label>Connection showing:</label>
             <input type="checkbox" ng-model="setting.buildson" ng-change="settingChanged()">buildson
             <input type="checkbox" ng-model="setting.references" ng-change="settingChanged()">reference
         </div>
@@ -96,7 +97,7 @@
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="setting.isclosed = !setting.isclosed"><img src="manual_assets/kf4images/button-info.gif" title="View Setting"></button>                
+                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="status.isSettingCollapsed = !status.isSettingCollapsed"><img src="manual_assets/kf4images/button-info.gif" title="View Setting"></button>                
             </span>
         </span>
         <span class="input-group">
