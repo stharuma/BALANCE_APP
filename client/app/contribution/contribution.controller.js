@@ -13,29 +13,29 @@ angular.module('kf6App')
         $scope.status = {};
         $scope.status.isScaffoldCollapsed = false;
         $scope.status.isAttachmentCollapsed = true;
-        $scope.isContributionCollapsed = true;
-        $scope.contributionStatus = '';
-        $scope.recoverable = false;
-        $scope.dirty = true;
-        $scope.initializing = 'true';
+        $scope.status.isContributionCollapsed = true;
+        $scope.status.edittabActive = false;
+        $scope.status.dirty = true;
+        $scope.status.contribution = '';
+        $scope.status.initializing = 'true';
+        $scope.status.recoverable = false;
 
         $scope.contribution = {};
         $scope.copy = {};
         $scope.authors = [];
-        $scope.selected = {};
         $scope.records = [];
-        $scope.communityMembers = [];
         $scope.toConnections = [];
         $scope.fromConnections = [];
-        $scope.editActive = false;
-        $scope.images = [];
         $scope.property = {};
+        $scope.communityMembers = [];
+        $scope.images = [];
+        $scope.selected = {};
 
         $http.get('/api/contributions/' + contributionId).success(function(contribution) {
             if (window.localStorage) {
                 var item = window.localStorage.getItem('kfdoc');
                 if (item) {
-                    $scope.recoverable = true;
+                    $scope.status.recoverable = true;
                 }
             }
             if (!contribution.data) {
@@ -98,7 +98,7 @@ angular.module('kf6App')
                 });
             });
             if (Auth.isEditable($scope.contribution) && $scope.contribution.type !== 'Attachment') {
-                $scope.editActive = true;
+                $scope.status.edittabActive = true;
             }
         }).error(function(msg) {
             console.log('error');
@@ -183,8 +183,8 @@ angular.module('kf6App')
                 return;
             }
 
-            $scope.isContributionCollapsed = false;
-            $scope.contributionStatus = 'saving';
+            $scope.status.isContributionCollapsed = false;
+            $scope.status.contribution = 'saving';
 
             cont.authors = _.pluck($scope.authors, '_id');
             if ($scope.property.isPublic) {
@@ -235,14 +235,14 @@ angular.module('kf6App')
         $scope.sendContribute = function() {
             $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {
                 if ($scope.contribution.type === 'Note') {
-                    $scope.dirty = false;
+                    $scope.status.dirty = false;
                 }
-                $scope.contributionStatus = 'success';
+                $scope.status.contribution = 'success';
             }).error(function() {
-                $scope.contributionStatus = 'failure';
+                $scope.status.contribution = 'failure';
                 if (window.localStorage) {
                     window.localStorage.setItem('kfdoc', $scope.copy.body);
-                    $scope.contributionStatus = 'stored';
+                    $scope.status.contribution = 'stored';
                 }
             });
         };
@@ -266,7 +266,7 @@ angular.module('kf6App')
 
         $scope.preProcess = function() {
             $scope.copy.body = $kftag.preProcess($scope.copy.body, $scope.toConnections, $scope.fromConnections);
-            $scope.initializing = false;
+            $scope.status.initializing = false;
         };
 
         $scope.postProcess = function(text, handler) {
@@ -282,22 +282,22 @@ angular.module('kf6App')
 
         $scope.updateDirtyStatus = function() {
             if (!$scope.isEditable()) {
-                $scope.dirty = false;
+                $scope.status.dirty = false;
                 return;
             }
             if ($scope.contribution.type !== 'Note') {
-                $scope.dirty = true;
+                $scope.status.dirty = true;
                 return;
             }
-            if ($scope.initializing === 'true') {
-                $scope.dirty = false;
+            if ($scope.status.initializing === 'true') {
+                $scope.status.dirty = false;
                 return;
             }
-            $scope.dirty = true;
+            $scope.status.dirty = true;
         };
 
         $(window).bind('beforeunload', function(e) {
-            if ($scope.dirty && $scope.contribution.type === 'Note') {
+            if ($scope.status.dirty && $scope.contribution.type === 'Note') {
                 return 'The contribution is not contributed. Are you sure to leave?';
             }
             return;

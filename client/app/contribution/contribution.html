@@ -1,15 +1,15 @@
 <div class="col-md-12 KFContribution" style="height: 100%;">
     <!-- dialogs -->
-    <div class="well" collapse="isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
+    <div class="well" collapse="status.isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
         <div>
-            <span ng-if="contributionStatus==='saving'">Saving...</span>
-            <span ng-if="contributionStatus==='success'">Contribution Succeeded.</span>
-            <span ng-if="contributionStatus==='failure'">Contribution Failed.</span>
-            <span ng-if="contributionStatus==='stored'">Contribution Failed. <br>Your writing temporary saved to the localstorage. Please recover the writing by "Recovery" button on the new note.</span>
+            <span ng-if="status.contribution==='saving'">Saving...</span>
+            <span ng-if="status.contribution==='success'">Contribution Succeeded.</span>
+            <span ng-if="status.contribution==='failure'">Contribution Failed.</span>
+            <span ng-if="status.contribution==='stored'">Contribution Failed. <br>Your writing temporary saved to the localstorage. Please recover the writing by "Recovery" button on the new note.</span>
         </div>
         <div style="text-align: right; padding-right: 100px; padding-top: 5px;">
-            <button ng-show="contributionStatus!=='saving'" type="submit" class="btn btn-primary kfbutton" ng-click="isContributionCollapsed=true">Continue editing</button>
-            <button ng-show="contributionStatus==='success'" type="submit" class="btn btn-primary kfbutton" ng-click="closeRequest()">Finish editing (Close this window)</button>
+            <button ng-show="status.contribution!=='saving'" type="submit" class="btn btn-primary kfbutton" ng-click="status.isContributionCollapsed=true">Continue editing</button>
+            <button ng-show="status.contribution==='success'" type="submit" class="btn btn-primary kfbutton" ng-click="closeRequest()">Finish editing (Close this window)</button>
         </div>
     </div>
 
@@ -55,7 +55,7 @@
                     <div id="riseabovediv"></div>
                 </div>
             </tab>
-            <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="editActive" select="editSelected()">
+            <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="status.edittabActive" select="editSelected()">
                 <div style="padding: 2px; height: 100%;">
                     <div>
                         <div ng-if="contribution.type === 'Note'" style="float: left;">
@@ -98,7 +98,7 @@
                                 <div>
                                     <label>Tools:</label>
                                     <br>
-                                    <button ng-disabled="!recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
+                                    <button ng-disabled="!status.recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
                                 </div>
                             </div>
                         </div>
@@ -258,7 +258,7 @@
 
     <div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
-            <button ng-disabled="!dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
+            <button ng-disabled="!status.dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
         </div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button type="submit" class="btn btn-primary" ng-click="buildson()">BuildsOn</button>
