@@ -373,39 +373,6 @@ angular.module('kf6App')
             });
         };
 
-        $scope.createRiseabove = function() {
-            var selected = $scope.getSelectedModels();
-            var topleft = {
-                x: 10000,
-                y: 10000
-            };
-            selected.forEach(function(ref) {
-                topleft.x = Math.min(topleft.x, ref.data.x);
-                topleft.y = Math.min(topleft.y, ref.data.y);
-            });
-            $community.createView('riseabove:', function(view) {
-                $community.createNote(function(note) {
-                    note.title = 'Riseabove';
-                    $community.makeRiseabove(note, view._id, function(note) {
-                        selected.forEach(function(each) {
-                            $scope.createOnViewRef0(view, each.to, null, {
-                                x: each.data.x - topleft.x + 20,
-                                y: each.data.y - topleft.y + 20
-                            });
-                        });
-                        selected.forEach(function(each) {
-                            $http.delete('/api/links/' + each._id);
-                        });
-                        //timing? need investigation
-                        $scope.createOnViewRef(note, {
-                            x: topleft.x + 50,
-                            y: topleft.y + 50
-                        }, function() {});
-                    });
-                });
-            }, true);
-        };
-
         $scope.saveRef = function(ref) {
             $http.put('/api/links/' + ref._id, ref);
         };
@@ -638,6 +605,43 @@ angular.module('kf6App')
             selected.forEach(function(each) {
                 $http.delete('/api/links/' + each._id);
             });
+        };
+
+        $scope.createRiseabove = function() {
+            var selected = $scope.getSelectedModels();
+            var confirmation = window.confirm('Are you sure to create riseabove using ' + selected.length + ' objects?');
+            if (!confirmation) {
+                return;
+            }
+            var topleft = {
+                x: 10000,
+                y: 10000
+            };
+            selected.forEach(function(ref) {
+                topleft.x = Math.min(topleft.x, ref.data.x);
+                topleft.y = Math.min(topleft.y, ref.data.y);
+            });
+            $community.createView('riseabove:', function(view) {
+                $community.createNote(function(note) {
+                    note.title = 'Riseabove';
+                    $community.makeRiseabove(note, view._id, function(note) {
+                        selected.forEach(function(each) {
+                            $scope.createOnViewRef0(view, each.to, null, {
+                                x: each.data.x - topleft.x + 20,
+                                y: each.data.y - topleft.y + 20
+                            });
+                        });
+                        selected.forEach(function(each) {
+                            $http.delete('/api/links/' + each._id);
+                        });
+                        //timing? need investigation
+                        $scope.createOnViewRef(note, {
+                            x: topleft.x + 50,
+                            y: topleft.y + 50
+                        }, function() {});
+                    });
+                });
+            }, true);
         };
 
     });
