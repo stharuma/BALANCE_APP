@@ -234,20 +234,48 @@
                     <label>Properties:</label>
                     <div style="padding: 10px;">
                         <label>Permission:</label>
-                        <ul>
-                            <input type="checkbox" ng-model="property.isPublic">public
-                        </ul>
+                        (Sorry, this setting does not reflect yet.)
+                        <div style="padding: 20px;">
+                            <table class="KFPermission">
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>Authors</td>
+                                    <td>Others</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="radio" ng-model="contribution.permission" value="private">&nbsp;private
+                                    </td>
+                                    <td>rw</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="radio" ng-model="contribution.permission" value="protected">&nbsp;protected
+                                    </td>
+                                    <td>rw</td>
+                                    <td>r</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="radio" ng-model="contribution.permission" value="public">&nbsp;public
+                                    </td>
+                                    <td>rw</td>
+                                    <td>rw</td>
+                                </tr>
+                            </table>
+                        </div>
                         <label>Status:</label>
-                        <ul>
+                        <div style="padding: 20px;">
                             {{contribution.status}}
-                        </ul>
+                        </div>
                     </div>
                     <div style="padding: 10px;" ng-if="contribution.type === 'Note'">
                         <label>Riseabove:</label>
-                        <ul ng-if="property.isRiseabove()">
+                        <ul ng-if="contribution.isRiseabove()">
                             This note has riseabove view. Please look it at 'Read' tab.
                         </ul>
-                        <ul ng-if="!property.isRiseabove()">
+                        <ul ng-if="!contribution.isRiseabove()">
                             <button type="submit" class="btn btn-primary" ng-click="makeRiseabove()">MakeRiseabove</button>
                         </ul>
                     </div>

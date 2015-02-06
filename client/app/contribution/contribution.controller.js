@@ -26,7 +26,6 @@ angular.module('kf6App')
         $scope.records = [];
         $scope.toConnections = [];
         $scope.fromConnections = [];
-        $scope.property = {};
         $scope.communityMembers = [];
         $scope.images = [];
         $scope.selected = {};
@@ -42,9 +41,6 @@ angular.module('kf6App')
                 contribution.data = {};
             }
             $scope.contribution = contribution;
-            $scope.$watch('contribution.title', function() {
-                $scope.updateDirtyStatus();
-            });
             $scope.setTitle();
             if ($scope.contribution.keywords) {
                 var keywordsStr = '';
@@ -56,35 +52,19 @@ angular.module('kf6App')
                 });
                 $scope.copy.keywords = keywordsStr;
             }
-            $scope.$watch('copy.keywords', function() {
-                $scope.updateDirtyStatus();
-            });
             $ac.mixIn($scope, contribution);
             $scope.copy.body = contribution.data.body;
-            $scope.$watch('copy.body', function() {
-                if ($scope.mceEditor) {
-                    $scope.updateDirtyStatus();
-                }
-            });
-            $scope.property.isPublic = !contribution.permission || contribution.permission === 'public';
-            $scope.$watch('property.isPublic', function() {
-                $scope.updateDirtyStatus();
-            });
-            $scope.property.isRiseabove = function() {
+            $scope.contribution.isRiseabove = function() {
                 return contribution.type === 'Note' && contribution.data && contribution.data.riseabove && contribution.data.riseabove.viewId;
             };
-            $scope.$watch('property.isRiseabove', function() {
-                $scope.updateDirtyStatus();
-            });
             $scope.prepareRiseabove();
             $community.enter($scope.contribution.communityId);
             window.contribution = contribution;
+            $scope.initializeDirtyStatusHandlers();
+
             $scope.contribution.authors.forEach(function(authorId) {
                 $scope.authors.push($community.getMember(authorId));
             });
-            $scope.$watch('authors', function() {
-                $scope.updateDirtyStatus();
-            }, true);
             window.setTimeout(function() {
                 $http.post('/api/records/read/' + contributionId);
             }, 3000);
@@ -104,6 +84,29 @@ angular.module('kf6App')
             console.log('error');
             console.log(msg);
         });
+
+        $scope.initializeDirtyStatusHandlers = function() {
+            $scope.$watch('contribution.title', function() {
+                $scope.updateDirtyStatus();
+            });
+            $scope.$watch('copy.keywords', function() {
+                $scope.updateDirtyStatus();
+            });
+            $scope.$watch('copy.body', function() {
+                if ($scope.mceEditor) {
+                    $scope.updateDirtyStatus();
+                }
+            });
+            $scope.$watch('contribution.permission', function() {
+                $scope.updateDirtyStatus();
+            });
+            $scope.$watch('contribution.isRiseabove', function() {
+                $scope.updateDirtyStatus();
+            });
+            $scope.$watch('authors', function() {
+                $scope.updateDirtyStatus();
+            }, true);
+        };
 
         $scope.getAuthorString = function() {
             return $community.makeAuthorString($scope.authors);
@@ -185,13 +188,7 @@ angular.module('kf6App')
 
             $scope.status.isContributionCollapsed = false;
             $scope.status.contribution = 'saving';
-
             cont.authors = _.pluck($scope.authors, '_id');
-            if ($scope.property.isPublic) {
-                cont.permission = 'public';
-            } else {
-                cont.permission = 'private';
-            }
 
             $scope.contribution.keywords = [];
             if ($scope.copy.keywords) {
@@ -325,7 +322,7 @@ angular.module('kf6App')
         };
 
         $scope.prepareRiseabove = function() {
-            if ($scope.property.isRiseabove()) {
+            if ($scope.contribution.isRiseabove()) {
                 var url = 'view/' + $scope.contribution.data.riseabove.viewId + '/X';
                 var xhtml = '<iframe style="display: block;" height="500px" width="100%" src="%SRC%" ></iframe>';
                 xhtml = xhtml.replace('%SRC%', url);
