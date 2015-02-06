@@ -1,5 +1,5 @@
 <div class="col-md-12 KFContribution" style="height: 100%;">
-    <!-- dialog -->
+    <!-- dialogs -->
     <div class="well" collapse="isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
         <div>
             <span ng-if="contributionStatus==='saving'">Saving...</span>
@@ -13,6 +13,17 @@
         </div>
     </div>
 
+    <div class="well" collapse="status.isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
+        <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isAttachmentCollapsed = true;">close</button>
+        </div>
+        <div style="padding: 10px;">
+            <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
+        </div>
+    </div>
+
+    <!-- title header part -->
+
     <div style="overflow: hidden;">
         <div style="float: left; overflow: hidden;">
             <span class="KFTitle">&nbsp;{{contribution.title}}</span>
@@ -22,6 +33,8 @@
             <p class="KFModified">Last modified: {{getTimeString(contribution.modified)}}</p>
         </div>
     </div>
+
+    <!-- tab and contents part -->
 
     <div class="KFTabSet">
         <tabset>
@@ -73,19 +86,13 @@
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <label>Attachments:</label>
-                                <button class="btn btn-default" ng-click="isAttachmentCollapsed = !isAttachmentCollapsed">Upload</button>
-                                <div class="well">
+                                <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">Upload</button>
+                                <div class="KFContainer">
                                     <span ng-repeat="attachment in images">
                                     <img ng-attr-src="{{attachment.data.url}}" width="50px" height="50px"></img>
                                             </span>
-                                    <p ng-if="images.length !== 0">You can drag and drop to the editor!</p>
+                                    <p ng-if="images.length !== 0">Drag and drop to the editor!</p>
                                     <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
-                                </div>
-                                <div collapse="isAttachmentCollapsed">
-                                    <label>Upload:</label>
-                                    <div class="well">
-                                        <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
-                                    </div>
                                 </div>
                                 <div style="height: 3px;"></div>
                                 <div>
@@ -217,12 +224,8 @@
                 </div>
 
                 <div ng-show="isEditable()">
-                    <div class="well">
-                        <label>Upload:</label>
-                        <div style="padding: 10px;">
-                            <div ng-include="'app/attachment/attachment.html'" ng-controller="AttachmentCtrl"></div>
-                        </div>
-                    </div>
+                    <label>Upload:</label>
+                    <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">Upload</button>
                 </div>
             </tab>
 
@@ -242,8 +245,7 @@
                     <div style="padding: 10px;" ng-if="contribution.type === 'Note'">
                         <label>Riseabove:</label>
                         <ul ng-if="property.isRiseabove()">
-                            This note has riseabove view. 
-                            Please look it at 'Read' tab.
+                            This note has riseabove view. Please look it at 'Read' tab.
                         </ul>
                         <ul ng-if="!property.isRiseabove()">
                             <button type="submit" class="btn btn-primary" ng-click="makeRiseabove()">MakeRiseabove</button>

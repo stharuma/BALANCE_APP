@@ -5,12 +5,14 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth, $ac) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth, $ac, $timeout) {
         var contributionId = $stateParams.contributionId;
 
         $ac.mixIn($scope, null);
+
         $scope.status = {};
         $scope.status.isScaffoldCollapsed = false;
+        $scope.status.isAttachmentCollapsed = true;
         $scope.isContributionCollapsed = true;
         $scope.contributionStatus = '';
         $scope.recoverable = false;
@@ -26,7 +28,6 @@ angular.module('kf6App')
         $scope.toConnections = [];
         $scope.fromConnections = [];
         $scope.editActive = false;
-        $scope.isAttachmentCollapsed = true;
         $scope.images = [];
         $scope.property = {};
 
@@ -339,6 +340,9 @@ angular.module('kf6App')
                 type: 'attach'
             }).success(function() {
                 $scope.updateFromConnections($scope.updateAttachments);
+                $timeout(function() {
+                    $scope.status.isAttachmentCollapsed = true;
+                }, 1500);
             });
         };
 
