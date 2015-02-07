@@ -13,16 +13,22 @@ exports.login = function(req, res) {
         if (!author) {
             return handleError(res, 'not found:' + authorId);
         }
-        console.log(author);
-        var session = {}
+        
+        var session = {};
         session.token = req.headers.authorization;
         session.author = author;
-        CommunitySession.create(session, function(err, session) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.send(200);
-        });
+
+        CommunitySession.findOneAndUpdate({
+                token: session.token
+            }, session, {
+                upsert: true
+            },
+            function(err, session) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                return res.send(200);
+            });
     });
 };
 

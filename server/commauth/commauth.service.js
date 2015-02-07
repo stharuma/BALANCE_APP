@@ -10,7 +10,9 @@ var CommunitySession = require('./commauth.model');
 function isAuthenticated() {
     return compose()
         .use(function(req, res, next) {
-            CommunitySession.findById(req.headers.authorization, function(err, session) {
+            CommunitySession.findOne({
+                token: req.headers.authorization
+            }, function(err, session) {
                 if (err) {
                     return next(err);
                 }

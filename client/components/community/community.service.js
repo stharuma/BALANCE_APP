@@ -15,6 +15,8 @@ angular.module('kf6App')
             $http.post('commauth/login', {
                 authorId: authorId
             }).success(function(author) {
+                registration = null;
+                community = null;
                 handler(author);
             }).error(function(err) {
                 console.log('login error:' + err);
@@ -143,12 +145,8 @@ angular.module('kf6App')
 
         var getRegistration = function(handler) {
             if (!registration) {
-                $http.get('/api/registrations/' + communityId + '/' + Auth.getCurrentUser()._id).success(function(results) {
-                    if (results.length <= 0) {
-                        console.log('registration size must be more than 1.');
-                        return;
-                    }
-                    registration = results[0];
+                $http.get('/api/registrations/me').success(function(reg) {
+                    registration = reg;
                     handler(registration);
                 });
             } else {

@@ -11,6 +11,7 @@ angular.module('kf6App')
             $('#maincanvas').addClass('KFViewMainCanvasWithoutMenu');
         }
         $scope.community = {};
+        $scope.registration = {};
         $scope.view = {};
         $scope.views = $community.getViews();
         $scope.refs = [];
@@ -31,6 +32,9 @@ angular.module('kf6App')
                 $scope.view = view;
                 $community.enter(view.communityId, function(community) {
                     $scope.community = community;
+                });
+                $community.getRegistration(function(registration) {
+                    $scope.registration = registration;
                 });
                 $scope.updateCanvas();
             });

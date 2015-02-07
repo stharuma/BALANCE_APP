@@ -15,6 +15,13 @@ exports.index = function(req, res) {
     });
 };
 
+/**
+ * Get my info
+ */
+exports.me = function(req, res) {
+    res.json(req.author);
+};
+
 // Get a single registration
 exports.show = function(req, res) {
     Registration.findById(req.params.id, function(err, registration) {
@@ -89,7 +96,7 @@ exports.create = function(req, res) {
                 title: community.title,
                 created: community.created
             };
-            req.body._user = req.user;
+            req.body._user = req.user.profile;
             Registration.create(req.body, function(err, registration) {
                 if (err) {
                     return handleError(res, err);

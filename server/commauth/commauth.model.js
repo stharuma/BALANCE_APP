@@ -6,7 +6,9 @@ var mongoose = require('mongoose'),
 var CommunitySessionSchema = new Schema({
     token: {
         type: String,
-        index: true
+        index: {
+            unique: true
+        }
     },
     author: Schema.Types.Mixed
 });
