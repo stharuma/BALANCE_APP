@@ -11,6 +11,16 @@ angular.module('kf6App')
         var scaffolds = [];
         var registration = null;
 
+        var login = function(authorId, handler) {
+            $http.post('commauth/login', {
+                authorId: authorId
+            }).success(function(author) {
+                handler(author);
+            }).error(function(err) {
+                console.log('login error:' + err);
+            });
+        };
+
         var enter = function(newId, handler) {
             if (!newId) {
                 console.log('bad newId: ' + newId);
@@ -386,6 +396,7 @@ angular.module('kf6App')
         };
 
         return {
+            login: login,
             enter: enter,
             getMember: getMember,
             updateCommunityMembers: updateCommunityMembers,
