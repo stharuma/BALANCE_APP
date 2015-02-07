@@ -47,11 +47,8 @@
     </div>
 
     <div class="KFViewNavBar" ng-if="!menuStatus">
-        <table style="width: 100%;">
-            <tr>
-                <td>{{view.title}}</td>
-            </tr>
-        </table>
+        <span class="KFCommunityTitle">{{community.title}}</span>
+        <span class="KFViewTitle">{{view.title}}</span>
     </div>
 
     <div class='KFViewToolBar' ng-if="!menuStatus">

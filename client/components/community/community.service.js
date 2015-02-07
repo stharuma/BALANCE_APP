@@ -4,11 +4,50 @@ angular.module('kf6App')
     .factory('$community', function($http, Auth) {
         // We need to hold two forms, because those collections might be watched by angular
         var communityId = null;
+        var community = null;
         var views = [];
         var communityMembers = {};
         var communityMembersArray = [];
         var scaffolds = [];
         var registration = null;
+
+        var enter = function(newId, handler) {
+            if (!newId) {
+                console.log('bad newId: ' + newId);
+                return;
+            }
+            if (communityId !== newId) {
+                registration = null;
+                community = null;
+                communityId = newId;
+                refreshCommunity(handler);
+                refreshViews();
+            }
+            if (handler) {
+                handler(community);
+            }
+        };
+
+        // var getCommunity = function(handler) {
+        //     if (!community) {
+        //         return refreshCommunity(handler);
+        //     }
+        //     if (handler) {
+        //         handler(community);
+        //     }
+        // };
+
+        var refreshCommunity = function(handler) {
+            if (!communityId) {
+                return;
+            }
+            $http.get('/api/communities/' + communityId).success(function(result) {
+                community = result;
+                if (handler) {
+                    handler(community);
+                }
+            });
+        };
 
         var refreshViews = function(handler) {
             if (!communityId) {
@@ -72,18 +111,6 @@ angular.module('kf6App')
                     handler();
                 }
             });
-        };
-
-        var enter = function(newId) {
-            registration = null;
-            if (!newId) {
-                console.log('bad newId: ' + newId);
-                return;
-            }
-            if (communityId !== newId) {
-                communityId = newId;
-                refreshViews();
-            }
         };
 
         var getMember = function(id) {

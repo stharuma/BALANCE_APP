@@ -10,6 +10,7 @@ angular.module('kf6App')
         if ($scope.menuStatus) {
             $('#maincanvas').addClass('KFViewMainCanvasWithoutMenu');
         }
+        $scope.community = {};
         $scope.view = {};
         $scope.views = $community.getViews();
         $scope.refs = [];
@@ -28,8 +29,9 @@ angular.module('kf6App')
         $scope.initialize = function() {
             $http.get('/api/contributions/' + viewId).success(function(view) {
                 $scope.view = view;
-                $community.enter(view.communityId);
-                $community.refreshViews();
+                $community.enter(view.communityId, function(community) {
+                    $scope.community = community;
+                });
                 $scope.updateCanvas();
             });
         };
@@ -280,13 +282,13 @@ angular.module('kf6App')
                 }
             });
             if (conn) {
-                $('#' + fromId).on("$destroy", function() {
+                $('#' + fromId).on('$destroy', function() {
                     if (conn.detached !== true) {
                         $scope.jsPlumb.detach(conn);
                         conn.detached = true;
                     }
                 });
-                $('#' + toId).on("$destroy", function() {
+                $('#' + toId).on('$destroy', function() {
                     if (conn.detached !== true) {
                         $scope.jsPlumb.detach(conn);
                         conn.detached = true;
