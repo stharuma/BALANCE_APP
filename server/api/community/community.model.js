@@ -5,7 +5,14 @@ var mongoose = require('mongoose'),
 
 var CommunitySchema = new Schema({
     title: String,
-    registrationKey: String,
+    registrationKey: {
+        type: String,
+        default: ''
+    },
+    managerRegistrationKey: {
+        type: String,
+        default: 'build'
+    },
     created: {
         type: Date,
         default: Date.now

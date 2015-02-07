@@ -4,13 +4,13 @@ angular.module('kf6App')
     .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location, $community) {
         $scope.author = Auth.getCurrentUser();
         $scope.selected = {};
-        $scope.myCommunities = [];
+        $scope.myRegistrations = [];
         $scope.communities = [];
         $scope.newCommunity = {};
         $scope.isAdmin = Auth.isAdmin;
 
-        $http.get('/api/communities/my').success(function(myCommunities) {
-            $scope.myCommunities = myCommunities;
+        $http.get('/api/users/myRegistrations').success(function(myRegs) {
+            $scope.myRegistrations = myRegs;
         });
 
         $http.get('/api/communities').success(function(communities) {
@@ -26,7 +26,6 @@ angular.module('kf6App')
             registration.authorId = $scope.author._id;
             registration.communityId = $scope.selected.community._id;
             registration.registrationKey = $scope.selected.key;
-            registration.role = 'Writer';
             $http.post('/api/registrations', registration).success(function() {
                 $state.reload();
             }).error(function(msg) { //function(data, status, headers, config)

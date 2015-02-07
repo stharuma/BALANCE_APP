@@ -60,7 +60,12 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
 
-        if (community.registrationKey !== req.body.registrationKey) {
+        var role = '';
+        if (community.registrationKey === req.body.registrationKey) {
+            role = 'writer';
+        } else if (community.managerRegistrationKey === req.body.registrationKey) {
+            role = 'manager';
+        } else {
             return res.send(400, 'RegistrationKey does not match.');
         }
 
@@ -73,10 +78,18 @@ exports.create = function(req, res) {
                 return handleError(res, err);
             }
 
-            if (regs.length > 0) {
-                return res.send(400, 'You have already registered.'); //already exists
-            }
+            regs.forEach(function(reg) {
+                if (reg.role === role) {
+                    return res.send(400, 'You have already registered.'); //already exists
+                }
+            });
 
+            req.body.role = role;
+            req.body._community = {
+                title: community.title,
+                created: community.created
+            };
+            req.body._user = req.user;
             Registration.create(req.body, function(err, registration) {
                 if (err) {
                     return handleError(res, err);

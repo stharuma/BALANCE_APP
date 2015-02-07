@@ -1,18 +1,19 @@
 <div class="col-md-12" style="padding-left: 50px;">
     <label>Communities:</label>
     <table>
-        <tr ng-repeat="community in myCommunities">
-            <td style="padding-left: 20px;">{{community.title}}</td>
-            <td style="padding-left: 5px;">(created: {{toTimeString(community.created)}})</td>
-            <td style="padding-left: 20px;"><a href='communitytop/{{community._id}}'>Enter</a>
+        <tr ng-repeat="registration in myRegistrations">
+
+            <td style="padding-left: 20px;">{{registration._community.title}}</td>
+            <td style="padding-left: 20px;">{{registration.role}}</td>
+            <td style="padding-left: 5px;">(created: {{toTimeString(registration._community.created)}})</td>
+            <td style="padding-left: 20px;"><a ng-href='communitytop/{{registration.communityId}}'>Enter</a>
             </td>
             <!-- <td style="padding-left: 20px;"><a href='viewmanager/{{community._id}}'>Manager</a>
             </td> -->
         </tr>
     </table>
 
-    <br>
-    <br>
+    <div style="height: 100px;"></div>
 
     <label>Join Community:</label>
     <div style="padding-left: 50px;">

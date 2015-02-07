@@ -85,27 +85,6 @@ exports.showauthors = function(req, res) {
     });
 };
 
-exports.myindex = function(req, res) {
-    Registration.find({
-        authorId: req.user._id
-    }, function(err, registrations) {
-        if (err) {
-            return handleError(res, err);
-        }
-        var ids = toIds(registrations, 'communityId');
-        Community.find({
-            '_id': {
-                $in: ids
-            }
-        }, function(err, objects) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.json(objects);
-        });
-    });
-};
-
 // Creates a new community in the DB.
 exports.create = function(req, res) {
     Community.create(req.body, function(err, community) {

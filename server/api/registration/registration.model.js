@@ -18,10 +18,16 @@ var RegistrationSchema = new Schema({
         type: String,
         index: true
     },
-    workspaces: [Schema.ObjectId] // elements in this supposed to be viewId
+    workspaces: [Schema.ObjectId], // elements in this supposed to be viewId
     /* here are cash to work read faster */
-    //community: Schema.Types.Mixed,
-    //author: Schema.Types.Mixed
+    _community: {
+        type: Schema.Types.Mixed,
+        default: {
+            title: 'Uncached',
+            created: Date.now
+        }
+    },
+    _user: Schema.Types.Mixed
 });
 
 module.exports = mongoose.model('Registration', RegistrationSchema);

@@ -5,6 +5,8 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 
+var Registration = require('../registration/registration.model');
+
 var validationError = function(res, err) {
     return res.json(422, err);
 };
@@ -19,6 +21,17 @@ exports.index = function(req, res) {
     //   if(err) return res.send(500, err);
     //   res.json(200, users);
     // });
+};
+
+exports.myRegistrations = function(req, res) {
+    Registration.find({
+        authorId: req.user._id
+    }, function(err, registrations) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(registrations);
+    });
 };
 
 /**
@@ -106,3 +119,7 @@ exports.me = function(req, res, next) {
 exports.authCallback = function(req, res, next) {
     res.redirect('/');
 };
+
+function handleError(res, err) {
+    return res.send(500, err);
+}
