@@ -13,8 +13,6 @@ angular.module('kf6App')
         $scope.view = {};
         $scope.views = $community.getViews();
         $scope.refs = [];
-        $scope.conns = {};
-        $scope.dragging = 'none';
 
         $scope.status = {};
         $scope.status.isViewlinkCollapsed = true;
@@ -25,8 +23,7 @@ angular.module('kf6App')
             buildson: true,
             references: true
         };
-
-        $scope.jsPlumb = undefined;
+        $scope.dragging = 'none';
 
         $scope.initialize = function() {
             $http.get('/api/contributions/' + viewId).success(function(view) {
@@ -197,23 +194,51 @@ angular.module('kf6App')
         $scope.updateLink = function(id) {
             $http.get('/api/links/tofrom/' + id).success(function(links) {
                 links.forEach(function(link) {
-                    $scope.makeArrow(link);
+                    $scope.createConnection(link);
                 });
             });
         };
 
         $scope.updateLinks = function() {
-            $scope.detachEveryConnection();
+            $scope.clearAllConnections();
             $http.get('/api/links/onview/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
-                    $scope.makeArrow(link);
+                    $scope.createConnection(link);
                 });
             });
         };
 
-        $scope.makeArrow = function(link) {
+        /* ----------- connections --------- */
+
+        $scope.connectionIdCounter = 0;
+        $scope.jsPlumb = undefined;
+        $scope.repaintRequest = false;
+        $scope.$watch('repaintRequest', function() {
+            if ($scope.repaintRequest === false) {
+                return;
+            }
+            if ($scope.jsPlumb) {
+                try {
+                    $scope.jsPlumb.repaintEverything();
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+            $scope.repaintRequest = false;
+        });
+
+        $scope.generateConnectionId = function() {
+            $scope.connectionIdCounter++;
+            return 'kfconnection' + $scope.connectionIdCounter;
+        };
+
+        $scope.repaintConnections = function(ref) {
+            $scope.repaintRequest = true;
+        };
+
+        $scope.createConnection = function(link) {
             if (link.type === 'buildson' && $scope.setting.buildson) {
-                $scope.makeArrow0(link.from, link.to, 'blue', '');
+                $scope.createConnection0(link, 'blue', '');
             }
             if (link.type === 'references' && $scope.setting.references) {
                 var text = '';
@@ -224,59 +249,54 @@ angular.module('kf6App')
                     }
                     text = '"' + text + '"';
                 }
-                $scope.makeArrow0(link.from, link.to, 'black', text);
+                $scope.createConnection0(link, 'black', text);
             }
         };
 
-        $scope.makeArrow0 = function(from, to, color, label) {
-            var fromElements = $('.icon' + from);
-            var toElements = $('.icon' + to);
+        $scope.createConnection0 = function(link, color, label) {
+            var fromElements = $('.icon' + link.from);
+            var toElements = $('.icon' + link.to);
             fromElements.each(function() {
                 var fromElement = $(this);
-                var fromId = fromElement.attr('id');
                 toElements.each(function() {
                     var toElement = $(this);
-                    var toId = toElement.attr('id');
-                    var conn = $scope.jsPlumb.connect({
-                        source: fromId,
-                        target: toId,
-                        type: 'kfarrow',
-                        data: {
-                            color: color,
-                            label: label
-                        }
-                    });
-                    $scope.registerConn(fromId, conn);
-                    $scope.registerConn(toId, conn);
+                    $scope.createConnection1(fromElement, toElement, color, label);
                 });
             });
         };
 
-        /* ----------- connections --------- */
-
-        $scope.registerConn = function(id, conn) {
-            if ($scope.conns[id] === undefined) {
-                $scope.conns[id] = [];
-            }
-            $scope.conns[id].push(conn);
-        };
-
-        $scope.detachEveryConnection = function() {
-            $scope.jsPlumb.detachEveryConnection();
-            $scope.conns = [];
-        };
-
-        $scope.detachAllConnections = function(id) {
-            if ($scope.conns[id] === undefined) {
-                return;
-            }
-            $scope.conns[id].forEach(function(conn) {
-                if (conn.detached !== true) {
-                    $scope.jsPlumb.detach(conn);
-                    conn.detached = true;
+        $scope.createConnection1 = function(fromElement, toElement, color, label) {
+            var fromId = $scope.generateConnectionId();
+            fromElement.attr('id', fromId);
+            var toId = $scope.generateConnectionId();
+            toElement.attr('id', toId);
+            var conn = $scope.jsPlumb.connect({
+                source: fromId,
+                target: toId,
+                type: 'kfarrow',
+                data: {
+                    color: color,
+                    label: label
                 }
             });
-            $scope.conns[id] = [];
+            if (conn) {
+                $('#' + fromId).on("$destroy", function() {
+                    if (conn.detached !== true) {
+                        $scope.jsPlumb.detach(conn);
+                        conn.detached = true;
+                    }
+                });
+                $('#' + toId).on("$destroy", function() {
+                    if (conn.detached !== true) {
+                        $scope.jsPlumb.detach(conn);
+                        conn.detached = true;
+                    }
+                });
+            }
+        };
+
+        $scope.clearAllConnections = function() {
+            $scope.jsPlumb.detachEveryConnection();
         };
 
         jsPlumb.ready(function() {

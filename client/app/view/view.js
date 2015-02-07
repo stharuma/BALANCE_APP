@@ -45,13 +45,10 @@ angular.module('kf6App')
                 var el = element[0];
 
                 scope.$watch('ref.data.x', function() {
-                    $scope.jsPlumb.repaintEverything();
+                    $scope.repaintConnections(ref);
                 });
                 scope.$watch('ref.data.y', function() {
-                    $scope.jsPlumb.repaintEverything();
-                });
-                scope.$on('$destroy', function() {
-                    $scope.detachAllConnections('icon' + ref._id);
+                    $scope.repaintConnections(ref);
                 });
 
                 ref.refreshFixedStatus = function() {
