@@ -105,9 +105,9 @@ angular.module('kf6App')
                     e.dataTransfer.setData('text', 'postref:' + JSON.stringify(models));
                     var hrefs = '';
                     models.forEach(function(each) {
-                        hrefs += '<a href="note/' + each.postId + '">';
-                        hrefs += each.title;
-                        hrefs += '</a>';
+                        hrefs += '<a href="contribution/' + each.to + '">';
+                        hrefs += each._to.title;
+                        hrefs += '</a><br>';
                     });
                     if (!IE) {
                         e.dataTransfer.setData('text/html', hrefs);
