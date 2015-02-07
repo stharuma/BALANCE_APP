@@ -5,10 +5,11 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth, $ac, $timeout) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth, $ac, $timeout, $kfutil) {
         var contributionId = $stateParams.contributionId;
 
         $ac.mixIn($scope, null);
+        $kfutil.mixIn($scope);
 
         $scope.status = {};
         $scope.status.isScaffoldCollapsed = false;
@@ -152,11 +153,6 @@ angular.module('kf6App')
                     };
                 });
             });
-        };
-
-        $scope.getTimeString = function(time) {
-            var d = new Date(time);
-            return d.toLocaleString();
         };
 
         $scope.addAuthor = function(author) {

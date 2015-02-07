@@ -1,9 +1,11 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('SearchCtrl', function($scope, $http, $community, $stateParams) {
+    .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
+
+        $kfutil.mixIn($scope);
 
         $scope.query = '';
         $scope.communityMembers = [];
@@ -84,4 +86,5 @@ angular.module('kf6App')
         $scope.addAuthor = function() {
             $scope.query += ' -author:' + $scope.selectedAuthor;
         };
+
     });

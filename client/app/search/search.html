@@ -8,46 +8,50 @@
     </p>
 
     <p style="text-align: right;">
-        <button class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Scaffold</button>
+        <button class="btn btn-default" ng-click="isCollapsed = !isCollapsed">Advanced</button>
     </p>
     <div collapse="isCollapsed">
         <div class="well well-lg">
             <div class="col-md-6">
-                <p class="input-group">
-                    <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="from" is-open="fromOpened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="openFrom($event)">From</button>
-                    </span>
-                    <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="to" is-open="toOpened" datepicker-options="dateOptions" show-weeks="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="openTo($event)">To</button>
-                    </span>
-                    <input type="text" ng-model="selectedAuthor" typeahead="author.email for author in communityMembers | filter:$viewValue | limitTo:8" class="form-control">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="addAuthor()">Add</button>
-                    </span>
-                </p>
+                <label>Dates:</label><br>
+                <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="from" is-open="fromOpened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <button type="button" class="btn btn-primary kfbutton" ng-click="openFrom($event)">From</button>
+                <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="to" is-open="toOpened" datepicker-options="dateOptions" show-weeks="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <button type="button" class="btn btn-primary kfbutton" ng-click="openTo($event)">To</button>
+            </div>
+
+            <div style="height: 5px;"></div>
+
+            <div style="padding: 15px;">
+                <label>Authors:</label><br>
+                <input type="text" ng-model="selectedAuthor" typeahead="author.email for author in communityMembers | filter:$viewValue | limitTo:8" class="form-control" style="display: inline; width: 300px;">
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addAuthor()">Add</button>
             </div>
         </div>
     </div>
 
     <div ng-if="contributions.length > 0">
         <style>
-            .KFSearchResult{
-                vertical-align: top;
-            }
+        .KFSearchResult td,
+        th {
+            padding: 3px;
+        }
+        .KFSearchResult {
+            vertical-align: top;
+        }
         </style>
         {{contributions.length}} contributions found.
-        <table border='1'>
+        <table border='1' style="width: 100%;">
             <tr>
                 <th>Title</th>
                 <th>Created</th>
                 <th>Body</th>
             </tr>
             <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note'">
-                <td><a href="contribution/{{contribution._id}}">{{contribution.title}}</a></td>
+                <td><a href="contribution/{{contribution._id}}">{{contribution.title}}</a>
+                </td>
                 <!-- <td>{{post.getAuthorText()}}</td> -->
-                <td>{{contribution.created}}</td>
+                <td>{{getTimeString(contribution.created)}}</td>
                 <td>
                     <div ng-bind-html="contribution.data.body" kf-notedoby></div>
                 </td>
