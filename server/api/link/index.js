@@ -10,7 +10,7 @@ router.get('/from/:id', controller.fromindex);
 router.get('/to/:id', controller.toindex);
 router.get('/tofrom/:id', controller.tofromindex);
 router.get('/onview/:id', controller.onviewindex);
-router.get('/updateallcash/:communityId', controller.updateAllCash);
+router.get('/updateallcache/:communityId', controller.updateAllCash);
 
 router.get('/:id', controller.show);
 router.post('/', controller.create);
