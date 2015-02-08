@@ -5,33 +5,9 @@ var mongoose = require('mongoose'),
 
 var ContributionSchema = new Schema({
     title: String,
-    communityId: {
-        type: Schema.ObjectId,
-        required: true,
-        index: true
-    },
-    type: {
-        type: String,
-        required: true,
-        index: true
-    },
-    created: {
-        type: Date,
-        default: Date.now
-    },
-    modified: {
-        type: Date,
-        default: Date.now
-    },
     authors: {
         type: [Schema.ObjectId],
         default: []
-    },
-    status: { //unsaved, active or inactive
-        type: String,
-        required: false, //this should be true in the future
-        index: true,
-        default: 'active' //this should be unsaved in the future
     },
     permission: { //public or private
         type: String,
@@ -40,8 +16,7 @@ var ContributionSchema = new Schema({
         default: 'public'
     },
     keywords: [String],
-    text4search: String,
-    data: Schema.Types.Mixed
+    text4search: String
 });
 
 // for text index search
@@ -49,4 +24,5 @@ ContributionSchema.index({
     text4search: 'text'
 });
 
-module.exports = mongoose.model('Contribution', ContributionSchema);
+var KObject = require('../KObject/KObject.model');
+module.exports = KObject.discriminator('KContribution', ContributionSchema);
