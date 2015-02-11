@@ -199,8 +199,8 @@ exports.destroy = function(req, res) {
     });
 };
 
-// ----- cash remaking function ------
-// ----- cash remaking is unnecessary in normal usage ------
+// ----- cache remaking function ------
+// ----- cache remaking is unnecessary in normal usage ------
 
 // Get a single link
 exports.updateAllCash = function(req, res) {

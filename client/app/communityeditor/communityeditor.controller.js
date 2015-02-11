@@ -20,9 +20,9 @@ angular.module('kf6App')
 
 
         $scope.updateAllCash = function() {
-            $http.get('/api/links/updateallcash/' + communityId).
+            $http.get('/api/links/updateallcache/' + communityId).
             success(function() {
-                window.alert('updateing cash successed.');
+                window.alert('updateing cache successed.');
             });
         };
     });

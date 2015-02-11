@@ -19,7 +19,7 @@ var RegistrationSchema = new Schema({
         index: true
     },
     workspaces: [Schema.ObjectId], // elements in this supposed to be viewId
-    /* here are cash to work read faster */
+    /* here are cache to work read faster */
     _community: {
         type: Schema.Types.Mixed,
         default: {

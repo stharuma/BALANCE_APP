@@ -29,7 +29,7 @@ var LinkSchema = new Schema({
         required: true,
         default: {}
     },
-    /* here are cash in order to work faster for reading */
+    /* here are cache in order to work faster for reading */
     _to: {
         type: Schema.Types.Mixed,
         required: true,
@@ -79,15 +79,15 @@ Contribution.schema.post('save', function(contribution) {
 });
 
 Link.createCashObj = function(contribution) {
-    var cash = {};
-    cash.type = contribution.type;
-    cash.title = contribution.title;
-    cash.authors = contribution.authors;
-    cash.permission = contribution.permission;
-    cash.status = contribution.status;
-    cash.created = contribution.created;
-    cash.modified = contribution.modified;    
-    return cash;
+    var cache = {};
+    cache.type = contribution.type;
+    cache.title = contribution.title;
+    cache.authors = contribution.authors;
+    cache.permission = contribution.permission;
+    cache.status = contribution.status;
+    cache.created = contribution.created;
+    cache.modified = contribution.modified;    
+    return cache;
 }
 
 module.exports = Link;
