@@ -4,12 +4,14 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil) {
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
             $('#maincanvas').addClass('KFViewMainCanvasWithoutMenu');
         }
+        
+        $kfutil.mixIn($scope);
         $scope.community = {};
         $scope.registration = {};
         $scope.view = {};

@@ -99,6 +99,9 @@
 .kfbutton:hover {
     background-color: #888888;
 }
+.KFTimeLabel {
+	font-size: 9px;
+}
 
 /* for handles */
 .ui-resizable {
