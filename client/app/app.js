@@ -36,7 +36,7 @@ angular.module('kf6App', [
         $translateProvider.translations('fr', {
             'Hello': 'Bonjour',
             'Admin': 'Administration',
-            'Communities': 'Communau<'      
+            'Communities': 'Communauté'      
         });
 
         $translateProvider.preferredLanguage('en');
