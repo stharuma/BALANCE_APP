@@ -1,11 +1,18 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('NavbarCtrl', function($scope, $location, Auth) {
+    .controller('NavbarCtrl', function($scope, $location, Auth, $translate) {
         $scope.menu = [{
             'title': 'Home',
             'link': '/'
         }];
+
+        $scope.selectedLanguage = 'en';
+        $scope.languages = ['en', 'fr'];
+
+        $scope.languageSelected = function() {
+            $translate.use($scope.selectedLanguage);
+        };
 
         $scope.isCollapsed = true;
         $scope.isLoggedIn = Auth.isLoggedIn;
