@@ -11,7 +11,8 @@ angular.module('kf6App', [
         'ui.sortable',
         'angularFileUpload',
         'ng-context-menu',
-        'ui.select'
+        'ui.select',
+        'pascalprecht.translate'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');
@@ -25,6 +26,21 @@ angular.module('kf6App', [
         $locationProvider.html5Mode(true);
         $httpProvider.interceptors.push('authInterceptor');
     })
+    .config(['$translateProvider', function($translateProvider) {
+        $translateProvider.translations('en', {
+            'Hello': 'Hello',
+            'Admin': 'Admin',
+            'Communities': 'Communities'            
+        });
+
+        $translateProvider.translations('fr', {
+            'Hello': 'Bonjour',
+            'Admin': 'Administration',
+            'Communities': 'Communau<'      
+        });
+
+        $translateProvider.preferredLanguage('en');
+    }])
 
 .factory('authInterceptor', function($rootScope, $q, $cookieStore, $location) {
     return {
