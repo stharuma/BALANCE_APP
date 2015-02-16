@@ -28,6 +28,16 @@ var KObjectSchema = new Schema({
         index: true,
         default: 'active' //this should be unsaved in the future
     },
+    permission: { //public or private
+        type: String,
+        required: false, //this should be true in the future
+        index: true,
+        default: 'public'
+    },
+    authors: {
+        type: [Schema.ObjectId],
+        default: []
+    },
     data: Schema.Types.Mixed
 });
 

@@ -100,6 +100,11 @@ angular.module('kf6App')
              * @return {Object} user
              */
             getCurrentUser: function() {
+                if (!currentUser.getName) {
+                    currentUser.getName = function() {
+                        return currentUser.firstName + ' ' + currentUser.lastName;
+                    };
+                }
                 return currentUser;
             },
 

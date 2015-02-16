@@ -2,7 +2,6 @@
 
 angular.module('kf6App')
     .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location, $community) {
-        $scope.author = Auth.getCurrentUser();
         $scope.selected = {};
         $scope.myRegistrations = [];
         $scope.communities = [];
@@ -22,11 +21,11 @@ angular.module('kf6App')
                 window.alert('Community must be selected');
                 return;
             }
-            var registration = {};
-            registration.authorId = $scope.author._id;
-            registration.communityId = $scope.selected.community._id;
-            registration.registrationKey = $scope.selected.key;
-            $http.post('/api/registrations', registration).success(function() {
+            var author = {};
+            author.userId = Auth.getCurrentUser()._id;
+            author.communityId = $scope.selected.community._id;
+            author.registrationKey = $scope.selected.key;
+            $http.post('/api/authors', author).success(function() {
                 $state.reload();
             }).error(function(msg) { //function(data, status, headers, config)
                 window.alert('Error: ' + msg);

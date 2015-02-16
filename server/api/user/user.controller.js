@@ -5,7 +5,7 @@ var passport = require('passport');
 var config = require('../../config/environment');
 var jwt = require('jsonwebtoken');
 
-var Registration = require('../registration/registration.model');
+var KAuthor = require('../KAuthor/KAuthor.model');
 
 var validationError = function(res, err) {
     return res.json(422, err);
@@ -24,13 +24,13 @@ exports.index = function(req, res) {
 };
 
 exports.myRegistrations = function(req, res) {
-    Registration.find({
-        authorId: req.user._id
-    }, function(err, registrations) {
+    KAuthor.find({
+        userId: req.user._id
+    }, function(err, authors) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(registrations);
+        return res.json(authors);
     });
 };
 
