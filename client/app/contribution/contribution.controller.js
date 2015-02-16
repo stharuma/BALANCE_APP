@@ -21,6 +21,7 @@ angular.module('kf6App')
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
 
+        $scope.community = {};
         $scope.contribution = {};
         $scope.copy = {};
         $scope.authors = [];
@@ -42,6 +43,9 @@ angular.module('kf6App')
                 contribution.data = {};
             }
             $scope.contribution = contribution;
+            $community.enter($scope.contribution.communityId);
+            $scope.community = $community.getCommunityData();
+
             $scope.setTitle();
             if ($scope.contribution.keywords) {
                 var keywordsStr = '';
@@ -59,7 +63,6 @@ angular.module('kf6App')
                 return contribution.type === 'Note' && contribution.data && contribution.data.riseabove && contribution.data.riseabove.viewId;
             };
             $scope.prepareRiseabove();
-            $community.enter($scope.contribution.communityId);
             window.contribution = contribution;
             $scope.initializeDirtyStatusHandlers();
 
@@ -226,7 +229,7 @@ angular.module('kf6App')
         };
 
         $scope.sendContribute = function() {
-            $http.put('/api/contributions/' + contributionId, $scope.contribution).success(function() {
+            $http.put('/api/contributions/' + $scope.contribution.communityId + '/' + contributionId, $scope.contribution).success(function() {
                 if ($scope.contribution.type === 'Note') {
                     $scope.status.dirty = false;
                 }

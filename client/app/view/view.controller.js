@@ -10,12 +10,11 @@ angular.module('kf6App')
         if ($scope.menuStatus) {
             $('#maincanvas').addClass('KFViewMainCanvasWithoutMenu');
         }
-        
+
         $kfutil.mixIn($scope);
         $scope.community = {};
-        $scope.registration = {};
         $scope.view = {};
-        $scope.views = $community.getViews();
+        $scope.views = [];
         $scope.refs = [];
 
         $scope.status = {};
@@ -32,12 +31,9 @@ angular.module('kf6App')
         $scope.initialize = function() {
             $http.get('/api/contributions/' + viewId).success(function(view) {
                 $scope.view = view;
-                $community.enter(view.communityId, function(community) {
-                    $scope.community = community;
-                });
-                $community.getRegistration(function(registration) {
-                    $scope.registration = registration;
-                });
+                $community.enter(view.communityId);
+                $scope.community = $community.getCommunityData();
+                $scope.views = $community.getViews();
                 $scope.updateCanvas();
             });
         };

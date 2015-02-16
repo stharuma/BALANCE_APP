@@ -39,7 +39,7 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
         RecordController.createInternal({
-            authorId: req.user._id,
+            authorId: req.author._id,
             targetId: contribution._id,
             type: 'created'
         });
@@ -103,7 +103,7 @@ exports.update = function(req, res) {
                 return handleError(res, err);
             }
             RecordController.createInternal({
-                authorId: req.user._id,
+                authorId: req.author._id,
                 targetId: contribution._id,
                 type: 'modified'
             });

@@ -1,26 +1,37 @@
 'use strict';
 
 var compose = require('composable-middleware');
-var CommunitySession = require('./commauth.model');
+var auth = require('./auth.service');
+var KAuthor = require('../api/KAuthor/KAuthor.model');
 
 /**
  * Attaches the user object to the request if authenticated
- * Otherwise returns 403
+ * Otherwise returns 401
  */
 function isAuthenticated() {
     return compose()
+        .use(auth.isAuthenticated())
         .use(function(req, res, next) {
-            CommunitySession.findOne({
-                token: req.headers.authorization
-            }, function(err, session) {
+            var user = req.user;
+            /* assert user is not null */
+            var communityId = req.params.communityId;
+            if (!communityId) {
+                return res.send(401, 'communityId not found.');
+            }
+
+            KAuthor.findOne({
+                communityId: communityId,
+                userId: user._id
+            }, function(err, author) {
+              
                 if (err) {
-                    return next(err);
+                    return res.send(500, err);
                 }
-                if (!session) {
-                    return res.send(401);
+                if (!author) {
+                    return res.send(401, 'author not found.');
                 }
 
-                req.author = session.author;
+                req.author = author;
                 next();
             });
         });

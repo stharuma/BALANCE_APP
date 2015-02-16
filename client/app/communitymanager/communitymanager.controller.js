@@ -58,9 +58,9 @@ angular.module('kf6App')
         };
 
         $scope.enterCommunity = function(author) {
-            $community.login(author._id, function() {
-                $location.path('communitytop/' + author.communityId);
-            });
+            //$community.login(author._id, function() {
+            $location.path('communitytop/' + author.communityId);
+            //});
         };
 
         $scope.toTimeString = function(time) {

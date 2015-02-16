@@ -1,27 +1,19 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$community', function($http, Auth) {
+    .factory('$community', function($http) {
         // We need to hold two forms, because those collections might be watched by angular
+
         var communityId = null;
+
+        var communityData = {};
+
+        // old
         var community = null;
         var views = [];
         var communityMembers = {};
         var communityMembersArray = [];
         var scaffolds = [];
-        var registration = null;
-
-        var login = function(authorId, handler) {
-            $http.post('commauth/login', {
-                authorId: authorId
-            }).success(function(author) {
-                registration = null;
-                community = null;
-                handler(author);
-            }).error(function(err) {
-                console.log('login error:' + err);
-            });
-        };
 
         var enter = function(newId, handler) {
             if (!newId) {
@@ -29,32 +21,24 @@ angular.module('kf6App')
                 return;
             }
             if (communityId !== newId) {
-                registration = null;
-                community = null;
                 communityId = newId;
+                refreshAuthor(handler);
                 refreshCommunity(handler);
-                refreshViews();
+                refreshViews(handler);
+                //updateCommunityMembers();
             }
             if (handler) {
                 handler(community);
             }
         };
 
-        // var getCommunity = function(handler) {
-        //     if (!community) {
-        //         return refreshCommunity(handler);
-        //     }
-        //     if (handler) {
-        //         handler(community);
-        //     }
-        // };
-
         var refreshCommunity = function(handler) {
             if (!communityId) {
                 return;
             }
-            $http.get('/api/communities/' + communityId).success(function(result) {
-                community = result;
+            communityData.community = {};
+            $http.get('/api/communities/' + communityId).success(function(community) {
+                communityData.community = community;
                 if (handler) {
                     handler(community);
                 }
@@ -75,6 +59,55 @@ angular.module('kf6App')
                 }
             }).error(function() {
                 console.log('view retrieving error');
+            });
+        };
+
+        /* this should be refresh */
+        var updateCommunityMembers = function() {
+            $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
+                authors.forEach(function(each) {
+                    _.extend(getMember(each._id), each);
+                });
+            });
+        };
+
+        var getMember = function(id) {
+            var member = createAuthor();
+            if (id === null || id === '') {
+                return member;
+            }
+            if (!(id in communityMembers)) {
+                member._id = id;
+                communityMembers[id] = member;
+                communityMembersArray.push(member);
+            }
+            return communityMembers[id];
+        };
+
+        var createAuthor = function() {
+            return {
+                firstName: 'N',
+                lastName: 'A',
+                getName: function() {
+                    return this.firstName + ' ' + this.lastName;
+                }
+            };
+        };
+
+        var getAuthor = function() {
+            return communityData.author;
+        };
+
+        var refreshAuthor = function(handler) {
+            if (!communityId) {
+                return;
+            }
+            communityData.author = createAuthor();
+            $http.get('/api/authors/' + communityId + '/me').success(function(author) {
+                _.extend(communityData.author, author);
+                if (handler) {
+                    handler(author);
+                }
             });
         };
 
@@ -125,63 +158,25 @@ angular.module('kf6App')
             });
         };
 
-        var getMember = function(id) {
-            if (id === null || id === '') {
-                return {
-                    name: 'NA'
-                };
-            }
-            if (!(id in communityMembers)) {
-                var user = {
-                    _id: id,
-                    email: 'hoge',
-                    name: 'NA'
-                };
-                communityMembers[id] = user;
-                communityMembersArray.push(user);
-            }
-            return communityMembers[id];
-        };
-
-        var getRegistration = function(handler) {
-            if (!registration) {
-                $http.get('/api/registrations/me').success(function(reg) {
-                    registration = reg;
-                    handler(registration);
-                });
-            } else {
-                handler(registration);
-            }
-        };
-
-        var saveRegistration = function(reg, handler) {
-            if (reg._id !== registration._id) {
-                console.log('error : reg._id !== registration._id.');
-                return;
-            }
-            $http.put('/api/registrations/' + reg._id, reg).success(function(dbReg) {
-                registration = dbReg;
-                if (handler) {
-                    handler(registration);
-                }
-            });
-        };
-
-        var updateCommunityMembers = function() {
-            $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
-                authors.forEach(function(each) {
-                    getMember(each._id).name = each.name;
-                    getMember(each._id).email = each.email;
-                });
-            });
-        };
+        // var saveRegistration = function(reg, handler) {
+        //     if (reg._id !== registration._id) {
+        //         console.log('error : reg._id !== registration._id.');
+        //         return;
+        //     }
+        //     $http.put('/api/registrations/' + reg._id, reg).success(function(dbReg) {
+        //         registration = dbReg;
+        //         if (handler) {
+        //             handler(registration);
+        //         }
+        //     });
+        // };
 
         var createNoteCommon = function(fromId, success) {
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
                 title: 'New Note',
-                authors: [Auth.getCurrentUser()._id],
+                authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
                 data: {
@@ -189,7 +184,7 @@ angular.module('kf6App')
                 },
                 buildson: fromId
             };
-            $http.post('/api/contributions', newobj)
+            $http.post('/api/contributions/' + communityId, newobj)
                 .success(function(note) {
                     success(note);
                 });
@@ -212,7 +207,7 @@ angular.module('kf6App')
             }
             note.status = 'active';
             note.data.riseabove = riseabove;
-            $http.put('/api/contributions/' + note._id, note).success(function(note) {
+            $http.put('/api/contributions/' + communityId + '/' + note._id, note).success(function(note) {
                 success(note);
             });
         };
@@ -222,14 +217,14 @@ angular.module('kf6App')
                 communityId: communityId,
                 type: 'Drawing',
                 title: 'a Drawing',
-                authors: [Auth.getCurrentUser()._id],
+                authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
                 data: {
                     svg: '<svg width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><\/g><\/svg>',
                 }
             };
-            $http.post('/api/contributions', newobj)
+            $http.post('/api/contributions/' + communityId, newobj)
                 .success(function(drawing) {
                     success(drawing);
                 });
@@ -240,11 +235,11 @@ angular.module('kf6App')
                 communityId: communityId,
                 type: 'View',
                 title: title,
-                authors: [Auth.getCurrentUser()._id],
+                authors: [getAuthor()._id],
                 status: 'active',
                 permission: 'public',
             };
-            $http.post('/api/contributions', newobj).success(function(view) {
+            $http.post('/api/contributions/' + communityId, newobj).success(function(view) {
                 if (noregistration === true) {
                     success(view);
                 } else {
@@ -280,11 +275,11 @@ angular.module('kf6App')
                 communityId: communityId,
                 type: 'Scaffold',
                 title: title,
-                authors: [Auth.getCurrentUser()._id],
+                authors: [getAuthor()._id],
                 status: 'active',
                 permission: 'protected'
             };
-            $http.post('/api/contributions', newobj).success(function(scaffold) {
+            $http.post('/api/contributions/' + communityId, newobj).success(function(scaffold) {
                 var url = 'api/communities/' + communityId;
                 $http.get(url).success(function(community) {
                     community.scaffolds.push(scaffold._id);
@@ -300,11 +295,11 @@ angular.module('kf6App')
                 communityId: communityId,
                 type: 'Support',
                 title: title,
-                authors: [Auth.getCurrentUser()._id],
+                authors: [getAuthor()._id],
                 status: 'active',
                 permission: 'protected'
             };
-            $http.post('/api/contributions', newobj).success(function(support) {
+            $http.post('/api/contributions/' + communityId, newobj).success(function(support) {
                 var link = {};
                 link.to = support._id;
                 link.from = scaffold._id;
@@ -323,14 +318,14 @@ angular.module('kf6App')
                 communityId: communityId,
                 type: 'Attachment',
                 title: 'an Attachment',
-                authors: [Auth.getCurrentUser()._id],
+                authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
                 data: {
                     version: 0
                 }
             };
-            $http.post('/api/contributions', newobj).success(function(attachment) {
+            $http.post('/api/contributions/' + communityId, newobj).success(function(attachment) {
                 success(attachment);
             });
         };
@@ -351,7 +346,7 @@ angular.module('kf6App')
                 if (authorString.length !== 0) {
                     authorString += ', ';
                 }
-                authorString += each.name;
+                authorString += each.getName();
             });
             return authorString;
         };
@@ -378,7 +373,7 @@ angular.module('kf6App')
         };
 
         var amIAuthor0 = function(authorIds) {
-            return _.contains(authorIds, Auth.getCurrentUser()._id);
+            return _.contains(authorIds, communityData.author._id);
         };
 
         var createDefaultScaffold = function(handler) {
@@ -394,7 +389,7 @@ angular.module('kf6App')
         };
 
         return {
-            login: login,
+            //login: login,
             enter: enter,
             getMember: getMember,
             updateCommunityMembers: updateCommunityMembers,
@@ -413,8 +408,7 @@ angular.module('kf6App')
             makeRiseabove: makeRiseabove,
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
-            getRegistration: getRegistration,
-            saveRegistration: saveRegistration,
+            //saveRegistration: saveRegistration,
             getViews: function() {
                 return views;
             },
@@ -426,6 +420,9 @@ angular.module('kf6App')
             },
             getMembersArray: function() {
                 return communityMembersArray;
+            },
+            getCommunityData: function() {
+                return communityData;
             },
             makeAuthorString: makeAuthorString,
             makeAuthorStringByIds: makeAuthorStringByIds

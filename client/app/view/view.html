@@ -47,9 +47,9 @@
     </div>
 
     <div class="KFViewNavBar" ng-if="!menuStatus">
-        <span class="KFCommunityTitle">{{community.title}}</span>
+        <span class="KFCommunityTitle">{{community.community.title}}</span>
         <span class="KFViewTitle">{{view.title}}</span>
-        <span style="float: right; padding-right: 20px;">{{registration._user.name}} ({{registration.role}})</span>
+        <span style="float: right; padding-right: 20px;">{{community.author.getName()}} ({{community.author.role}})</span>
     </div>
 
     <div class='KFViewToolBar' ng-if="!menuStatus">

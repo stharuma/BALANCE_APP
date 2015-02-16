@@ -5,11 +5,12 @@ var controller = require('./contribution.controller');
 
 var router = express.Router();
 var auth = require('../../auth/auth.service');
+var commauth = require('../../auth/commauth.service');
 
 router.get('/', controller.index);
 router.get('/:id', controller.show);
-router.post('/', auth.isAuthenticated(), controller.create);
-router.put('/:id', auth.isAuthenticated(), controller.update);
+router.post('/:communityId', commauth.isAuthenticated(), controller.create);
+router.put('/:communityId/:id', commauth.isAuthenticated(), controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 

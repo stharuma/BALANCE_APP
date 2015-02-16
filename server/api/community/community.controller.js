@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 var Community = require('./community.model');
 var Contribution = require('../contribution/contribution.model');
-var Registration = require('../registration/registration.model');
+var KAuthor = require('../KAuthor/KAuthor.model');
 var User = require('../user/user.model');
 
 // Get list of communitys
@@ -65,23 +65,13 @@ function toIds(array, paramName) {
 
 // Get authors of the community
 exports.showauthors = function(req, res) {
-    Registration.find({
+    KAuthor.find({
         communityId: req.params.id
-    }, function(err, registrations) {
+    }, function(err, authors) {
         if (err) {
             return handleError(res, err);
         }
-        var ids = toIds(registrations, 'authorId');
-        User.find({
-            '_id': {
-                $in: ids
-            }
-        }, function(err, objects) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.json(objects);
-        });
+        return res.json(authors);
     });
 };
 

@@ -29,6 +29,13 @@ exports.show = function(req, res) {
     });
 };
 
+/**
+ * Get my info
+ */
+exports.me = function(req, res) {
+    return res.json(req.author);
+};
+
 // Creates a new registration in the DB.
 exports.create = function(req, res) {
     var communityId = mongoose.Types.ObjectId(req.body.communityId);
