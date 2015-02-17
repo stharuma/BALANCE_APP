@@ -330,7 +330,7 @@ angular.module('kf6App')
             }
         };
 
-        $scope.attachmentUpdated = function(attachment) {
+        $scope.attachmentUploaded = function(attachment) {
             $http.post('/api/links', {
                 from: $scope.contribution._id,
                 to: attachment._id,
@@ -339,7 +339,7 @@ angular.module('kf6App')
                 $scope.updateFromConnections($scope.updateAttachments);
                 $timeout(function() {
                     $scope.status.isAttachmentCollapsed = true;
-                }, 1500);
+                }, 500);
             });
         };
 

@@ -405,11 +405,7 @@ angular.module('kf6App')
             $scope.status.isAttachmentCollapsed = !$scope.status.isAttachmentCollapsed;
         };
 
-        $scope.attachmentUpdated = function(attachment) {
-            $timeout(function() {
-                $scope.status.isAttachmentCollapsed = true;
-                $scope.$digest($scope.status.isAttachmentCollapsed);
-            }, 1500);
+        $scope.attachmentUploaded = function(attachment) {
             $http.post('/api/links', {
                 from: $scope.view._id,
                 to: attachment._id,
@@ -421,7 +417,10 @@ angular.module('kf6App')
                     height: 200
                 }
             }).success(function() {
-
+                $timeout(function() {
+                    $scope.status.isAttachmentCollapsed = true;
+                    $scope.$digest($scope.status.isAttachmentCollapsed);
+                }, 500);
             });
         };
 

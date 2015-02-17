@@ -1,16 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('AttachmentCtrl', function($scope, $http, $upload, $community) {
-        $scope.updated = function(attachment) {
-            console.log('updated to:' + attachment.url);
-            console.log('please set updated handler');
-        };
-
-        if ($scope.$parent.attachmentUpdated) {
-            $scope.updated = $scope.$parent.attachmentUpdated;
-        }
-
+    .controller('AttachmentUploaderCtrl', function($scope, $http, $upload, $community) {
         $scope.onFileSelect = function($files) {
             $files.forEach(function(file) {
                 $scope.createAttachment(file);
@@ -34,11 +25,19 @@ angular.module('kf6App')
                         attachment.data = data;
                         attachment.tmpFilename = data.tmpFilename;
                         $community.modifyObject(attachment, function(newAttachment) {
-                            $scope.updated(newAttachment);
+                            $scope.notifyAttachmentUploaded(newAttachment);
                         });
                     }).error(function( /*data, status*/ ) {
                         window.alert('error on uploading');
                     });
             });
+        };
+
+        $scope.notifyAttachmentUploaded = function(attachment) {
+            if (!$scope.attachmentUploaded) {
+                window.alert('$scope.attachmentUploaded is not defined.');
+                return;
+            }
+            $scope.attachmentUploaded(attachment);
         };
     });
