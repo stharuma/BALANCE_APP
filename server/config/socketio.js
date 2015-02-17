@@ -34,6 +34,6 @@ module.exports = function(socketio) {
         console.info('[%s] CONNECTED', socket.address);
     });
 
-    require('../api/link/link.socket').register(socketio);
+    require('../api/KLink/KLink.socket').register(socketio);
     require('../api/record/record.socket').register(socketio);
 };

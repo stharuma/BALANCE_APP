@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var LinkSchema = new Schema({
+var KLinkSchema = new Schema({
     communityId: {
         type: Schema.ObjectId,
         required: true, //temporary
@@ -42,30 +42,29 @@ var LinkSchema = new Schema({
     }
 });
 
-
-var Link = mongoose.model('Link', LinkSchema);
+var KLink = mongoose.model('KLink', KLinkSchema);
 
 function updateLinks(contribution) {
-    Link.find({
+    KLink.find({
         to: contribution._id
     }, function(err, links) {
         if (err) {
             return;
         }
         links.forEach(function(link) {
-            link._to = Link.createCashObj(contribution);
+            link._to = KLink.createCashObj(contribution);
             link.markModified('_to');
             link.save();
         });
     });
-    Link.find({
+    KLink.find({
         from: contribution._id
     }, function(err, links) {
         if (err) {
             return;
         }
         links.forEach(function(link) {
-            link._from = Link.createCashObj(contribution);
+            link._from = KLink.createCashObj(contribution);
             link.markModified('_from');
             link.save();
         });
@@ -78,7 +77,7 @@ Contribution.schema.post('save', function(contribution) {
     updateLinks(contribution);
 });
 
-Link.createCashObj = function(contribution) {
+KLink.createCashObj = function(contribution) {
     var cache = {};
     cache.type = contribution.type;
     cache.title = contribution.title;
@@ -90,4 +89,4 @@ Link.createCashObj = function(contribution) {
     return cache;
 }
 
-module.exports = Link;
+module.exports = KLink;

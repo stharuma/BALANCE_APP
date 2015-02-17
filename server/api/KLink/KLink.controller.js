@@ -1,11 +1,11 @@
 'use strict';
 
 var _ = require('lodash');
-var Link = require('./link.model');
+var KLink = require('./KLink.model');
 var Contribution = require('../contribution/contribution.model');
 
 exports.index = function(req, res) {
-    Link.find(function(err, links) {
+    KLink.find(function(err, links) {
         if (err) {
             return handleError(res, err);
         }
@@ -14,7 +14,7 @@ exports.index = function(req, res) {
 };
 
 exports.fromindex = function(req, res) {
-    Link.find({
+    KLink.find({
         from: req.params.id
     }, function(err, links) {
         if (err) {
@@ -25,7 +25,7 @@ exports.fromindex = function(req, res) {
 };
 
 exports.toindex = function(req, res) {
-    Link.find({
+    KLink.find({
         to: req.params.id
     }, function(err, links) {
         if (err) {
@@ -36,7 +36,7 @@ exports.toindex = function(req, res) {
 };
 
 exports.tofromindex = function(req, res) {
-    Link.find({
+    KLink.find({
         $or: [{
             from: req.params.id
         }, {
@@ -52,7 +52,7 @@ exports.tofromindex = function(req, res) {
 
 // Get links between contributions on view
 exports.onviewindex = function(req, res) {
-    Link.find({
+    KLink.find({
         from: req.params.id
     }, function(err, refs) {
         if (err) {
@@ -62,7 +62,7 @@ exports.onviewindex = function(req, res) {
         refs.forEach(function(ref) {
             return ids.push(ref.to);
         });
-        Link.find({
+        KLink.find({
             $or: [{
                 from: {
                     $in: ids
@@ -83,7 +83,7 @@ exports.onviewindex = function(req, res) {
 
 // Get a single link
 exports.show = function(req, res) {
-    Link.findById(req.params.id, function(err, link) {
+    KLink.findById(req.params.id, function(err, link) {
         if (err) {
             return handleError(res, err);
         }
@@ -112,7 +112,7 @@ exports.checkAndCreate = function(seed, handler) {
             }
             return;
         }
-        Link.create(seed, function(err, link) {
+        KLink.create(seed, function(err, link) {
             if (handler) {
                 handler(err, link);
             }
@@ -142,8 +142,8 @@ function checkAndPrepareSeed(seed, handler) {
         if (seed.communityId.toString() !== to.communityId.toString()) {
             return handler('seed.communityId !== from.communityId');
         }
-        seed._from = Link.createCashObj(from);
-        seed._to = Link.createCashObj(to);
+        seed._from = KLink.createCashObj(from);
+        seed._to = KLink.createCashObj(to);
         return handler(); //OK
     });
 }
@@ -161,7 +161,7 @@ exports.update = function(req, res) {
     if (req.body._id) {
         delete req.body._id;
     }
-    Link.findById(req.params.id, function(err, link) {
+    KLink.findById(req.params.id, function(err, link) {
         if (err) {
             return handleError(res, err);
         }
@@ -183,7 +183,7 @@ exports.update = function(req, res) {
 
 // Deletes a link from the DB.
 exports.destroy = function(req, res) {
-    Link.findById(req.params.id, function(err, link) {
+    KLink.findById(req.params.id, function(err, link) {
         if (err) {
             return handleError(res, err);
         }
@@ -204,7 +204,7 @@ exports.destroy = function(req, res) {
 
 // Get a single link
 exports.updateAllCash = function(req, res) {
-    Link.update({
+    KLink.update({
         communityId: req.params.communityId,
     }, {
         $set: {
@@ -222,7 +222,7 @@ exports.updateAllCash = function(req, res) {
 }
 
 exports.updateAllCashRec = function(req, res) {
-    var query = Link.find({
+    var query = KLink.find({
         communityId: req.params.communityId,
         _to: null
     }).limit(5000);
@@ -256,9 +256,9 @@ function updateCash(link, handler) {
             link._to = 'missing';
             return link.save(handler);
         }
-        link._from = Link.createCashObj(from);
+        link._from = KLink.createCashObj(from);
         link.markModified('_from');
-        link._to = Link.createCashObj(to);
+        link._to = KLink.createCashObj(to);
         link.markModified('_to');
         return link.save(handler);
     });

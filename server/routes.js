@@ -9,11 +9,11 @@ var errors = require('./components/errors');
 module.exports = function(app) {
 
     // Insert routes below
+    app.use('/api/links', require('./api/KLink'));
     app.use('/api/upload', require('./api/upload'));
     app.use('/api/authors', require('./api/KAuthor'));
     app.use('/api/objects', require('./api/KObject'));
     app.use('/api/communities', require('./api/community'));
-    app.use('/api/links', require('./api/link'));
     app.use('/api/records', require('./api/record'));
     app.use('/api/contributions', require('./api/contribution'));
     app.use('/api/users', require('./api/user'));

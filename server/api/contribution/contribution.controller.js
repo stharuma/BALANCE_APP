@@ -4,9 +4,9 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 
 var Contribution = require('./contribution.model');
-var Link = require('../link/link.model');
+var KLink = require('../KLink/KLink.model');
 var RecordController = require('../record/record.controller.js');
-var LinkController = require('../link/link.controller.js');
+var KLinkController = require('../KLink/KLink.controller.js');
 
 // Get list of contributions
 exports.index = function(req, res) {
@@ -275,14 +275,14 @@ exports.createBuildsOn = function(res, note, buildsonId, handler) {
         to: buildsonId,
         type: 'buildson'
     };
-    LinkController.checkAndCreate(seed, function(err, link) {
+    KLinkController.checkAndCreate(seed, function(err, link) {
         if (err) {
             if (handler) {
                 handler(err);
             }
             return;
         }
-        Link.find({
+        KLink.find({
                 to: link.to,
                 type: 'contains'
             },
@@ -301,7 +301,7 @@ exports.createBuildsOn = function(res, note, buildsonId, handler) {
                             y: ref.data.y + 50
                         }
                     };
-                    LinkController.checkAndCreate(newref, function(err, newref) {
+                    KLinkController.checkAndCreate(newref, function(err, newref) {
                         if (err) {
                             console.log(err);
                             return;

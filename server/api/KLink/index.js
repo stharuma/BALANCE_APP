@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./link.controller');
+var controller = require('./KLink.controller');
 
 var router = express.Router();
 

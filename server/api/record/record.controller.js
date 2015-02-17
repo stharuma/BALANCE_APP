@@ -4,7 +4,7 @@ var _ = require('lodash');
 var Record = require('./record.model');
 
 var Contribution = require('../contribution/contribution.model');
-var Link = require('../link/link.model');
+var KLink = require('../KLink/KLink.model');
 var mongoose = require('mongoose');
 
 exports.read = function(req, res) {
@@ -22,7 +22,7 @@ exports.read = function(req, res) {
 };
 
 exports.count = function(req, res) {
-    Link.find({
+    KLink.find({
         from: req.params.viewId
     }, function(err, refs) {
         if (err) {
