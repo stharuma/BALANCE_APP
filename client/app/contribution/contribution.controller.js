@@ -32,7 +32,7 @@ angular.module('kf6App')
         $scope.images = [];
         $scope.selected = {};
 
-        $http.get('/api/contributions/' + contributionId).success(function(contribution) {
+        $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
                 var item = window.localStorage.getItem('kfdoc');
                 if (item) {
@@ -85,7 +85,7 @@ angular.module('kf6App')
                     $scope.status.edittabActive = true;
                 }
             });
-        }).error(function(msg) {
+        }, function(msg) {
             console.log('error');
             console.log(msg);
         });
@@ -138,7 +138,7 @@ angular.module('kf6App')
             $scope.images = [];
             links.forEach(function(each) {
                 if (each.type === 'attach') {
-                    $http.get('/api/contributions/' + each.to).success(function(contribution) {
+                    $community.getObject(each.to, function(contribution) {
                         if ($scope.isImage(contribution)) {
                             $scope.images.push(contribution);
                         }
@@ -148,7 +148,7 @@ angular.module('kf6App')
         };
 
         $scope.updateRecords = function() {
-            $http.get('/api/records/contribution/' + contributionId).success(function(records) {
+            $http.get('/api/records/object/' + contributionId).success(function(records) {
                 $scope.records = records;
                 $scope.records.forEach(function(record) {
                     record.user = $community.getMember(record.authorId);

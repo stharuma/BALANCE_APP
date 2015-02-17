@@ -8,24 +8,6 @@ var KLink = require('../KLink/KLink.model');
 var KRecordController = require('../KRecord/KRecord.controller.js');
 var KLinkController = require('../KLink/KLink.controller.js');
 
-// Get list of contributions
-exports.index = function(req, res) {
-    return res.json(200, []);
-};
-
-// Get a single contribution
-exports.show = function(req, res) {
-    KContribution.findById(req.params.id, function(err, contribution) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!contribution) {
-            return res.send(404);
-        }
-        return res.json(contribution);
-    });
-};
-
 // Creates a new contribution in the DB.
 exports.create = function(req, res) {
     KContribution.create(req.body, function(err, contribution) {

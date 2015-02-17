@@ -59,15 +59,9 @@ exports.count = function(req, res) {
     });
 };
 
-// Get list of records
 exports.index = function(req, res) {
-    //shuold not be used
-    return res.json(200, []);
-};
-
-exports.indexOfContribution = function(req, res) {
     KRecord.find({
-        targetId: req.params.contributionId
+        targetId: req.params.objectId
     }, function(err, records) {
         if (err) {
             return handleError(res, err);

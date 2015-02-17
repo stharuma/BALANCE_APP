@@ -29,7 +29,7 @@ angular.module('kf6App')
         $scope.dragging = 'none';
 
         $scope.initialize = function() {
-            $http.get('/api/contributions/' + viewId).success(function(view) {
+            $community.getObject(viewId, function(view) {
                 $scope.view = view;
                 $community.enter(view.communityId);
                 $scope.community = $community.getCommunityData();
@@ -111,7 +111,7 @@ angular.module('kf6App')
         };
 
         $scope.loadAsShowInPlace = function(ref) {
-            $http.get('api/contributions/' + ref.to).success(function(contribution) {
+            $community.getObject(ref.to, function(contribution) {
                 ref.contribution = contribution;
             });
         };
@@ -349,7 +349,7 @@ angular.module('kf6App')
 
         $scope.createNote = function() {
             $community.createNote(function(note) {
-                $scope.createOnViewRef(note, {
+                $scope.createContainsLink(note._id, {
                     x: 100,
                     y: 100
                 });
@@ -359,7 +359,7 @@ angular.module('kf6App')
 
         $scope.createDrawing = function() {
             $community.createDrawing(function(drawing) {
-                $scope.createOnViewRef(drawing, {
+                $scope.createContainsLink(drawing._id, {
                     x: 100,
                     y: 100,
                     width: 100,
@@ -374,23 +374,17 @@ angular.module('kf6App')
             $scope.status.isViewlinkCollapsed = !$scope.status.isViewlinkCollapsed;
         };
 
-        $scope.createOnViewRefById = function(id, data) {
-            $http.get('/api/contributions/' + id).success(function(contribution) {
-                $scope.createOnViewRef(contribution, data);
-            });
+        $scope.createContainsLink = function(toId, data, handler) {
+            $scope.createContainsLink0($scope.view._id, toId, data, handler);
         };
 
-        $scope.createOnViewRef = function(target, data, handler) {
-            $scope.createOnViewRef0($scope.view, target._id, target, data, handler);
-        };
-
-        $scope.createOnViewRef0 = function(view, targetId, target, data, handler) {
-            var refObj = {};
-            refObj.from = view._id;
-            refObj.to = targetId;
-            refObj.type = 'contains';
-            refObj.data = data;
-            $http.post('/api/links', refObj).success(function() {
+        $scope.createContainsLink0 = function(viewId, toId, data, handler) {
+            var link = {};
+            link.from = viewId;
+            link.to = toId;
+            link.type = 'contains';
+            link.data = data;
+            $http.post('/api/links', link).success(function() {
                 if (handler) {
                     handler();
                 }
@@ -655,7 +649,7 @@ angular.module('kf6App')
                     note.title = 'Riseabove';
                     $community.makeRiseabove(note, view._id, function(note) {
                         selected.forEach(function(each) {
-                            $scope.createOnViewRef0(view, each.to, null, {
+                            $scope.createContainsLink0(view._id, each.to, null, {
                                 x: each.data.x - topleft.x + 20,
                                 y: each.data.y - topleft.y + 20
                             });

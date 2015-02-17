@@ -271,7 +271,7 @@ angular.module('kf6App')
                         });
                     } else if ($scope.draggingViewlink) {
                         var view = $scope.draggingViewlink;
-                        $scope.createOnViewRef(view, {
+                        $scope.createContainsLink(view._id, {
                             x: newX,
                             y: newY
                         });
@@ -284,7 +284,7 @@ angular.module('kf6App')
                         var text = data.replace('postref:', '');
                         var models = JSON.parse(text);
                         models.forEach(function(each) {
-                            $scope.createOnViewRefById(each.to, {
+                            $scope.createContainsLink(each.to, {
                                 x: newX + each.offsetX,
                                 y: newY + each.offsetY
                             });

@@ -45,7 +45,7 @@ angular.module('kf6App')
         };
 
         $scope.selectSupport = function(supportref) {
-            $http.get('api/contributions/' + supportref.to).success(function(support) {
+            $community.getObject(supportref.to, function(support) {
                 $scope.selected.support = support;
             });
         };

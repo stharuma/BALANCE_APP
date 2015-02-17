@@ -20,7 +20,7 @@ angular.module('kf6App')
                 return;
             }
             var currentUserId = Auth.getCurrentUser()._id;
-            if (communityId !== newId || userId != currentUserId) {
+            if (communityId !== newId || userId !== currentUserId) {
                 userId = currentUserId;
                 communityId = newId;
 
@@ -131,7 +131,7 @@ angular.module('kf6App')
                 scaffoldIds.forEach(function(scaffoldId) {
                     var newScaffold = {};
                     communityData.scaffolds.push(newScaffold);
-                    $http.get('/api/contributions/' + scaffoldId).success(function(scaffold) {
+                    getObject(scaffoldId, function(scaffold) {
                         _.extend(newScaffold, scaffold);
                         fillSupport(newScaffold, function() {
                             numOfFinished++;
@@ -141,7 +141,7 @@ angular.module('kf6App')
                                 }
                             }
                         });
-                    }).error(function() {
+                    }, function() {
                         if (numOfFinished >= len) {
                             if (handler) {
                                 handler();
@@ -398,6 +398,20 @@ angular.module('kf6App')
             });
         };
 
+        var getObject = function(id, success, error) {
+            $http.get('/api/objects/' + id).success(function(obj) {
+                if (success) {
+                    success(obj);
+                }
+            }).error(function(data) {
+                if (error) {
+                    error(data);
+                } else {
+                    window.alert('error on getObject: ' + data);
+                }
+            });
+        };
+
         var read = function(contribution) {
             if (!communityId) {
                 console.log('error in making read mark.');
@@ -429,6 +443,7 @@ angular.module('kf6App')
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
             modifyObject: modifyObject,
+            getObject: getObject,
             read: read,
             //saveRegistration: saveRegistration,
             getViews: function() {
