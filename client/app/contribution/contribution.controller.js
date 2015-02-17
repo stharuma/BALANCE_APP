@@ -456,13 +456,13 @@ angular.module('kf6App')
             init_instance_callback: $scope.mcesetupHandler
         };
 
-        $scope.addSupport = function(supportRef) {
+        $scope.addSupport = function(supportLink) {
             if (!$scope.mceEditor) {
                 window.alert('$scope.mceEditor is not set.');
                 return;
             }
-            var id = supportRef.to;
-            var title = supportRef._to.title;
+            var id = supportLink.to;
+            var title = supportLink._to.title;
             var tag = $kftag.createNewScaffoldTag(id, title);
             $scope.mceEditor.insertContent(tag);
         };

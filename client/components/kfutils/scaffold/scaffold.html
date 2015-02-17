@@ -1,12 +1,12 @@
-<div class="col-md-12" style="padding: 0px;">
-    <div >
+<div ng-controller="ScaffoldCtrl" class="col-md-12" style="padding: 0px;">
+    <div>
         <select class="KFScaffoldMenu" ng-model="current" ng-options="s.title for s in scaffolds" context-menu data-target="menu-B">
         </select>
     </div>
     <div style="height: 5px;">
     </div>
     <div>
-        <div class="KFSupportButton" ng-repeat="s in current.supports" ng-click="addSupport(s);" context-menu="onContextOpen(this)" data-target="menu-A">{{s._to.title}}</div>
+        <div class="KFSupportButton" ng-repeat="s in current.supports" ng-click="supportClicked(s);" context-menu="onContextOpen(this)" data-target="menu-A">{{s._to.title}}</div>
     </div>
     <div class="dropdown position-fixed" id="menu-A">
         <ul class="dropdown-menu" role="menu">

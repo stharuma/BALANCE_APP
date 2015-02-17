@@ -1,16 +1,19 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ScaffoldCtrl', function($scope, $community, $stateParams) {
-        if($stateParams.communityId){
-        	$community.enter($stateParams.communityId);
-        }
+    .controller('ScaffoldCtrl', function($scope, $community) {
         $scope.scaffolds = $community.getScaffolds();
         $community.refreshScaffolds(function() {
             $scope.current = $scope.scaffolds[0];
         });
 
-        $scope.addSupport = $scope.$parent.addSupport;
+        $scope.supportClicked = function(supportLink) {
+            if (!$scope.addSupport) {
+                window.alert('no $scope.addSupport(supportLink) defined.');
+                return;
+            }
+            $scope.addSupport(supportLink);
+        };
 
         $scope.onContextOpen = function(childScope) {
             $scope.contextTarget = childScope.s;
@@ -24,5 +27,5 @@ angular.module('kf6App')
         $scope.scaffoldOpenInWindow = function() {
             var url = '/contribution/' + $scope.current._id;
             window.open(url, '_blank');
-        };        
+        };
     });
