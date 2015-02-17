@@ -388,6 +388,20 @@ angular.module('kf6App')
             });
         };
 
+        var modifyObject = function(object, success, error) {
+            $http.put('/api/contributions/' + communityId + '/' + object._id, object).success(function(json) {
+                if (success) {
+                    success(json);
+                }
+            }).error(function(data) {
+                if (error) {
+                    error(data);
+                } else {
+                    window.alert('error on modifyObject: ' + data);
+                }
+            });
+        };
+
         return {
             //login: login,
             enter: enter,
@@ -408,6 +422,7 @@ angular.module('kf6App')
             makeRiseabove: makeRiseabove,
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
+            modifyObject: modifyObject,
             //saveRegistration: saveRegistration,
             getViews: function() {
                 return views;

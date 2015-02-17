@@ -20,7 +20,7 @@ angular.module('kf6App')
         $scope.createAttachment = function(file) {
             $community.createAttachment(function(attachment) {
                 $scope.upload = $upload.upload({
-                        url: 'api/contributions/upload',
+                        url: 'api/upload',
                         method: 'POST',
                         file: file
                     })
@@ -32,7 +32,8 @@ angular.module('kf6App')
                         attachment.status = 'active';
                         data.version = attachment.data.version + 1;
                         attachment.data = data;
-                        $http.put('api/contributions/' + attachment._id, attachment).success(function(newAttachment) {
+                        attachment.tmpFilename = data.tmpFilename;
+                        $community.modifyObject(attachment, function(newAttachment) {
                             $scope.updated(newAttachment);
                         });
                     }).error(function( /*data, status*/ ) {

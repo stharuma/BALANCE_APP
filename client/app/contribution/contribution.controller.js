@@ -229,12 +229,12 @@ angular.module('kf6App')
         };
 
         $scope.sendContribute = function() {
-            $http.put('/api/contributions/' + $scope.contribution.communityId + '/' + contributionId, $scope.contribution).success(function() {
+            $community.modifyObject($scope.contribution, function() {
                 if ($scope.contribution.type === 'Note') {
                     $scope.status.dirty = false;
                 }
                 $scope.status.contribution = 'success';
-            }).error(function() {
+            }, function() {
                 $scope.status.contribution = 'failure';
                 if (window.localStorage) {
                     window.localStorage.setItem('kfdoc', $scope.copy.body);

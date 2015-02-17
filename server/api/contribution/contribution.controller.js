@@ -64,7 +64,7 @@ var config = require('../../config/environment');
 exports.update = function(req, res) {
     var newobj = req.body;
 
-    if (newobj.type === 'Attachment') {
+    if (newobj.type === 'Attachment' && newobj.tmpFilename) {
         try {
             processAttachment(newobj);
         } catch (e) {
@@ -113,7 +113,7 @@ exports.update = function(req, res) {
 };
 
 function processAttachment(newobj) {
-    var tmpFile = path.join(config.attachmentsPath, newobj.data.tmpFilename);
+    var tmpFile = path.join(config.attachmentsPath, newobj.tmpFilename);
     if (fs.existsSync(tmpFile) === false) {
         throw 'tmpfile not found.';
     }
