@@ -81,7 +81,7 @@ angular.module('kf6App')
                         $scope.updateAttachments(links);
                     });
                 });
-                if ($scope.isEditable() && $scope.contribution.type !== 'Attachment') {
+                if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }
             });

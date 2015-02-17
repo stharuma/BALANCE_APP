@@ -196,7 +196,7 @@ angular.module('kf6App')
             }
             note.status = 'active';
             note.data.riseabove = riseabove;
-            $http.put('/api/contributions/' + communityId + '/' + note._id, note).success(function(note) {
+            modifyObject(note, function(note) {
                 success(note);
             });
         };
