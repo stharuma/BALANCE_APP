@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, Auth, $ac, $timeout, $kfutil) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil) {
         var contributionId = $stateParams.contributionId;
 
         $ac.mixIn($scope, null);
@@ -43,47 +43,48 @@ angular.module('kf6App')
                 contribution.data = {};
             }
             $scope.contribution = contribution;
-            $community.enter($scope.contribution.communityId);
-            $scope.community = $community.getCommunityData();
+            $community.enter($scope.contribution.communityId, function() {
+                $scope.community = $community.getCommunityData();
 
-            $scope.setTitle();
-            if ($scope.contribution.keywords) {
-                var keywordsStr = '';
-                $scope.contribution.keywords.forEach(function(keyword) {
-                    if (keywordsStr.length !== 0) {
-                        keywordsStr += '; ';
-                    }
-                    keywordsStr += keyword;
-                });
-                $scope.copy.keywords = keywordsStr;
-            }
-            $ac.mixIn($scope, contribution);
-            $scope.copy.body = contribution.data.body;
-            $scope.contribution.isRiseabove = function() {
-                return contribution.type === 'Note' && contribution.data && contribution.data.riseabove && contribution.data.riseabove.viewId;
-            };
-            $scope.prepareRiseabove();
-            window.contribution = contribution;
-            $scope.initializeDirtyStatusHandlers();
+                $scope.setTitle();
+                if ($scope.contribution.keywords) {
+                    var keywordsStr = '';
+                    $scope.contribution.keywords.forEach(function(keyword) {
+                        if (keywordsStr.length !== 0) {
+                            keywordsStr += '; ';
+                        }
+                        keywordsStr += keyword;
+                    });
+                    $scope.copy.keywords = keywordsStr;
+                }
+                $ac.mixIn($scope, contribution);
+                $scope.copy.body = contribution.data.body;
+                $scope.contribution.isRiseabove = function() {
+                    return contribution.type === 'Note' && contribution.data && contribution.data.riseabove && contribution.data.riseabove.viewId;
+                };
+                $scope.prepareRiseabove();
+                window.contribution = contribution;
+                $scope.initializeDirtyStatusHandlers();
 
-            $scope.contribution.authors.forEach(function(authorId) {
-                $scope.authors.push($community.getMember(authorId));
-            });
-            window.setTimeout(function() {
-                $community.read($scope.contribution);
-            }, 3000);
-            $scope.updateRecords();
-            $scope.communityMembers = $community.getMembersArray();
-            $community.updateCommunityMembers();
-            $scope.updateToConnections(function() {
-                $scope.updateFromConnections(function(links) {
-                    $scope.preProcess();
-                    $scope.updateAttachments(links);
+                $scope.contribution.authors.forEach(function(authorId) {
+                    $scope.authors.push($community.getMember(authorId));
                 });
+                window.setTimeout(function() {
+                    $community.read($scope.contribution);
+                }, 3000);
+                $scope.updateRecords();
+                $scope.communityMembers = $community.getMembersArray();
+                $community.updateCommunityMembers();
+                $scope.updateToConnections(function() {
+                    $scope.updateFromConnections(function(links) {
+                        $scope.preProcess();
+                        $scope.updateAttachments(links);
+                    });
+                });
+                if ($scope.isEditable() && $scope.contribution.type !== 'Attachment') {
+                    $scope.status.edittabActive = true;
+                }
             });
-            if (Auth.isEditable($scope.contribution) && $scope.contribution.type !== 'Attachment') {
-                $scope.status.edittabActive = true;
-            }
         }).error(function(msg) {
             console.log('error');
             console.log(msg);

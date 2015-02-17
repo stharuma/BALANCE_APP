@@ -148,10 +148,6 @@ angular.module('kf6App')
              */
             getToken: function() {
                 return $cookieStore.get('token');
-            },
-
-            isEditable: function(contribution) {
-                return _.contains(contribution.authors, currentUser._id);
             }
         };
     });

@@ -15,20 +15,21 @@ angular.module('kf6App')
         var communityMembersArray = [];
         var scaffolds = [];
 
-        var enter = function(newId, handler) {
+        var enter = function(newId, authorHandler) {
             if (!newId) {
                 console.log('bad newId: ' + newId);
                 return;
             }
             if (communityId !== newId) {
                 communityId = newId;
-                refreshAuthor(handler);
-                refreshCommunity(handler);
-                refreshViews(handler);
+                refreshAuthor(authorHandler);
+                refreshCommunity();
+                refreshViews();
                 //updateCommunityMembers();
-            }
-            if (handler) {
-                handler(community);
+            } else {
+                if (authorHandler) {
+                    authorHandler();
+                }
             }
         };
 
