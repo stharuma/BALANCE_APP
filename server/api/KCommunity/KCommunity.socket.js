@@ -4,4 +4,6 @@
 
 'use strict';
 
-// not implemented yet
+var KCommunity = require('./KCommunity.model');
+
+//not implemented yet

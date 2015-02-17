@@ -3,14 +3,13 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
 
-var Community = require('./community.model');
+var KCommunity = require('./KCommunity.model');
 var KContribution = require('../KContribution/KContribution.model');
 var KAuthor = require('../KAuthor/KAuthor.model');
-var User = require('../user/user.model');
 
 // Get list of communitys
 exports.index = function(req, res) {
-    Community.find(function(err, communitys) {
+    KCommunity.find(function(err, communitys) {
         if (err) {
             return handleError(res, err);
         }
@@ -20,7 +19,7 @@ exports.index = function(req, res) {
 
 // Get a single community
 exports.show = function(req, res) {
-    Community.findById(req.params.id, function(err, community) {
+    KCommunity.findById(req.params.id, function(err, community) {
         if (err) {
             return handleError(res, err);
         }
@@ -33,7 +32,7 @@ exports.show = function(req, res) {
 
 // Get views of the community
 exports.showviews = function(req, res) {
-    Community.findById(req.params.id, function(err, community) {
+    KCommunity.findById(req.params.id, function(err, community) {
         if (err) {
             return handleError(res, err);
         }
@@ -77,7 +76,7 @@ exports.showauthors = function(req, res) {
 
 // Creates a new community in the DB.
 exports.create = function(req, res) {
-    Community.create(req.body, function(err, community) {
+    KCommunity.create(req.body, function(err, community) {
         if (err) {
             return handleError(res, err);
         }
@@ -91,7 +90,7 @@ exports.update = function(req, res) {
     if (req.body._id) {
         delete req.body._id;
     }
-    Community.findById(req.params.id, function(err, community) {
+    KCommunity.findById(req.params.id, function(err, community) {
         if (err) {
             return handleError(res, err);
         }
@@ -114,7 +113,7 @@ exports.update = function(req, res) {
 
 // Deletes a community from the DB.
 exports.destroy = function(req, res) {
-    Community.findById(req.params.id, function(err, community) {
+    KCommunity.findById(req.params.id, function(err, community) {
         if (err) {
             return handleError(res, err);
         }

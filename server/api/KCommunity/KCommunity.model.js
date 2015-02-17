@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var CommunitySchema = new Schema({
+var KCommunitySchema = new Schema({
     title: String,
     registrationKey: {
         type: String,
@@ -21,4 +21,4 @@ var CommunitySchema = new Schema({
     views: [Schema.ObjectId],
 });
 
-module.exports = mongoose.model('Community', CommunitySchema);
+module.exports = mongoose.model('KCommunity', KCommunitySchema);

@@ -4,6 +4,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var KAuthorSchema = new Schema({
+    userId: {
+        type: Schema.ObjectId,
+        index: true
+    },
     firstName: {
         type: String,
         required: true
@@ -11,10 +15,6 @@ var KAuthorSchema = new Schema({
     lastName: {
         type: String,
         required: false
-    },
-    userId: {
-        type: Schema.ObjectId,
-        index: true
     },
     role: {
         type: String,
