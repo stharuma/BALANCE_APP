@@ -435,15 +435,18 @@ angular.module('kf6App')
         // };
 
         $scope.openWorkspace = function() {
-            $community.getRegistration(function(reg) {
-                if (reg.workspaces && reg.workspaces.length > 0) {
-                    $scope.openWorkspace0(reg.workspaces[0]);
-                } else {
-                    $scope.createWorkspace(reg, function(workspace) {
-                        $scope.openWorkspace0(workspace._id);
-                    });
-                }
-            });
+            var author = $scope.community.author;
+            if (!author) {
+                window.alert('author has not loaded yet.');
+                return;
+            }
+            if (author.data && author.data.workspaces) {
+                $scope.openWorkspace0(author.data.workspaces[0]);
+            } else {
+                $scope.createWorkspace(author, function(workspace) {
+                    $scope.openWorkspace0(workspace._id);
+                });
+            }
         };
 
         $scope.openScaffolds = function() {
@@ -451,14 +454,17 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
-        $scope.createWorkspace = function(reg, handler) {
-            var title = Auth.getCurrentUser().name + '\'s workspace';
+        $scope.createWorkspace = function(author, handler) {
+            var title = author.getName() + '\'s workspace';
             $community.createView(title, function(view) {
-                if (!reg.workspaces) {
-                    reg.workspaces = [];
+                if (!author.data) {
+                    author.data = {};
                 }
-                reg.workspaces.push(view._id);
-                $community.saveRegistration(reg, function() {
+                if (!author.data.workspaces) {
+                    author.data.workspaces = [];
+                }
+                author.data.workspaces.push(view._id);
+                $community.modifyObject(author, function() {
                     if (handler) {
                         handler(view);
                     }

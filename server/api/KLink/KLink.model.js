@@ -44,27 +44,27 @@ var KLinkSchema = new Schema({
 
 var KLink = mongoose.model('KLink', KLinkSchema);
 
-function updateLinks(contribution) {
+function updateLinks(obj) {
     KLink.find({
-        to: contribution._id
+        to: obj._id
     }, function(err, links) {
         if (err) {
             return;
         }
         links.forEach(function(link) {
-            link._to = KLink.createCashObj(contribution);
+            link._to = KLink.createCashObj(obj);
             link.markModified('_to');
             link.save();
         });
     });
     KLink.find({
-        from: contribution._id
+        from: obj._id
     }, function(err, links) {
         if (err) {
             return;
         }
         links.forEach(function(link) {
-            link._from = KLink.createCashObj(contribution);
+            link._from = KLink.createCashObj(obj);
             link.markModified('_from');
             link.save();
         });
@@ -72,20 +72,20 @@ function updateLinks(contribution) {
 }
 
 /* this method will be called in both update and create */
-var KContribution = require('../KContribution/KContribution.model');
-KContribution.schema.post('save', function(contribution) {
-    updateLinks(contribution);
+var KObject = require('../KObject/KObject.model');
+KObject.schema.post('save', function(obj) {
+    updateLinks(obj);
 });
 
-KLink.createCashObj = function(contribution) {
+KLink.createCashObj = function(obj) {
     var cache = {};
-    cache.type = contribution.type;
-    cache.title = contribution.title;
-    cache.authors = contribution.authors;
-    cache.permission = contribution.permission;
-    cache.status = contribution.status;
-    cache.created = contribution.created;
-    cache.modified = contribution.modified;    
+    cache.type = obj.type;
+    cache.status = obj.status;
+    cache.created = obj.created;
+    cache.modified = obj.modified;
+    cache.title = obj.title;
+    cache.authors = obj.authors;
+    cache.permission = obj.permission;
     return cache;
 }
 

@@ -2,6 +2,8 @@
 
 var _ = require('lodash');
 var KObject = require('./KObject.model');
+var KRecordController = require('../KRecord/KRecord.controller.js');
+var upload = require('../upload/upload.controller');
 
 // Get list of KObjects
 exports.index = function(req, res) {
@@ -36,44 +38,62 @@ exports.create = function(req, res) {
     });
 };
 
-// Updates an existing KObject in the DB.
+// Updates an existing contribution in the DB.
 exports.update = function(req, res) {
-    if (req.body._id) {
-        delete req.body._id;
+    var newobj = req.body;
+
+    if (newobj.type === 'Attachment' && newobj.tmpFilename) {
+        try {
+            upload.processAttachment(newobj);
+        } catch (e) {
+            return res.send(500, e);
+        }
     }
-    KObject.findById(req.params.id, function(err, KObject) {
+
+    if (newobj._id) {
+        delete newobj._id;
+        delete newobj.__v; /* by using this, we can avoid conflict of editing multi users*/
+    }
+
+    KObject.findById(req.params.id, function(err, contribution) {
         if (err) {
             return handleError(res, err);
         }
-        if (!KObject) {
+        if (!contribution) {
             return res.send(404);
         }
-        var updated = _.merge(KObject, req.body);
-        updated.save(function(err) {
+        var updated = _.merge(contribution, newobj);
+        if (newobj.authors) {
+            updated.authors = newobj.authors;
+            updated.markModified('authors');
+        }
+        if (newobj.keywords) {
+            updated.keywords = newobj.keywords;
+            updated.markModified('keywords');
+        }
+        if (newobj.data) {
+            updated.markModified('data');
+        }
+        updated.modified = Date.now();
+        updated.save(function(err, newContribution) {
             if (err) {
+                console.log(err);
                 return handleError(res, err);
             }
-            return res.json(200, KObject);
+            KRecordController.createInternal({
+                authorId: req.author._id,
+                targetId: contribution._id,
+                type: 'modified'
+            });
+            return res.json(200, newContribution);
         });
     });
 };
 
 // Deletes a KObject from the DB.
 exports.destroy = function(req, res) {
-    KObject.findById(req.params.id, function(err, KObject) {
-        if (err) {
-            return handleError(res, err);
-        }
-        if (!KObject) {
-            return res.send(404);
-        }
-        KObject.remove(function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
-            return res.send(204);
-        });
-    });
+    //not implemented yet
+    res.send(500);
 };
 
 function handleError(res, err) {

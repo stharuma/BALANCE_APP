@@ -59,7 +59,7 @@ angular.module('kf6App')
             if (!scaffold) {
                 return;
             }
-            $http.put('/api/contributions/' + scaffold._id, scaffold).success(function() {
+            $community.modifyObject(scaffold, function() {
                 $scope.showSaved();
                 $scope.update();
             });

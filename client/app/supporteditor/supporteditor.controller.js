@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('SupporteditorCtrl', function($scope, $http) {
+    .controller('SupporteditorCtrl', function($scope, $community) {
         $scope.save = function() {
             var support = $scope.selected.support;
             if (!support) {
                 return;
             }
-            $http.put('/api/contributions/' + support._id, support).success(function() {
+            $community.modifyObject(support, function() {
                 $scope.showSaved();
                 $scope.update(); //update scaffold editor
             });

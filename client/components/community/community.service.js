@@ -160,19 +160,6 @@ angular.module('kf6App')
             });
         };
 
-        // var saveRegistration = function(reg, handler) {
-        //     if (reg._id !== registration._id) {
-        //         console.log('error : reg._id !== registration._id.');
-        //         return;
-        //     }
-        //     $http.put('/api/registrations/' + reg._id, reg).success(function(dbReg) {
-        //         registration = dbReg;
-        //         if (handler) {
-        //             handler(registration);
-        //         }
-        //     });
-        // };
-
         var createNoteCommon = function(fromId, success) {
             var newobj = {
                 communityId: communityId,
@@ -391,9 +378,12 @@ angular.module('kf6App')
         };
 
         var modifyObject = function(object, success, error) {
-            $http.put('/api/contributions/' + communityId + '/' + object._id, object).success(function(json) {
+            $http.put('/api/objects/' + communityId + '/' + object._id, object).success(function(newobject) {
+                if (newobject._id === communityData.author._id) {
+                    _.extend(communityData.author, newobject);
+                }
                 if (success) {
-                    success(json);
+                    success(newobject);
                 }
             }).error(function(data) {
                 if (error) {

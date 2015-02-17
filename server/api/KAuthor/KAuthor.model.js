@@ -27,7 +27,6 @@ var KAuthorSchema = new Schema({
         required: true,
         index: true
     },
-    workspaces: [Schema.ObjectId], // elements in this supposed to be viewId
 
     /* here are cache to work read faster */
     _community: {
