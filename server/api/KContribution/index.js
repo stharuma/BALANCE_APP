@@ -1,11 +1,11 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./contribution.controller');
-
-var router = express.Router();
+var controller = require('./KContribution.controller');
 var auth = require('../../auth/auth.service');
 var commauth = require('../../auth/commauth.service');
+
+var router = express.Router();
 
 router.get('/', controller.index);
 router.get('/:id', controller.show);

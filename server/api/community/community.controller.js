@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 
 var Community = require('./community.model');
-var Contribution = require('../contribution/contribution.model');
+var KContribution = require('../KContribution/KContribution.model');
 var KAuthor = require('../KAuthor/KAuthor.model');
 var User = require('../user/user.model');
 
@@ -41,7 +41,7 @@ exports.showviews = function(req, res) {
             return res.send(404);
         }
         var ids = community.views;
-        Contribution.find({
+        KContribution.find({
             '_id': {
                 $in: ids
             }

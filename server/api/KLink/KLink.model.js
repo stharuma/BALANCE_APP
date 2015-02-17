@@ -72,8 +72,8 @@ function updateLinks(contribution) {
 }
 
 /* this method will be called in both update and create */
-var Contribution = require('../contribution/contribution.model');
-Contribution.schema.post('save', function(contribution) {
+var KContribution = require('../KContribution/KContribution.model');
+KContribution.schema.post('save', function(contribution) {
     updateLinks(contribution);
 });
 

@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var ContributionSchema = new Schema({
+var KContributionSchema = new Schema({
     title: String,
     authors: {
         type: [Schema.ObjectId],
@@ -20,9 +20,9 @@ var ContributionSchema = new Schema({
 });
 
 // for text index search
-ContributionSchema.index({
+KContributionSchema.index({
     text4search: 'text'
 });
 
 var KObject = require('../KObject/KObject.model');
-module.exports = KObject.discriminator('KContribution', ContributionSchema);
+module.exports = KObject.discriminator('KContribution', KContributionSchema);

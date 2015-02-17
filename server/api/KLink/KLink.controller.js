@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var KLink = require('./KLink.model');
-var Contribution = require('../contribution/contribution.model');
+var KContribution = require('../KContribution/KContribution.model');
 
 exports.index = function(req, res) {
     KLink.find(function(err, links) {
@@ -149,8 +149,8 @@ function checkAndPrepareSeed(seed, handler) {
 }
 
 function getFromToContributions(fromId, toId, handler) {
-    Contribution.findById(fromId, function(err, from) {
-        Contribution.findById(toId, function(err, to) {
+    KContribution.findById(fromId, function(err, from) {
+        KContribution.findById(toId, function(err, to) {
             handler(from, to);
         });
     });

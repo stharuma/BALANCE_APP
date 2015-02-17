@@ -3,14 +3,14 @@
 var _ = require('lodash');
 var mongoose = require('mongoose');
 
-var Contribution = require('./contribution.model');
+var KContribution = require('./KContribution.model');
 var KLink = require('../KLink/KLink.model');
 var RecordController = require('../record/record.controller.js');
 var KLinkController = require('../KLink/KLink.controller.js');
 
 // Get list of contributions
 exports.index = function(req, res) {
-    // Contribution.find(function(err, contributions) {
+    // KContribution.find(function(err, contributions) {
     //     if (err) {
     //         return handleError(res, err);
     //     }
@@ -21,7 +21,7 @@ exports.index = function(req, res) {
 
 // Get a single contribution
 exports.show = function(req, res) {
-    Contribution.findById(req.params.id, function(err, contribution) {
+    KContribution.findById(req.params.id, function(err, contribution) {
         if (err) {
             return handleError(res, err);
         }
@@ -34,7 +34,7 @@ exports.show = function(req, res) {
 
 // Creates a new contribution in the DB.
 exports.create = function(req, res) {
-    Contribution.create(req.body, function(err, contribution) {
+    KContribution.create(req.body, function(err, contribution) {
         if (err) {
             return handleError(res, err);
         }
@@ -77,7 +77,7 @@ exports.update = function(req, res) {
         delete newobj.__v; /* by using this, we can avoid conflict of editing multi users*/
     }
 
-    Contribution.findById(req.params.id, function(err, contribution) {
+    KContribution.findById(req.params.id, function(err, contribution) {
         if (err) {
             return handleError(res, err);
         }
@@ -140,7 +140,7 @@ function processAttachment(newobj) {
 
 // Deletes a contribution from the DB.
 exports.destroy = function(req, res) {
-    Contribution.findById(req.params.id, function(err, contribution) {
+    KContribution.findById(req.params.id, function(err, contribution) {
         if (err) {
             return handleError(res, err);
         }
@@ -214,7 +214,7 @@ exports.search = function(req, res) {
         text4search: new RegExp(regexpstr, 'i')
     });
 
-    Contribution.find(mongoQuery).
+    KContribution.find(mongoQuery).
     limit(50).
     exec(function(err, contributions) {
         if (err) {

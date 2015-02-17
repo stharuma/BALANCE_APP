@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var Record = require('./record.model');
 
-var Contribution = require('../contribution/contribution.model');
+var KObject = require('../KObject/KObject.model');
 var KLink = require('../KLink/KLink.model');
 var mongoose = require('mongoose');
 
@@ -106,14 +106,14 @@ exports.createInternal = function(seed, handler) {
     if (seed.communityId) {
         Record.create(seed, handler);
     } else {
-        Contribution.findById(seed.targetId, function(err, contribution) {
+        KObject.findById(seed.targetId, function(err, object) {
             if (err) {
                 if (handler) {
                     handler(err);
                 }
                 return;
             }
-            seed.communityId = contribution.communityId;
+            seed.communityId = object.communityId;
             Record.create(seed, handler);
         });
     }
