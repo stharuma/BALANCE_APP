@@ -8,7 +8,6 @@ var router = express.Router();
 var auth = require('../../auth/auth.service');
 var commauth = require('../../auth/commauth.service');
 
-router.get('/', controller.index);
 router.get('/:communityId/me', commauth.isAuthenticated(), controller.me);
 router.post('/', auth.isAuthenticated(), controller.create);
 

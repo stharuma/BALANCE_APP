@@ -6,16 +6,6 @@ var KAuthor = require('./KAuthor.model');
 var mongoose = require('mongoose');
 var KCommunity = require('../KCommunity/KCommunity.model');
 
-// Get list of KAuthors
-exports.index = function(req, res) {
-    KAuthor.find(function(err, KAuthors) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.json(200, KAuthors);
-    });
-};
-
 /**
  * Get my info
  */

@@ -10,7 +10,7 @@ exports.register = function(socketio) {
     KLink.schema.post('save', function(link) {
         socketio.sockets.to(link.from).emit('ref:save', link);
     });
-    KLink.schema.post('remove', function(ref) {
+    KLink.schema.post('remove', function(link) {
         socketio.sockets.to(link.from).emit('ref:remove', link);
     });
 }
