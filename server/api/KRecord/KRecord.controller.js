@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var Record = require('./record.model');
+var KRecord = require('./KRecord.model');
 
 var KObject = require('../KObject/KObject.model');
 var KLink = require('../KLink/KLink.model');
@@ -33,7 +33,7 @@ exports.count = function(req, res) {
             ids.push(refs[i].to);
         }
         var uid = mongoose.Types.ObjectId(req.params.authorId);
-        Record.aggregate([{
+        KRecord.aggregate([{
                 $match: {
                     $and: [{
                         authorId: uid
@@ -66,7 +66,7 @@ exports.index = function(req, res) {
 };
 
 exports.indexOfContribution = function(req, res) {
-    Record.find({
+    KRecord.find({
         targetId: req.params.contributionId
     }, function(err, records) {
         if (err) {
@@ -81,7 +81,7 @@ exports.indexOfContribution = function(req, res) {
 
 // Get a single record
 exports.show = function(req, res) {
-    Record.findById(req.params.id, function(err, record) {
+    KRecord.findById(req.params.id, function(err, record) {
         if (err) {
             return handleError(res, err);
         }
@@ -104,7 +104,7 @@ exports.create = function(req, res) {
 
 exports.createInternal = function(seed, handler) {
     if (seed.communityId) {
-        Record.create(seed, handler);
+        KRecord.create(seed, handler);
     } else {
         KObject.findById(seed.targetId, function(err, object) {
             if (err) {
@@ -114,7 +114,7 @@ exports.createInternal = function(seed, handler) {
                 return;
             }
             seed.communityId = object.communityId;
-            Record.create(seed, handler);
+            KRecord.create(seed, handler);
         });
     }
 };

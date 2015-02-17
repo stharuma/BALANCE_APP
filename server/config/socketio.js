@@ -35,5 +35,5 @@ module.exports = function(socketio) {
     });
 
     require('../api/KLink/KLink.socket').register(socketio);
-    require('../api/record/record.socket').register(socketio);
+    require('../api/KRecord/KRecord.socket').register(socketio);
 };

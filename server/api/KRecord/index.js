@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./record.controller');
+var controller = require('./KRecord.controller');
 
 var router = express.Router();
 var auth = require('../../auth/auth.service');

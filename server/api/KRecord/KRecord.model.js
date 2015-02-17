@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var RecordSchema = new Schema({
+var KRecordSchema = new Schema({
     communityId: {
         type: Schema.ObjectId,
         required: true,
@@ -30,4 +30,4 @@ var RecordSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Record', RecordSchema);
+module.exports = mongoose.model('KRecord', KRecordSchema);

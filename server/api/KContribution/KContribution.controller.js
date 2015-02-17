@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 
 var KContribution = require('./KContribution.model');
 var KLink = require('../KLink/KLink.model');
-var RecordController = require('../record/record.controller.js');
+var KRecordController = require('../KRecord/KRecord.controller.js');
 var KLinkController = require('../KLink/KLink.controller.js');
 
 // Get list of contributions
@@ -38,7 +38,7 @@ exports.create = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        RecordController.createInternal({
+        KRecordController.createInternal({
             authorId: req.author._id,
             targetId: contribution._id,
             type: 'created'
@@ -102,7 +102,7 @@ exports.update = function(req, res) {
                 console.log(err);
                 return handleError(res, err);
             }
-            RecordController.createInternal({
+            KRecordController.createInternal({
                 authorId: req.author._id,
                 targetId: contribution._id,
                 type: 'modified'

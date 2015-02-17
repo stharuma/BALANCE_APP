@@ -4,10 +4,10 @@
 
 'use strict';
 
-var Record = require('./record.model');
+var KRecord = require('./KRecord.model');
 
 exports.register = function(socketio) {
-    Record.schema.post('save', function(record) {
+    KRecord.schema.post('save', function(record) {
         socketio.sockets.to(record.authorId).emit('record:save', record);
     });
 }
