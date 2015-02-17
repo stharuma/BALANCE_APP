@@ -164,24 +164,24 @@ angular.module('kf6App')
         };
 
         $scope.refreshRead = function() {
-            var uid = Auth.getCurrentUser()._id;
-            if (uid === null) {
+            var authorId = $scope.community.author._id;
+            if (authorId === null) {
                 return;
             }
-            $http.get('/api/records/count/' + $scope.view._id + '/' + uid).success(function(res) {
+            $http.get('/api/records/count/' + $scope.view.communityId + '/' + $scope.view._id).success(function(res) {
                 res.forEach(function(each) {
                     $scope.updateRefRead(each._id);
                 });
             });
 
-            socket.socket.emit('subscribe', uid);
+            socket.socket.emit('subscribe', authorId);
             socket.socket.on('record:save', function(record) {
                 if (record.type === 'read') {
                     $scope.updateRefRead(record.targetId);
                 }
             });
             $scope.$on('$destroy', function() {
-                socket.socket.emit('unsubscribe', uid);
+                socket.socket.emit('unsubscribe', authorId);
                 socket.socket.removeAllListeners('record:save');
             });
         };

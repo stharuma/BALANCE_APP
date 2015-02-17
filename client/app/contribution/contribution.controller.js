@@ -70,7 +70,7 @@ angular.module('kf6App')
                 $scope.authors.push($community.getMember(authorId));
             });
             window.setTimeout(function() {
-                $http.post('/api/records/read/' + contributionId);
+                $community.read($scope.contribution);
             }, 3000);
             $scope.updateRecords();
             $scope.communityMembers = $community.getMembersArray();

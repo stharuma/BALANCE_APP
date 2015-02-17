@@ -5,12 +5,13 @@ var controller = require('./KRecord.controller');
 
 var router = express.Router();
 var auth = require('../../auth/auth.service');
-
-router.post('/read/:contributionId', auth.isAuthenticated(), controller.read);
-router.get('/count/:viewId/:authorId', auth.isAuthenticated(), controller.count);
+var commauth = require('../../auth/commauth.service');
 
 router.get('/', controller.index);
-router.get('/contribution/:contributionId', auth.isAuthenticated(), controller.indexOfContribution);
 router.get('/:id', controller.show);
+router.get('/contribution/:contributionId', auth.isAuthenticated(), controller.indexOfContribution);
+router.get('/count/:communityId/:viewId', commauth.isAuthenticated(), controller.count);
+
+router.post('/read/:communityId/:contributionId', commauth.isAuthenticated(), controller.read);
 
 module.exports = router;

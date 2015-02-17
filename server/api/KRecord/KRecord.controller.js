@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 
 exports.read = function(req, res) {
     exports.createInternal({
-            authorId: req.user._id,
+            authorId: req.author._id,
             targetId: req.params.contributionId,
             type: 'read'
         },
@@ -32,7 +32,7 @@ exports.count = function(req, res) {
         for (var i = 0; i < refs.length; i++) {
             ids.push(refs[i].to);
         }
-        var uid = mongoose.Types.ObjectId(req.params.authorId);
+        var uid = mongoose.Types.ObjectId(req.author._id);
         KRecord.aggregate([{
                 $match: {
                     $and: [{

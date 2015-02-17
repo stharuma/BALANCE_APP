@@ -402,6 +402,16 @@ angular.module('kf6App')
             });
         };
 
+        var read = function(contribution) {
+            if (!communityId) {
+                console.log('error in making read mark.');
+                return;
+            }
+            $http.post('/api/records/read/' + communityId + '/' + contribution._id).error(function() {
+                console.log('error in making read mark.');
+            });
+        };
+
         return {
             //login: login,
             enter: enter,
@@ -423,6 +433,7 @@ angular.module('kf6App')
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
             modifyObject: modifyObject,
+            read: read,
             //saveRegistration: saveRegistration,
             getViews: function() {
                 return views;
