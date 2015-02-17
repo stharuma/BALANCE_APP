@@ -33,7 +33,7 @@ exports.create = function(req, res) {
     }
 
     //check key
-    Community.findById(communityId, function(err, community) {
+    KCommunity.findById(communityId, function(err, community) {
         if (err) {
             return handleError(res, err);
         }
@@ -69,7 +69,6 @@ exports.create = function(req, res) {
                 title: community.title,
                 created: community.created
             };
-            req.body._user = req.user.profile;
             KAuthor.create(req.body, function(err, author) {
                 if (err) {
                     return handleError(res, err);

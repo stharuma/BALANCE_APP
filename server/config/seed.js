@@ -34,7 +34,8 @@ User.find({
         User.create({
             provider: 'local',
             role: 'admin',
-            name: 'Admin',
+            firstName: 'KF',
+            lastName: 'Admin',
             email: 'admin@admin.com',
             password: 'admin'
         });

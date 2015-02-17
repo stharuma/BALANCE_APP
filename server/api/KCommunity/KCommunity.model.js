@@ -4,7 +4,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var KCommunitySchema = new Schema({
-    title: String,
+    title: {
+        type: String,
+        required: true
+    },
     registrationKey: {
         type: String,
         default: ''

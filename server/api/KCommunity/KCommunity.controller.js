@@ -81,7 +81,23 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
 
-        return res.json(201, community);
+        var author = {};
+        author.communityId = community._id;
+        author.userId = req.user._id;
+        author.type = 'Author';
+        author.role = 'manager';
+        author.firstName = req.user.firstName;
+        author.lastName = req.user.lastName;
+        author._community = {
+            title: community.title,
+            created: community.created
+        };
+        KAuthor.create(author, function(err) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(201, community);
+        });
     });
 };
 

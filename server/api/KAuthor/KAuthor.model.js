@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var KAuthorSchema = new Schema({
     userId: {
         type: Schema.ObjectId,
+        required: true,
         index: true
     },
     firstName: {
@@ -18,10 +19,11 @@ var KAuthorSchema = new Schema({
     },
     role: {
         type: String,
+        required: true,
         index: true
     },
     workspaces: [Schema.ObjectId], // elements in this supposed to be viewId
-
+    
     /* here are cache to work read faster */
     _community: {
         type: Schema.Types.Mixed,
@@ -29,8 +31,7 @@ var KAuthorSchema = new Schema({
             title: 'Uncached',
             created: Date.now
         }
-    },
-    _user: Schema.Types.Mixed
+    }
 });
 
 var KObject = require('../KObject/KObject.model');
