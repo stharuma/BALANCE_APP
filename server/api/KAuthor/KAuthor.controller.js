@@ -53,6 +53,7 @@ exports.create = function(req, res) {
             req.body.communityId = communityId;
             req.body.type = 'Author';
             req.body.role = role;
+            req.body.userName = req.user.email;            
             req.body.firstName = req.user.firstName;
             req.body.lastName = req.user.lastName;
             req.body._community = {

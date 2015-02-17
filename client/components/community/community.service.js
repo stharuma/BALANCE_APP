@@ -3,17 +3,15 @@
 angular.module('kf6App')
     .factory('$community', function($http) {
         // We need to hold two forms, because those collections might be watched by angular
-
         var communityId = null;
 
         var communityData = {};
-
-        // old
-        var community = null;
-        var views = [];
-        var communityMembers = {};
-        var communityMembersArray = [];
-        var scaffolds = [];
+        communityData.community = null;
+        communityData.author = null;
+        communityData.views = [];
+        communityData.members = {};
+        communityData.membersArray = [];
+        communityData.scaffolds = [];
 
         var enter = function(newId, authorHandler) {
             if (!newId) {
@@ -51,9 +49,9 @@ angular.module('kf6App')
                 return;
             }
             $http.get('/api/communities/' + communityId + '/views').success(function(result) {
-                views.length = 0; //clear once
+                communityData.views.length = 0; //clear once
                 result.forEach(function(each) {
-                    views.push(each);
+                    communityData.views.push(each);
                 });
                 if (handler) {
                     handler();
@@ -67,26 +65,29 @@ angular.module('kf6App')
         var updateCommunityMembers = function() {
             $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
                 authors.forEach(function(each) {
-                    _.extend(getMember(each._id), each);
+                    var author = getMember(each._id);
+                    _.extend(author, each);
+                    author.name = author.getName();
                 });
             });
         };
 
         var getMember = function(id) {
-            var member = createAuthor();
             if (id === null || id === '') {
-                return member;
+                return createAuthor(undefined);
             }
-            if (!(id in communityMembers)) {
-                member._id = id;
-                communityMembers[id] = member;
-                communityMembersArray.push(member);
+            if (!(id in communityData.members)) {
+                var member = createAuthor(id);
+                communityData.members[id] = member;
+                communityData.membersArray.push(member);
             }
-            return communityMembers[id];
+            return communityData.members[id];
         };
 
-        var createAuthor = function() {
+        var createAuthor = function(id) {
             return {
+                _id: id,
+                name: 'NA',
                 firstName: 'N',
                 lastName: 'A',
                 getName: function() {
@@ -114,7 +115,7 @@ angular.module('kf6App')
 
         var refreshScaffolds = function(handler) {
             $http.get('/api/communities/' + communityId).success(function(community) {
-                scaffolds.length = 0; //clear once
+                communityData.scaffolds.length = 0; //clear once
                 var scaffoldIds = community.scaffolds;
                 var len = scaffoldIds.length;
                 var numOfFinished = 0;
@@ -125,7 +126,7 @@ angular.module('kf6App')
                 }
                 scaffoldIds.forEach(function(scaffoldId) {
                     var newScaffold = {};
-                    scaffolds.push(newScaffold);
+                    communityData.scaffolds.push(newScaffold);
                     $http.get('/api/contributions/' + scaffoldId).success(function(scaffold) {
                         _.extend(newScaffold, scaffold);
                         fillSupport(newScaffold, function() {
@@ -334,8 +335,8 @@ angular.module('kf6App')
         var updateCommunity = function(obj, success) {
             var url = 'api/communities/' + communityId;
             $http.get(url).success(function(community) {
-                var newCommunity = _.extend(community, obj); /* dont use merge, for overriding array */
-                $http.put(url, newCommunity).success(function() {
+                _.extend(community, obj); /* dont use merge, for overriding array */
+                $http.put(url, community).success(function() {
                     success();
                 });
             });
@@ -437,16 +438,16 @@ angular.module('kf6App')
             read: read,
             //saveRegistration: saveRegistration,
             getViews: function() {
-                return views;
+                return communityData.views;
             },
             getScaffolds: function() {
-                return scaffolds;
+                return communityData.scaffolds;
             },
             getMembers: function() {
-                return communityMembers;
+                return communityData.members;
             },
             getMembersArray: function() {
-                return communityMembersArray;
+                return communityData.membersArray;
             },
             getCommunityData: function() {
                 return communityData;

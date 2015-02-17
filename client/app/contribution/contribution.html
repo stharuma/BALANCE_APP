@@ -130,16 +130,7 @@
                             <td width="100%" valign="top">
                                 <div ng-show="isEditable()">
                                     <h4>Add to authors:</h4>
-                                    <ui-select ng-model="selected.author" theme="select2" ng-disabled="disabled" style="width: 80%;">
-                                        <ui-select-match placeholder="Select author...">{{selected.author.getName()}} &lt;{{selected.author.email}}&gt;</ui-select-match>
-                                        <ui-select-choices repeat="author in communityMembers | filter: {name: $select.search, email: $select.search} | orderBy:'name'| limitTo:12">
-                                            <div ng-bind-html="author.name | highlight: $select.search"></div>
-                                            <small><div ng-bind-html="author.email | highlight: $select.search"></div></small>
-                                        </ui-select-choices>
-                                    </ui-select>
-                                    <button type="submit" class="btn btn-primary" ng-click="addAuthor(selected.author)">Add</button>
-                                    <br>
-                                    <p>{{communityMembers.length}} possible authors in this community.</p>
+                                    <div style="width: 100%;" ng-include="'components/kfutils/authorselector/authorselector.html'"></div>                                    
                                 </div>
                             </td>
                         </tr>

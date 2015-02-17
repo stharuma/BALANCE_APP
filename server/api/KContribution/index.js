@@ -14,6 +14,6 @@ router.put('/:communityId/:id', commauth.isAuthenticated(), controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 
-router.post('/search', controller.search);
+router.post('/:communityId/search', controller.search);
 
 module.exports = router;

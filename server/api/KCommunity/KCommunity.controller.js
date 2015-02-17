@@ -86,6 +86,7 @@ exports.create = function(req, res) {
         author.userId = req.user._id;
         author.type = 'Author';
         author.role = 'manager';
+        author.userName = req.user.email;
         author.firstName = req.user.firstName;
         author.lastName = req.user.lastName;
         author._community = {

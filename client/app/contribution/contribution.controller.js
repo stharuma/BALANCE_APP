@@ -159,7 +159,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.addAuthor = function(author) {
+        $scope.authorSelected = function(author) {
             if (_.contains($scope.authors, author)) {
                 window.alert('already included');
                 return;

@@ -4,17 +4,17 @@ angular.module('kf6App')
     .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
+        $community.updateCommunityMembers();        
+        $scope.communityMembers = $community.getCommunityData().membersArray;
 
         $kfutil.mixIn($scope);
 
         $scope.query = '';
-        $scope.communityMembers = [];
-        $scope.isCollapsed = true;
-        $scope.selectedAuthor = '';
-        $scope.contributions = [];
+        $scope.status = {};
+        $scope.status.detailCollapsed = true;
+        $scope.status.status = 'init';
 
-        $scope.communityMembers = $community.getMembersArray();
-        $community.updateCommunityMembers();
+        $scope.contributions = [];        
 
         $scope.search = function() {
             var query = {
@@ -40,7 +40,7 @@ angular.module('kf6App')
                 if (token.indexOf('-author:') >= 0) {
                     token = token.replace('-author:', '');
                     var author = _.findWhere($scope.communityMembers, {
-                        email: token
+                        userName: token
                     });
                     if (author) {
                         query.authors.push(author._id);
@@ -51,10 +51,21 @@ angular.module('kf6App')
                 }
                 query.words.push(token);
             });
-            $http.post('/api/contributions/search', {
+            $scope.status.status = 'searching';
+            $http.post('/api/contributions/' + communityId + '/search', {
                 query: query
             }).success(function(contributions) {
-                $scope.contributions = contributions;
+                $scope.status.detailCollapsed = true;
+                $scope.contributions = contributions;                
+                if (contributions.length > 0) {
+                    console.log('xxx');
+                    $scope.status.status = 'searched';
+                } else {
+                    console.log('yyy');                    
+                    $scope.status.status = 'noresult';
+                }
+            }).error(function() {
+                $scope.status.status = 'error';
             });
         };
 
@@ -83,8 +94,8 @@ angular.module('kf6App')
             }
         });
 
-        $scope.addAuthor = function() {
-            $scope.query += ' -author:' + $scope.selectedAuthor;
+        $scope.authorSelected = function(author) {
+            $scope.query += ' -author:' + author.userName;
         };
 
     });

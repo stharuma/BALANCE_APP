@@ -9,6 +9,11 @@ var KAuthorSchema = new Schema({
         required: true,
         index: true
     },
+    userName: { /* generally, user.email field will be copied to this field */
+        type: String,
+        required: true,
+        index: true
+    },
     firstName: {
         type: String,
         required: true
@@ -23,7 +28,7 @@ var KAuthorSchema = new Schema({
         index: true
     },
     workspaces: [Schema.ObjectId], // elements in this supposed to be viewId
-    
+
     /* here are cache to work read faster */
     _community: {
         type: Schema.Types.Mixed,
