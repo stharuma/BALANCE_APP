@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$community', function($http) {
+    .factory('$community', function($http, Auth) {
         // We need to hold two forms, because those collections might be watched by angular
+        var userId = null;
         var communityId = null;
 
         var communityData = {};
@@ -18,8 +19,11 @@ angular.module('kf6App')
                 console.log('bad newId: ' + newId);
                 return;
             }
-            if (communityId !== newId) {
+            var currentUserId = Auth.getCurrentUser()._id;
+            if (communityId !== newId || userId != currentUserId) {
+                userId = currentUserId;
                 communityId = newId;
+
                 refreshAuthor(authorHandler);
                 refreshCommunity();
                 refreshViews();
