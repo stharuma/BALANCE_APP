@@ -48,15 +48,18 @@ angular.module('kf6App')
                     }
                 });
                 $scope.refs = onviewrefs;
-                socket.socket.emit('subscribe', viewId);
+                socket.socket.emit('subscribe', 'linkfrom:' + viewId);
                 $scope.$on('$destroy', function() {
-                    socket.socket.emit('unsubscribe', viewId);
-                    socket.unsyncUpdates('ref');
+                    socket.unsyncUpdates('link');
+                    socket.socket.emit('unsubscribe', 'linkfrom:' + viewId);
                 });
-                socket.syncUpdates('ref', $scope.refs, function(event, item) {
+                socket.syncUpdates('link', function(item) {
+                    return item.type === 'contains';
+                }, $scope.refs, function(event, item) {
                     if (event === 'created') {
                         $scope.updateRef(item);
-                        $scope.updateLink(item.to);
+                        $scope.refreshConnection(item.to);
+                        $scope.refreshReadStatus(item);
                     }
                     if (event === 'updated') {
                         $scope.updateRef(item);
@@ -70,18 +73,24 @@ angular.module('kf6App')
                 $community.updateCommunityMembers();
 
                 //update links
-                $scope.updateLinks();
+                $scope.refreshAllConnections();
 
                 //read
-                $scope.refreshRead();
+                $scope.refreshAllReadStatus();
             });
         };
 
         $scope.settingChanged = function() {
-            $scope.updateLinks();
+            $scope.refreshAllConnections();
         };
 
         $scope.updateRef = function(ref) {
+
+            // show only contains
+            if (ref.type !== 'contains') {
+                console.log('item is not \'contains\'');
+                return;
+            }
 
             // assure data
             if (!ref._to) {
@@ -120,29 +129,40 @@ angular.module('kf6App')
             ref.authorObjects = [];
 
             ref.getIcon = function() {
+                var iconroot = 'manual_assets/kf4images/';
+                return iconroot + ref.getIconFile();
+            };
+
+            ref.getIconFile = function() {
                 if (ref._to.type === 'View') {
-                    return 'manual_assets/kf4images/icon-view.gif';
+                    return 'icon-view.gif';
                 }
                 if (ref._to.type === 'Attachment') {
-                    return 'manual_assets/kf4images/icon-attachment.gif';
+                    return 'icon-attachment.gif';
                 }
                 if (ref._to.type === 'Drawing') {
-                    return 'manual_assets/kf4images/icon-drawing.gif';
+                    return 'icon-drawing.gif';
                 }
-
-                var author = ref.amIAuthor();
-                if (ref.read === true) {
-                    if (author === true) {
-                        return 'manual_assets/kf4images/icon-note-read-auth-.gif';
+                if (ref._to.type === 'Note') {
+                    var name = 'icon-note-';
+                    if (ref.readlink) {
+                        name += 'read-';
+                        // if (ref._to.modified < ref.readlink.modified) {
+                        //     name += 'read-';
+                        // } 
+                        // else {
+                        //     name += 'mod-';
+                        // }
                     } else {
-                        return 'manual_assets/kf4images/icon-note-read-othr-.gif';
+                        name += 'unread-';
                     }
-                } else {
-                    if (author === true) {
-                        return 'manual_assets/kf4images/icon-note-unread-auth-.gif';
+                    if (ref.amIAuthor()) {
+                        name += 'auth-';
                     } else {
-                        return 'manual_assets/kf4images/icon-note-unread-othr-.gif';
+                        name += 'othr-';
                     }
+                    name += '.gif';
+                    return name;
                 }
             };
 
@@ -163,39 +183,45 @@ angular.module('kf6App')
             }
         };
 
-        $scope.refreshRead = function() {
+        $scope.refreshReadStatus = function(ref) {
+            $http.get('/api/records/myreadstatus/' + $scope.view.communityId + '/' + ref.to).success(function(readlink) {
+                ref.readlink = readlink;
+            });
+        };
+
+        $scope.refreshAllReadStatus = function() {
             var authorId = $scope.community.author._id;
             if (authorId === null) {
                 return;
             }
-            $http.get('/api/records/count/' + $scope.view.communityId + '/' + $scope.view._id).success(function(res) {
-                res.forEach(function(each) {
-                    $scope.updateRefRead(each._id);
+            $http.get('/api/records/myreadstatusview/' + $scope.view.communityId + '/' + $scope.view._id).success(function(readlinks) {
+                readlinks.forEach(function(readlink) {
+                    $scope.updateRefRead(readlink);
                 });
             });
 
-            socket.socket.emit('subscribe', authorId);
-            socket.socket.on('record:save', function(record) {
-                if (record.type === 'read') {
-                    $scope.updateRefRead(record.targetId);
+            socket.socket.emit('subscribe', 'linkfrom:' + authorId);
+            socket.socket.on('link:save', function(link) {
+                if (link.type === 'read') {
+                    $scope.updateRefRead(link);
                 }
             });
             $scope.$on('$destroy', function() {
-                socket.socket.emit('unsubscribe', authorId);
-                socket.socket.removeAllListeners('record:save');
+                socket.socket.emit('unsubscribe', 'linkfrom:' + authorId);
+                socket.socket.removeAllListeners('link:save');
             });
         };
 
-        $scope.updateRefRead = function(id) {
-            var ref = _.find($scope.refs, function(ref) {
-                return ref.to === id;
+        $scope.updateRefRead = function(readlink) {
+            var refs = _.filter($scope.refs, function(ref) {
+                return ref.to === readlink.to;
             });
-            if (ref) {
-                ref.read = true;
-            }
+            refs.forEach(function(ref) {
+                ref.readlink = readlink;
+            });
         };
 
-        $scope.updateLink = function(id) {
+        $scope.refreshConnection = function(id) {
             $http.get('/api/links/either/' + id).success(function(links) {
                 links.forEach(function(link) {
                     $scope.createConnection(link);
@@ -203,7 +229,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.updateLinks = function() {
+        $scope.refreshAllConnections = function() {
             $scope.clearAllConnections();
             $http.get('/api/links/view/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
@@ -648,20 +674,19 @@ angular.module('kf6App')
                 $community.createNote(function(note) {
                     note.title = 'Riseabove';
                     $community.makeRiseabove(note, view._id, function(note) {
-                        selected.forEach(function(each) {
-                            $scope.createContainsLink0(view._id, each.to, null, {
-                                x: each.data.x - topleft.x + 20,
-                                y: each.data.y - topleft.y + 20
-                            });
-                        });
-                        selected.forEach(function(each) {
-                            $http.delete('/api/links/' + each._id);
-                        });
-                        //timing? need investigation
-                        $scope.createOnViewRef(note, {
+                        $scope.createContainsLink(note._id, {
                             x: topleft.x + 50,
                             y: topleft.y + 50
-                        }, function() {});
+                        }, function() {
+                            selected.forEach(function(each) {
+                                $scope.createContainsLink0(view._id, each.to, {
+                                    x: each.data.x - topleft.x + 20,
+                                    y: each.data.y - topleft.y + 20
+                                }, function() {
+                                    $http.delete('/api/links/' + each._id);
+                                });
+                            });
+                        });
                     });
                 });
             }, true);

@@ -8,9 +8,9 @@ var KLink = require('./KLink.model');
 
 exports.register = function(socketio) {
     KLink.schema.post('save', function(link) {
-        socketio.sockets.to(link.from).emit('ref:save', link);
+        socketio.sockets.to('linkfrom:' + link.from).emit('link:save', link);
     });
     KLink.schema.post('remove', function(link) {
-        socketio.sockets.to(link.from).emit('ref:remove', link);
+        socketio.sockets.to('linkfrom:' + link.from).emit('link:remove', link);
     });
 }

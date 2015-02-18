@@ -28,13 +28,18 @@ angular.module('kf6App')
              * @param {Array} array
              * @param {Function} cb
              */
-            syncUpdates: function(modelName, array, cb) {
+            syncUpdates: function(modelName, cond, array, cb) {
                 cb = cb || angular.noop;
 
                 /**
                  * Syncs item creation/updates on 'model:save'
                  */
                 socket.on(modelName + ':save', function(item) {
+
+                    if (cond && cond(item) === false) {
+                        return;
+                    }
+
                     var oldItem = _.find(array, {
                         _id: item._id
                     });
@@ -61,6 +66,11 @@ angular.module('kf6App')
                  * Syncs removed items on 'model:remove'
                  */
                 socket.on(modelName + ':remove', function(item) {
+
+                    if (cond && cond(item) === false) {
+                        return;
+                    }
+
                     var event = 'deleted';
                     _.remove(array, {
                         _id: item._id

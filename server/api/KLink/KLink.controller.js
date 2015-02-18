@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var KLink = require('./KLink.model');
-var KContribution = require('../KContribution/KContribution.model');
+var KObject = require('../KObject/KObject.model');
 
 exports.index = function(req, res) {
     //this should not be used
@@ -49,7 +49,8 @@ exports.eitherIndex = function(req, res) {
 // Get links between contributions on view
 exports.viewIndex = function(req, res) {
     KLink.find({
-        from: req.params.id
+        from: req.params.id,
+        type: 'contains'
     }, function(err, refs) {
         if (err) {
             return handleError(res, err);
@@ -122,8 +123,8 @@ function checkAndPrepareSeed(seed, handler) {
         if (!seed.type) {
             return handler("no seed type." + seed);
         }
-        if (from === null || to === null) {
-            return handler("missing link in seed: " + seed);
+        if (!from || !to) {
+            return handler("missing link in seed: " + JSON.stringify(seed));
         }
         if (!seed.communityId) {
             seed.communityId = from.communityId;
@@ -145,8 +146,8 @@ function checkAndPrepareSeed(seed, handler) {
 }
 
 function getFromToContributions(fromId, toId, handler) {
-    KContribution.findById(fromId, function(err, from) {
-        KContribution.findById(toId, function(err, to) {
+    KObject.findById(fromId, function(err, from) {
+        KObject.findById(toId, function(err, to) {
             handler(from, to);
         });
     });
@@ -165,6 +166,7 @@ exports.update = function(req, res) {
             return res.send(404);
         }
         var updated = _.merge(link, req.body);
+        updated.modified = Date.now();
         if (req.body.data) {
             updated.markModified('data');
         }

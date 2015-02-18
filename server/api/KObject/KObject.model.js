@@ -42,7 +42,10 @@ var KObjectSchema = new Schema({
         type: [Schema.ObjectId],
         default: []
     },
-    data: Schema.Types.Mixed
+    data: {
+        type: Schema.Types.Mixed,
+        default: {}
+    }
 });
 
 module.exports = mongoose.model('KObject', KObjectSchema);

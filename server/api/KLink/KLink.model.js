@@ -24,20 +24,27 @@ var KLinkSchema = new Schema({
         required: true,
         index: true
     },
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    modified: {
+        type: Date,
+        default: Date.now
+    },
     data: {
         type: Schema.Types.Mixed,
-        required: true,
         default: {}
     },
     /* here are cache in order to work faster for reading */
     _to: {
         type: Schema.Types.Mixed,
-        required: true,
+        //        required: true,
         default: {}
     },
     _from: {
         type: Schema.Types.Mixed,
-        required: true,
+        //        required: true,
         default: {}
     }
 });

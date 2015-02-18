@@ -5,10 +5,45 @@ var KRecord = require('./KRecord.model');
 
 var KObject = require('../KObject/KObject.model');
 var KLink = require('../KLink/KLink.model');
+var KLinkController = require('../KLink/KLink.controller');
 var mongoose = require('mongoose');
+
+function createReadmark(req, res) {
+    var seed = {
+        from: req.author._id,
+        to: req.params.contributionId,
+        type: 'read'
+    };
+    KLink.findOne(seed, function(err, link) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!link) {
+            KLinkController.checkAndCreate(seed, function(err, link) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                createReadmark0(req, res, link);
+            });
+        } else {
+            createReadmark0(req, res, link);
+        }
+    });
+}
+
+function createReadmark0(req, res, link) {
+    link.modified = Date.now();
+    link.save(function(err) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, {});
+    });
+}
 
 exports.read = function(req, res) {
     exports.createInternal({
+            communityId: req.author.communityId,
             authorId: req.author._id,
             targetId: req.params.contributionId,
             type: 'read'
@@ -17,45 +52,47 @@ exports.read = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, {});
+            createReadmark(req, res);
         });
 };
 
-exports.count = function(req, res) {
+exports.myReadStatus = function(req, res) {
+    var seed = {
+        from: req.author._id,
+        to: req.params.contributionId,
+        type: 'read'
+    };
+    KLink.findOne(seed, function(err, link) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, link);
+    });
+};
+
+exports.myReadStatusView = function(req, res) {
     KLink.find({
-        from: req.params.viewId
+        from: req.params.viewId,
+        type: 'contains'
     }, function(err, refs) {
         if (err) {
             return handleError(res, err);
         }
         var ids = [];
-        for (var i = 0; i < refs.length; i++) {
-            ids.push(refs[i].to);
-        }
-        var uid = mongoose.Types.ObjectId(req.author._id);
-        KRecord.aggregate([{
-                $match: {
-                    $and: [{
-                        authorId: uid
-                    }, {
-                        type: "read"
-                    }, {
-                        targetId: {
-                            $in: ids
-                        }
-                    }]
-                }
-            }, {
-                $group: {
-                    _id: "$targetId",
-                    counts: {
-                        $sum: 1
-                    }
-                }
-            }],
-            function(err, records) {
-                return res.json(200, records);
-            });
+        refs.forEach(function(ref) {
+            return ids.push(ref.to);
+        });
+        KLink.find({
+            from: req.author._id,
+            to: {
+                $in: ids
+            }
+        }, function(err, links) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(200, links);
+        });
     });
 };
 
@@ -108,11 +145,22 @@ exports.createInternal = function(seed, handler) {
                 return;
             }
             seed.communityId = object.communityId;
-            KRecord.create(seed, handler);
+            KRecord.create(seed, function(err, record) {
+                if (err) {
+                    if (handler) {
+                        handler(err);
+                    }
+                    return;
+                }
+                if (handler) {
+                    handler();
+                }
+            });
         });
     }
 };
 
 function handleError(res, err) {
+    console.log(err);
     return res.send(500, err);
 }
