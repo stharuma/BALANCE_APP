@@ -3,6 +3,8 @@
 var _ = require('lodash');
 var KLink = require('./KLink.model');
 var KObject = require('../KObject/KObject.model');
+var KRecordController = require('../KRecord/KRecord.controller.js');
+var KHistoricalObject = require('../KHistoricalObject/KHistoricalObject.model.js');
 
 exports.index = function(req, res) {
     //this should not be used
@@ -165,16 +167,27 @@ exports.update = function(req, res) {
         if (!link) {
             return res.send(404);
         }
-        var updated = _.merge(link, req.body);
-        updated.modified = Date.now();
-        if (req.body.data) {
-            updated.markModified('data');
-        }
-        updated.save(function(err) {
+        KHistoricalObject.createByLink(link, function(err, historical) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, link);
+            var updated = _.merge(link, req.body);
+            updated.modified = Date.now();
+            if (req.body.data) {
+                updated.markModified('data');
+            }
+            updated.save(function(err) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                // KRecordController.createInternal({
+                //     authorId: req.author._id,
+                //     targetId: contribution._id,
+                //     type: 'modified',
+                //     historicalObjectId: historical._id
+                // });
+                return res.json(200, link);
+            });
         });
     });
 };

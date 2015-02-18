@@ -130,7 +130,7 @@
                             <td width="100%" valign="top">
                                 <div ng-show="isEditable()">
                                     <h4>Add to authors:</h4>
-                                    <div style="width: 100%;" ng-include="'components/kfutils/authorselector/authorselector.html'"></div>                                    
+                                    <div style="width: 100%;" ng-include="'components/kfutils/authorselector/authorselector.html'"></div>
                                 </div>
                             </td>
                         </tr>
@@ -193,6 +193,7 @@
                     <ul>
                         <li ng-repeat="record in records" ng-if="record.type!=='read'">
                             {{record.type}} by {{record.user.getName()}} at {{record.getTime()}}
+                            <span ng-if="record.historicalObjectId"><a ng-href="historicalobject/{{record.historicalObjectId}}" target="_blank" >historical</a></span>
                         </li>
                     </ul>
                     <label>read logs:</label>

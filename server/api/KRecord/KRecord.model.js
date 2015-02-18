@@ -27,6 +27,11 @@ var KRecordSchema = new Schema({
     timestamp: {
         type: Date,
         default: Date.now
+    },
+    historicalObjectId: {
+        type: Schema.ObjectId,
+        required: false,
+        index: true
     }
 });
 

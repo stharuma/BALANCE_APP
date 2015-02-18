@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var KObject = require('./KObject.model');
 var KRecordController = require('../KRecord/KRecord.controller.js');
+var KHistoricalObject = require('../KHistoricalObject/KHistoricalObject.model.js');
 var upload = require('../upload/upload.controller');
 
 // Get list of KObjects
@@ -58,6 +59,7 @@ exports.update = function(req, res) {
         if (!contribution) {
             return res.send(404);
         }
+
         var updated = _.merge(contribution, newobj);
         if (newobj.authors) {
             updated.authors = newobj.authors;
@@ -76,10 +78,17 @@ exports.update = function(req, res) {
                 console.log(err);
                 return handleError(res, err);
             }
-            KRecordController.createInternal({
-                authorId: req.author._id,
-                targetId: contribution._id,
-                type: 'modified'
+            KHistoricalObject.createByObject(newContribution, function(err, historical) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                KRecordController.createInternal({
+                    authorId: req.author._id,
+                    targetId: contribution._id,
+                    type: 'modified',
+                    historicalObjectId: historical._id
+                });
             });
             return res.json(200, newContribution);
         });
