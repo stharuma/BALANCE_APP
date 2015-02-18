@@ -15,6 +15,35 @@ angular.module('kf6App')
             ioSocket: ioSocket
         });
 
+        function exactlyNew(newItem, oldItem) {
+            var isLink = newItem.from && newItem.to;
+            if (!isLink) {
+                return true;
+            }
+
+            if (newItem.modified < oldItem.modified) {
+                return false;
+            }
+
+            if (newItem.modified > oldItem.modified) {
+                return true;
+            }
+
+            //in case of the same
+            if (newItem._to && oldItem._to) {
+                if (newItem._to.modified > oldItem._to.modified) {
+                    return true;
+                }
+            }
+            if (newItem._from && oldItem._from) {
+                if (newItem._from.modified > oldItem._from.modified) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         return {
             socket: socket,
 
@@ -49,8 +78,7 @@ angular.module('kf6App')
                     // replace oldItem if it exists
                     // otherwise just add item to the collection
                     if (oldItem) {
-                        var exactlynew = oldItem.modified <= item.modified;
-                        if (!exactlynew) {
+                        if (!exactlyNew(item, oldItem)) {
                             console.log('This is the old one.');
                             return;
                         }
