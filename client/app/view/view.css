@@ -1,25 +1,45 @@
 .KFViewNavBar {
     position: fixed;
     width: 100%;
-    height: 30px;
-    background-color: #f8f8f8;
+    height: 29px;
+    border-width: 1px;
+    border-color: #EEE;
+    background-color: #DDD;
     color: #777;
-    padding-top: 3px;
-    padding-left: 10px;
+    padding-top: 0px;
+    padding-left: 0px;
 }
 .KFCommunityTitle {
-    padding: 40px 10px;
+    height: 100%;
+    /*border: 1px solid black;    */
+    float: left;
+    padding-top: 1px;
+    padding-left: 50px;
+    padding-right: 10px;
     font-size: 20px;
 }
 .KFViewTitle {
-    padding: 40px 10px;    
+    height: 100%;    
+    /*border: 1px solid black;    */
+    float: left;    
+    padding-top: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
     font-size: 15px;
 }
-
+.KFUserName {
+    height: 100%;        
+    /*border: 1px solid black;*/
+    padding-top: 11px;        
+    font-size: 10px;    
+    float: right;
+    padding-left: 20px;    
+    padding-right: 20px;
+}
 .KFViewToolBar {
     position: fixed;
     top: 30px;
-    width: 40px;
+    width: 34px;
     z-index: 0;
 }
 .KFViewMainCanvas {
@@ -28,8 +48,8 @@
     
     overflow: scroll;
     top: 30px;
-    left: 40px;
-    width: calc(100% - 40px);
+    left: 34px;
+    width: calc(100% - 34px);
     height: 100vh;
     /* for safari <7.0  */
     
@@ -75,7 +95,6 @@
     pointer-events: none;
     z-index: -100;
 }
-
 /* for view ref presentation */
 
 .KFViewRef {
@@ -91,19 +110,24 @@
 .kfIcon {
     color: black;
 }
-.kfbutton {
-    border-color: #FFFFFF;
-    background-color: #AAAAAA;
-    padding: 1px;
+.KFToolBarButton {
+    width: 34px;
+    border-color: #DDD;
+    background-color: #DDD;
+    padding: 2px;
 }
-.kfbutton:hover {
-    background-color: #888888;
+.KFToolBarImage{
+    width: 30px;
+}
+.KFToolBarButton:hover {
+    border-color: #BBB;
+    background-color: #BBB;
 }
 .KFTimeLabel {
-	font-size: 9px;
+    font-size: 9px;
 }
-
 /* for handles */
+
 .ui-resizable {
     /*position: relative;*/
 }

@@ -47,60 +47,60 @@
     </div>
 
     <div class="KFViewNavBar" ng-if="!menuStatus">
-        <span class="KFCommunityTitle">{{community.community.title}}</span>
-        <span class="KFViewTitle">{{view.title}}</span>
-        <span style="float: right; padding-right: 20px;">{{community.author.getName()}} ({{community.author.role}})</span>
+        <div class="KFCommunityTitle">{{community.community.title}}</div>
+        <div class="KFViewTitle">{{view.title}}</div>
+        <div class="KFUserName">{{community.author.getName()}} ({{community.author.role}})</div>
     </div>
 
     <div class='KFViewToolBar' ng-if="!menuStatus">
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createNote()"><img src="manual_assets/kf4images/toolbar-newnote-small.png" title="Note"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createNote()"><img class="KFToolBarImage" src="manual_assets/kf6images/01-toolbar-newwriting.png" title="New writing contribution"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createDrawing()"><img src="manual_assets/kf4images/toolbar-palette-small.png" title="Graphic Note"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createDrawing()"><img class="KFToolBarImage" src="manual_assets/kf6images/02-toolbar-newdrawing.png" title="New drawing contribution"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openAttachment()"><img src="manual_assets/kf4images/toolbar-newattachment-small.png" title="Attachment"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAttachment()"><img class="KFToolBarImage" src="manual_assets/kf6images/03-toolbar-attachment.png" title="Attachment"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="createViewlink()"><img src="manual_assets/kf4images/toolbar-newviewlink-small.png" title="Views"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img class="KFToolBarImage" src="manual_assets/kf6images/04-toolbar-viewmanagement.png" title="View management"></button>            
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openSearch()"><img src="manual_assets/kf4images/toolbar-search-small.png" title="Search"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createViewlink()"><img class="KFToolBarImage" src="manual_assets/kf6images/05-toolbar-viewlink.png" title="View link"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openWorkspace()"><img src="manual_assets/kf4images/toolbar-workspace-small.png" title="Workspace"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openScaffolds();"><img class="KFToolBarImage" src="manual_assets/kf6images/06-toolbar-scaffolds.png" title="Scaffolds"></button>            
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img src="manual_assets/kf4images/toolbar-viewlist-small.png" title="View Manager"></button>            
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openWorkspace()"><img class="KFToolBarImage" src="manual_assets/kf6images/07-toolbar-personalworkspace.png" title="Personal workspace"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="openScaffolds();"><img src="manual_assets/kf4images/toolbar-scaffolds-small.png" title="Scaffold"></button>            
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openSearch()"><img class="KFToolBarImage" src="manual_assets/kf6images/08-toolbar-search.png" title="Search"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="status.isSettingCollapsed = !status.isSettingCollapsed"><img src="manual_assets/kf4images/button-info.gif" title="View Setting"></button>                
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isSettingCollapsed = !status.isSettingCollapsed"><img class="KFToolBarImage" src="manual_assets/kf6images/13-settings.png" title="Settings"></button>                
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" style="width: 40px;" class="btn btn-primary kfbutton" ng-click="doExit()"><img src="manual_assets/kf4images/toolbar-logout-small.png" title="Exit Community"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="doExit()"><img class="KFToolBarImage" src="manual_assets/kf6images/10-toolbar-exit.png" title="Exit community"></button>
             </span>
         </span>
     </div>
@@ -113,11 +113,13 @@
                         <span kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
                             <img ng-src="{{ref.getIcon()}}" draggable="false">
                         </span>
-                        <a class='kfIcon'>{{ref._to.title}}</a><br />
+                        <a class='kfIcon'>{{ref._to.title}}</a>
+                        <br />
                         <span ng-click="openContribution(ref.to)" style="font-size: 10px; color: #777777; white-space: nowrap;">
-							{{ref.getAuthorString()}}
-						</span><br />
-						<span class="KFTimeLabel">{{getTimeString(ref._to.modified)}}</span>
+                            {{ref.getAuthorString()}}
+                        </span>
+                        <br />
+                        <span class="KFTimeLabel">{{getTimeString(ref._to.modified)}}</span>
                     </div>
                     <div ng-if="ref._to.type === 'View'" style="white-space: nowrap;">
                         <span kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}">
