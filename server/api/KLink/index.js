@@ -6,10 +6,11 @@ var controller = require('./KLink.controller');
 var router = express.Router();
 
 router.get('/', controller.index);
-router.get('/from/:id', controller.fromindex);
-router.get('/to/:id', controller.toindex);
-router.get('/tofrom/:id', controller.tofromindex);
-router.get('/onview/:id', controller.onviewindex);
+router.get('/from/:id', controller.fromIndex);
+router.get('/to/:id', controller.toIndex);
+router.get('/either/:id', controller.eitherIndex);
+router.get('/view/:id', controller.viewIndex);
+
 router.get('/updateallcache/:communityId', controller.updateAllCash);
 
 router.get('/:id', controller.show);

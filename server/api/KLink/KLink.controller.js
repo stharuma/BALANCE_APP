@@ -5,15 +5,11 @@ var KLink = require('./KLink.model');
 var KContribution = require('../KContribution/KContribution.model');
 
 exports.index = function(req, res) {
-    KLink.find(function(err, links) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.json(200, links);
-    });
+    //this should not be used
+    res.json(200, []);
 };
 
-exports.fromindex = function(req, res) {
+exports.fromIndex = function(req, res) {
     KLink.find({
         from: req.params.id
     }, function(err, links) {
@@ -24,7 +20,7 @@ exports.fromindex = function(req, res) {
     });
 };
 
-exports.toindex = function(req, res) {
+exports.toIndex = function(req, res) {
     KLink.find({
         to: req.params.id
     }, function(err, links) {
@@ -35,7 +31,7 @@ exports.toindex = function(req, res) {
     });
 };
 
-exports.tofromindex = function(req, res) {
+exports.eitherIndex = function(req, res) {
     KLink.find({
         $or: [{
             from: req.params.id
@@ -51,7 +47,7 @@ exports.tofromindex = function(req, res) {
 };
 
 // Get links between contributions on view
-exports.onviewindex = function(req, res) {
+exports.viewIndex = function(req, res) {
     KLink.find({
         from: req.params.id
     }, function(err, refs) {

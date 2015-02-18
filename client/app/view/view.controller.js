@@ -196,7 +196,7 @@ angular.module('kf6App')
         };
 
         $scope.updateLink = function(id) {
-            $http.get('/api/links/tofrom/' + id).success(function(links) {
+            $http.get('/api/links/either/' + id).success(function(links) {
                 links.forEach(function(link) {
                     $scope.createConnection(link);
                 });
@@ -205,7 +205,7 @@ angular.module('kf6App')
 
         $scope.updateLinks = function() {
             $scope.clearAllConnections();
-            $http.get('/api/links/onview/' + $scope.view._id).success(function(links) {
+            $http.get('/api/links/view/' + $scope.view._id).success(function(links) {
                 links.forEach(function(link) {
                     $scope.createConnection(link);
                 });

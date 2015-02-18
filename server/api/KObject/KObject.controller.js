@@ -7,34 +7,30 @@ var upload = require('../upload/upload.controller');
 
 // Get list of KObjects
 exports.index = function(req, res) {
-    KObject.find(function(err, KObjects) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.json(200, KObjects);
-    });
+    //this should not be used
+    res.json(200, []);
 };
 
 // Get a single KObject
 exports.show = function(req, res) {
-    KObject.findById(req.params.id, function(err, KObject) {
+    KObject.findById(req.params.id, function(err, obj) {
         if (err) {
             return handleError(res, err);
         }
-        if (!KObject) {
+        if (!obj) {
             return res.send(404);
         }
-        return res.json(KObject);
+        return res.json(obj);
     });
 };
 
 // Creates a new KObject in the DB.
 exports.create = function(req, res) {
-    KObject.create(req.body, function(err, KObject) {
+    KObject.create(req.body, function(err, obj) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(201, KObject);
+        return res.json(201, obj);
     });
 };
 
