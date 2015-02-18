@@ -146,13 +146,11 @@ angular.module('kf6App')
                 if (ref._to.type === 'Note') {
                     var name = 'icon-note-';
                     if (ref.readlink) {
-                        name += 'read-';
-                        // if (ref._to.modified < ref.readlink.modified) {
-                        //     name += 'read-';
-                        // } 
-                        // else {
-                        //     name += 'mod-';
-                        // }
+                        if (ref._to.modified < ref.readlink.modified) {
+                            name += 'read-';
+                        } else {
+                            name += 'mod-';
+                        }
                     } else {
                         name += 'unread-';
                     }

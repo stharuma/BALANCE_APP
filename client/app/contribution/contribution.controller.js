@@ -69,9 +69,6 @@ angular.module('kf6App')
                 $scope.contribution.authors.forEach(function(authorId) {
                     $scope.authors.push($community.getMember(authorId));
                 });
-                window.setTimeout(function() {
-                    $community.read($scope.contribution);
-                }, 3000);
                 $scope.updateRecords();
                 $scope.communityMembers = $community.getMembersArray();
                 $community.updateCommunityMembers();
@@ -83,6 +80,11 @@ angular.module('kf6App')
                 });
                 if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
+                }
+                if ($scope.contribution.status === 'active') {
+                    window.setTimeout(function() {
+                        $community.read($scope.contribution);
+                    }, 3000);
                 }
             });
         }, function(msg) {
@@ -235,6 +237,8 @@ angular.module('kf6App')
                     $scope.status.dirty = false;
                 }
                 $scope.status.contribution = 'success';
+                /* contributor should be a first reader */
+                $community.read($scope.contribution);
             }, function() {
                 $scope.status.contribution = 'failure';
                 if (window.localStorage) {
