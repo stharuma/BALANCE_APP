@@ -44,15 +44,21 @@ angular.module('kf6App')
                         _id: item._id
                     });
                     //var index = array.indexOf(oldItem);
-                    var event = 'created';
+                    var event = 'unknown';
 
                     // replace oldItem if it exists
                     // otherwise just add item to the collection
                     if (oldItem) {
+                        var exactlynew = oldItem.modified < item.modified;
+                        if (!exactlynew) {
+                            console.log('This is the old one.');
+                            return;
+                        }
                         $.extend(oldItem, item);
                         event = 'updated';
                     } else {
                         array.push(item);
+                        event = 'created';
                     }
 
                     if (oldItem) {
