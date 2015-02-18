@@ -14,6 +14,10 @@ var KObjectSchema = new Schema({
         required: true,
         index: true
     },
+    title: {
+        type: String,
+        default: ''
+    },
     created: {
         type: Date,
         default: Date.now

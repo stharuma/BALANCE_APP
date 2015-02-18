@@ -4,17 +4,6 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var KContributionSchema = new Schema({
-    title: String,
-    authors: {
-        type: [Schema.ObjectId],
-        default: []
-    },
-    permission: { //public or private
-        type: String,
-        required: false, //this should be true in the future
-        index: true,
-        default: 'public'
-    },
     keywords: [String],
     text4search: String
 });
