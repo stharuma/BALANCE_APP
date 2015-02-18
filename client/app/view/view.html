@@ -109,13 +109,13 @@
         <div id="viewcanvas" class="KFViewContributionCanvas">
             <div ng-attr-id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
                 <div ng-if="ref.data.showInPlace!==true" style="white-space: nowrap; font-size: 12px;">
-                    <div ng-click="openContribution(ref.to)" ng-if="ref._to.type !== 'View'">
-                        <span kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
+                    <div ng-if="ref._to.type !== 'View'">
+                        <span ng-click="openContribution(ref.to, $event)" kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
                             <img ng-src="{{ref.getIcon()}}" draggable="false">
                         </span>
-                        <a class='kfIcon'>{{ref._to.title}}</a>
+                        <a ng-click="openContribution(ref.to, $event)" class='kfIcon'>{{ref._to.title}}</a>
                         <br />
-                        <span ng-click="openContribution(ref.to)" style="font-size: 10px; color: #777777; white-space: nowrap;">
+                        <span style="font-size: 10px; color: #777777; white-space: nowrap;">
                             {{ref.getAuthorString()}}
                         </span>
                         <br />

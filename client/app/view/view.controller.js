@@ -509,7 +509,10 @@ angular.module('kf6App')
 
         /* ----------- open window --------- */
 
-        $scope.openContribution = function(id) {
+        $scope.openContribution = function(id, e) {
+            if (e.ctrlKey === true || e.button !== 0) {
+                return;
+            }
             var url = 'contribution/' + id;
             $scope.openByInternalWindow(url);
         };
