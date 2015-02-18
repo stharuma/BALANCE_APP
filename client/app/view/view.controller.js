@@ -133,6 +133,10 @@ angular.module('kf6App')
                 return iconroot + ref.getIconFile();
             };
 
+            ref.isRiseabove = function() {
+                return ref._to.data && ref._to.data.riseabove;
+            };
+
             ref.getIconFile = function() {
                 if (ref._to.type === 'View') {
                     return 'icon-view.gif';
@@ -158,6 +162,9 @@ angular.module('kf6App')
                         name += 'auth-';
                     } else {
                         name += 'othr-';
+                    }
+                    if (ref.isRiseabove()) {
+                        name += 'rise';
                     }
                     name += '.gif';
                     return name;

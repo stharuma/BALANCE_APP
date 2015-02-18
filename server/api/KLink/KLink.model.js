@@ -87,12 +87,29 @@ KObject.schema.post('save', function(obj) {
 KLink.createCashObj = function(obj) {
     var cache = {};
     cache.type = obj.type;
+    cache.title = obj.title;
     cache.status = obj.status;
     cache.created = obj.created;
     cache.modified = obj.modified;
-    cache.title = obj.title;
     cache.authors = obj.authors;
     cache.permission = obj.permission;
+
+    /* for author */
+    if (obj.userName) {
+        cache.userName = obj.userName;
+    }
+    if (obj.firstName) {
+        cache.firstName = obj.firstName;
+    }
+    if (obj.lastName) {
+        cache.lastName = obj.lastName;
+    }
+
+    /* for note */
+    if (obj.data && obj.data.riseabove) {
+        cache.data = {};
+        cache.data.riseabove = 'riseabove'; /* dummy object */
+    }
     return cache;
 }
 
