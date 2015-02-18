@@ -19,7 +19,7 @@ var KRecordSchema = new Schema({
         required: true,
         index: true
     },
-    type: {
+    type: { /* created, read, modified, or deleted */
         type: String,
         required: true,
         index: true
@@ -27,6 +27,24 @@ var KRecordSchema = new Schema({
     timestamp: {
         type: Date,
         default: Date.now
+    },
+
+    /* historical information will be set in modified type */
+
+    historicalObjectType: { /* Object or Link */
+        type: String,
+        required: false,
+        index: true
+    },
+    historicalVariableName: { /* in case of link, link.type should be set  */
+        type: String,
+        required: false,
+        index: true
+    },
+    historicalOperationType: { /* only in case of link: created, modified, or deleted should be set */
+        type: String,
+        required: false,
+        index: true
     },
     historicalObjectId: {
         type: Schema.ObjectId,

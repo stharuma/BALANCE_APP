@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./KLink.controller');
+var commauth = require('../../auth/commauth.service');
 
 var router = express.Router();
 
@@ -14,9 +15,8 @@ router.get('/view/:id', controller.viewIndex);
 router.get('/updateallcache/:communityId', controller.updateAllCash);
 
 router.get('/:id', controller.show);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);
+router.post('/', commauth.isLinkAuthenticated(), controller.create);
+router.put('/:id', commauth.isLinkAuthenticated(), controller.update);
+router.delete('/:id', commauth.isLinkAuthenticatedById(), controller.destroy);
 
 module.exports = router;

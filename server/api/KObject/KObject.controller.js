@@ -87,6 +87,7 @@ exports.update = function(req, res) {
                     authorId: req.author._id,
                     targetId: contribution._id,
                     type: 'modified',
+                    historicalObjectType: 'Object',
                     historicalObjectId: historical._id
                 });
             });

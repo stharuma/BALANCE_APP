@@ -99,6 +99,7 @@ exports.create = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
+        record(req, link, 'created');
         return res.json(201, link);
     });
 };
@@ -167,27 +168,18 @@ exports.update = function(req, res) {
         if (!link) {
             return res.send(404);
         }
-        KHistoricalObject.createByLink(link, function(err, historical) {
+
+        var updated = _.merge(link, req.body);
+        updated.modified = Date.now();
+        if (req.body.data) {
+            updated.markModified('data');
+        }
+        updated.save(function(err) {
             if (err) {
                 return handleError(res, err);
             }
-            var updated = _.merge(link, req.body);
-            updated.modified = Date.now();
-            if (req.body.data) {
-                updated.markModified('data');
-            }
-            updated.save(function(err) {
-                if (err) {
-                    return handleError(res, err);
-                }
-                // KRecordController.createInternal({
-                //     authorId: req.author._id,
-                //     targetId: contribution._id,
-                //     type: 'modified',
-                //     historicalObjectId: historical._id
-                // });
-                return res.json(200, link);
-            });
+            record(req, link, 'modified');
+            return res.json(200, link);
         });
     });
 };
@@ -205,10 +197,33 @@ exports.destroy = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
+            record(req, link, 'deleted');
             return res.send(204);
         });
     });
 };
+
+function record(req, link, operationType) {
+    if (!req.author) {
+        console.log('req.author not found.');
+        return;
+    }
+    KHistoricalObject.createByLink(link, function(err, historical) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        KRecordController.createInternal({
+            authorId: req.author._id,
+            targetId: link.from,
+            type: 'modified',
+            historicalObjectType: 'Link',
+            historicalVariableName: link.type,
+            historicalOperationType: operationType,
+            historicalObjectId: historical._id
+        });
+    });
+}
 
 // ----- cache remaking function ------
 // ----- cache remaking is unnecessary in normal usage ------
