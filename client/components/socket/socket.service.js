@@ -49,7 +49,7 @@ angular.module('kf6App')
                     // replace oldItem if it exists
                     // otherwise just add item to the collection
                     if (oldItem) {
-                        var exactlynew = oldItem.modified < item.modified;
+                        var exactlynew = oldItem.modified <= item.modified;
                         if (!exactlynew) {
                             console.log('This is the old one.');
                             return;
