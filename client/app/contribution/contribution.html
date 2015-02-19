@@ -123,7 +123,7 @@
                                 <ul ui-sortable ng-model="authors">
                                     <li style="cursor: move;" ng-repeat="author in authors">
                                         {{author.getName()}}
-                                        <button type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
+                                        <button ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
                                     </li>
                                 </ul>
                             </td>
