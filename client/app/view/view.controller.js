@@ -690,7 +690,7 @@ angular.module('kf6App')
 
         $scope.delete = function(ref) {
             var selected = $scope.getSelectedModels();
-            var confirmation = window.confirm('Are you sure to delete ' + selected.length + ' links?');
+            var confirmation = window.confirm('Are you sure to delete the selected ' + selected.length + ' object(s)?');
             if (!confirmation) {
                 return;
             }
@@ -701,7 +701,7 @@ angular.module('kf6App')
 
         $scope.createRiseabove = function() {
             var selected = $scope.getSelectedModels();
-            var confirmation = window.confirm('Are you sure to create riseabove using ' + selected.length + ' objects?');
+            var confirmation = window.confirm('Are you sure to create riseabove using the selected ' + selected.length + ' object(s)?');
             if (!confirmation) {
                 return;
             }
