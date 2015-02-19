@@ -46,6 +46,7 @@
 .KFTabSet .tab-content {
     overflow: auto;
     vertical-align: top;
+    height: 100%;
     height: calc(100% - 19px);
 }
 .KFTabSet .tab-pane {
