@@ -113,6 +113,16 @@ angular.module('kf6App')
                 return;
             }
 
+            // adjust location
+            if (ref.data) {
+                if (ref.data.x < 2) {
+                    ref.data.x = 2;
+                }
+                if (ref.data.y < 2) {
+                    ref.data.y = 2;
+                }
+            }
+
             if (ref.refreshFixedStatus) {
                 ref.refreshFixedStatus();
             }
