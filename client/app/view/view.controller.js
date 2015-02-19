@@ -18,6 +18,7 @@ angular.module('kf6App')
         $scope.refs = [];
 
         $scope.status = {};
+        $scope.status.error = false;
         $scope.status.isViewlinkCollapsed = true;
         $scope.status.isViewManagerCollapsed = true;
         $scope.status.isAttachmentCollapsed = true;
@@ -35,6 +36,9 @@ angular.module('kf6App')
                 $scope.community = $community.getCommunityData();
                 $scope.views = $community.getViews();
                 $scope.updateCanvas();
+            }, function(msg, status) {
+                $scope.status.error = true;
+                $scope.status.errorMessage = msg;
             });
         };
 
