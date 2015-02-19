@@ -48,7 +48,7 @@
 
     <div class="KFViewNavBar" ng-if="!menuStatus">
         <div class="KFCommunityTitle">{{community.community.title}}</div>
-        <div class="KFViewTitle">{{view.title}}</div>
+        <div class="KFViewTitle">{{view.title}}<span ng-show="!isEditable()"> (read only)</span></div>
         <div class="KFUserName">{{community.author.getName()}} ({{community.author.role}})</div>
     </div>
 

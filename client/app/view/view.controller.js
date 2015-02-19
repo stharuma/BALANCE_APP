@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
@@ -32,6 +32,7 @@ angular.module('kf6App')
         $scope.initialize = function() {
             $community.getObject(viewId, function(view) {
                 $scope.view = view;
+                $ac.mixIn($scope, view);
                 $community.enter(view.communityId);
                 $scope.community = $community.getCommunityData();
                 $scope.views = $community.getViews();
@@ -393,6 +394,10 @@ angular.module('kf6App')
         /* ----------- creation --------- */
 
         $scope.createNote = function() {
+            if (!$scope.isEditable()) {
+                window.alert('You have no permission to edit this view.');
+                return;
+            }
             $community.createNote(function(note) {
                 $scope.createContainsLink(note._id, {
                     x: 100,
@@ -403,6 +408,10 @@ angular.module('kf6App')
         };
 
         $scope.createDrawing = function() {
+            if (!$scope.isEditable()) {
+                window.alert('You have no permission to edit this view.');
+                return;
+            }
             $community.createDrawing(function(drawing) {
                 $scope.createContainsLink(drawing._id, {
                     x: 100,
@@ -416,6 +425,10 @@ angular.module('kf6App')
         };
 
         $scope.createViewlink = function() {
+            if (!$scope.isEditable()) {
+                window.alert('You have no permission to edit this view.');
+                return;
+            }
             $scope.status.isViewlinkCollapsed = !$scope.status.isViewlinkCollapsed;
         };
 
@@ -441,6 +454,10 @@ angular.module('kf6App')
         };
 
         $scope.openAttachment = function() {
+            if (!$scope.isEditable()) {
+                window.alert('You have no permission to edit this view.');
+                return;
+            }
             $scope.status.isAttachmentCollapsed = !$scope.status.isAttachmentCollapsed;
         };
 

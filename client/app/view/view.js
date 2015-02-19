@@ -243,6 +243,11 @@ angular.module('kf6App')
                 var $scope = scope;
 
                 $scope.dragover = function(e) {
+                    if (!$scope.isEditable || !$scope.isEditable()) {
+                        e.dataTransfer.dropEffect = 'none';                    
+                        return;
+                    }
+
                     if ($scope.dragging !== 'none') {
                         e.dataTransfer.dropEffect = 'move';
                     } else {
@@ -251,6 +256,10 @@ angular.module('kf6App')
                 };
 
                 $scope.drop = function(e, ref) {
+                    if (!$scope.isEditable || !$scope.isEditable()) {
+                        return;
+                    }
+
                     var firefox = (e.offsetX === undefined);
                     var newX = firefox ? e.layerX : e.offsetX;
                     var newY = firefox ? e.layerY : e.offsetY;

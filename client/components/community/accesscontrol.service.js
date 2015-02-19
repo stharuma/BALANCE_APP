@@ -2,8 +2,6 @@
 
 angular.module('kf6App')
     .factory('$ac', function($community) {
-        var obj = {};
-
         var authorRequirementTable = {
             private: {
                 r: true,
@@ -42,11 +40,18 @@ angular.module('kf6App')
             return object.authors.indexOf(author._id) >= 0;
         };
 
-        obj.mixIn = function(scope, object) {
-            scope.isEditable = function() {
-                return fullfillRequirement(object, $community.getCommunityData().author, 'w');
-            };
+        var isEditable = function(object) {
+            return fullfillRequirement(object, $community.getCommunityData().author, 'w');
         };
 
-        return obj;
+        return {
+            fullfillRequirement: fullfillRequirement,
+            isAuthor: isAuthor,
+            isEditable: isEditable,
+            mixIn: function(scope, object) {
+                scope.isEditable = function() {
+                    return isEditable(object);
+                };
+            }
+        };
     });
