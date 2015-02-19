@@ -25,13 +25,13 @@ angular.module('kf6App')
             return tag;
         };
 
-        obj.createNewScaffoldTag = function(supportId, title) {
+        obj.createNewScaffoldTag = function(supportId, title, text) {
             var tag = '';
             tag = tag + '<br>';
             tag = tag + '<span id="' + supportId + '" class="KFSupportStart mceNonEditable">';
             tag = tag + obj.createScaffoldStartTag(title);
             tag = tag + '</span>';
-            tag = tag + '- enter your idea here -';
+            tag = tag + text;
             tag = tag + '<span id="' + supportId + '" class="KFSupportEnd mceNonEditable">';
             tag = tag + obj.createScaffoldEndTag();
             tag = tag + '</span>';

@@ -466,9 +466,17 @@ angular.module('kf6App')
                 window.alert('$scope.mceEditor is not set.');
                 return;
             }
+            var text = '- enter your idea here -';
+            if ($scope.mceEditor.selection) {
+                var selected = $scope.mceEditor.selection.getContent();
+                if (selected.length > 0) {
+                    text = selected;
+                }
+            }
+
             var id = supportLink.to;
             var title = supportLink._to.title;
-            var tag = $kftag.createNewScaffoldTag(id, title);
+            var tag = $kftag.createNewScaffoldTag(id, title, text);
             $scope.mceEditor.insertContent(tag);
         };
 
