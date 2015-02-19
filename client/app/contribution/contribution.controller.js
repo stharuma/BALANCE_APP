@@ -12,6 +12,7 @@ angular.module('kf6App')
         $kfutil.mixIn($scope);
 
         $scope.status = {};
+        $scope.status.error = false;
         $scope.status.isScaffoldCollapsed = false;
         $scope.status.isAttachmentCollapsed = true;
         $scope.status.isContributionCollapsed = true;
@@ -87,9 +88,9 @@ angular.module('kf6App')
                     }, 3000);
                 }
             });
-        }, function(msg) {
-            console.log('error');
-            console.log(msg);
+        }, function(msg, status) {
+            $scope.status.error = true;
+            $scope.status.errorMessage = msg;
         });
 
         $scope.initializeDirtyStatusHandlers = function() {

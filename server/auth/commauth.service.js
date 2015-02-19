@@ -2,37 +2,71 @@
 
 var compose = require('composable-middleware');
 var auth = require('./auth.service');
+
 var KAuthor = require('../api/KAuthor/KAuthor.model');
 var KObject = require('../api/KObject/KObject.model');
 var KLink = require('../api/KLink/KLink.model');
 
+var kfac = require('./kfac')();
+
+function checkPermissionById(requiredPermission) {
+    return compose()
+        .use(setObjectById)
+        .use(isAuthenticated())
+        .use(function(req, res, next) {
+            if (kfac.fullfillRequirement(req.object, req.author, requiredPermission)) {
+                next();
+            } else {
+                return res.send(403);
+            }
+        });
+}
+
+function setObjectById(req, res, next) {
+    if (!req.params.id) {
+        return res.send(500, 'id param not found');
+    }
+    KObject.findById(req.params.id, function(err, object) {
+        if (err) {
+            return res.send(500, err);
+        }
+        if (!object) {
+            return res.send(500, 'object not found');
+        }
+        req.object = object;
+        req.params.communityId = req.object.communityId;
+        next();
+    });
+}
+
 function isLinkAuthenticatedById() {
     return compose()
-        .use(function(req, res, next) {
-            if (!req.params.id) {
-                return res.send(500, 'id param not found');
-            }
-            KLink.findById(req.params.id, function(err, link) {
-                if (err) {
-                    return res.send(500, err);
-                }
-                if (!link) {
-                    return res.send(500, 'link not found');
-                }
-                if (!req.body) {
-                    req.body = {};
-                }
-                req.body.from = link.from;
-                req.body.to = link.to;
-                next();
-            });
-        })
+        .use(setLinkById)
         .use(isLinkAuthenticated());
+}
+
+function setLinkById(req, res, next) {
+    if (!req.params.id) {
+        return res.send(500, 'id param not found');
+    }
+    KLink.findById(req.params.id, function(err, link) {
+        if (err) {
+            return res.send(500, err);
+        }
+        if (!link) {
+            return res.send(500, 'link not found');
+        }
+        if (!req.body) {
+            req.body = {};
+        }
+        req.body.from = link.from;
+        req.body.to = link.to;
+        next();
+    });
 }
 
 function isLinkAuthenticated() {
     return compose()
-        .use(auth.isAuthenticated())
         .use(function(req, res, next) {
             if (!req.body.from) {
                 return res.send(500, 'from field not found');
@@ -111,6 +145,7 @@ function hasRole(roleRequired) {
         });
 }
 
+exports.checkPermissionById = checkPermissionById;
 exports.isLinkAuthenticatedById = isLinkAuthenticatedById;
 exports.isLinkAuthenticated = isLinkAuthenticated;
 exports.isAuthenticated = isAuthenticated;
