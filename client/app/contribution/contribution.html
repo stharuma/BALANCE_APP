@@ -39,11 +39,18 @@
     <div class="KFTabSet">
         <tabset>
             <tab heading="Read" class="KFTab" select="readSelected()">
-                <div style="padding: 10px;">
-                    <div ng-if="contribution.type === 'Note'">
+                <div style="padding: 10px; height: 100%;">
+                    <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
-                        <div class="KFDragSource" ng-bind-html="copy.body"></div>
+                        <div ng-show="!contribution.isRiseabove()">
+                            <div class="KFDragSource" ng-bind-html="copy.body"></div>
+                        </div>
+                        <div style="height: 100%; width: 100%;" ng-hide="!contribution.isRiseabove()">
+                            <div class="KFDragSource" style="float: left; width: 50%; height: 100%; overflow: scroll;" ng-bind-html="copy.body"></div>
+                            <div id="riseabovediv" style="overflow: hidden; height: 100%; border: 1px solid black;"></div>
+                        </div>
                     </div>
+
                     <div ng-if="contribution.type === 'Attachment'">
                         <div ng-if="isImage(contribution)">
                             <img ng-attr-src="{{contribution.data.url}}">
@@ -52,7 +59,6 @@
                             <a ng-click="downloadAttachment(contribution)">Download</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
                         </div>
                     </div>
-                    <div id="riseabovediv"></div>
                 </div>
             </tab>
             <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="status.edittabActive" select="editSelected()">

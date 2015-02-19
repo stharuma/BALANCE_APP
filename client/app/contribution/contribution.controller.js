@@ -329,7 +329,7 @@ angular.module('kf6App')
         $scope.prepareRiseabove = function() {
             if ($scope.contribution.isRiseabove()) {
                 var url = 'view/' + $scope.contribution.data.riseabove.viewId + '/X';
-                var xhtml = '<iframe style="display: block;" height="500px" width="100%" src="%SRC%" ></iframe>';
+                var xhtml = '<iframe style="display: block;" height="100%" width="100%" src="%SRC%" ></iframe>';
                 xhtml = xhtml.replace('%SRC%', url);
                 $('#riseabovediv').html(xhtml);
             }
