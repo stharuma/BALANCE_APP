@@ -223,7 +223,7 @@ angular.module('kf6App')
                 });
         };
 
-        var createView = function(title, success, noregistration) {
+        var createView = function(title, success, noregistration, options) {
             var newobj = {
                 communityId: communityId,
                 type: 'View',
@@ -232,6 +232,8 @@ angular.module('kf6App')
                 status: 'active',
                 permission: 'public',
             };
+            _.extend(newobj, options);
+            console.log(newobj);
             $http.post('/api/contributions/' + communityId, newobj).success(function(view) {
                 if (noregistration === true) {
                     success(view);

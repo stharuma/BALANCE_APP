@@ -498,7 +498,9 @@ angular.module('kf6App')
                         handler(view);
                     }
                 });
-            }, true);
+            }, true, {
+                permission: 'private'
+            });
         };
 
         $scope.openWorkspace0 = function(viewId) {
