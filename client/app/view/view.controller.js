@@ -8,7 +8,7 @@ angular.module('kf6App')
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
-            $('#maincanvas').addClass('KFViewMainCanvasWithoutMenu');
+            $('#maincanvas').addClass('KFViewMainCanvas0');
         }
 
         $kfutil.mixIn($scope);
