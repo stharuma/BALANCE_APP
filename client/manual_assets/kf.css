@@ -3,6 +3,16 @@
     Author     : Yoshiaki
 */
 
+.KFSupportStart{
+    padding-left: 3px;
+    padding-right: 3px;    
+}
+
+.KFSupportEnd{
+    padding-left: 3px;
+    padding-right: 3px;    
+}
+
 .kfSupportStartLabel {
     border-color: #EFB137;
     border-style: solid;

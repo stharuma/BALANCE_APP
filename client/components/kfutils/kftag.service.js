@@ -28,6 +28,7 @@ angular.module('kf6App')
         obj.createNewScaffoldTag = function(supportId, title, text) {
             var tag = '';
             tag = tag + '<br>';
+            tag = tag + '&nbsp;&nbsp;'; //important for mce
             tag = tag + '<span id="' + supportId + '" class="KFSupportStart mceNonEditable">';
             tag = tag + obj.createScaffoldStartTag(title);
             tag = tag + '</span>';
@@ -35,20 +36,26 @@ angular.module('kf6App')
             tag = tag + '<span id="' + supportId + '" class="KFSupportEnd mceNonEditable">';
             tag = tag + obj.createScaffoldEndTag();
             tag = tag + '</span>';
+            tag = tag + '&nbsp;&nbsp;'; //important for mce
             tag = tag + '<br>';
             return tag;
         };
 
         obj.createScaffoldStartTag = function(title) {
             var tag = '';
-            tag = tag + '<span class="kfSupportStartMark">&nbsp; </span>';
+            tag = tag + ' '; //important for mce
+            tag = tag + '<span class="kfSupportStartMark"> &nbsp; </span>';
+            tag = tag + ' '; //important for mce           
             tag = tag + '<span class="kfSupportStartLabel">' + title + '</span>';
+            tag = tag + ' '; //important for mce           
             return tag;
         };
 
         obj.createScaffoldEndTag = function() {
             var tag = '';
-            tag = tag + '<span class="kfSupportEndMark">&nbsp; </span>';
+            tag = tag + ' '; //important for mce            
+            tag = tag + '<span class="kfSupportEndMark"> &nbsp; </span>';
+            tag = tag + ' '; //important for mce            
             return tag;
         };
 
