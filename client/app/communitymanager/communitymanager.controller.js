@@ -45,10 +45,11 @@ angular.module('kf6App')
                 title: $scope.newCommunity.title,
                 registrationKey: $scope.newCommunity.key
             }).success(function(community) {
-                $community.enter(community._id);
-                $community.createView('Welcome', function() {
-                    $community.createDefaultScaffold(function() {
-                        $state.reload();
+                $community.enter(community._id, function() {
+                    $community.createView('Welcome', function() {
+                        $community.createDefaultScaffold(function() {
+                            $state.reload();
+                        });
                     });
                 });
             }).error(function() {
