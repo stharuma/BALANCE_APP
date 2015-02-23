@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>Login</h1>
+            <h1>{{'LOGIN' | translate}}</h1>
             <!-- <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test@test.com</code> / <code>test</code>
             </p>
             <p>Admin account is <code>admin@admin.com</code> / <code>admin</code>
@@ -13,13 +13,13 @@
             <form class="form" name="form" ng-submit="login(form)" novalidate>
 
                 <div class="form-group">
-                    <label>Email</label>
+                    <label>{{'EMAIL' | translate}}</label>
 
                     <input type="email" name="email" class="form-control" ng-model="user.email" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Password</label>
+                    <label>{{'PASSWORD' | translate}}</label>
 
                     <input type="password" name="password" class="form-control" ng-model="user.password" required>
                 </div>
@@ -37,10 +37,10 @@
 
                 <div>
                     <button class="btn btn-default btn-lg btn-login" type="submit">
-                        Login
+                        {{'LOGIN' | translate}}
                     </button>
                     <a class="btn btn-default btn-lg btn-register" href="/signup">
-            Register
+            {{'REGISTER' | translate}}
           </a>
                 </div>
 

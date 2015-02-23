@@ -30,16 +30,28 @@ angular.module('kf6App', [
         $translateProvider.translations('en', {
             'Hello': 'Hello',
             'Admin': 'Admin',
-            'Communities': 'Communities'            
+            'COMMUNITIES': 'Communities',
+            'COMMUNITY': 'Community',
+            'COMMUNITY_JOIN': 'Join Community',
+            'EMAIL': 'Email',
+            'LOGIN': 'Login',
+            'PASSWORD': 'Password',
+            'REGISTER': 'Register'
         });
 
         $translateProvider.translations('fr', {
             'Hello': 'Bonjour',
             'Admin': 'Administration',
-            'Communities': 'Communauté'      
+            'COMMUNITIES': 'Communautés',
+            'COMMUNITY': 'Communauté',
+            'COMMUNITY_JOIN': 'Joindre une communauté',
+            'EMAIL': 'Courriel',
+            'LOGIN': 'Connexion',
+            'PASSWORD': 'Mot de passe',
+            'REGISTER': 'Inscription'
         });
 
-        $translateProvider.preferredLanguage('en');
+        $translateProvider.preferredLanguage('fr');
     }])
 
 .factory('authInterceptor', function($rootScope, $q, $cookieStore, $location) {
