@@ -38,11 +38,42 @@ exports.create = function(req, res) {
     });
 };
 
+exports.searchCount = function(req, res) {
+    makeMongoQuery(req, res, function() {
+        KContribution.count(req.mongoQuery, function(err, count) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(200, {
+                count: count
+            });
+        });
+    });
+};
+
 exports.search = function(req, res) {
+    var query = req.body.query;
+    var pagesize = query.pagesize ? query.pagesize : 50;
+    var page = query.page ? query.page : 1;
+    var skip = pagesize * (page - 1);
+
+    makeMongoQuery(req, res, function() {
+        KContribution.find(req.mongoQuery).skip(skip).
+        limit(pagesize).
+        exec(function(err, contributions) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(200, contributions);
+        });
+    });
+};
+
+function makeMongoQuery(req, res, success) {
     var query = req.body.query;
     var communityId = query.communityId;
     if (!communityId) {
-        return res.json(400, {
+        return res.json(500, {
             'err': 'communityId is necessary'
         });
     }
@@ -96,16 +127,9 @@ exports.search = function(req, res) {
         text4search: new RegExp(regexpstr, 'i')
     });
 
-    KContribution.find(mongoQuery).
-    limit(50).
-    exec(function(err, contributions) {
-        if (err) {
-            console.error(err);
-            return handleError(res, err);
-        }
-        return res.json(200, contributions);
-    });
-};
+    req.mongoQuery = mongoQuery;
+    success();
+}
 
 // not used yet
 // exports.textindexSearch = function(req, res) {

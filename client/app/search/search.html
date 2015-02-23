@@ -1,7 +1,7 @@
 <div class="col-md-12">
     <label>KF Contribution Search</label>
     <p class="input-group">
-        <input type="text" class="form-control" placeholder="Search words here." ng-model="query">
+        <input type="text" class="form-control" placeholder="Search words here." ng-model="queryString">
         <span class="input-group-btn">
         <button type="submit" class="btn btn-primary" ng-click="search()">Search</button>
       </span>
@@ -30,40 +30,56 @@
         </div>
     </div>
 
-    <div ng-if="status.status === 'searching'">
-        searching...
-    </div>
+    <hr>
 
-    <div ng-if="status.status === 'noresult'">
-        There were no contributions to match.
-    </div>
+    <div class="KFSearchResult">
+        <div ng-if="status.status === 'searching'">
+            searching...
+        </div>
 
-    <div ng-if="status.status === 'searched'">
-        <style>
-        .KFSearchResult td,
-        th {
-            padding: 3px;
-        }
-        .KFSearchResult {
-            vertical-align: top;
-        }
-        </style>
-        {{contributions.length}} contributions found.
-        <table border='1' style="width: 100%;">
-            <tr>
-                <th>Title</th>
-                <th>Created</th>
-                <th>Body</th>
-            </tr>
-            <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note'">
-                <td><a href="contribution/{{contribution._id}}">{{contribution.title}}</a>
-                </td>
-                <!-- <td>{{post.getAuthorText()}}</td> -->
-                <td>{{getTimeString(contribution.created)}}</td>
-                <td>
-                    <div ng-bind-html="contribution.data.body" kf-notedoby></div>
-                </td>
-            </tr>
-        </table>
+        <div ng-if="status.status === 'noresult'">
+            There was no contributions to match.
+        </div>
+
+        <div ng-if="status.status === 'searched'">
+            <style>
+            .KFSearchResult td,
+            th {
+                padding: 3px;
+            }
+            .KFSearchResult {
+                vertical-align: top;
+            }
+            </style>
+
+            <div style="float: right;">
+                <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
+            </div>
+            <div style="width: 100%; float: left; text-align: right;">
+                CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total:  {{pager.total}} contributions were found. 
+            </div>
+
+            <div ng-if="status.loading === true">
+            </div>
+
+            <div ng-if="status.loading !== true">
+                <table border='1' style="width: 100%;">
+                    <tr>
+                        <th>Title</th>
+                        <th>Created</th>
+                        <th>Body</th>
+                    </tr>
+                    <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note'">
+                        <td><a href="contribution/{{contribution._id}}">{{contribution.title}}</a>
+                        </td>
+                        <!-- <td>{{post.getAuthorText()}}</td> -->
+                        <td>{{getTimeString(contribution.created)}}</td>
+                        <td>
+                            <div ng-bind-html="contribution.data.body" kf-notedoby></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

@@ -7,6 +7,7 @@ var commauth = require('../../auth/commauth.service');
 var router = express.Router();
 
 router.post('/:communityId', commauth.isAuthenticated(), controller.create);
+router.post('/:communityId/search/count', commauth.isAuthenticated(), controller.searchCount);
 router.post('/:communityId/search', commauth.isAuthenticated(), controller.search);
 
 module.exports = router;
