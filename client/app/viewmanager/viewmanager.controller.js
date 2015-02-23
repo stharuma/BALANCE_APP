@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewmanagerCtrl', function($scope, $http, $community, $state, $stateParams) {
+    .controller('ViewmanagerCtrl', function($scope, $http, $community, $state, $stateParams, $ac) {
         var communityId = $stateParams.communityId;
+        $ac.mixIn($scope);
         $scope.views = $community.getViews();
         $scope.input = {};
         $scope.input.title = '';

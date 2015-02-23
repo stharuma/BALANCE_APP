@@ -40,6 +40,14 @@ angular.module('kf6App')
             return object.authors.indexOf(author._id) >= 0;
         };
 
+        var isManager = function() {
+            var author = $community.getCommunityData().author;
+            if (!author) {
+                return false;
+            }
+            return author.role === 'manager';
+        };
+
         var isEditable = function(object) {
             return fullfillRequirement(object, $community.getCommunityData().author, 'w');
         };
@@ -52,6 +60,7 @@ angular.module('kf6App')
                 scope.isEditable = function() {
                     return isEditable(object);
                 };
+                scope.isManager = isManager;
             }
         };
     });

@@ -9,7 +9,7 @@
                 <button ng-show="input.editMode" type="submit" class="btn btn-primary" ng-click="removeView(view)">x</button>
             </li>
         </ul>
-        <div style='float: right;'>
+        <div ng-show="isManager()" style='float: right;'>
             <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">edit</button>
         </div>
     </div>
