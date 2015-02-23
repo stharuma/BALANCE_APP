@@ -141,7 +141,7 @@ angular.module('kf6App')
                 todos.push(function(handler) {
                     createLink(type, fromId, toId, data, function(link) {
                         if (!link) {
-                            console.log('failure');
+                            console.error('failure');
                             handler();
                             return;
                         }

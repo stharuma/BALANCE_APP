@@ -28,7 +28,7 @@ exports.show = function(req, res) {
 // Creates a new KObject in the DB.
 exports.create = function(req, res) {
     if (!_.contains(req.body.authors, req.author._id.toString())) {
-        console.log('author must be included in authors.');
+        console.error('author must be included in authors.');
         return res.json(403);
     }
     KObject.create(req.body, function(err, obj) {
@@ -84,13 +84,11 @@ exports.update = function(req, res) {
         updated.modified = Date.now();
         updated.save(function(err, newContribution) {
             if (err) {
-                console.log(err);
                 return handleError(res, err);
             }
             KHistoricalObject.createByObject(newContribution, function(err, historical) {
                 if (err) {
-                    console.log(err);
-                    return;
+                    return handleError(res, err);
                 }
                 KRecordController.createInternal({
                     authorId: req.author._id,
@@ -112,5 +110,6 @@ exports.destroy = function(req, res) {
 };
 
 function handleError(res, err) {
+    console.error(err);
     return res.send(500, err);
 }

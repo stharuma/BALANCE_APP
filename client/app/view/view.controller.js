@@ -93,13 +93,13 @@ angular.module('kf6App')
 
             // show only contains
             if (ref.type !== 'contains') {
-                console.log('item is not \'contains\'');
+                console.warn('item is not \'contains\'');
                 return;
             }
 
             // assure data
             if (!ref._to) {
-                console.log('ref._to not found');
+                console.warn('ref._to not found');
                 ref._to = {};
             }
             if (!ref.data) {
@@ -271,7 +271,7 @@ angular.module('kf6App')
                 try {
                     $scope.jsPlumb.repaintEverything();
                 } catch (e) {
-                    console.log(e);
+                    console.error(e);
                 }
             }
             $scope.repaintRequest = false;

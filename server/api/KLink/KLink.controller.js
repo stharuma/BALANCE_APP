@@ -131,7 +131,7 @@ function checkAndPrepareSeed(seed, handler) {
         }
         if (!seed.communityId) {
             seed.communityId = from.communityId;
-            console.log('communityId missing automatically complimented:' + seed);
+            console.info('communityId missing automatically complimented:' + seed);
         }
         if (from.communityId.toString() !== to.communityId.toString()) {
             return handler('from.communityId !== to.communityId');
@@ -205,12 +205,12 @@ exports.destroy = function(req, res) {
 
 function record(req, link, operationType) {
     if (!req.author) {
-        console.log('req.author not found.');
+        console.error('req.author not found.');
         return;
     }
     KHistoricalObject.createByLink(link, function(err, historical) {
         if (err) {
-            console.log(err);
+            console.error(err);
             return;
         }
         KRecordController.createInternal({
@@ -257,9 +257,9 @@ exports.updateAllCashRec = function(req, res) {
             return handleError(res, err);
         }
         var len = links.length;
-        console.log(len + ' links to update!');
+        console.info(len + ' links to update!');
         if (len <= 0) {
-            console.log('no links to update!');
+            console.info('no links to update!');
             return res.send(200);
         }
         var numFinished = 0;
@@ -301,11 +301,11 @@ function showMissingLinkMsg(link, fromObj, toObj) {
     if (toObj) {
         msg += ', toType=' + toObj.type;
     }
-    console.log(msg);
+    console.warn(msg);
 }
 
 //--------------------------------------------
 function handleError(res, err) {
-    console.log(err);
+    console.error(err);
     return res.send(500, err);
 }

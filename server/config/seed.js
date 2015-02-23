@@ -22,7 +22,6 @@ var User = require('../api/user/user.model');
 //     email: 'admin@admin.com',
 //     password: 'admin'
 //   }, function() {
-//       console.log('finished populating users');
 //     }
 //   );
 // });

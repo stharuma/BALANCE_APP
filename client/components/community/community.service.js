@@ -2,7 +2,7 @@
 
 angular.module('kf6App')
     .factory('$community', function($http, Auth) {
-        // We need to hold two forms, because those collections might be watched by angular
+        
         var userId = null;
         var communityId = null;
 
@@ -10,13 +10,14 @@ angular.module('kf6App')
         communityData.community = null;
         communityData.author = null;
         communityData.views = [];
+        // We need to hold two forms, because those collections might be watched by angular
         communityData.members = {};
         communityData.membersArray = [];
         communityData.scaffolds = [];
 
         var enter = function(newId, authorHandler) {
             if (!newId) {
-                console.log('bad newId: ' + newId);
+                console.warn('bad newId: ' + newId);
                 return;
             }
             var currentUserId = Auth.getCurrentUser()._id;
@@ -27,7 +28,7 @@ angular.module('kf6App')
                 refreshAuthor(authorHandler);
                 refreshCommunity();
                 refreshViews();
-                //updateCommunityMembers();
+                //updateCommunityMembers(); // it takes cost
             } else {
                 if (authorHandler) {
                     authorHandler();
@@ -61,7 +62,7 @@ angular.module('kf6App')
                     handler();
                 }
             }).error(function() {
-                console.log('view retrieving error');
+                console.error('view retrieving error');
             });
         };
 
@@ -365,7 +366,7 @@ angular.module('kf6App')
             } else if (obj.authors) { //contrib
                 return amIAuthor0(obj.authors);
             } else {
-                console.log('unsupported object=' + obj);
+                console.error('unsupported object=' + obj);
             }
         };
 
@@ -418,11 +419,11 @@ angular.module('kf6App')
 
         var read = function(contribution) {
             if (!communityId) {
-                console.log('error in making read mark.');
+                console.error('error in making read mark.');
                 return;
             }
             $http.post('/api/records/read/' + communityId + '/' + contribution._id).error(function() {
-                console.log('error in making read mark.');
+                console.error('error in making read mark.');
             });
         };
 

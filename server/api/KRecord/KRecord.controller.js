@@ -161,6 +161,6 @@ exports.createInternal = function(seed, handler) {
 };
 
 function handleError(res, err) {
-    console.log(err);
+    console.error(err);
     return res.send(500, err);
 }

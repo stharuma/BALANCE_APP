@@ -11,9 +11,9 @@ var KLinkController = require('../KLink/KLink.controller.js');
 // Creates a new contribution in the DB.
 exports.create = function(req, res) {
     if (!_.contains(req.body.authors, req.author._id.toString())) {
-        console.log(req.body.authors)
-        console.log(req.author._id);
-        console.log('author must be included in authors.');
+        console.error(req.body.authors)
+        console.error(req.author._id);
+        console.error('author must be included in authors.');
         return res.json(403);
     }
     KContribution.create(req.body, function(err, contribution) {
@@ -100,7 +100,7 @@ exports.search = function(req, res) {
     limit(50).
     exec(function(err, contributions) {
         if (err) {
-            console.log(err);
+            console.error(err);
             return handleError(res, err);
         }
         return res.json(200, contributions);
@@ -132,7 +132,6 @@ exports.search = function(req, res) {
 //     limit(10).
 //     exec(function(err, posts) {
 //         if (err) {
-//             console.log(err);
 //             return handleError(res, err);
 //         }
 //         return res.json(200, posts);
@@ -160,7 +159,7 @@ exports.createBuildsOn = function(res, note, buildsonId, handler) {
             },
             function(err, refs) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     return;
                 }
                 refs.forEach(function(ref) {
@@ -175,7 +174,7 @@ exports.createBuildsOn = function(res, note, buildsonId, handler) {
                     };
                     KLinkController.checkAndCreate(newref, function(err, newref) {
                         if (err) {
-                            console.log(err);
+                            console.error(err);
                             return;
                         }
                     });
@@ -189,6 +188,6 @@ exports.createBuildsOn = function(res, note, buildsonId, handler) {
 };
 
 function handleError(res, err) {
-    console.log(err);
+    console.error(err);
     return res.send(500, err);
 }

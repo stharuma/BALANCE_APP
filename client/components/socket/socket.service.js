@@ -79,7 +79,7 @@ angular.module('kf6App')
                     // otherwise just add item to the collection
                     if (oldItem) {
                         if (!exactlyNew(item, oldItem)) {
-                            console.log('This is the old one.');
+                            console.warn('This is the old one.');
                             return;
                         }
                         $.extend(oldItem, item);

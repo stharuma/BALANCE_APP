@@ -524,7 +524,6 @@ angular.module('kf6App')
     });
 
 function onSvgInitialized() {
-    //console.log('svg initialized');
     var wnd = document.getElementById('svgedit').contentWindow;
     var doc = wnd.document;
     var mainButton = doc.getElementById('main_button');
@@ -534,7 +533,6 @@ function onSvgInitialized() {
     if (window.contribution) {
         svg = window.contribution.data.svg;
     }
-    //console.log(svg);
     wnd.svgCanvas.setSvgString(svg);
     wnd.svgEditor.showSaveWarning = false;
 }

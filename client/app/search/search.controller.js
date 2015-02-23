@@ -58,10 +58,8 @@ angular.module('kf6App')
                 $scope.status.detailCollapsed = true;
                 $scope.contributions = contributions;                
                 if (contributions.length > 0) {
-                    console.log('xxx');
                     $scope.status.status = 'searched';
-                } else {
-                    console.log('yyy');                    
+                } else {                
                     $scope.status.status = 'noresult';
                 }
             }).error(function() {

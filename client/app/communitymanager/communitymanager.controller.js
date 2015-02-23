@@ -53,7 +53,7 @@ angular.module('kf6App')
                     });
                 });
             }).error(function() {
-                console.log('error in creating community');
+                console.error('error in creating community');
             });
             $scope.newCommunity = {};
         };
