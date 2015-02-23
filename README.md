@@ -10,7 +10,7 @@ Creating Development Environment
 
 * mongodb
 * node.js  
-note: please use the following way to install node.js into ubuntu
+note: please use the following way to install node.js into ubuntu  
 ```shell
 $ sudo apt-get install curl
 $ curl -sL https://deb.nodesource.com/setup | sudo bash -  
@@ -43,7 +43,7 @@ $ bower install
 ### Run ###
 
 1. run mongodb  
-2. run kf6 server
+2. run kf6 server  
 ```shell
 $ grunt serve
 ```
