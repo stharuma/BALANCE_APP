@@ -42,7 +42,8 @@ $ bower install
 
 ### Run ###
 
-1. run mongodb  
+1. run mongodb
+  
 2. run kf6 server  
 ```shell
 $ grunt serve
