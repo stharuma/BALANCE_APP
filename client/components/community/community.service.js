@@ -66,13 +66,16 @@ angular.module('kf6App')
         };
 
         /* this should be refresh */
-        var updateCommunityMembers = function() {
+        var updateCommunityMembers = function(handler) {
             $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
                 authors.forEach(function(each) {
                     var author = getMember(each._id);
                     _.extend(author, each);
                     author.name = author.getName();
                 });
+                if (handler) {
+                    handler();
+                }
             });
         };
 
@@ -233,7 +236,6 @@ angular.module('kf6App')
                 permission: 'public',
             };
             _.extend(newobj, options);
-            console.log(newobj);
             $http.post('/api/contributions/' + communityId, newobj).success(function(view) {
                 if (noregistration === true) {
                     success(view);

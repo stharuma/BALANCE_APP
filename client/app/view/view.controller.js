@@ -510,6 +510,11 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
+        $scope.openAuthors = function() {
+            var url = '/authormanager/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
         $scope.createWorkspace = function(author, handler) {
             var title = author.getName() + '\'s workspace';
             $community.createView(title, function(view) {

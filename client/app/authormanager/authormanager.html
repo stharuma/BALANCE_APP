@@ -1,0 +1,10 @@
+<div class="col-md-12">
+    <div>
+        <label>Managers</label>
+        <ul>
+            <li ng-repeat="manager in getManagers()">{{manager.name}}<a ng-click="removeFromManager(manager)" class="trash"><span class="glyphicon glyphicon-trash"></span></a>
+            </li>
+        </ul>
+    </div>
+    <div style="width: 100%;" ng-include="'components/kfutils/authorselector/authorselector.html'"></div>
+</div>

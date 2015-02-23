@@ -48,7 +48,8 @@
 
     <div class="KFViewNavBar" ng-if="!menuStatus">
         <div class="KFCommunityTitle">{{community.community.title}}</div>
-        <div class="KFViewTitle">{{view.title}}<span ng-show="!isEditable()"> (read only)</span></div>
+        <div class="KFViewTitle">{{view.title}}<span ng-show="!isEditable()"> (read only)</span>
+        </div>
         <div class="KFUserName">{{community.author.getName()}} ({{community.author.role}})</div>
     </div>
 
@@ -81,6 +82,11 @@
         <span class="input-group">
             <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openScaffolds();"><img class="KFToolBarImage" src="manual_assets/kf6images/06-toolbar-scaffolds.png" title="Scaffolds"></button>            
+            </span>
+        </span>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAuthors();"><img class="KFToolBarImage" src="manual_assets/kf6images/12-users.png" title="Authors"></button>
             </span>
         </span>
         <span class="input-group">

@@ -28,8 +28,6 @@ exports.show = function(req, res) {
 // Creates a new KObject in the DB.
 exports.create = function(req, res) {
     if (!_.contains(req.body.authors, req.author._id.toString())) {
-        console.log(req.body.authors)
-        console.log(req.author._id);
         console.log('author must be included in authors.');
         return res.json(403);
     }
@@ -64,6 +62,11 @@ exports.update = function(req, res) {
         }
         if (!contribution) {
             return res.send(404);
+        }
+
+        // exceptional case restriction
+        if (contribution.type === 'Author' && contribution.role !== newobj.role && req.author.role !== 'manager') {
+            return res.send(403);
         }
 
         var updated = _.merge(contribution, newobj);
