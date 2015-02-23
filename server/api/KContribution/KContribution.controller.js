@@ -10,6 +10,12 @@ var KLinkController = require('../KLink/KLink.controller.js');
 
 // Creates a new contribution in the DB.
 exports.create = function(req, res) {
+    if (!_.contains(req.body.authors, req.author._id.toString())) {
+        console.log(req.body.authors)
+        console.log(req.author._id);
+        console.log('author must be included in authors.');
+        return res.json(403);
+    }
     KContribution.create(req.body, function(err, contribution) {
         if (err) {
             return handleError(res, err);
