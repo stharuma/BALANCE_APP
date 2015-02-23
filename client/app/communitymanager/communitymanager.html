@@ -1,5 +1,5 @@
 <div class="col-md-12" style="padding-left: 50px;">
-    <label>{{'Communities' | translate}}:</label>
+    <label>{{'COMMUNITIES' | translate}}:</label>
     <table>
         <tr ng-repeat="registration in myRegistrations">
             <td style="padding-left: 20px;">{{registration._community.title}}</td>
@@ -17,7 +17,7 @@
     <div style="padding-left: 50px;">
         <table>
             <tr>
-                <td style="text-align: right;">Community:</td>
+                <td style="text-align: right;">{{'COMMUNITY' | translate}}:</td>
                 <td>
                     <ui-select ng-model="selected.community" theme="bootstrap" ng-disabled="disabled" style="width: 400px;">
                         <ui-select-match placeholder="Select community...">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
