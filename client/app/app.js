@@ -1,5 +1,43 @@
 'use strict';
 
+var translations_en = {
+    'Hello': 'Hello',
+    'Admin': 'Admin',
+    'COMMUNITIES': 'Communities',
+    'COMMUNITY': 'Community',
+    'COMMUNITY_JOIN': 'Join Community',
+    'EMAIL': 'Email',
+    'FULLNAME': 'Name',
+    'LOGIN': 'Login',
+    'LOGIN_ERROR_NAMEANDPASS' : 'Please enter your email and password.',
+    'LOGIN_ERROR_EMAIL' : 'Please enter a valid email.',
+    'PASSWORD': 'Password',
+    'REGISTER': 'Register',
+    'REGISTER_ERROR_FULLNAME': 'A name is required',
+    'REGISTER_ERROR_EMAIL_INVALID': 'Doesn\'t look like a valid email.',
+    'REGISTER_ERROR_EMAIL_MISSING': 'What\'s your email address?',
+    'REGISTER_ERROR_PASSWORD': 'Password must be at least 3 characters.'
+};
+
+var translations_fr = {
+    'Hello': 'Bonjour',
+    'Admin': 'Administration',
+    'COMMUNITIES': 'Communautés',
+    'COMMUNITY': 'Communauté',
+    'COMMUNITY_JOIN': 'Joindre une communauté',
+    'EMAIL': 'Courriel',
+    'FULLNAME': 'Nom complet',
+    'LOGIN': 'Connexion',
+    'LOGIN_ERROR_NAMEANDPASS' : 'Veuillez saisir votre courriel et mot de passe.',
+    'LOGIN_ERROR_EMAIL' : 'Veuillez saisir une adresse de courriel valide.',
+    'PASSWORD': 'Mot de passe',
+    'REGISTER': 'Inscription',
+    'REGISTER_ERROR_FULLNAME': 'Veuillez saisir un nom complet.',
+    'REGISTER_ERROR_EMAIL_INVALID': 'Veuillez saisir une adresse de courriel valide.',
+    'REGISTER_ERROR_EMAIL_MISSING': 'Veuillez saisir une adresse de courriel.',
+    'REGISTER_ERROR_PASSWORD': 'Le mot de passe doit comporter au moins 3 caractères.'
+};
+
 angular.module('kf6App', [
         'ngCookies',
         'ngResource',
@@ -27,41 +65,12 @@ angular.module('kf6App', [
         $httpProvider.interceptors.push('authInterceptor');
     })
     .config(['$translateProvider', function($translateProvider) {
-        $translateProvider.translations('en', {
-            'Hello': 'Hello',
-            'Admin': 'Admin',
-            'COMMUNITIES': 'Communities',
-            'COMMUNITY': 'Community',
-            'COMMUNITY_JOIN': 'Join Community',
-            'EMAIL': 'Email',
-            'FULLNAME': 'Name',
-            'LOGIN': 'Login',
-            'PASSWORD': 'Password',
-            'REGISTER': 'Register',
-            'REGISTER_ERROR_FULLNAME': 'A name is required',
-            'REGISTER_ERROR_EMAIL_INVALID': 'Doesn\'t look like a valid email.',
-            'REGISTER_ERROR_EMAIL_MISSING': 'What\'s your email address?',
-            'REGISTER_ERROR_PASSWORD': 'Password must be at least 3 characters.'
-        });
-
-        $translateProvider.translations('fr', {
-            'Hello': 'Bonjour',
-            'Admin': 'Administration',
-            'COMMUNITIES': 'Communautés',
-            'COMMUNITY': 'Communauté',
-            'COMMUNITY_JOIN': 'Joindre une communauté',
-            'EMAIL': 'Courriel',
-            'FULLNAME': 'Nom complet',
-            'LOGIN': 'Connexion',
-            'PASSWORD': 'Mot de passe',
-            'REGISTER': 'Inscription',
-            'REGISTER_ERROR_FULLNAME': 'Veuillez saisir un nom complet.',
-            'REGISTER_ERROR_EMAIL_INVALID': 'Veuillez saisie une adresse de courriel valide.',
-            'REGISTER_ERROR_EMAIL_MISSING': 'Veuillez sairsir une adresse de courriel.',
-            'REGISTER_ERROR_PASSWORD': 'Le mot de passe doit comporter au moins 3 caractères.'
-        });
-
-        $translateProvider.preferredLanguage('fr');
+        $translateProvider
+            .translations('en', translations_en)
+            .translations('fr', translations_fr)    
+            .registerAvailableLanguageKeys(['en','fr'])
+            .determinePreferredLanguage();
+            //.preferredLanguage('fr');
     }])
 
 .factory('authInterceptor', function($rootScope, $q, $cookieStore, $location) {
