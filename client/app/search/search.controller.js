@@ -113,7 +113,6 @@ angular.module('kf6App')
             return query;
         }
 
-
         $scope.openFrom = function($event) {
             $event.preventDefault();
             $event.stopPropagation();
@@ -141,6 +140,10 @@ angular.module('kf6App')
 
         $scope.authorSelected = function(author) {
             $scope.queryString += ' -author:' + author.userName;
+        };
+
+        $scope.makeAuthorString = function(obj) {
+            return $community.makeAuthorStringByIds(obj.authors);
         };
 
     });

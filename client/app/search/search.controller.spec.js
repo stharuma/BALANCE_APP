@@ -1,21 +1,21 @@
 'use strict';
 
-describe('Controller: SearchCtrl', function () {
+describe('Controller: SearchCtrl', function() {
 
-  // load the controller's module
-  beforeEach(module('kf6App'));
+    // load the controller's module
+    beforeEach(module('kf6App'));
 
-  var SearchCtrl, scope;
+    var SearchCtrl, scope;
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    SearchCtrl = $controller('SearchCtrl', {
-      $scope: scope
+    // Initialize the controller and a mock scope
+    beforeEach(inject(function($controller, $rootScope) {
+        scope = $rootScope.$new();
+        SearchCtrl = $controller('SearchCtrl', {
+            $scope: scope
+        });
+    }));
+
+    it('should ...', function() {
+        expect(1).toEqual(1);
     });
-  }));
-
-  it('should ...', function () {
-    expect(1).toEqual(1);
-  });
 });
