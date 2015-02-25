@@ -2,7 +2,7 @@
 
 angular.module('kf6App')
     .factory('$community', function($http, Auth) {
-        
+
         var userId = null;
         var communityId = null;
 
@@ -13,6 +13,8 @@ angular.module('kf6App')
         // We need to hold two forms, because those collections might be watched by angular
         communityData.members = {};
         communityData.membersArray = [];
+        communityData.groups = {};
+        communityData.groupsArray = [];
         communityData.scaffolds = [];
 
         var enter = function(newId, authorHandler) {
@@ -328,6 +330,21 @@ angular.module('kf6App')
             });
         };
 
+        var createGroup = function(title, success) {
+            var newobj = {
+                communityId: communityId,
+                type: 'Group',
+                title: title,
+                authors: [getAuthor()._id],
+                members: [getAuthor()._id],
+                status: 'active',
+                permission: 'protected'
+            };
+            $http.post('/api/groups/' + communityId, newobj).success(function(group) {
+                success(group);
+            });
+        };
+
         var updateCommunity = function(obj, success) {
             var url = 'api/communities/' + communityId;
             $http.get(url).success(function(community) {
@@ -403,6 +420,25 @@ angular.module('kf6App')
             });
         };
 
+        var getGroups = function(success, error) {
+            $http.get('/api/communities/' + communityId + '/groups').success(function(groups) {
+                communityData.groupsArray.length = 0;
+                groups.forEach(function(each) {
+                    communityData.groups[each._id] = each;
+                    communityData.groupsArray.push(each);
+                });
+                if (success) {
+                    success(groups);
+                }
+            }).error(function(data) {
+                if (error) {
+                    error(data);
+                } else {
+                    window.alert('error on getGroups: ' + data);
+                }
+            });
+        };
+
         var getObject = function(id, success, error) {
             $http.get('/api/objects/' + id).success(function(obj) {
                 if (success) {
@@ -431,6 +467,7 @@ angular.module('kf6App')
             //login: login,
             enter: enter,
             getMember: getMember,
+            getGroups: getGroups,
             updateCommunityMembers: updateCommunityMembers,
             createAttachment: createAttachment,
             createNote: createNote,
@@ -439,6 +476,7 @@ angular.module('kf6App')
             createView: createView,
             createScaffold: createScaffold,
             createSupport: createSupport,
+            createGroup: createGroup,
             createDefaultScaffold: createDefaultScaffold,
             fillSupport: fillSupport,
             removeView: removeView,

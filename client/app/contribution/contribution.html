@@ -62,6 +62,10 @@
                             <a ng-click="downloadAttachment(contribution)">Download</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
                         </div>
                     </div>
+
+                    <div ng-if="contribution.type === 'Group'">
+                        <div ng-include="'components/kfutils/group/groupreader.html'"></div>
+                    </div>
                 </div>
             </tab>
             <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="status.edittabActive" select="editSelected()">
@@ -119,6 +123,10 @@
                     <div ng-if="contribution.type === 'Drawing'">
                         <div id="svgeditdiv"></div>
                     </div>
+                    <div ng-if="contribution.type === 'Group'">
+                        <div ng-include="'components/kfutils/group/groupeditor.html'"></div>
+                    </div>
+
                 </div>
             </tab>
 
@@ -136,6 +144,11 @@
                                         <button ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
                                     </li>
                                 </ul>
+                                <h4>Group:</h4>
+                                <div> <a ng-href="contribution/{{contribution.group}}">{{contribution.getGroupName()}}</a> </div>
+                                <div ng-show="isEditable()">
+                                    <select ng-model="selected.group" ng-options="g.title for g in community.groupsArray"> </select>
+                                </div>
                             </td>
                             <td width="100%" valign="top">
                                 <div ng-show="isEditable()">
@@ -241,12 +254,14 @@
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td>Authors</td>
+                                    <td>Group Members</td>
                                     <td>Others</td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <input type="radio" ng-model="contribution.permission" value="private">&nbsp;private
                                     </td>
+                                    <td>rw</td>
                                     <td>rw</td>
                                     <td>-</td>
                                 </tr>
@@ -255,12 +270,14 @@
                                         <input type="radio" ng-model="contribution.permission" value="protected">&nbsp;protected
                                     </td>
                                     <td>rw</td>
+                                    <td>rw</td>
                                     <td>r</td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <input type="radio" ng-model="contribution.permission" value="public">&nbsp;public
                                     </td>
+                                    <td>rw</td>
                                     <td>rw</td>
                                     <td>rw</td>
                                 </tr>

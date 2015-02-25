@@ -33,6 +33,8 @@ angular.module('kf6App')
         $scope.images = [];
         $scope.selected = {};
 
+        $scope.preContributeHooks = [];
+
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
                 var item = window.localStorage.getItem('kfdoc');
@@ -70,15 +72,33 @@ angular.module('kf6App')
                 $scope.contribution.authors.forEach(function(authorId) {
                     $scope.authors.push($community.getMember(authorId));
                 });
-                $scope.updateRecords();
-                $scope.communityMembers = $community.getMembersArray();
-                $community.updateCommunityMembers();
+                $scope.contribution.getGroupName = function() {
+                    var groupId = $scope.contribution.group;
+                    if (!groupId) {
+                        return '(none)';
+                    }
+                    var group = $scope.community.groups[groupId];
+                    if (!group) {
+                        return groupId + ' (loading)';
+                    }
+                    return group.title;
+                };
+                $scope.$watch('selected.group', function() {
+                    if ($scope.selected.group) {
+                        $scope.contribution.group = $scope.selected.group._id;
+                    }
+                });
+
                 $scope.updateToConnections(function() {
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();
                         $scope.updateAttachments(links);
                     });
                 });
+                $scope.updateRecords();
+                $scope.communityMembers = $community.getMembersArray();
+                $community.updateCommunityMembers();
+                $community.getGroups(function() {});
                 if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }
@@ -191,10 +211,15 @@ angular.module('kf6App')
 
             $scope.status.isContributionCollapsed = false;
             $scope.status.contribution = 'saving';
+
+            $scope.preContributeHooks.forEach(function(each) {
+                each();
+            });
+
             cont.authors = _.pluck($scope.authors, '_id');
 
-            $scope.contribution.keywords = [];
             if ($scope.copy.keywords) {
+                $scope.contribution.keywords = [];
                 var keywordsArray = $scope.copy.keywords.split(';');
                 keywordsArray.forEach(function(keyword) {
                     var word = keyword.trim();

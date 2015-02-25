@@ -9,6 +9,7 @@ var errors = require('./components/errors');
 module.exports = function(app) {
 
     // Insert routes below
+    app.use('/api/groups', require('./api/KGroup'));
     app.use('/api/historicalobjects/', require('./api/KHistoricalObject'));
     app.use('/api/communities', require('./api/KCommunity'));
     app.use('/api/objects', require('./api/KObject'));

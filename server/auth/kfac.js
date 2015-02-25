@@ -28,7 +28,7 @@ var kfac = function() {
         if (!object || !author) {
             return false;
         }
-        
+
         if (author.role === 'manager') {
             return true;
         }
@@ -38,13 +38,24 @@ var kfac = function() {
         }
 
         //author requirement
-        return isAuthor(object, author);
+        return isAuthorOrGroupMember(object, author);
+    };
+
+    var isAuthorOrGroupMember = function(object, author) {
+        return isAuthor(object, author) || isGroupMember(object, author);
     };
 
     var isAuthor = function(object, author) {
         //This is not work because ObjectId object is different
         //return _.contains(object.authors, author._id.toString());
         return object.authors.indexOf(author._id) >= 0;
+    };
+
+    var isGroupMember = function(object, author) {
+        if (!object._groupMembers) {
+            return false;
+        }
+        return object._groupMembers.indexOf(author._id) >= 0;
     };
 
     return {
@@ -59,7 +70,7 @@ if (typeof exports !== 'undefined') {
         exports = module.exports = kfac;
     }
     exports.kfac = kfac;
-} 
+}
 // else {
 //     root['kfac'] = kfac;
 // }

@@ -1,0 +1,21 @@
+<div class="col-md-12">
+    This is the groupmanager view.
+    <div>
+        <label>Groups</label>
+        <ul>
+            <li ng-repeat="group in groups">
+                <a class="KFGroupManagerAnchor" ng-click="selectGroup(group)">{{group.title}}</a> &nbsp;&nbsp;
+                <a class="KFGroupManagerAnchor trash" ng-click="removeGroup(group)"><span class="glyphicon glyphicon-trash"></span></a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <label>New Group</label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="Input New Group Title" ng-model="input.groupTitle">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary" ng-click="addGroup()">Add New Group</button>
+             </span>
+        </p>
+    </div>
+</div>

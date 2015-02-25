@@ -6,6 +6,7 @@ var _ = require('lodash');
 var KCommunity = require('./KCommunity.model');
 var KContribution = require('../KContribution/KContribution.model');
 var KAuthor = require('../KAuthor/KAuthor.model');
+var KGroup = require('../KGroup/KGroup.model');
 
 // Get list of communitys
 exports.index = function(req, res) {
@@ -65,7 +66,8 @@ function toIds(array, paramName) {
 // Get authors of the community
 exports.showauthors = function(req, res) {
     KAuthor.find({
-        communityId: req.params.id
+        communityId: req.params.id,
+        status: 'active'
     }, function(err, authors) {
         if (err) {
             return handleError(res, err);
@@ -73,6 +75,20 @@ exports.showauthors = function(req, res) {
         return res.json(authors);
     });
 };
+
+// Get groups of the community
+exports.showgroups = function(req, res) {
+    KGroup.find({
+        communityId: req.params.id,
+        status: 'active'
+    }, function(err, groups) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(groups);
+    });
+};
+
 
 // Creates a new community in the DB.
 exports.create = function(req, res) {

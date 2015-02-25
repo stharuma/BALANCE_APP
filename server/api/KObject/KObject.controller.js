@@ -78,10 +78,17 @@ exports.update = function(req, res) {
             updated.keywords = newobj.keywords;
             updated.markModified('keywords');
         }
+        if (newobj.members) {
+            updated.members = newobj.members;
+            updated.markModified('members');
+        }
         if (newobj.data) {
             updated.markModified('data');
         }
         updated.modified = Date.now();
+        if (updated.group !== newobj.group) {
+            updated._groupMembers = null;
+        }
         updated.save(function(err, newContribution) {
             if (err) {
                 return handleError(res, err);
