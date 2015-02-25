@@ -130,17 +130,17 @@ angular.module('kf6App')
 
         $scope.$watch('from', function() {
             if ($scope.from !== undefined) {
-                $scope.query += ' -from:' + $scope.from.toISOString();
+                $scope.queryString += ' -from:' + $scope.from.toISOString();
             }
         });
         $scope.$watch('to', function() {
             if ($scope.to !== undefined) {
-                $scope.query += ' -to:' + $scope.to.toISOString();
+                $scope.queryString += ' -to:' + $scope.to.toISOString();
             }
         });
 
         $scope.authorSelected = function(author) {
-            $scope.query += ' -author:' + author.userName;
+            $scope.queryString += ' -author:' + author.userName;
         };
 
     });
