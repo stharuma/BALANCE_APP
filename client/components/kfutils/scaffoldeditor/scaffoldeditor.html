@@ -5,8 +5,8 @@
         <label>Supports</label>
         <ul>
             <li ng-repeat="supportref in contribution.supports">
-                <a ng-click="selectSupport(supportref)">{{supportref._to.title}}</a> &nbsp;&nbsp;
-                <button type="submit" class="btn btn-primary" ng-click="removeSupport(supportref)">x</button>
+                <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(supportref)">{{supportref._to.title}}</a> &nbsp;&nbsp;
+                <a class="KFGroupManagerAnchor trash" ng-click="removeSupport(supportref)"><span class="glyphicon glyphicon-trash"></span></a>
             </li>
         </ul>
     </div>
@@ -16,8 +16,8 @@
         <p class="input-group">
             <input type="text" class="form-control" placeholder="Input New Support Title" ng-model="input.supportTitle">
             <span class="input-group-btn">
-        		<button type="submit" class="btn btn-primary" ng-click="addSupport()">Add New Support</button>
-     		 </span>
+                <button type="submit" class="btn btn-primary" ng-click="addSupport()">Add New Support</button>
+             </span>
         </p>
     </div>
 </div>
