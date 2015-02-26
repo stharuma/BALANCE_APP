@@ -24,6 +24,42 @@ exports.index = function(req, res) {
     // });
 };
 
+function makeQuery(req) {
+    var queryStr = req.body.query ? req.body.query : '';
+    var regexpstr = '(?=.*' + queryStr + ').*';
+    var regexp = new RegExp(regexpstr, 'i');
+    return {
+        email: regexp
+    };
+}
+
+exports.searchCount = function(req, res) {
+    var query = makeQuery(req);
+    User.count(query, function(err, count) {
+        if (err) {
+            return handleError(res, err);
+        }
+        console.log(count);
+        return res.json(200, {
+            count: count
+        });
+    });
+};
+
+exports.search = function(req, res) {
+    var query = makeQuery(req);
+    var pagesize = req.body.pagesize ? req.body.pagesize : 10;
+    var page = req.body.page ? req.body.page : 1;
+    var skip = pagesize * (page - 1);
+    User.find(query).skip(skip).
+    limit(pagesize).exec(function(err, users) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, users);
+    });
+};
+
 exports.myRegistrations = function(req, res) {
     KAuthor.find({
         userId: req.user._id
@@ -48,7 +84,7 @@ exports.create = function(req, res, next) {
     }
     if (req.body.registrationKey !== 'kcreation') {
         return res.json(422, {
-            errorCode: 'invalidRegistrationKey'            
+            errorCode: 'invalidRegistrationKey'
         });
     }
 
@@ -106,12 +142,34 @@ exports.changePassword = function(req, res, next) {
         if (user.authenticate(oldPass)) {
             user.password = newPass;
             user.save(function(err) {
-                if (err) return validationError(res, err);
+                if (err) {
+                    return validationError(res, err);
+                }
                 res.send(200);
             });
         } else {
             res.send(403);
         }
+    });
+};
+
+
+exports.forceUpdate = function(req, res, next) {
+    var userId = req.params.id;
+    User.findById(userId, function(err, user) {
+        if (err) {
+            return validationError(res, err);
+        }
+        if (!user) {
+            return res.send(403);
+        }
+        user.password = req.body.password;
+        user.save(function(err) {
+            if (err) {
+                return validationError(res, err);
+            }
+            res.send(200);
+        });
     });
 };
 

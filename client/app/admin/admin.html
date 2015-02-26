@@ -1,12 +1,38 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
-  <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
-  <ul class="list-group">
-    <li class="list-group-item" ng-repeat="user in users">
-        <strong>{{user.name}}</strong><br>
-        <span class="text-muted">{{user.email}}</span>
-        <a ng-click="delete(user)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
-    </li>
-  </ul>
+    <label>User Management:</label>
+    <p class="input-group">
+        <input type="text" class="form-control" placeholder="filter text here." ng-model="queryString">
+        <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="count()">Filter</button>
+      </span>
+    </p>
+
+    <div>
+        <div style="float: right;">
+            <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="width: 100%; float: left; text-align: right;">
+            CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} users were found.
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div style="height: 10px;"></div>
+    <div>
+        <table style="width: 100%;">
+            <tr ng-repeat="user in users">
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td>
+                    <span class="text-muted">{{user.email}}</span>
+                </td>
+                <td style="text-align: right;">
+                    <input type="text" placeholder="new password here." ng-model="user.password">
+                    <button ng-click="resetPassword(user)" class="trash">Reset</button>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
