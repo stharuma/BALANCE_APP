@@ -4,7 +4,7 @@ angular.module('kf6App')
     .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
-        $community.updateCommunityMembers();
+        $community.refreshMembers();
         $scope.communityMembers = $community.getCommunityData().membersArray;
 
         $kfutil.mixIn($scope);

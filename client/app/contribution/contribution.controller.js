@@ -98,7 +98,7 @@ angular.module('kf6App')
                 });
                 $scope.updateRecords();
                 $scope.communityMembers = $community.getMembersArray();
-                $community.updateCommunityMembers();
+                $community.refreshMembers();
                 if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }

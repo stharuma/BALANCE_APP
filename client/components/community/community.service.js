@@ -33,7 +33,7 @@ angular.module('kf6App')
                 refreshAuthor(authorHandler);
                 refreshCommunity();
                 refreshViews();
-                //updateCommunityMembers(); // it takes cost
+                //refreshMembers(); // it takes cost
             } else {
                 if (authorHandler) {
                     authorHandler();
@@ -72,7 +72,7 @@ angular.module('kf6App')
         };
 
         /* this should be refresh */
-        var updateCommunityMembers = function(handler) {
+        var refreshMembers = function(handler) {
             $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
                 authors.forEach(function(each) {
                     var author = getMember(each._id);
@@ -482,12 +482,12 @@ angular.module('kf6App')
         };
 
         return {
-            //login: login,
             enter: enter,
             getMember: getMember,
+            refreshMembers: refreshMembers,            
+            getGroup: getGroup,            
             refreshGroups: refreshGroups,
-            getGroup: getGroup,
-            updateCommunityMembers: updateCommunityMembers,
+
             createAttachment: createAttachment,
             createNote: createNote,
             createNoteOn: createNoteOn,
@@ -507,7 +507,6 @@ angular.module('kf6App')
             modifyObject: modifyObject,
             getObject: getObject,
             read: read,
-            //saveRegistration: saveRegistration,
             getViews: function() {
                 return communityData.views;
             },

@@ -75,7 +75,7 @@ angular.module('kf6App')
                 refscopy.forEach(function(ref) {
                     $scope.updateRef(ref);
                 });
-                $community.updateCommunityMembers();
+                $community.refreshMembers();
 
                 //update links
                 $scope.refreshAllConnections();

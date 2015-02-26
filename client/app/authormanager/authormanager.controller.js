@@ -10,7 +10,7 @@ angular.module('kf6App')
         };
         if ($stateParams.communityId) {
             $community.enter($stateParams.communityId, function() {
-                $community.updateCommunityMembers(function() {});
+                $community.refreshMembers(function() {});
             });
         }
 
