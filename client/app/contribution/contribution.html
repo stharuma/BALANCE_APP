@@ -194,16 +194,24 @@
                 <div>
                     <label>Views for this note:</label>
                     <ul>
-                        <li ng-repeat="conn in toConnections" ng-if="conn.type==='contains'">
+                        <li ng-repeat="conn in toConnections" ng-if="conn.type ==='contains' && conn._from.type === 'View'">
                             <a href="/view/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
                         </li>
                     </ul>
                 </div>
-                <div>
+                <div ng-show="contribution.type === 'Note'">
                     <label>This note is supported by:</label>
                     <ul>
                         <li ng-repeat="conn in toConnections" ng-if="conn.type==='supports'">
                             <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div ng-show="contribution.type === 'Support'">
+                    <label>This support supports:</label>
+                    <ul>
+                        <li ng-repeat="conn in fromConnections" ng-if="conn.type==='supports'">
+                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
                         </li>
                     </ul>
                 </div>
