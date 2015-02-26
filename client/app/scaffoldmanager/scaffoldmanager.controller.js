@@ -44,7 +44,8 @@ angular.module('kf6App')
         };
 
         $scope.editScaffold = function(scaffold) {
-            $scope.selected.scaffold = scaffold;
+            var url = 'contribution/' + scaffold._id;
+            window.open(url, '_blank');
         };
 
         $scope.saveOrder = function() {

@@ -500,9 +500,9 @@ angular.module('kf6App')
             }
             // content tag for text selection after insert
             var supportContentId = new Date().getTime().toString();
-            var contentTag = '<span id="' + supportContentId + '"></span>';
+            var contentTagStr = '<span id="' + supportContentId + '"></span>';
 
-            var text = ' -&nbsp;' + contentTag + initialText + '&nbsp;- ';
+            var text = ' -&nbsp;' + contentTagStr + initialText + '&nbsp;- ';
 
             // insert
             var id = supportLink.to;
