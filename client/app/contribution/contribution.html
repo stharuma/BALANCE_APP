@@ -145,9 +145,16 @@
                                     </li>
                                 </ul>
                                 <h4>Group:</h4>
-                                <div> <a ng-href="contribution/{{contribution.group}}">{{contribution.getGroupName()}}</a> </div>
-                                <div ng-show="isEditable()">
-                                    <select ng-model="selected.group" ng-options="g.title for g in community.groupsArray"> </select>
+                                <div style="padding-left: 30px;">
+                                    <div ng-if="!isEditable()">
+                                        <a ng-href="contribution/{{contribution.group}}">{{selected.group.title}}</a>
+                                    </div>
+                                    <div ng-if="isEditable()">
+                                        <select ng-model="selected.group" ng-options="g.title for g in community.groupsArray" ng-change="updateDirtyStatus()"></select>
+                                        <div ng-show="selected.group._id" style="padding: 10px 10px;">
+                                            click <a ng-href="contribution/{{contribution.group}}">here</a> to check member(s)
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                             <td width="100%" valign="top">

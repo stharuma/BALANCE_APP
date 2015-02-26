@@ -83,12 +83,13 @@ angular.module('kf6App')
                     }
                     return group.title;
                 };
+                $scope.selected.group = $community.getGroup($scope.contribution.group);
                 $scope.$watch('selected.group', function() {
                     if ($scope.selected.group) {
                         $scope.contribution.group = $scope.selected.group._id;
                     }
                 });
-
+                $community.getGroups();
                 $scope.updateToConnections(function() {
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();
@@ -98,7 +99,6 @@ angular.module('kf6App')
                 $scope.updateRecords();
                 $scope.communityMembers = $community.getMembersArray();
                 $community.updateCommunityMembers();
-                $community.getGroups(function() {});
                 if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }

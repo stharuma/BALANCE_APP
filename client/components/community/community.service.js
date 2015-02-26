@@ -18,6 +18,9 @@ angular.module('kf6App')
         communityData.scaffolds = [];
 
         var enter = function(newId, authorHandler) {
+            if (communityData.groupsArray.length === 0) {
+                getGroup(null);
+            }
             if (!newId) {
                 console.warn('bad newId: ' + newId);
                 return;
@@ -420,12 +423,28 @@ angular.module('kf6App')
             });
         };
 
+        var getGroup = function(id) {
+            if (!(id in communityData.groups)) {
+                var group = createGroupSkelton(id);
+                communityData.groups[id] = group;
+                communityData.groupsArray.push(group);
+            }
+            return communityData.groups[id];
+        };
+
+        var createGroupSkelton = function(id) {
+            return {
+                _id: id,
+                title: 'none'
+            };
+        };
+
+        /* the name of this method should be changed to refresh */
         var getGroups = function(success, error) {
             $http.get('/api/communities/' + communityId + '/groups').success(function(groups) {
-                communityData.groupsArray.length = 0;
                 groups.forEach(function(each) {
-                    communityData.groups[each._id] = each;
-                    communityData.groupsArray.push(each);
+                    var group = getGroup(each._id);
+                    _.extend(group, each);
                 });
                 if (success) {
                     success(groups);
@@ -468,6 +487,7 @@ angular.module('kf6App')
             enter: enter,
             getMember: getMember,
             getGroups: getGroups,
+            getGroup: getGroup,
             updateCommunityMembers: updateCommunityMembers,
             createAttachment: createAttachment,
             createNote: createNote,
