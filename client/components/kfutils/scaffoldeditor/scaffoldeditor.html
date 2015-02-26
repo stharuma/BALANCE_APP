@@ -3,9 +3,9 @@
 
     <div>
         <label>Supports</label>
-        <ul>
+        <ul ui-sortable ng-model="contribution.supports">
             <li ng-repeat="supportref in contribution.supports">
-                <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(supportref)">{{supportref._to.title}}</a> &nbsp;&nbsp;
+                <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(supportref)">{{supportref._to.title}}</a>&nbsp;&nbsp;
                 <a class="KFGroupManagerAnchor trash" ng-click="removeSupport(supportref)"><span class="glyphicon glyphicon-trash"></span></a>
             </li>
         </ul>

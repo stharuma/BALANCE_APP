@@ -11,6 +11,23 @@ angular.module('kf6App')
 
         $scope.update();
 
+        $scope.preContributeHooks.push(function() {
+            if (!$scope.contribution.supports) {
+                console.error('contribution.supports is not set.');
+                return;
+            }
+
+            var order = 0;
+            $scope.contribution.supports.forEach(function(each) {
+                if (!each.data) {
+                    each.data = {};
+                }
+                order++;
+                each.data.order = order;
+                $http.put('/api/links/' + each._id, each);
+            });
+        });
+
         $scope.addSupport = function() {
             if ($scope.input.supportTitle === '') {
                 return;
@@ -30,7 +47,7 @@ angular.module('kf6App')
                 console.error('contribution is not set.');
                 return;
             }
-            var confirmation = window.confirm('Are you sure to delete ' + supportref.toTitle + '?');
+            var confirmation = window.confirm('Are you sure to delete ' + supportref._to.title + '?');
             if (!confirmation) {
                 return;
             }
