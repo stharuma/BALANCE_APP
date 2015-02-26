@@ -8,18 +8,16 @@
         <div class="col-sm-12">
             <form class="form" name="form" ng-submit="register(form)" novalidate>
 
-                <div class="form-group" ng-class="{ 'has-success': form.firstName.$valid && submitted,
-                                            'has-error': form.name.$invalid && submitted }">
+                <div class="form-group" ng-class="{ 'has-success': form.firstName.$valid && submitted, 'has-error': form.firstName.$invalid && submitted }">
                     <label>First Name</label>
 
                     <input type="text" name="firstName" class="form-control" ng-model="user.firstName" required/>
-                    <p class="help-block" ng-show="form.name.$error.required && submitted">
+                    <p class="help-block" ng-show="form.firstName.$error.required && submitted">
                         A first name is required
                     </p>
                 </div>
 
-                <div class="form-group" ng-class="{ 'has-success': form.lastName.$valid && submitted,
-                                            'has-error': form.lastName.$invalid && submitted }">
+                <div class="form-group" ng-class="{ 'has-success': form.lastName.$valid && submitted, 'has-error': form.lastName.$invalid && submitted }">
                     <label>Last Name</label>
 
                     <input type="text" name="name" class="form-control" ng-model="user.lastName" required/>
@@ -28,8 +26,7 @@
                     </p>
                 </div>
 
-                <div class="form-group" ng-class="{ 'has-success': form.email.$valid && submitted,
-                                            'has-error': form.email.$invalid && submitted }">
+                <div class="form-group" ng-class="{ 'has-success': form.email.$valid && submitted, 'has-error': form.email.$invalid && submitted }">
                     <label>Email</label>
 
                     <input type="email" name="email" class="form-control" ng-model="user.email" required mongoose-error/>
@@ -44,16 +41,23 @@
                     </p>
                 </div>
 
-                <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted,
-                                            'has-error': form.password.$invalid && submitted }">
+                <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted, 'has-error': form.password.$invalid && submitted }">
                     <label>Password</label>
 
-                    <input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength="3" required mongoose-error/>
+                    <input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength="4" required mongoose-error/>
                     <p class="help-block" ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
-                        Password must be at least 3 characters.
+                        Password must be at least 4 characters.
                     </p>
                     <p class="help-block" ng-show="form.password.$error.mongoose">
                         {{ errors.password }}
+                    </p>
+                </div>
+
+                <div class="form-group" ng-class="{ 'has-success': form.registrationKey.$valid && submitted, 'has-error': form.registrationKey.$invalid && submitted }">
+                    <label>User Registration Key:</label>
+                    <input type="text" name="registrationKey" class="form-control" ng-model="user.registrationKey" mongoose-error/>
+                    <p class="help-block" ng-show="form.registrationKey.$error.mongoose">
+                        RegistrationKey is not valid.
                     </p>
                 </div>
 
@@ -61,9 +65,6 @@
                     <button class="btn btn-inverse btn-lg btn-login" type="submit">
                         Sign up
                     </button>
-                    <a class="btn btn-default btn-lg btn-register" href="/login">
-            Login
-          </a>
                 </div>
 
                 <!-- <hr> -->

@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken');
 var KAuthor = require('../KAuthor/KAuthor.model');
 
 var validationError = function(res, err) {
+    console.error(err);
     return res.json(422, err);
 };
 
@@ -38,11 +39,26 @@ exports.myRegistrations = function(req, res) {
  * Creates a new user
  */
 exports.create = function(req, res, next) {
+
+    //Here is a temporary registration password system.
+    if (!req.body.registrationKey) {
+        return res.json(422, {
+            errorCode: 'invalidRegistrationKey'
+        });
+    }
+    if (req.body.registrationKey !== 'kcreation') {
+        return res.json(422, {
+            errorCode: 'invalidRegistrationKey'            
+        });
+    }
+
     var newUser = new User(req.body);
     newUser.provider = 'local';
     newUser.role = 'user';
     newUser.save(function(err, user) {
-        if (err) return validationError(res, err);
+        if (err) {
+            return validationError(res, err);
+        }
         var token = jwt.sign({
             _id: user._id
         }, config.secrets.session, {

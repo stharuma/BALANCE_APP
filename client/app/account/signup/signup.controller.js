@@ -11,9 +11,10 @@ angular.module('kf6App')
             if (form.$valid) {
                 Auth.createUser({
                         firstName: $scope.user.firstName,
-                        lastName: $scope.user.lastName,                        
+                        lastName: $scope.user.lastName,
                         email: $scope.user.email,
-                        password: $scope.user.password
+                        password: $scope.user.password,
+                        registrationKey: $scope.user.registrationKey
                     })
                     .then(function() {
                         // Account created, redirect to home
@@ -22,6 +23,12 @@ angular.module('kf6App')
                     .catch(function(err) {
                         err = err.data;
                         $scope.errors = {};
+
+                        if (err.errorCode) {
+                            $scope.errors = err;
+                            form.registrationKey.$setValidity('mongoose', false);
+                            return;
+                        }
 
                         // Update validity of form fields that match the mongoose errors
                         angular.forEach(err.errors, function(error, field) {
