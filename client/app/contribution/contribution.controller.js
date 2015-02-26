@@ -493,12 +493,16 @@ angular.module('kf6App')
             }
 
             // choose text
-            var text = '';
+            var initialText = '';
             var selected = $scope.mceEditor.selection.getContent();
             if (selected.length > 0) {
-                text = selected;
+                initialText = selected;
             }
-            text = ' -&nbsp;' + text + '&nbsp;- ';
+            // content tag for text selection after insert
+            var supportContentId = new Date().getTime().toString();
+            var contentTag = '<span id="' + supportContentId + '"></span>';
+
+            var text = ' -&nbsp;' + contentTag + initialText + '&nbsp;- ';
 
             // insert
             var id = supportLink.to;
@@ -507,13 +511,9 @@ angular.module('kf6App')
             $scope.mceEditor.insertContent(tag);
 
             // select text after insert
-            var startTag = $scope.mceEditor.dom.get(id);
-            if (startTag) {
-                var contentTag = startTag.nextSibling;
-                if (contentTag) {
-                    $scope.mceEditor.selection.setCursorLocation(contentTag, 3);
-                    //$scope.mceEditor.selection.select(contentTag, true);
-                }
+            var contentTag = $scope.mceEditor.dom.get(supportContentId);
+            if (contentTag) {
+                $scope.mceEditor.selection.setCursorLocation(contentTag);
             }
         };
 
