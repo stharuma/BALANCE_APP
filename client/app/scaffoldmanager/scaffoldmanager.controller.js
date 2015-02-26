@@ -10,7 +10,6 @@ angular.module('kf6App')
         $scope.status.isSavingProgressMonitorCollapsed = true;
 
         $scope.scaffolds = $community.getScaffolds();
-        $scope.selected = {};
         $community.refreshScaffolds(function() {});
 
         $scope.showSaved = function() {
@@ -50,6 +49,14 @@ angular.module('kf6App')
 
         $scope.saveOrder = function() {
             $scope.save();
+        };
+
+        $scope.isManager = function() {
+            var author = $community.getCommunityData().author;
+            if (!author) {
+                return false;
+            }
+            return author.role === 'manager';
         };
 
         $scope.save = function() {

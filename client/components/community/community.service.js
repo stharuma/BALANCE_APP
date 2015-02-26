@@ -159,8 +159,8 @@ angular.module('kf6App')
         };
 
         var fillSupport = function(scaffold, handler) {
-            scaffold.supports = [];
             $http.get('/api/links/from/' + scaffold._id).success(function(supports) {
+                scaffold.supports = [];
                 supports.forEach(function(support) {
                     scaffold.supports.push(support);
                 });

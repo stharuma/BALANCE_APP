@@ -66,6 +66,9 @@
                     <div ng-if="contribution.type === 'Group'">
                         <div ng-include="'components/kfutils/group/groupreader.html'"></div>
                     </div>
+                    <div ng-if="contribution.type === 'Scaffold'">
+                        <div ng-include="'components/kfutils/scaffoldeditor/scaffoldreader.html'"></div>
+                    </div>
                 </div>
             </tab>
             <tab class="KFTab" ng-show="isEditable()" heading="Edit" active="status.edittabActive" select="editSelected()">

@@ -10,21 +10,22 @@
 <div class="col-md-12">
     <div>
         <label>Scaffolds</label>
-        <div style="text-align: right;">
-            <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">edit</button>
-        </div>
         <ul ui-sortable style="cursor: move;" ng-model="scaffolds">
             <li ng-repeat="scaffold in scaffolds">
-                <a ng-click="editScaffold(scaffold)">{{scaffold.title}}</a> &nbsp;&nbsp;
-                <button ng-show="input.editMode" type="submit" class="btn btn-primary" ng-click="removeScaffold(scaffold)">x</button>
+                <a class="KFScaffoldManagerAnchor" ng-click="editScaffold(scaffold)">{{scaffold.title}}</a>
+                <span ng-show="isManager()">
+                    &nbsp;&nbsp;
+                    <a class="KFGroupManagerAnchor trash" ng-click="removeScaffold(scaffold)"><span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </span>
             </li>
         </ul>
-        <div ng-if="input.editMode" style="text-align: right;">
+        <div ng-show="isManager()" style="text-align: right;">
             <button type="submit" class="btn btn-primary" ng-click="saveOrder()">Save Order</button>
         </div>
     </div>
 
-    <div>
+    <div ng-show="isManager()">
         <label>New Scaffold</label>
         <p class="input-group">
             <input type="text" class="form-control" placeholder="Input New Scaffold Title" ng-model="input.scaffoldTitle">
@@ -32,11 +33,5 @@
                 <button type="submit" class="btn btn-primary" ng-click="addScaffold()">Add New Scaffold</button>
              </span>
         </p>
-    </div>
-
-    <div ng-if="selected.scaffold">
-        <hr>
-        <div ng-include="'app/scaffoldeditor/scaffoldeditor.html'" ng-controller="ScaffoldeditorCtrl">
-        </div>
     </div>
 </div>
