@@ -5,7 +5,7 @@ angular.module('kf6App')
 
         $scope.group = {};
 
-        $community.getGroups(function() {
+        $community.refreshGroups(function() {
             $scope.group = $scope.community.groups[$scope.contribution._id];
             $scope.group._members = [];
             $scope.group.members.forEach(function(authorId) {

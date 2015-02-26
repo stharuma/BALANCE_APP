@@ -4,7 +4,7 @@ angular.module('kf6App')
     .controller('GroupmanagerCtrl', function($scope, $community, $state, $stateParams) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
-        $community.getGroups(function(groups) {
+        $community.refreshGroups(function(groups) {
             $scope.groups = groups;
         });
 

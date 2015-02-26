@@ -89,7 +89,7 @@ angular.module('kf6App')
                         $scope.contribution.group = $scope.selected.group._id;
                     }
                 });
-                $community.getGroups();
+                $community.refreshGroups();
                 $scope.updateToConnections(function() {
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();

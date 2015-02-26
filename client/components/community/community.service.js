@@ -439,8 +439,7 @@ angular.module('kf6App')
             };
         };
 
-        /* the name of this method should be changed to refresh */
-        var getGroups = function(success, error) {
+        var refreshGroups = function(success, error) {
             $http.get('/api/communities/' + communityId + '/groups').success(function(groups) {
                 groups.forEach(function(each) {
                     var group = getGroup(each._id);
@@ -453,7 +452,7 @@ angular.module('kf6App')
                 if (error) {
                     error(data);
                 } else {
-                    window.alert('error on getGroups: ' + data);
+                    window.alert('error on refreshGroups: ' + data);
                 }
             });
         };
@@ -486,7 +485,7 @@ angular.module('kf6App')
             //login: login,
             enter: enter,
             getMember: getMember,
-            getGroups: getGroups,
+            refreshGroups: refreshGroups,
             getGroup: getGroup,
             updateCommunityMembers: updateCommunityMembers,
             createAttachment: createAttachment,
