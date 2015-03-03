@@ -76,9 +76,13 @@
 
     <script type="text/javascript" src="bower_components/tinymce/tinymce.min.js"></script>
     <!-- for IE by Yoshiaki -->
-    <!--[if IE]>
-        <script type="text/javascript" src="manual_components/tinymce-4.0.0/tinymce.min.js"></script>
-    <![endif]-->
+    <script type="text/javascript">
+    var ua = window.navigator.userAgent.toLowerCase();
+    var isIE = (ua.indexOf('msie') >= 0 || ua.indexOf('trident') >= 0)
+    if (isIE) {
+        document.write('<script type="text/javascript" src="manual_components/tinymce-4.0.0/tinymce.min.js"><\/script>');
+    }
+    </script>
     
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>

@@ -407,13 +407,18 @@ angular.module('kf6App')
                 e.stopPropagation();
                 ed.focus();
             });
-            //this was necessary 4.0.0 not necessary on 4.1.7
-            // ed.on('drop', function(e) {
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            //     var data = e.dataTransfer.getData('text/html');
-            //     tinymce.execCommand('mceInsertContent', true, data);
-            // });
+
+            // this is necessary 4.0 not necessary on 4.1.7
+            // 4.1.7 does not work in IE, 4.0 is used in IE
+            var version = tinymce.majorVersion + '.' + tinymce.minorVersion;            
+            if (version === '4.0') {
+                ed.on('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var data = e.dataTransfer.getData('text/html');
+                    tinymce.execCommand('mceInsertContent', true, data);
+                });
+            }
         };
 
         $scope.mceResize = function() {
