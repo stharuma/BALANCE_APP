@@ -332,13 +332,21 @@ angular.module('kf6App')
             if (conn) {
                 $('#' + fromId).on('$destroy', function() {
                     if (conn.detached !== true) {
-                        $scope.jsPlumb.detach(conn);
+                        try {
+                            $scope.jsPlumb.detach(conn);
+                        } catch (e) {
+                            console.error(e);
+                        }
                         conn.detached = true;
                     }
                 });
                 $('#' + toId).on('$destroy', function() {
                     if (conn.detached !== true) {
-                        $scope.jsPlumb.detach(conn);
+                        try {
+                            $scope.jsPlumb.detach(conn);
+                        } catch (e) {
+                            console.error(e);
+                        }
                         conn.detached = true;
                     }
                 });
