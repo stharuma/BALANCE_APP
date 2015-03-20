@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil) {
+    .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil, $ac) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
@@ -64,6 +64,14 @@ angular.module('kf6App')
             $http.post('/api/contributions/' + communityId + '/search', {
                 query: $scope.pager.query
             }).success(function(contributions) {
+                contributions.forEach(function(c){
+                    if(!$ac.isReadable(c)){
+                        c.title = 'forbidden';
+                        c.authors = [];
+                        c.data.body = '(forbidden)';
+                        c.created = null;
+                    }
+                });
                 $scope.contributions = contributions;
                 if (contributions.length > 0) {
                     $scope.status.status = 'searched';
