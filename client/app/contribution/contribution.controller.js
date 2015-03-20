@@ -332,8 +332,12 @@ angular.module('kf6App')
 
         $scope.buildson = function() {
             $community.createNoteOn($scope.contribution._id, function(newContribution) {
-                var url = './contribution/' + newContribution._id;
-                window.location = url;
+                if (window.openContribution) {
+                    window.openContribution(newContribution._id);
+                } else {
+                    var url = './contribution/' + newContribution._id;
+                    window.open(url, '_blank');
+                }
             });
         };
 
@@ -410,7 +414,7 @@ angular.module('kf6App')
 
             // this is necessary 4.0 not necessary on 4.1.7
             // 4.1.7 does not work in IE, 4.0 is used in IE
-            var version = tinymce.majorVersion + '.' + tinymce.minorVersion;            
+            var version = tinymce.majorVersion + '.' + tinymce.minorVersion;
             if (version === '4.0') {
                 ed.on('drop', function(e) {
                     e.preventDefault();

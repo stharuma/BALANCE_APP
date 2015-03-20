@@ -575,7 +575,7 @@ angular.module('kf6App')
                 }
             }
             var url = 'contribution/' + id;
-            $scope.openByInternalWindow(url);
+            return $scope.openByInternalWindow(url);
         };
 
         $scope.openView = function(id) {
@@ -639,7 +639,7 @@ angular.module('kf6App')
             if (height > hmax) {
                 height = hmax;
             }
-            $scope.openByIFrame(url, width, height);
+            return $scope.openByIFrame(url, width, height);
             //$scope.openInternally(url, width, height);
         };
 
@@ -672,6 +672,9 @@ angular.module('kf6App')
                     $(this).css('padding', '1px');
                     var contentWindow = document.getElementById(wid).contentWindow;
                     contentWindow.wid = wid;
+                    contentWindow.openContribution = function(id){
+                        return $scope.openContribution(id);
+                    };
                     contentWindow.setInternalWindowTitle = function(title) {
                         $('#' + wid).dialog('option', 'title', title);
                     };
@@ -680,6 +683,7 @@ angular.module('kf6App')
                     $(this).remove();
                 }
             });
+            return wid;        
         };
 
         /* ----------- context menu --------- */
