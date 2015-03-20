@@ -114,6 +114,14 @@ angular.module('kf6App')
                 return;
             }
 
+            // show only readable
+            if (!$ac.isReadable(ref._to)) {
+                _.remove($scope.refs, function(obj) {
+                    return obj === ref;
+                });
+                return;
+            }
+
             // adjust location
             if (ref.data) {
                 if (ref.data.x < 2) {

@@ -63,10 +63,15 @@ angular.module('kf6App')
             return fullfillRequirement(object, $community.getCommunityData().author, 'w');
         };
 
+        var isReadable = function(object) {
+            return fullfillRequirement(object, $community.getCommunityData().author, 'r');
+        };
+
         return {
             fullfillRequirement: fullfillRequirement,
             isAuthor: isAuthor,
             isEditable: isEditable,
+            isReadable: isReadable,            
             mixIn: function(scope, object) {
                 scope.isEditable = function() {
                     return isEditable(object);
