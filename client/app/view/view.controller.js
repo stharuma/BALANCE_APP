@@ -660,6 +660,8 @@ angular.module('kf6App')
         //     $('#' + wid).resizable();
         // }
 
+        var frames = [];
+
         $scope.openByIFrame = function(url, width, height) {
             windowIdNum++;
             var wid = 'window' + windowIdNum;
@@ -672,18 +674,37 @@ angular.module('kf6App')
                     $(this).css('padding', '1px');
                     var contentWindow = document.getElementById(wid).contentWindow;
                     contentWindow.wid = wid;
-                    contentWindow.openContribution = function(id){
+                    contentWindow.openContribution = function(id) {
                         return $scope.openContribution(id);
                     };
                     contentWindow.setInternalWindowTitle = function(title) {
                         $('#' + wid).dialog('option', 'title', title);
                     };
                 },
+                open: function() {
+                    var iwnd = $(this).parent();
+                    var x = iwnd.offset().left;
+                    var y = iwnd.offset().top;
+                    var offset = frames.length * 20;
+                    iwnd.offset({
+                        left: x + offset,
+                        top: y + offset
+                    });
+                    frames.push(wid);
+                },
+                drag: function() {
+                    _.remove(frames, function(n) {
+                        return n === wid;
+                    });
+                },
                 close: function() { /*we need to erase element*/
+                    _.remove(frames, function(n) {
+                        return n === wid;
+                    });
                     $(this).remove();
                 }
             });
-            return wid;        
+            return wid;
         };
 
         /* ----------- context menu --------- */
