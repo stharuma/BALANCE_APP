@@ -135,6 +135,60 @@ angular.module('kf6App')
     .directive('KFViewDropCanvas', function() {
         return {
             restrict: 'C',
+            link: function(scope, element) {
+                var $scope = scope;
+                element.bind('contextmenu', function(e) {
+                    var found = findObject(e);
+                    if (found) {
+                        var model = $scope.searchById($scope.refs, found.id);
+                        if (!model) {
+                            console.log('model is null for ' + found.id);
+                            return;
+                        }
+                        var confirmation = window.confirm('here is a fixed object, would you like to unfix?');
+                        if (confirmation) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            model.data.fixed = false;
+                            $scope.saveRef(model);
+                        }
+                    }
+                });
+
+                function findObject(e) {
+                    var mousePos = {
+                        x: e.offsetX,
+                        y: e.offsetY
+                    };
+
+                    var result = null;
+                    $('#viewcanvas').children().each(function(index, child) {
+                        if (contains(child, mousePos)) {
+                            result = child;
+                        }
+                    });
+                    return result;
+                }
+
+                function contains(element, p) {
+                    //var r = element.getBoundingClientRect();//this does not work
+                    var r = {
+                        left: element.offsetLeft,
+                        right: element.offsetLeft + element.offsetWidth,
+                        top: element.offsetTop,
+                        bottom: element.offsetTop + element.offsetHeight
+                    };
+                    return (r.left <= p.x && p.x <= r.right && r.top <= p.y && p.y <= r.bottom);
+                }
+            }
+        }
+    });
+
+
+angular.module('kf6App')
+    .directive('KFViewDropCanvas', function() {
+        return {
+            restrict: 'C',
             link: function(scope) {
                 var $scope = scope;
                 $scope.selected = [];
