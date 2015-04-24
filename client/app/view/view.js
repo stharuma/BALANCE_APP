@@ -53,7 +53,7 @@ angular.module('kf6App')
 
                 ref.refreshFixedStatus = function() {
                     if (ref.data.fixed === true) {
-                        element.css('z-index', 3);
+                        element.css('z-index', -1);
                         el.draggable = false;
                     } else {
                         element.css('z-index', 5);
