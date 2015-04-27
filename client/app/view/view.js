@@ -181,7 +181,7 @@ angular.module('kf6App')
                     return (r.left <= p.x && p.x <= r.right && r.top <= p.y && p.y <= r.bottom);
                 }
             }
-        }
+        };
     });
 
 
