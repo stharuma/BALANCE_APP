@@ -1,0 +1,6 @@
+.KFSearchResult td, th {
+    padding: 3px;
+}
+.KFSearchResult {
+    vertical-align: top;
+}
