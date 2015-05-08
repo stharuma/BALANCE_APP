@@ -2,10 +2,12 @@
 
 angular.module('kf6App')
     .controller('NavbarCtrl', function($scope, $location, Auth, $translate) {
+        /*
         $scope.menu = [{
             'title': 'Home',
             'link': '/'
         }];
+        */
 
         $scope.selectedLanguage = 'en';
         $scope.languages = ['en', 'fr'];
