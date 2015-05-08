@@ -3,42 +3,50 @@
 var translations_en = {
     'home': 'Home',
     'admin': 'Admin',
-    'COMMUNITIES': 'Communities',
-    'COMMUNITY': 'Community',
-    'COMMUNITY_JOIN': 'Join Community',
-    'EMAIL': 'Email',
-    'FULLNAME': 'Name',
-    'LOGIN': 'Login',
-    'LOGIN_ERROR_NAMEANDPASS' : 'Please enter your email and password.',
-    'LOGIN_ERROR_EMAIL' : 'Please enter a valid email.',
-    'PASSWORD': 'Password',
-    'REGISTER': 'Register',
-    'REGISTER_ERROR_FULLNAME': 'A name is required',
-    'REGISTER_ERROR_EMAIL_INVALID': 'Doesn\'t look like a valid email.',
-    'REGISTER_ERROR_EMAIL_MISSING': 'What\'s your email address?',
-    'REGISTER_ERROR_PASSWORD': 'Password must be at least 3 characters.',
-    'LOGOUT': 'Logout',
+    'communities': 'Communities',
+    'community': 'Community',
+    'community_join': 'Join Community',
+    'first_name': 'First Name',
+    'last_name': 'Last Name',
+    'email': 'Email',
+    'login': 'Login',
+    'login_error_nameAndPass' : 'Please enter your email and password.',
+    'login_error_email' : 'Please enter a valid email.',
+    'password': 'Password',
+    'register': 'Register',
+    'registration_key': 'Registration key',
+    'registration_key_invalid': 'Invalid registration key.',
+    'register_error_firstName' : 'A first name is required.',
+    'register_error_lastName': 'A last name is required.',
+    'register_error_email_invalid': 'Doesn\'t look like a valid email.',
+    'register_error_email_missing': 'What\'s your email address?',
+    'register_error_password': 'Password must be at least 3 characters.',
+    'logout': 'Logout',
     'community_enter': 'Accéder à la commmunauté'
 };
 
 var translations_fr = {
     'home': 'Accueil',
     'admin': 'Administration',
-    'COMMUNITIES': 'Communautés',
-    'COMMUNITY': 'Communauté',
-    'COMMUNITY_JOIN': 'Joindre une communauté',
-    'EMAIL': 'Courriel',
-    'FULLNAME': 'Nom complet',
-    'LOGIN': 'Connexion',
-    'LOGIN_ERROR_NAMEANDPASS' : 'Veuillez saisir votre courriel et mot de passe.',
-    'LOGIN_ERROR_EMAIL' : 'Veuillez saisir une adresse de courriel valide.',
-    'PASSWORD': 'Mot de passe',
-    'REGISTER': 'Inscription',
-    'REGISTER_ERROR_FULLNAME': 'Veuillez saisir un nom complet.',
-    'REGISTER_ERROR_EMAIL_INVALID': 'Veuillez saisir une adresse de courriel valide.',
-    'REGISTER_ERROR_EMAIL_MISSING': 'Veuillez saisir une adresse de courriel.',
-    'REGISTER_ERROR_PASSWORD': 'Le mot de passe doit comporter au moins 3 caractères.',
-    'LOGOUT': 'Déconnexion',
+    'communities': 'Communautés',
+    'community': 'Communauté',
+    'community_join': 'Joindre une communauté',
+    'first_name': 'Prénom',
+    'last_name': 'Nom',
+    'email': 'Courriel',
+    'login': 'Connexion',
+    'login_error_nameAndPass' : 'Veuillez saisir votre courriel et mot de passe.',
+    'login_error_email' : 'Veuillez saisir une adresse de courriel valide.',
+    'password': 'Mot de passe',
+    'register': 'Inscription',
+    'registration_key': 'Code d\'inscription',
+    'registration_key_invalid': 'Code d\'inscription invalide.',    
+    'register_error_firstName' : 'Veuillez saisir un prénom.',
+    'register_error_lastName': 'Veuillez saisir un nom.',
+    'register_error_email_invalid': 'Veuillez saisir une adresse de courriel valide.',
+    'register_error_email_missing': 'Veuillez saisir une adresse de courriel.',
+    'register_error_password': 'Le mot de passe doit comporter au moins 3 caractères.',
+    'logout': 'Déconnexion',
     'community_enter': 'Accéder à la commmunauté'
 };
 
@@ -71,8 +79,9 @@ angular.module('kf6App', [
     .config(['$translateProvider', function($translateProvider) {
         $translateProvider
             .translations('en', translations_en)
-            .translations('fr', translations_fr)    
-            .registerAvailableLanguageKeys(['en','fr'])
+            .translations('fr', translations_fr)
+            .fallbackLanguage('en')
+            //egisterAvailableLanguageKeys(['en','fr'])
             //.determinePreferredLanguage();
             .preferredLanguage('fr');
     }])

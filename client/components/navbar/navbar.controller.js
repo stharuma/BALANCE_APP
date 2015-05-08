@@ -9,7 +9,8 @@ angular.module('kf6App')
         }];
         */
 
-        $scope.selectedLanguage = 'en';
+        // TODO: selected detected user-agent locale
+        //$scope.selectedLanguage = 'en';
         $scope.languages = ['en', 'fr'];
 
         $scope.languageSelected = function() {
