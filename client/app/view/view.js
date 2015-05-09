@@ -138,6 +138,9 @@ angular.module('kf6App')
             link: function(scope, element) {
                 var $scope = scope;
                 element.bind('contextmenu', function(e) {
+                    if(!$scope.isEditable || !$scope.isEditable()){
+                        return;
+                    }
                     var found = findObject(e);
                     if (found) {
                         var model = $scope.searchById($scope.refs, found.id);
