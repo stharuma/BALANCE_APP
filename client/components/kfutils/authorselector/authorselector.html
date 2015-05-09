@@ -2,7 +2,7 @@
 <div ng-controller="AuthorSelectorCtrl">
     <ui-select ng-model="selected.author" theme="select2" ng-disabled="disabled" style="width: 80%;">
         <ui-select-match placeholder="Select author...">{{selected.author.getName()}} &lt;{{selected.author.userName}}&gt;</ui-select-match>
-        <ui-select-choices repeat="author in authors | filter: {name: $select.search, userName: $select.search} | orderBy:'name'| limitTo:12">
+        <ui-select-choices repeat="author in authors | filter: $select.search | orderBy:'userName'| limitTo:80">
             <div ng-bind-html="author.getName() | highlight: $select.search"></div>
             <small><div ng-bind-html="author.userName | highlight: $select.search"></div></small>
         </ui-select-choices>
