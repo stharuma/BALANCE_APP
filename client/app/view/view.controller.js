@@ -414,12 +414,17 @@ angular.module('kf6App')
                 window.alert('You have no permission to edit this view.');
                 return;
             }
+
+            var w = null;
+            if ($scope.isMobile()) {
+                w = window.open('');
+            }
             $community.createNote(function(note) {
                 $scope.createContainsLink(note._id, {
                     x: 100,
                     y: 100
                 });
-                $scope.openContribution(note._id);
+                $scope.openContribution(note._id, null, w);
             });
         };
 
@@ -568,14 +573,24 @@ angular.module('kf6App')
 
         /* ----------- open window --------- */
 
-        $scope.openContribution = function(id, e) {
+        $scope.openContribution = function(id, e, w) {
             if (e) {
                 if (e.ctrlKey === true || e.button !== 0) {
                     return;
                 }
             }
             var url = 'contribution/' + id;
-            return $scope.openByInternalWindow(url);
+
+            if (w) {
+                w.location.href = url;
+                return;
+            }
+            if (!$kfutil.isMobile()) {
+                return $scope.openByInternalWindow(url);
+            } else {
+                window.open(url);
+            }
+
         };
 
         $scope.openView = function(id) {
