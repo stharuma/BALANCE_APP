@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location, $community) {
+    .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location, $community, $kfutil) {
+        $kfutil.mixIn($scope);
+        
         $scope.selected = {};
         $scope.myRegistrations = [];
         $scope.communities = [];

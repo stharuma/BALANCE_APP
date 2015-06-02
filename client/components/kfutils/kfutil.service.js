@@ -4,11 +4,9 @@ angular.module('kf6App')
     .factory('$kfutil', function() {
         var obj = {};
 
-        obj.mixIn = function(scope) {
-            scope.getTimeString = function(time) {
-                var d = new Date(time);
-                return d.toLocaleString();
-            };
+        obj.getTimeString = function(time) {
+            var d = new Date(time);
+            return d.toLocaleString();
         };
 
         // obj.isSafari = function() {
@@ -52,6 +50,32 @@ angular.module('kf6App')
 
         obj.isIE = function() {
             return obj.browser.name === 'ie' || obj.browser.name === 'msie';
+        };
+
+        obj.isiOS = function() {
+            var iOS = (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false);
+            return iOS;
+        };
+
+        obj.isAndroid = function() {
+            var ua = navigator.userAgent.toLowerCase();
+            var isAndroid = ua.indexOf('android') > -1;
+            return isAndroid;
+        };
+
+        obj.isMobile = function() {
+            return obj.isiOS() || obj.isAndroid();
+        };
+
+        obj.mixIn = function(scope) {
+            scope.getTimeString = obj.getTimeString;
+            scope.isIE = obj.isIE;
+            scope.isiOS = obj.isiOS;
+            scope.isAndroid = obj.isAndroid;
+            scope.isMobile = obj.isMobile;
+            scope.browser = function() {
+                return obj.browser;
+            };
         };
 
         return obj;

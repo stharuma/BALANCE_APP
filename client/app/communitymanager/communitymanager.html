@@ -2,7 +2,6 @@
     <label>Communities:</label>
     <table>
         <tr ng-repeat="registration in myRegistrations">
-
             <td style="padding-left: 20px;">{{registration._community.title}}</td>
             <td style="padding-left: 10px;">(created: {{toTimeString(registration._community.created)}})</td>
             <td style="padding-left: 20px;">{{registration.role}}</td>
@@ -13,9 +12,7 @@
             </td> -->
         </tr>
     </table>
-
     <div style="height: 100px;"></div>
-
     <label>Join Community:</label>
     <div style="padding-left: 50px;">
         <table>
@@ -55,11 +52,8 @@
                 </td>
         </table>
     </div>
-
     <br>
-
     <div ng-show="isAdmin()">
-
         <label>New Community:</label>
         <div style="padding-left: 50px;">
             <table>
@@ -84,6 +78,26 @@
                     </td>
             </table>
         </div>
-
+    </div>
+    <div>
+        <label>User Agent:</label>
+        <table>
+            <tr>
+                <td>browser?:</td>
+                <td>{{browser()}}</td>
+            </tr>
+            <tr>
+                <td>iOS?:</td>
+                <td>{{isiOS()}}</td>
+            </tr>
+            <tr>
+                <td>Android?:</td>
+                <td>{{isAndroid()}}</td>
+            </tr>
+            <tr>
+                <td>Mobile?:</td>
+                <td>{{isMobile()}}</td>
+            </tr>
+        </table>
     </div>
 </div>
