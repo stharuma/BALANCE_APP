@@ -84,6 +84,7 @@ angular.module('kf6App')
 
                 var sp;
                 var dragging = false;
+                var proxy;
                 el.addEventListener('touchstart', function(e) {
                     if (!$scope.isSelected(ref._id)) {
                         $scope.singleSelect(ref._id);
@@ -97,8 +98,21 @@ angular.module('kf6App')
                 });
                 el.addEventListener('touchmove', function(e) {
                     e.preventDefault();
+                    if (proxy) {
+                        var d = calcDelta(e);
+                        $('#kf6-touch-proxy').css({
+                            left: ref.data.x + d.x,
+                            top: ref.data.y + d.y
+                        });
+                    }
                     if (!dragging) {
-                        //TODO: add proxy image here.
+                        //Add proxy image here.
+                        proxy = el.cloneNode(true);
+                        proxy.id = 'kf6-touch-proxy';
+                        $('#maincanvas').get(0).appendChild(proxy);
+                        $('#kf6-touch-proxy').css({
+                            opacity: '0.5'
+                        });
                         dragging = true;
                     }
                 });
@@ -106,6 +120,18 @@ angular.module('kf6App')
                     if (!dragging) {
                         return;
                     }
+                    if (proxy) {
+                        $('#maincanvas').get(0).removeChild(proxy);
+                        proxy = null;
+                    }
+                    var delta = calcDelta(e);
+                    $scope.moveRefs(delta);
+                });
+                el.addEventListener('touchcancel', function( /*e*/ ) {
+                    /* do nothing */
+                });
+
+                function calcDelta(e) {
                     var touch = e.changedTouches[0];
                     var p = {
                         x: touch.clientX,
@@ -115,11 +141,8 @@ angular.module('kf6App')
                         x: p.x - sp.x,
                         y: p.y - sp.y
                     };
-                    $scope.moveRefs(delta);
-                });
-                el.addEventListener('touchcancel', function(/*e*/) {
-                    /* do nothing */
-                });
+                    return delta;
+                }
 
                 /** touch support end **/
 
