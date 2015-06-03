@@ -79,8 +79,52 @@ angular.module('kf6App')
                         }
                     }
                 });
+
+                /** touch support **/
+
+                var sp;
+                var dragging = false;
+                el.addEventListener('touchstart', function(e) {
+                    if (!$scope.isSelected(ref._id)) {
+                        $scope.singleSelect(ref._id);
+                    }
+                    var touch = e.touches[0];
+                    sp = {
+                        x: touch.clientX,
+                        y: touch.clientY
+                    };
+                    dragging = false;
+                });
+                el.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    if (!dragging) {
+                        //TODO: add proxy image here.
+                        dragging = true;
+                    }
+                });
+                el.addEventListener('touchend', function(e) {
+                    if (!dragging) {
+                        return;
+                    }
+                    var touch = e.changedTouches[0];
+                    var p = {
+                        x: touch.clientX,
+                        y: touch.clientY
+                    };
+                    var delta = {
+                        x: p.x - sp.x,
+                        y: p.y - sp.y
+                    };
+                    $scope.moveRefs(delta);
+                });
+                el.addEventListener('touchcancel', function(/*e*/) {
+                    /* do nothing */
+                });
+
+                /** touch support end **/
+
                 el.addEventListener('dragstart', function(e) {
-                    var offset = $kfutil.getOffset(e);                  
+                    var offset = $kfutil.getOffset(e);
                     if ($kfutil.isSafari() /*|| (chrome && $scope.selected.length >= 2)*/ ) {
                         var imgX = element.position().left + offset.x;
                         var imgY = element.position().top + offset.y;
@@ -129,7 +173,7 @@ angular.module('kf6App')
             link: function(scope, element) {
                 var $scope = scope;
                 element.bind('contextmenu', function(e) {
-                    if(!$scope.isEditable || !$scope.isEditable()){
+                    if (!$scope.isEditable || !$scope.isEditable()) {
                         return;
                     }
                     var found = findObject(e);
@@ -226,6 +270,11 @@ angular.module('kf6App')
                     return $scope.selected.indexOf(id) >= 0;
                 };
 
+                $scope.singleSelect = function(id) {
+                    $scope.clearSelection();
+                    $scope.select(id);
+                };
+
                 $scope.select = function(id) {
                     if ($scope.isSelected(id)) {
                         return;
@@ -288,7 +337,7 @@ angular.module('kf6App')
 
                 $scope.dragover = function(e) {
                     if (!$scope.isEditable || !$scope.isEditable()) {
-                        e.dataTransfer.dropEffect = 'none';                    
+                        e.dataTransfer.dropEffect = 'none';
                         return;
                     }
 
@@ -316,12 +365,11 @@ angular.module('kf6App')
                         var postref = $scope.dragging;
                         var dx = newX - postref.data.x - $scope.dragpoint.x;
                         var dy = newY - postref.data.y - $scope.dragpoint.y;
-
-                        $scope.getSelectedModels().forEach(function(postref) {
-                            postref.data.x += dx;
-                            postref.data.y += dy;
-                            $scope.saveRef(postref);
+                        $scope.moveRefs({
+                            x: dx,
+                            y: dy
                         });
+
                     } else if ($scope.draggingViewlink) {
                         var view = $scope.draggingViewlink;
                         $scope.createContainsLink(view._id, {
@@ -344,6 +392,14 @@ angular.module('kf6App')
                         });
                     }
                     $scope.draggingViewlink = null;
+                };
+
+                $scope.moveRefs = function(delta) {
+                    $scope.getSelectedModels().forEach(function(ref) {
+                        ref.data.x += delta.x;
+                        ref.data.y += delta.y;
+                        $scope.saveRef(ref);
+                    });
                 };
 
                 var el = element[0];
