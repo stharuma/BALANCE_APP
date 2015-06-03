@@ -48,6 +48,18 @@ angular.module('kf6App')
             return browser;
         })();
 
+        obj.isSafari = function() {
+            return obj.browser.name === 'safari';
+        };
+
+        obj.isChrome = function() {
+            return obj.browser.name === 'chrome';
+        };
+
+        obj.isFirefox = function() {
+            return obj.browser.name === 'firefox';
+        };
+
         obj.isIE = function() {
             return obj.browser.name === 'ie' || obj.browser.name === 'msie';
         };
@@ -65,6 +77,27 @@ angular.module('kf6App')
 
         obj.isMobile = function() {
             return obj.isiOS() || obj.isAndroid();
+        };
+
+        obj.getOffset = function(e) {
+            if (obj.isFirefox()) {
+                if (e.type === 'contextmenu') {
+                    return {
+                        x: e.originalEvent.layerX,
+                        y: e.originalEvent.layerY
+                    };
+                }
+                return {
+                    x: e.layerX,
+                    y: e.layerY
+                };
+            }
+
+            //other browser
+            return {
+                x: e.offsetX,
+                y: e.offsetY
+            };
         };
 
         obj.mixIn = function(scope) {

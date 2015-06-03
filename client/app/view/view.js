@@ -36,7 +36,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewRef', function() {
+    .directive('KFViewRef', function($kfutil) {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -80,17 +80,8 @@ angular.module('kf6App')
                     }
                 });
                 el.addEventListener('dragstart', function(e) {
-                    var firefox = (e.offsetX === undefined);
-                    var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
-                    //var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;                    
-                    var IE = (navigator.userAgent.indexOf('MSIE') !== -1 || document.documentMode <= 11); /*IE11*/
-
-                    var offset = {
-                        x: firefox ? e.layerX : e.offsetX,
-                        y: firefox ? e.layerY : e.offsetY
-                    };
-
-                    if (safari /*|| (chrome && $scope.selected.length >= 2)*/ ) {
+                    var offset = $kfutil.getOffset(e);                  
+                    if ($kfutil.isSafari() /*|| (chrome && $scope.selected.length >= 2)*/ ) {
                         var imgX = element.position().left + offset.x;
                         var imgY = element.position().top + offset.y;
                         var selImg = $('#selectioncanvas').get(0);
@@ -109,7 +100,7 @@ angular.module('kf6App')
                         hrefs += each._to.title;
                         hrefs += '</a><br>';
                     });
-                    if (!IE) {
+                    if (!$kfutil.isIE()) {
                         e.dataTransfer.setData('text/html', hrefs);
                     }
 
@@ -132,7 +123,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewDropCanvas', function() {
+    .directive('KFViewDropCanvas', function($kfutil) {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -159,11 +150,7 @@ angular.module('kf6App')
                 });
 
                 function findObject(e) {
-                    var mousePos = {
-                        x: e.offsetX,
-                        y: e.offsetY
-                    };
-
+                    var mousePos = $kfutil.getOffset(e);
                     var result = null;
                     $('#viewcanvas').children().each(function(index, child) {
                         if (contains(child, mousePos)) {
