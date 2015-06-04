@@ -495,7 +495,7 @@ angular.module('kf6App')
                         return;
                     }
                     var marqueeRect = j2rect(marquee);
-                    $('.KFViewRef').each(function() {
+                    $('.kfViewRef').each(function() {
                         if (intersects(marqueeRect, j2rect($(this)))) {
                             scope.select($(this).attr('id'));
                         } else {
