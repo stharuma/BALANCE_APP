@@ -100,6 +100,39 @@ angular.module('kf6App')
             };
         };
 
+        obj.getTouchPos = function(touchEvent) {
+            var changed = touchEvent.changedTouches[0];
+            return {
+                x: changed.pageX,
+                y: changed.pageY
+            };
+        };
+
+        obj.getTouchOffset = function(touchEvent, jElem) {
+            var p = obj.getTouchPos(touchEvent);
+            return {
+                x: p.x + -(jElem.offset().left),
+                y: p.y + -(jElem.offset().top)
+            };
+        };
+
+        obj.fireContextMenuEvent = function(touchEvent, jElem) {
+            var el = jElem[0];
+            var evt = el.ownerDocument.createEvent("HTMLEvents")
+            evt.initEvent('contextmenu', true, true) // bubbles = true, cancelable = true
+            var p = obj.getTouchPos(touchEvent);
+            var offset = obj.getTouchOffset(touchEvent, jElem);
+            evt.pageX = p.x;
+            evt.pageY = p.y;
+            evt.offsetX = offset.x;
+            evt.offsetY = offset.y;
+            if (document.createEventObject) {
+                return el.fireEvent('oncontextmenu', evt)
+            } else {
+                return !el.dispatchEvent(evt)
+            }
+        };
+
         obj.mixIn = function(scope) {
             scope.getTimeString = obj.getTimeString;
             scope.isIE = obj.isIE;

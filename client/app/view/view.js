@@ -90,11 +90,7 @@ angular.module('kf6App')
                     if (!$scope.isSelected(ref._id)) {
                         $scope.singleSelect(ref._id);
                     }
-                    var touch = e.touches[0];
-                    sp = {
-                        x: touch.clientX,
-                        y: touch.clientY
-                    };
+                    sp = $kfutil.getTouchPos(e);
                     state = 'PRESSED';
                     if ($kfutil.isiOS()) {
                         timer = setTimeout(function() {
@@ -162,11 +158,7 @@ angular.module('kf6App')
                 });
 
                 function calcDelta(e) {
-                    var touch = e.changedTouches[0];
-                    var p = {
-                        x: touch.clientX,
-                        y: touch.clientY
-                    };
+                    var p = $kfutil.getTouchPos(e);
                     var delta = {
                         x: p.x - sp.x,
                         y: p.y - sp.y
@@ -175,20 +167,7 @@ angular.module('kf6App')
                 }
 
                 function showHelo(e) {
-                    openContextMenu(e);
-                }
-
-                function openContextMenu(e) {
-                    var evt = el.ownerDocument.createEvent("HTMLEvents")
-                    evt.initEvent('contextmenu', true, true) // bubbles = true, cancelable = true
-                    evt.pageX = e.pageX;
-                    evt.pageY = e.pageY;
-
-                    if (document.createEventObject) {
-                        return el.fireEvent('oncontextmenu', evt)
-                    } else {
-                        return !el.dispatchEvent(evt)
-                    }
+                    $kfutil.fireContextMenuEvent(e, element);
                 }
 
                 /** touch support end **/
@@ -305,18 +284,7 @@ angular.module('kf6App')
                 });
 
                 function openContextMenu(e) {
-                    var evt = el.ownerDocument.createEvent("HTMLEvents")
-                    evt.initEvent('contextmenu', true, true) // bubbles = true, cancelable = true
-                    evt.pageX = e.pageX;
-                    evt.pageY = e.pageY;
-                    evt.offsetX = e.pageX + -(element.offset().left);
-                    evt.offsetY = e.pageY + -(element.offset().top);
-
-                    if (document.createEventObject) {
-                        return el.fireEvent('oncontextmenu', evt)
-                    } else {
-                        return !el.dispatchEvent(evt)
-                    }
+                    $kfutil.fireContextMenuEvent(e, element);
                 }
 
                 /*********   for touch interface end ************/
