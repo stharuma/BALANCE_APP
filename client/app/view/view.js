@@ -96,12 +96,14 @@ angular.module('kf6App')
                         y: touch.clientY
                     };
                     state = 'PRESSED';
-                    timer = setTimeout(function() {
-                        if (state === 'PRESSED') {
-                            state = 'CONTEXTMENUOPENED';
-                            showHelo(e);
-                        }
-                    }, 700);
+                    if ($kfutil.isiOS()) {
+                        timer = setTimeout(function() {
+                            if (state === 'PRESSED') {
+                                state = 'CONTEXTMENUOPENED';
+                                showHelo(e);
+                            }
+                        }, 700);
+                    }
                 });
                 el.addEventListener('touchmove', function(e) {
                     clearTimeout(timer);
