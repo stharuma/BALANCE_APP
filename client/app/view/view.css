@@ -81,7 +81,7 @@
     padding: 0px;
     border: 0px;
 }
-.KFViewMarqueeCanvas {
+.kfViewMarqueeCanvas {
     position: absolute;
     left: 0pt;
     top: 0pt;
@@ -101,7 +101,7 @@
 }
 /* for view ref presentation */
 
-.KFViewRef {
+.kfViewRef {
     position: absolute;
     z-index: 5;
 }

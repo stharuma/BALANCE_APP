@@ -36,7 +36,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewRef', function($kfutil) {
+    .directive('kfViewRef', function($kfutil) {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -81,7 +81,7 @@ angular.module('kf6App')
                 });
 
                 /** touch support **/
-
+                var startTime;
                 var sp;
                 var dragging = false;
                 var proxy;
@@ -95,6 +95,7 @@ angular.module('kf6App')
                         y: touch.clientY
                     };
                     dragging = false;
+                    //startTime = new Date().getTime();
                 });
                 el.addEventListener('touchmove', function(e) {
                     e.preventDefault();
@@ -117,15 +118,19 @@ angular.module('kf6App')
                     }
                 });
                 el.addEventListener('touchend', function(e) {
-                    if (!dragging) {
+                    if (dragging) {
+                        if (proxy) {
+                            $('#maincanvas').get(0).removeChild(proxy);
+                            proxy = null;
+                        }
+                        var delta = calcDelta(e);
+                        $scope.moveRefs(delta);
                         return;
                     }
-                    if (proxy) {
-                        $('#maincanvas').get(0).removeChild(proxy);
-                        proxy = null;
-                    }
-                    var delta = calcDelta(e);
-                    $scope.moveRefs(delta);
+
+                    // var endTime = new Date().getTime();
+                    // var time = endTime - startTime;
+                    // window.alert(time);
                 });
                 el.addEventListener('touchcancel', function( /*e*/ ) {
                     /* do nothing */
@@ -190,7 +195,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewDropCanvas', function($kfutil) {
+    .directive('kfViewDropCanvas', function($kfutil) {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -243,7 +248,7 @@ angular.module('kf6App')
 
 
 angular.module('kf6App')
-    .directive('KFViewDropCanvas', function() {
+    .directive('kfViewDropCanvas', function() {
         return {
             restrict: 'C',
             link: function(scope) {
@@ -352,7 +357,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewDropCanvas', function() {
+    .directive('kfViewDropCanvas', function() {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -440,7 +445,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFViewMarqueeCanvas', function() {
+    .directive('kfViewMarqueeCanvas', function() {
         return {
             restrict: 'C',
             link: function(scope, element) {

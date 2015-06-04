@@ -11,7 +11,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('KFDragSource', function($kftag) {
+    .directive('kfDragSource', function($kftag) {
         return {
             restrict: 'C',
             link: function(scope, element) {

@@ -43,10 +43,10 @@
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div ng-show="!contribution.isRiseabove()">
-                            <div class="KFDragSource" ng-bind-html="copy.body"></div>
+                            <div class="kfDragSource" ng-bind-html="copy.body"></div>
                         </div>
                         <div style="height: 100%; width: 100%;" ng-hide="!contribution.isRiseabove()">
-                            <div class="KFDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
+                            <div class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
                             <div style="height: 100%; overflow: hidden;">
                                 <label>Riseabove View:</label>
                                 <div id="riseabovediv" style="height: 100%; height: calc(100% - 20px);)border: 1px solid black;"></div>

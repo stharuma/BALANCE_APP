@@ -123,7 +123,7 @@
 
     <div id="maincanvas" class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
-            <div ng-attr-id="{{ref._id}}" class="KFViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
+            <div ng-attr-id="{{ref._id}}" class="kfViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
                 <div ng-if="ref.data.showInPlace!==true" style="white-space: nowrap; font-size: 12px;">
                     <div ng-if="ref._to.type !== 'View'">
                         <span ng-click="openContribution(ref.to, $event)" kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
@@ -159,7 +159,7 @@
         </div>
         <!-- for selection proxy-->
         <div id="selectioncanvas" class="KFViewSelectedCanvas"></div>
-        <div id="dropcanvas" class="KFViewDropCanvas KFViewMarqueeCanvas"></div>
+        <div id="dropcanvas" class="kfViewDropCanvas kfViewMarqueeCanvas"></div>
         <div id="windows" class="KFViewWindowsCanvas"></div>
     </div>
 
