@@ -83,7 +83,8 @@ angular.module('kf6App')
                 /** touch support **/
                 var timer;
                 var sp;
-                var dragging = false;
+                var state = 'IDLE';
+                var contextOpened = false;
                 var proxy;
                 el.addEventListener('touchstart', function(e) {
                     if (!$scope.isSelected(ref._id)) {
@@ -94,21 +95,25 @@ angular.module('kf6App')
                         x: touch.clientX,
                         y: touch.clientY
                     };
-                    dragging = false;
-                    timer = setTimeout(function(){
-                        showHelo();
-                    }, 980);
+                    state = 'PRESSED';
+                    timer = setTimeout(function() {
+                        if (state === 'PRESSED') {
+                            state = 'CONTEXTMENUOPENED';
+                            showHelo(e);
+                        }
+                    }, 700);
                 });
                 el.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
-                    if (proxy) {
+                    clearTimeout(timer);
+                    if (state === 'MOVING') {
                         var d = calcDelta(e);
                         $('#kf6-touch-proxy').css({
                             left: ref.data.x + d.x,
                             top: ref.data.y + d.y
                         });
                     }
-                    if (!dragging) {
+                    if (state === 'PRESSED') {
+                        state = 'MOVING';
                         //Add proxy image here.
                         proxy = el.cloneNode(true);
                         proxy.id = 'kf6-touch-proxy';
@@ -116,12 +121,20 @@ angular.module('kf6App')
                         $('#kf6-touch-proxy').css({
                             opacity: '0.5'
                         });
-                        dragging = true;
                     }
+                    e.preventDefault();
                 });
                 el.addEventListener('touchend', function(e) {
+                    handleEnd(e);
+                });
+                el.addEventListener('touchcancel', function(e) {
+                    handleEnd(e);
+                });
+
+                function handleEnd(e) {
                     clearTimeout(timer);
-                    if (dragging) {
+                    if (state === 'MOVING') {
+                        e.preventDefault();
                         if (proxy) {
                             $('#maincanvas').get(0).removeChild(proxy);
                             proxy = null;
@@ -130,10 +143,20 @@ angular.module('kf6App')
                         $scope.moveRefs(delta);
                         return;
                     }
+                    if (state === 'CONTEXTMENUOPENED') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        contextOpened = true;
+                    }
+                    state = 'IDLE';
                     return;
-                });
-                el.addEventListener('touchcancel', function( /*e*/ ) {
-                    clearTimeout(timer);
+                }
+                el.addEventListener('click', function(e) {
+                    if (contextOpened === true) {
+                        //e.preventDefault();
+                        e.stopPropagation();
+                        contextOpened = false;
+                    }
                 });
 
                 function calcDelta(e) {
@@ -149,8 +172,30 @@ angular.module('kf6App')
                     return delta;
                 }
 
-                function showHelo(){
+                function showHelo(e) {
                     //window.alert('helo!');
+
+                    // var menuElm = $('#menu-A');
+                    // menuElm.css({
+                    //     left: ref.data.x,
+                    //     top: ref.data.y
+                    // });
+                    // menuElm.addClass('open');
+
+                    openContextMenu(e);
+                }
+
+                function openContextMenu(e) {
+                    var evt = el.ownerDocument.createEvent("HTMLEvents")
+                    evt.initEvent('contextmenu', true, true) // bubbles = true, cancelable = true
+                    evt.pageX = e.pageX;
+                    evt.pageY = e.pageY;
+
+                    if (document.createEventObject) {
+                        return el.fireEvent('oncontextmenu', evt)
+                    } else {
+                        return !el.dispatchEvent(evt)
+                    }
                 }
 
                 /** touch support end **/
