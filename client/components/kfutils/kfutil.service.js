@@ -118,8 +118,8 @@ angular.module('kf6App')
 
         obj.fireContextMenuEvent = function(touchEvent, jElem) {
             var el = jElem[0];
-            var evt = el.ownerDocument.createEvent("HTMLEvents")
-            evt.initEvent('contextmenu', true, true) // bubbles = true, cancelable = true
+            var evt = el.ownerDocument.createEvent('HTMLEvents');
+            evt.initEvent('contextmenu', true, true); // bubbles = true, cancelable = true
             var p = obj.getTouchPos(touchEvent);
             var offset = obj.getTouchOffset(touchEvent, jElem);
             evt.pageX = p.x;
@@ -127,9 +127,9 @@ angular.module('kf6App')
             evt.offsetX = offset.x;
             evt.offsetY = offset.y;
             if (document.createEventObject) {
-                return el.fireEvent('oncontextmenu', evt)
+                return el.fireEvent('oncontextmenu', evt);
             } else {
-                return !el.dispatchEvent(evt)
+                return !el.dispatchEvent(evt);
             }
         };
 

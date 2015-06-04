@@ -433,6 +433,11 @@ angular.module('kf6App')
                 window.alert('You have no permission to edit this view.');
                 return;
             }
+
+            var w = null;
+            if ($scope.isMobile()) {
+                w = window.open('');
+            }
             $community.createDrawing(function(drawing) {
                 $scope.createContainsLink(drawing._id, {
                     x: 100,
@@ -441,7 +446,7 @@ angular.module('kf6App')
                     height: 100,
                     showInPlace: true
                 });
-                $scope.openContribution(drawing._id);
+                $scope.openContribution(drawing._id, null, w);
             });
         };
 

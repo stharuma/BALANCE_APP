@@ -273,13 +273,13 @@ angular.module('kf6App')
                         openContextMenu(e);
                     }, 700);
                 });
-                el.addEventListener('touchmove', function(e) {
+                el.addEventListener('touchmove', function() {
                     clearTimeout(timer);
                 });
-                el.addEventListener('touchend', function(e) {
+                el.addEventListener('touchend', function() {
                     clearTimeout(timer);
                 });
-                el.addEventListener('touchcancel', function(e) {
+                el.addEventListener('touchcancel', function() {
                     clearTimeout(timer);
                 });
 
