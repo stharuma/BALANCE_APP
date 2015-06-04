@@ -743,6 +743,7 @@ angular.module('kf6App')
                 var ref = $scope.contextTarget;
                 ref.data.fixed = true;
                 $scope.saveRef(ref);
+                $scope.clearSelection();
             }
         };
 
