@@ -175,15 +175,6 @@ angular.module('kf6App')
                 }
 
                 function showHelo(e) {
-                    //window.alert('helo!');
-
-                    // var menuElm = $('#menu-A');
-                    // menuElm.css({
-                    //     left: ref.data.x,
-                    //     top: ref.data.y
-                    // });
-                    // menuElm.addClass('open');
-
                     openContextMenu(e);
                 }
 
@@ -246,7 +237,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('kfViewDropCanvas', function($kfutil) {
+    .directive('kfViewMarqueeCanvas', function($kfutil) {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -293,6 +284,42 @@ angular.module('kf6App')
                     };
                     return (r.left <= p.x && p.x <= r.right && r.top <= p.y && p.y <= r.bottom);
                 }
+
+                /*********   for touch interface ************/
+
+                var el = element[0];
+                var timer;
+                el.addEventListener('touchstart', function(e) {
+                    timer = setTimeout(function() {
+                        openContextMenu(e);
+                    }, 700);
+                });
+                el.addEventListener('touchmove', function(e) {
+                    clearTimeout(timer);
+                });
+                el.addEventListener('touchend', function(e) {
+                    clearTimeout(timer);
+                });
+                el.addEventListener('touchcancel', function(e) {
+                    clearTimeout(timer);
+                });
+
+                function openContextMenu(e) {
+                    var evt = el.ownerDocument.createEvent("HTMLEvents")
+                    evt.initEvent('contextmenu', true, true) // bubbles = true, cancelable = true
+                    evt.pageX = e.pageX;
+                    evt.pageY = e.pageY;
+                    evt.offsetX = e.pageX + -(element.offset().left);
+                    evt.offsetY = e.pageY + -(element.offset().top);
+
+                    if (document.createEventObject) {
+                        return el.fireEvent('oncontextmenu', evt)
+                    } else {
+                        return !el.dispatchEvent(evt)
+                    }
+                }
+
+                /*********   for touch interface end ************/
             }
         };
     });
