@@ -81,7 +81,7 @@ angular.module('kf6App')
                 });
 
                 /** touch support **/
-                var startTime;
+                var timer;
                 var sp;
                 var dragging = false;
                 var proxy;
@@ -95,7 +95,9 @@ angular.module('kf6App')
                         y: touch.clientY
                     };
                     dragging = false;
-                    //startTime = new Date().getTime();
+                    timer = setTimeout(function(){
+                        showHelo();
+                    }, 980);
                 });
                 el.addEventListener('touchmove', function(e) {
                     e.preventDefault();
@@ -118,6 +120,7 @@ angular.module('kf6App')
                     }
                 });
                 el.addEventListener('touchend', function(e) {
+                    clearTimeout(timer);
                     if (dragging) {
                         if (proxy) {
                             $('#maincanvas').get(0).removeChild(proxy);
@@ -127,13 +130,10 @@ angular.module('kf6App')
                         $scope.moveRefs(delta);
                         return;
                     }
-
-                    // var endTime = new Date().getTime();
-                    // var time = endTime - startTime;
-                    // window.alert(time);
+                    return;
                 });
                 el.addEventListener('touchcancel', function( /*e*/ ) {
-                    /* do nothing */
+                    clearTimeout(timer);
                 });
 
                 function calcDelta(e) {
@@ -147,6 +147,10 @@ angular.module('kf6App')
                         y: p.y - sp.y
                     };
                     return delta;
+                }
+
+                function showHelo(){
+                    //window.alert('helo!');
                 }
 
                 /** touch support end **/
