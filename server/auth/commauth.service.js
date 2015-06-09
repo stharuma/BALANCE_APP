@@ -75,6 +75,9 @@ function isLinkAuthenticated() {
                 if (err) {
                     return res.send(500, err);
                 }
+                if (!obj) {
+                    return res.send(500, 'object was not found');
+                }
                 req.from = obj;
                 req.params.communityId = obj.communityId;
                 next();
