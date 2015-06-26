@@ -14,7 +14,7 @@ else
 	touch lock;
 fi
 
-((PORT=9000 ATTACHMENTS_PATH=../attachments grunt serve:dist) >> log.\
+((PORT=80 ATTACHMENTS_PATH=../attachments grunt serve:dist) >> log.\
 log) 2>> err.log &
 
 
