@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>{{'LOGIN' | translate}}</h1>
+            <h1>{{ 'login' | translate }}</h1>
             <!-- <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test@test.com</code> / <code>test</code>
             </p>
             <p>Admin account is <code>admin@admin.com</code> / <code>admin</code>
@@ -13,23 +13,23 @@
             <form class="form" name="form" ng-submit="login(form)" novalidate>
 
                 <div class="form-group">
-                    <label>{{'EMAIL' | translate}}</label>
+                    <label>{{ 'email' | translate }}</label>
 
                     <input type="email" name="email" class="form-control" ng-model="user.email" required>
                 </div>
 
                 <div class="form-group">
-                    <label>{{'PASSWORD' | translate}}</label>
+                    <label>{{ 'password' | translate }}</label>
 
                     <input type="password" name="password" class="form-control" ng-model="user.password" required>
                 </div>
 
                 <div class="form-group has-error">
                     <p class="help-block" ng-show="form.email.$error.required && form.password.$error.required && submitted">
-                        {{'LOGIN_ERROR_NAMEANDPASS' | translate}}
+                        {{ 'login_error_nameAndPass' | translate }}
                     </p>
                     <p class="help-block" ng-show="form.email.$error.email && submitted">
-                        {{'LOGIN_ERROR_EMAIL' | translate}}
+                        {{ 'login_error_email' | translate }}
                     </p>
 
                     <p class="help-block">{{ errors.other }}</p>
@@ -37,11 +37,11 @@
 
                 <div>
                     <button class="btn btn-default btn-lg btn-login" type="submit">
-                        {{'LOGIN' | translate}}
+                        {{ 'login' | translate }}
                     </button>
                     <a class="btn btn-default btn-lg btn-register" href="/signup">
-            {{'REGISTER' | translate}}
-          </a>
+                      {{ 'register' | translate }}
+                    </a>
                 </div>
 
                 <!-- <hr> -->
