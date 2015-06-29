@@ -1,14 +1,18 @@
 'use strict';
 
-var translations_en = {
+var translationsEN = {
     'home': 'Home',
     'admin': 'Admin',
     'communities': 'Communities',
     'community': 'Community',
     'community_join': 'Join Community',
-    'first_name': 'First Name',
-    'last_name': 'Last Name',
+    'community_possible': 'possible communitie(s)',
+    'community_registration_key': 'Community Registration Key',
+    'community_select': 'Select community',
+    'firstName': 'First Name',
+    'join': 'Join',
     'email': 'Email',
+    'lastName': 'Last Name',
     'login': 'Login',
     'login_error_nameAndPass' : 'Please enter your email and password.',
     'login_error_email' : 'Please enter a valid email.',
@@ -20,32 +24,36 @@ var translations_en = {
     'register_error_lastName': 'A last name is required.',
     'register_error_email_invalid': 'Doesn\'t look like a valid email.',
     'register_error_email_missing': 'What\'s your email address?',
-    'register_error_password': 'Password must be at least 3 characters.',
+    'register_error_password': 'Password must be at least 4 characters.',
     'logout': 'Logout',
     'community_enter': 'Accéder à la commmunauté'
 };
 
-var translations_fr = {
+var translationsFR = {
     'home': 'Accueil',
     'admin': 'Administration',
     'communities': 'Communautés',
     'community': 'Communauté',
     'community_join': 'Joindre une communauté',
-    'first_name': 'Prénom',
-    'last_name': 'Nom',
+    'community_possible': 'communauté(s) possible(s)',
+    'community_registration_key': 'Code d\'adhésion',
+    'community_select': 'Sélectionnez une communauté',
+    'firstName': 'Prénom',
+    'join': 'Joindre',
     'email': 'Courriel',
+    'lastName': 'Nom',
     'login': 'Connexion',
     'login_error_nameAndPass' : 'Veuillez saisir votre courriel et mot de passe.',
     'login_error_email' : 'Veuillez saisir une adresse de courriel valide.',
     'password': 'Mot de passe',
     'register': 'Inscription',
     'registration_key': 'Code d\'inscription',
-    'registration_key_invalid': 'Code d\'inscription invalide.',    
+    'registration_key_invalid': 'Code d\'inscription invalide.',
     'register_error_firstName' : 'Veuillez saisir un prénom.',
     'register_error_lastName': 'Veuillez saisir un nom.',
     'register_error_email_invalid': 'Veuillez saisir une adresse de courriel valide.',
     'register_error_email_missing': 'Veuillez saisir une adresse de courriel.',
-    'register_error_password': 'Le mot de passe doit comporter au moins 3 caractères.',
+    'register_error_password': 'Le mot de passe doit comporter au moins 4 caractères.',
     'logout': 'Déconnexion',
     'community_enter': 'Accéder à la commmunauté'
 };
@@ -78,11 +86,11 @@ angular.module('kf6App', [
     })
     .config(['$translateProvider', function($translateProvider) {
         $translateProvider
-            .translations('en', translations_en)
-            .translations('fr', translations_fr)
+            .translations('en', translationsEN)
+            .translations('fr', translationsFR)
             .fallbackLanguage('en')
-            //egisterAvailableLanguageKeys(['en','fr'])
-            //.determinePreferredLanguage();
+          //.registerAvailableLanguageKeys(['en','fr'])
+          //.determinePreferredLanguage();
             .preferredLanguage('fr');
     }])
 
