@@ -3,19 +3,19 @@
     <div class="well" collapse="status.isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
         <div>
             <span ng-if="status.contribution==='saving'">Saving...</span>
-            <span ng-if="status.contribution==='success'">Contribution Succeeded.</span>
+            <span ng-if="status.contribution==='success'">{{ 'contribution_success' | translate }}</span>
             <span ng-if="status.contribution==='failure'">Contribution Failed.</span>
             <span ng-if="status.contribution==='stored'">Contribution Failed. <br>Your writing temporary saved to the localstorage. Please recover the writing by "Recovery" button on the new note.</span>
         </div>
         <div style="text-align: right; padding-right: 100px; padding-top: 5px;">
-            <button ng-show="status.contribution!=='saving'" type="submit" class="btn btn-primary kfbutton" ng-click="status.isContributionCollapsed=true">Continue editing</button>
-            <button ng-show="status.contribution==='success'" type="submit" class="btn btn-primary kfbutton" ng-click="closeRequest()">Finish editing (Close this window)</button>
+            <button ng-show="status.contribution!=='saving'" type="submit" class="btn btn-primary kfbutton" ng-click="status.isContributionCollapsed=true">{{ 'contribution_continueEditing' | translate }}</button>
+            <button ng-show="status.contribution==='success'" type="submit" class="btn btn-primary kfbutton" ng-click="closeRequest()">{{ 'contribution_finish' | translate }}</button>
         </div>
     </div>
 
     <div class="well" collapse="status.isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isAttachmentCollapsed = true;">close</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isAttachmentCollapsed = true;">{{ 'close' | translate }}</button>
         </div>
         <div style="padding: 10px;">
             <div ng-include="'components/kfutils/attachmentuploader/attachmentuploader.html'"></div>
@@ -103,19 +103,19 @@
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <label>{{ 'attachments' | translate }}:</label>
-                                <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">Upload</button>
+                                <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">{{ 'attach' | translate }}</button>
                                 <div class="KFContainer">
                                     <span ng-repeat="attachment in images">
                                     <img ng-attr-src="{{attachment.data.url}}" width="50px" height="50px"></img>
                                             </span>
                                     <p ng-if="images.length !== 0">Drag and drop to the editor!</p>
-                                    <p ng-if="images.length === 0">There is no image attachment on this contribution.</p>
+                                    <p ng-if="images.length === 0">{{ 'attachments_image_not' | translate }}</p>
                                 </div>
                                 <div style="height: 3px;"></div>
                                 <div>
                                     <label>{{ 'tools' | translate }}:</label>
                                     <br>
-                                    <button ng-disabled="!status.recoverable" class="btn btn-default" ng-click="recover()">Recovery</button>
+                                    <button ng-disabled="!status.recoverable" class="btn btn-default" ng-click="recover()">{{ 'recovery' | translate }}</button>
                                 </div>
                             </div>
                         </div>
@@ -138,23 +138,24 @@
 
             <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"> -->
             <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css">
-            <tab class="KFTab" heading="{{ 'authors' | translate }}">
+            <tab class="KFTab" heading="{{ 'author-s' | translate }}">
                 <div style="height: 100%;">
                     <table style="width: 100%;">
                         <tr>
                             <td width="50%" valign="top">
-                                <h4>Authors:</h4>
+                                <h4>{{ 'author-s' | translate }}:</h4>
                                 <ul ui-sortable ng-model="authors">
                                     <li style="cursor: move;" ng-repeat="author in authors">
                                         {{author.getName()}}
                                         <button ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="removeAuthor(author)">x</button>
                                     </li>
                                 </ul>
-                                <h4>Group:</h4>
+                                <h4>{{ 'group' | translate }}:</h4>
                                 <div style="padding-left: 30px;">
                                     <div ng-if="!isEditable()">
                                         {{selected.group.title}}
                                     </div>
+
                                     <div ng-if="isEditable()">
                                         <select ng-model="selected.group" ng-options="g.title for g in community.groupsArray" ng-change="updateDirtyStatus()"></select>
                                     </div>
@@ -165,7 +166,7 @@
                             </td>
                             <td width="100%" valign="top">
                                 <div ng-show="isEditable()">
-                                    <h4>Add to authors:</h4>
+                                    <h4>{{ 'author_add' | translate }}:</h4>
                                     <div style="width: 100%;" ng-include="'components/kfutils/authorselector/authorselector.html'"></div>
                                 </div>
                             </td>
@@ -176,7 +177,7 @@
 
             <tab class="KFTab" heading="{{ 'connections' | translate }}">
                 <div>
-                    <label>This note builds onto:</label>
+                    <label>{{ 'contribution_connection_buildsOnto' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in fromConnections" ng-if="conn.type==='buildson'">
                             <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
@@ -184,7 +185,7 @@
                     </ul>
                 </div>
                 <div>
-                    <label>This note is built onto by:</label>
+                    <label>{{ 'contribution_connection_builtOnto' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in toConnections" ng-if="conn.type==='buildson'">
                             <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
@@ -192,7 +193,7 @@
                     </ul>
                 </div>
                 <div>
-                    <label>Views for this note:</label>
+                    <label>{{ 'contribution_connection_views' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in toConnections" ng-if="conn.type ==='contains' && conn._from.type === 'View'">
                             <a href="/view/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
@@ -200,7 +201,7 @@
                     </ul>
                 </div>
                 <div ng-show="contribution.type === 'Note'">
-                    <label>This note is supported by:</label>
+                    <label>{{ 'note_connection_supportedBy' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in toConnections" ng-if="conn.type==='supports'">
                             <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
@@ -216,13 +217,13 @@
                     </ul>
                 </div>
                 <div>
-                    <label>This note references:</label>
+                    <label>{{ 'contribution_connection_references' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in fromConnections" ng-if="conn.type==='references'">
                             <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
                         </li>
                     </ul>
-                    <label>This note is referenced by:</label>
+                    <label>{{ 'contribution_connection_referencedBy' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in toConnections" ng-if="conn.type==='references'">
                             <a href="/contribution/{{conn.from}}" target="_blank">{{conn._from.title}}</a>
@@ -233,17 +234,17 @@
 
             <tab class="KFTab" heading="{{ 'history' | translate }}">
                 <div>
-                    <label>edit logs:</label>
+                    <label>{{ 'edit_logs' | translate }}:</label>
                     <ul>
                         <li ng-repeat="record in records" ng-if="record.type!=='read'">
-                            {{record.type}} by {{record.user.getName()}} at {{record.getTime()}}
-                            <span ng-if="record.historicalObjectId"><a ng-href="historicalobject/{{record.historicalObjectId}}" target="_blank" >historical</a></span>
+                          {{record.getTime()}}: {{record.user.getName()}}
+                            <span ng-if="record.historicalObjectId"><a ng-href="historicalobject/{{record.historicalObjectId}}" target="_blank" >{{ 'technical_data' | translate }}</a></span>
                         </li>
                     </ul>
-                    <label>read logs:</label>
+                    <label>{{ 'read_logs' | translate }}:</label>
                     <ul>
                         <li ng-repeat="record in records" ng-if="record.type==='read'">
-                            {{record.type}} by {{record.user.getName()}} at {{record.getTime()}}
+                          {{record.getTime()}}: {{record.user.getName()}}
                         </li>
                     </ul>
                 </div>
@@ -260,8 +261,8 @@
                 </div>
 
                 <div ng-show="isEditable()">
-                    <label>Upload:</label>
-                    <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">Upload</button>
+                    <label>{{ "attachments_add" | translate }}:</label>
+                    <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">{{ 'attach' | translate }}</button>
                 </div>
             </tab>
 
