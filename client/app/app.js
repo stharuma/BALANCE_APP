@@ -1,39 +1,79 @@
 'use strict';
 
-//var translationsEN = require('resources/i18n/en.json');
-//var translationsFR = require('resources/i18n/fr.json');
 var translationsEN = {
   "add": "Add",
+  "author_add": "Add an author",
+  "author_select": "Select an author",
   "authors": "Authors",
+  "author-s": "Author(s)",
+  "authors_community": "possible author(s) in this community",
   "home": "Home",
   "admin": "Admin",
   "attachments": "Attachments",
+  "attachments_add": "Add an attachment",
+  "attachments_drop": "... or drag and drop files here.",
+  "attachments_drop_notSupported": "Drag and drop is not supported by your browser.",
+  "attachments_image_not": "There is no image attachment on this contribution.",
+  "attach": "Attach",
   "build-on": "Build-on",
+  "close": "Close",
   "communities": "Communities",
   "community": "Community",
-  "community_enter": "Accéder à la commmunauté",
+  "community_enter": "Enter community",
   "community_join": "Join Community",
   "community_possible": "possible communitie(s)",
   "community_registration_key": "Community Registration Key",
   "community_select": "Select community",
   "connections": "Connections",
   "contribute": "Contribute",
+  "contribution_connection_buildsOnto": "This contribution builds onto",
+  "contribution_connection_builtOnto": "This contribution is built onto by",
+  "contribution_connection_references": "This contribution references",
+  "contribution_connection_referencedBy" : "This contribution is referenced by",
+  "contribution_connection_views": "View(s) for this note",
+  "contribution_success": "Contribution Succeeded.",
+  "contribution_continueEditing": "Continue editing",
+  "contribution_finish": "Finish editing (Close this window)",
   "createdBy": "Created by",
+  "delete": "Delete",
   "edit": "Edit",
+  "edit_logs": "Edit logs",
+  "error": "Error",
   "firstName": "First Name",
+  "group": "Group",
+  "group members": "Group members",
   "history": "History",
   "join": "Join",
+  "kbc_myKBCsTitle": "My Knowledge Building Communities",
   "keyword-s": "Keyword(s)",
   "email": "Email",
+  "language": "Language",
+  "language_modify": "Modify language",
+  "language_select": "Select language",
   "lastName": "Last Name",
   "lastModified": "Last modified",
+  "loading..." : "Loading...",
   "login": "Login",
   "login_error_nameAndPass" : "Please enter your email and password.",
   "login_error_email" : "Please enter a valid email.",
-  "manage" : "Manage",
+  "logout": "Logout",
+  "manage": "Manage",
+  "note_connection_supportedBy": "This note is supported by",
+  "open": "Open",
+  "openInInternal": "Ouvrir in internal",
+  "openInTab": "Open in tab",
+  "openInWindow": "Open in window",
   "password": "Password",
+  "password_modify": "Modify password",
+  "password_current": "Current password",
+  "password_new": "New password",
+  "password_restrictions": "Password must be at least 3 characters.",
+  "position_fix": "Fix position",
+  "position_unfix": "Unfix position",
   "properties": "Properties",
   "read": "Read",
+  "read_logs": "Read logs",
+  "recovery": "Recovery",
   "register": "Register",
   "registration_key": "Registration key",
   "registration_key_invalid": "Invalid registration key.",
@@ -42,8 +82,12 @@ var translationsEN = {
   "register_error_email_invalid": "Doesn't look like a valid email.",
   "register_error_email_missing": "What's your email address?",
   "register_error_password": "Password must be at least 4 characters.",
+  "rise-above_create": "Create a Rise-above note",
+  "save": "Save",
   "scaffolds": "Scaffolds",
-  "logout": "Logout",
+  "technical_data": "Technical data",
+  "upload": "Upload",
+  "user_agent": "User Agent",
   "tools": "Tools",
 
 };
@@ -51,10 +95,25 @@ var translationsEN = {
 var translationsFR = {
   "add": "Ajouter",
   "authors": "Auteurs",
+  "author-s": "Auteur(s)",
+  "author_add": "Ajouter un auteur",
+  "author_select": "Sélectionnez un auteur",
+  "authors_community": "auteur(s) possible(s) dans cette communauté",
   "attachments": "Pièce(s) jointe(s)",
+  "attachments_add": "Ajouter une pièce jointe",
+  "attachments_drop": "... ou glisser-déposer le(s) fichier(s) ici.",
+  "attachments_drop_notSupported": "Le glisser-déposer n'est pas pris en charge par votre navigateur.",
+  "attachments_image_not": "Il n'y a pas d'image jointe à cette contribution.",
+  "attach": "Joindre",
   "home": "Accueil",
   "admin": "Administration",
   "build-on": "Élaborer",
+  "close": "Fermer",
+  "contribution_connection_buildsOnto": "Cette contribution élabore",
+  "contribution_connection_builtOnto": "Cette contribution est élaborée par celle(s)-ci",
+  "contribution_connection_references": "Cette contribution référence",
+  "contribution_connection_referencedBy" : "Cette contribution est référencée par",
+  "contribution_connection_views": "Perspective(s) contenant cette contribution",
   "communities": "Communautés",
   "community": "Communauté",
   "community_enter": "Accéder à la commmunauté",
@@ -64,22 +123,49 @@ var translationsFR = {
   "community_select": "Sélectionnez une communauté",
   "connections": "Liens",
   "contribute": "Contribuer",
+  "contribution_success": "Vous avez contribué avec succès.",
+  "contribution_continueEditing": "Poursuivre l'édition",
+  "contribution_finish": "Terminer l'édition (fermer cette fenêtre)",
   "createdBy": "Créé(e) par",
+  "delete": "Supprimer",
   "edit": "Éditer",
+  "edit_logs": "Révisions",
+  "error": "Erreur",
   "firstName": "Prénom",
+  "group": "Groupe",
+  "group members": "Membres du groupe",
   "history": "Historique",
   "join": "Joindre",
+  "kbc_myKBCsTitle": "Mes communautés d'élaboration de connaissances (CoÉco)",
   "keyword-s": "Mot(s)-clé(s)",
   "email": "Courriel",
+  "language": "Langue",
+  "language_modify": "Modifier la langue",
+  "language_select": "Sélectionnez une langue",
   "lastName": "Nom",
   "lastModified": "Dernière modification",
+  "loading..." : "Chargement en cours...",
   "login": "Connexion",
   "login_error_nameAndPass" : "Veuillez saisir votre courriel et mot de passe.",
   "login_error_email" : "Veuillez saisir une adresse de courriel valide.",
+  "logout": "Déconnexion",
   "manage" : "Gérer",
+  "note_connection_supportedBy": "Cette note est appuyée par",
+  "open": "Ouvrir",
+  "openInInternal": "Ouvrir à l'intérieur",
+  "openInTab": "Ouvrir dans un onglet",
+  "openInWindow": "Ouvrir dans une fenêtre",
   "password": "Mot de passe",
+  "password_modify": "Modifier mon mot de passe",
+  "password_current": "Mot de passe actuel",
+  "password_new": "Nouveau mot de passe",
+  "password_restrictions": "Le mot de passe doit contenir au moins 3 caractères.",
+  "position_fix": "Verrouiller la position",
+  "position_unfix": "Déverrouiller la position",
   "properties": "Propriétés",
   "read": "Lire",
+  "read_logs": "Lectures",
+  "recovery": "Récupération",
   "register": "Inscription",
   "registration_key": "Code d'inscription",
   "registration_key_invalid": "Code d'inscription invalide.",
@@ -88,9 +174,13 @@ var translationsFR = {
   "register_error_email_invalid": "Veuillez saisir une adresse de courriel valide.",
   "register_error_email_missing": "Veuillez saisir une adresse de courriel.",
   "register_error_password": "Le mot de passe doit comporter au moins 4 caractères.",
+  "rise-above_create": "Créer une note Élever-le-propos",
+  "save": "Enregistrer",
   "scaffolds": "Échafaudages",
-  "logout": "Déconnexion",
-  "tools": "Outils",
+  "upload": "Téléverser",
+  "user_agent": "Agent utilisateur",
+  "technical_data": "Données techniques",
+  "tools": "Outils"
 };
 
 angular.module('kf6App', [
@@ -119,36 +209,23 @@ angular.module('kf6App', [
         $locationProvider.html5Mode(true);
         $httpProvider.interceptors.push('authInterceptor');
     })
-  /*
+
     .config(['$translateProvider', function($translateProvider) {
         $translateProvider
-          //.useStaticFilesLoader({
-          //  prefix: 'resources/i18n/',
-          //  suffix: '.json'
-          //})
           .translations('en', translationsEN)
           .translations('fr', translationsFR)
-            .fallbackLanguage('en')
-          //.registerAvailableLanguageKeys(['en','fr'])
+          .preferredLanguage('fr')
+          .fallbackLanguage('en')
           //.determinePreferredLanguage();
-            .preferredLanguage('fr');
-    }])*/
-  .config(function ($translateProvider) {
+    }])
+  .controller('LanguageCtrl', function ($scope, $translate) {
+  $scope.changeLanguage = function (key) {
+    console.log('proposedLanguage', $translate.proposedLanguage());
+    console.log('new language', key);
+    $translate.use(key);
+  };
+})
 
-    $translateProvider
-
-      /*
-      .useStaticFilesLoader({
-        prefix: 'locale-',
-        suffix: '.json'
-        })
-      */
-      .translations('en', translationsEN)
-      .translations('fr', translationsFR)
-      .preferredLanguage('fr')
-      .fallbackLanguage('en');
-
-  })
 
 .factory('authInterceptor', function($rootScope, $q, $cookieStore, $location) {
     return {

@@ -76,7 +76,7 @@
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img class="KFToolBarImage" src="manual_assets/kf6images/04-toolbar-viewmanagement.png" title="View management"></button>            
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img class="KFToolBarImage" src="manual_assets/kf6images/04-toolbar-viewmanagement.png" title="View management"></button>
             </span>
         </span>
         <span class="input-group">
@@ -86,7 +86,7 @@
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openScaffolds();"><img class="KFToolBarImage" src="manual_assets/kf6images/06-toolbar-scaffolds.png" title="Scaffolds"></button>            
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openScaffolds();"><img class="KFToolBarImage" src="manual_assets/kf6images/06-toolbar-scaffolds.png" title="Scaffolds"></button>
             </span>
         </span>
         <span ng-show="isManager()" class="input-group">
@@ -135,7 +135,7 @@
             <div ng-attr-id="{{ref._id}}" class="kfViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
                 <div ng-if="ref.data.showInPlace!==true" style="white-space: nowrap; font-size: 12px;">
                     <div ng-if="ref._to.type !== 'View'">
-                        <span ng-click="openContribution(ref.to, $event)" kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}"> 
+                        <span ng-click="openContribution(ref.to, $event)" kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}">
                             <img ng-src="{{ref.getIcon()}}" draggable="false">
                         </span>
                         <a ng-click="openContribution(ref.to, $event)" class='kfIcon'>{{ref._to.title}}</a>
@@ -173,22 +173,28 @@
     </div>
     <div class="dropdown position-fixed" id="menu-A" style="position: absolute; z-index: 20;">
         <ul class="dropdown-menu" role="menu">
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContribution()">Open</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInTab()">Open In Tab</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInPopup()">Open In Window</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenView()">Open</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInInternal()">Open In Internal</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInPopup()">Open In Window</li>
-            <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">Delete</li>
+            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContribution()">{{ 'open' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInTab()">{{ 'openInTab' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInPopup()">{{ 'openInWindow' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenView()">{{ 'open' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInInternal()">{{ 'openInInternal' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInPopup()">{{ 'openInWindow' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
             <li ng-if="contextTarget.data.showInPlace === true && isEditable()" class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
             <li ng-if="contextTarget.data.showInPlace !== true && contextTarget._to.type !== 'Note' && isEditable()" class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
+<<<<<<< HEAD
             <li ng-if="isFixable()" class="menuitem" ng-click="fix()">Fix</li>
             <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">Fix and Lock</li>
             <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">Unfix</li>
             <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabove()">Riseabove</li>
+=======
+            <li ng-if="contextTarget.data.fixed !== true && isEditable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
+            <li ng-if="contextTarget.data.fixed === true && isEditable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
+            <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabove()">{{ 'rise-above_create' | translate }}</li>
+>>>>>>> advancing i18n...
         </ul>
     </div>
 </div>
 <div ng-show="status.error">
-    Error: {{status.errorMessage}}
+    {{ 'error' | translate }}: {{status.errorMessage}}
 </div>
