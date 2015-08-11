@@ -13,6 +13,7 @@ var UserSchema = new Schema({
         type: String,
         lowercase: true
     },
+    username: String,
     role: {
         type: String,
         default: 'user'
@@ -47,6 +48,7 @@ UserSchema
         return {
             '_id': this._id,
             'email': this.email,
+            'username': this.username,
             'name': this.firstName + ' ' + this.lastName,
             'firstName': this.firstName,
             'lastName': this.lastName,
@@ -68,13 +70,13 @@ UserSchema
  * Validations
  */
 
-// Validate empty email
+// Validate empty username
 UserSchema
-    .path('email')
-    .validate(function(email) {
+    .path('username')
+    .validate(function(username) {
         if (authTypes.indexOf(this.provider) !== -1) return true;
-        return email.length;
-    }, 'Email cannot be blank');
+        return username.length;
+    }, 'Username cannot be blank');
 
 // Validate empty password
 UserSchema
@@ -84,13 +86,13 @@ UserSchema
         return hashedPassword.length;
     }, 'Password cannot be blank');
 
-// Validate email is not taken
+// Validate username is not taken
 UserSchema
-    .path('email')
+    .path('username')
     .validate(function(value, respond) {
         var self = this;
         this.constructor.findOne({
-            email: value
+            username: value
         }, function(err, user) {
             if (err) throw err;
             if (user) {
@@ -99,7 +101,7 @@ UserSchema
             }
             respond(true);
         });
-    }, 'The specified email address is already in use.');
+    }, 'The specified username is already in use.');
 
 var validatePresenceOf = function(value) {
     return value && value.length;

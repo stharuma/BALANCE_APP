@@ -13,9 +13,9 @@
             <form class="form" name="form" ng-submit="login(form)" novalidate>
 
                 <div class="form-group">
-                    <label>{{ 'email' | translate }}</label>
+                    <label>{{ 'username' | translate }}</label>
 
-                    <input type="email" name="email" class="form-control" ng-model="user.email" required>
+                    <input type="username" name="username" class="form-control" ng-model="user.username" required>
                 </div>
 
                 <div class="form-group">
@@ -25,10 +25,10 @@
                 </div>
 
                 <div class="form-group has-error">
-                    <p class="help-block" ng-show="form.email.$error.required && form.password.$error.required && submitted">
+                    <p class="help-block" ng-show="form.username.$error.required && form.password.$error.required && submitted">
                         {{ 'login_error_nameAndPass' | translate }}
                     </p>
-                    <p class="help-block" ng-show="form.email.$error.email && submitted">
+                    <p class="help-block" ng-show="form.username.$error.email && submitted">
                         {{ 'login_error_email' | translate }}
                     </p>
 
@@ -36,12 +36,13 @@
                 </div>
 
                 <div>
-                    <button class="btn btn-default btn-lg btn-login" type="submit">
+                  <p>
+                    <button class="btn btn-default btn-lg btn-login btn-primary" type="submit">
                         {{ 'login' | translate }}
                     </button>
-                    <a class="btn btn-default btn-lg btn-register" href="/signup">
-                      {{ 'register' | translate }}
-                    </a>
+                  </p>
+                  <br />
+                  <p>{{ 'login_signup_invite' | translate }}: <a href="/signup"><strong>{{ 'register' | translate }}</strong></a></p>
                 </div>
 
                 <!-- <hr> -->
