@@ -13,6 +13,7 @@ angular.module('kf6App')
                         firstName: $scope.user.firstName,
                         lastName: $scope.user.lastName,
                         email: $scope.user.email,
+                        username: $scope.user.username,
                         password: $scope.user.password,
                         registrationKey: $scope.user.registrationKey
                     })
