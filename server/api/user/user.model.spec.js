@@ -42,12 +42,22 @@ describe('User Model', function() {
         });
     });
 
+    // TODO: decide if reintroducing mandatory email -- not compatible with Quebec RNS
+    /*
     it('should fail when saving without an email', function(done) {
         user.email = '';
         user.save(function(err) {
             should.exist(err);
             done();
         });
+    });
+    */
+    it('should fail when saving without a username', function(done) {
+      user.username = '';
+      user.save(function(err) {
+        should.exist(err);
+        done();
+      });
     });
 
     it("should authenticate user if password is valid", function() {
