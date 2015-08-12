@@ -54,7 +54,7 @@ exports.create = function(req, res) {
             req.body.type = 'Author';
             req.body.role = role;
             req.body.permission = 'protected';
-            req.body.userName = req.user.email;            
+            req.body.userName = req.user.email;
             req.body.firstName = req.user.firstName;
             req.body.lastName = req.user.lastName;
             req.body._community = {
@@ -65,7 +65,7 @@ exports.create = function(req, res) {
                 if (err) {
                     return handleError(res, err);
                 }
-                return res.json(201, author);
+                return res.status(201).json(author);
             });
         });
     });

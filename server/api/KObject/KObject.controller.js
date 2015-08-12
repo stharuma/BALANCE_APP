@@ -9,7 +9,7 @@ var upload = require('../upload/upload.controller');
 // Get list of KObjects
 exports.index = function(req, res) {
     //this should not be used
-    res.json(200, []);
+    res.status(200).json([]);
 };
 
 // Get a single KObject
@@ -35,7 +35,7 @@ exports.create = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(201, obj);
+        return res.status(201).json(obj);
     });
 };
 
@@ -111,7 +111,7 @@ exports.update = function(req, res) {
                     historicalObjectId: historical._id
                 });
             });
-            return res.json(200, newContribution);
+            return res.status(200).json(newContribution);
         });
     });
 };

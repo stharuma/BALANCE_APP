@@ -14,7 +14,7 @@ exports.index = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, communitys);
+        return res.status(200).json(communitys);
     });
 };
 
@@ -113,7 +113,7 @@ exports.create = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(201, community);
+            return res.status(201).json(community);
         });
     });
 };
@@ -139,7 +139,7 @@ exports.update = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, community);
+            return res.status(200).json(community);
         });
     });
 };

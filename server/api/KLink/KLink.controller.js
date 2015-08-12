@@ -8,7 +8,7 @@ var KHistoricalObject = require('../KHistoricalObject/KHistoricalObject.model.js
 
 exports.index = function(req, res) {
     //this should not be used
-    res.json(200, []);
+    res.status(200).json([]);
 };
 
 exports.fromIndex = function(req, res) {
@@ -18,7 +18,7 @@ exports.fromIndex = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, links);
+        return res.status(200).json(links);
     });
 };
 
@@ -29,7 +29,7 @@ exports.toIndex = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, links);
+        return res.status(200).json(links);
     });
 };
 
@@ -44,7 +44,7 @@ exports.eitherIndex = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, links);
+        return res.status(200).json(links);
     });
 };
 
@@ -75,7 +75,7 @@ exports.viewIndex = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, links);
+            return res.status(200).json(links);
         });
     });
 };
@@ -100,7 +100,7 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
         record(req, link, 'created');
-        return res.json(201, link);
+        return res.status(201).json(link);
     });
 };
 
@@ -179,7 +179,7 @@ exports.update = function(req, res) {
                 return handleError(res, err);
             }
             record(req, link, 'modified');
-            return res.json(200, link);
+            return res.status(200).json(link);
         });
     });
 };

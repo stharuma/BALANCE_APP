@@ -11,7 +11,7 @@ exports.upload = function(req, res) {
     obj.tmpFilename = file.path.split('\\').pop().split('/').pop();
     obj.size = file.size;
     obj.type = file.type;
-    return res.json(200, obj);
+    return res.status(200).json(obj);
 };
 
 exports.processAttachment = function(newobj) {

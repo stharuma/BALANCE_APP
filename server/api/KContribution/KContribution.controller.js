@@ -30,11 +30,11 @@ exports.create = function(req, res) {
                 if (err) {
                     return handleError(res, err);
                 }
-                return res.json(201, contribution);
+                return res.status(201).json(contribution);
             });
             return;
         }
-        return res.json(201, contribution);
+        return res.status(201).json(contribution);
     });
 };
 
@@ -44,7 +44,7 @@ exports.searchCount = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, {
+            return res.status(200).json({
                 count: count
             });
         });
@@ -64,7 +64,7 @@ exports.search = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, contributions);
+            return res.status(200).json(contributions);
         });
     });
 };
