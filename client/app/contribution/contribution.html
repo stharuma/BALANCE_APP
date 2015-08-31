@@ -59,7 +59,7 @@
                             <img ng-attr-src="{{contribution.data.url}}">
                         </div>
                         <div ng-if="!isImage(contribution)">
-                            <a ng-click="downloadAttachment(contribution)">Download</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
+                            <a ng-click="downloadAttachment(contribution)">{{ 'download' | translate }}</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
                         </div>
                     </div>
 
