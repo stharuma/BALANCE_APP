@@ -22,7 +22,17 @@
     <div style="height: 10px;"></div>
     <div>
         <table style="width: 100%;">
+          <thead>
+            <tr>
+              <th>{{ 'username' | translate }}</th>
+              <th>{{ 'firstName' | translate }}</th>
+              <th>{{ 'lastName' | translate }}</th>
+              <th>{{ 'email' | translate }}</th>
+              <th></th>
+            </tr>
+          </thead>
             <tr ng-repeat="user in users">
+              <td>{{user.username}}</td>
                 <td>{{user.firstName}}</td>
                 <td>{{user.lastName}}</td>
                 <td>
