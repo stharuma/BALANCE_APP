@@ -331,8 +331,15 @@ angular.module('kf6App')
         });
 
         $scope.buildson = function() {
+            var w = undefined;
+            if ($scope.isMobile()) {
+                w = window.open('');
+            }
             $community.createNoteOn($scope.contribution._id, function(newContribution) {
-                if (window.openContribution) {
+                if (w) {
+                    var url = './contribution/' + newContribution._id;
+                    w.location.href = url;
+                } else if (window.openContribution) {
                     window.openContribution(newContribution._id);
                 } else {
                     var url = './contribution/' + newContribution._id;
