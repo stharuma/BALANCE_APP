@@ -92,7 +92,7 @@ UserSchema
     .validate(function(value, respond) {
         var self = this;
         this.constructor.findOne({
-            username: value
+            username: new RegExp(value, 'i')
         }, function(err, user) {
             if (err) throw err;
             if (user) {
