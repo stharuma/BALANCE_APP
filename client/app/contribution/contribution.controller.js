@@ -331,18 +331,17 @@ angular.module('kf6App')
         });
 
         $scope.buildson = function() {
-            var w = undefined;
+            var w;
             if ($scope.isMobile()) {
                 w = window.open('');
             }
             $community.createNoteOn($scope.contribution._id, function(newContribution) {
+                var url = './contribution/' + newContribution._id;
                 if (w) {
-                    var url = './contribution/' + newContribution._id;
                     w.location.href = url;
                 } else if (window.openContribution) {
                     window.openContribution(newContribution._id);
                 } else {
-                    var url = './contribution/' + newContribution._id;
                     window.open(url, '_blank');
                 }
             });
