@@ -85,6 +85,12 @@ exports.update = function(req, res) {
         if (newobj.data) {
             updated.markModified('data');
         }
+        /* bridge program: old user does not have userName which cannot update (e.g. workspace creation problem caused by this) */
+        if (updated.__t === 'KAuthor' && !updated.userName) {
+            updated.userName = req.user.email;
+        }
+        /* bridge program end */
+
         updated.modified = Date.now();
         if (updated.group !== newobj.group) {
             updated._groupMembers = null;
