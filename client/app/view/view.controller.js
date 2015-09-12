@@ -557,9 +557,14 @@ angular.module('kf6App')
                 }
                 author.data.workspaces.push(view._id);
                 $community.modifyObject(author, function() {
+                    /* success */
                     if (handler) {
                         handler(view);
                     }
+                }, function(err) {
+                    /* error */
+                    window.alert(JSON.stringify(err));
+                    author.data.workspaces = undefined; /* roll back */
                 });
             }, true, {
                 permission: 'private'
