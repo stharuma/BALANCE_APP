@@ -28,21 +28,18 @@ var kfac = function() {
         if (!object || !author) {
             return false;
         }
-
         if (author.role === 'manager') {
             return true;
         }
-
         if (authorRequirementTable[object.permission][requiredPermission] === false) {
             return true;
         }
-
         //author requirement
         return isAuthorOrGroupMember(object, author);
     };
 
     var isAuthorOrGroupMember = function(object, author) {
-        return isAuthor(object, author) || isGroupMember(object, author);
+        return isAuthor(object, author) || isGroupMember(object, author) || isMyself(object, author);
     };
 
     var isAuthor = function(object, author) {
@@ -56,6 +53,10 @@ var kfac = function() {
             return false;
         }
         return object._groupMembers.indexOf(author._id) >= 0;
+    };
+
+    var isMyself = function(object, author) {
+        return object._id.equals(author._id);
     };
 
     return {
