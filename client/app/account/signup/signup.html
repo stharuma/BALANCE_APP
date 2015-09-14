@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>Sign up</h1>
+            <h1>New Account</h1>
         </div>
         <div class="col-sm-12">
             <form class="form" name="form" ng-submit="register(form)" novalidate>
@@ -54,16 +54,16 @@
                 </div>
 
                 <div class="form-group" ng-class="{ 'has-success': form.registrationKey.$valid && submitted, 'has-error': form.registrationKey.$invalid && submitted }">
-                    <label>User Registration Key:</label>
+                    <label>Account Creation Key:</label>
                     <input type="text" name="registrationKey" class="form-control" ng-model="user.registrationKey" mongoose-error/>
                     <p class="help-block" ng-show="form.registrationKey.$error.mongoose">
-                        RegistrationKey is not valid.
+                        The key is not valid.
                     </p>
                 </div>
 
                 <div>
                     <button class="btn btn-inverse btn-lg btn-login" type="submit">
-                        Sign up
+                        Create
                     </button>
                 </div>
 
