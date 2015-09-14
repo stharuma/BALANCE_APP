@@ -81,12 +81,11 @@ function makeMongoQuery(req, res, success) {
     var mongoQuery = {
         $and: []
     };
-
     mongoQuery.$and.push({
         communityId: communityId
     });
 
-    if (query.authors.length > 0) {
+    if (query.authors && query.authors.length > 0) {
         var authorIds = [];
         query.authors.forEach(function(authorIdStr) {
             authorIds.push(mongoose.Types.ObjectId(authorIdStr));
@@ -119,10 +118,12 @@ function makeMongoQuery(req, res, success) {
     //http://stackoverflow.com/questions/10913568/mongoose-how-to-find-3-words-in-any-order-and-in-any-place-in-the-string-sql
     //(?=.*comp)(?=.*abc)(?=.*300).*
     var regexpstr = '';
-    query.words.forEach(function(word) {
-        regexpstr += '(?=.*' + word + ')';
-    });
-    regexpstr += '.*';
+    if (query.words) {
+        query.words.forEach(function(word) {
+            regexpstr += '(?=.*' + word + ')';
+        });
+        regexpstr += '.*';
+    }
     mongoQuery.$and.push({
         text4search: new RegExp(regexpstr, 'i')
     });
