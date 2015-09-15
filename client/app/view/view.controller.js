@@ -22,6 +22,7 @@ angular.module('kf6App')
         $scope.status.isViewlinkCollapsed = true;
         $scope.status.isViewManagerCollapsed = true;
         $scope.status.isAttachmentCollapsed = true;
+        $scope.status.isAnalyticsCollapsed = true;
         $scope.status.isSettingCollapsed = true;
         $scope.setting = {
             buildson: true,
@@ -575,6 +576,17 @@ angular.module('kf6App')
             var url = './view/' + viewId;
             $scope.openInPopup(url);
         };
+
+        $scope.openAnalytics = function() {
+            $scope.status.isAnalyticsCollapsed = !$scope.status.isAnalyticsCollapsed;
+        };
+
+        $scope.openTagCloud = function() {
+            $scope.openAnalytics();
+            var url = 'wcloud/' + $scope.view._id;
+            $scope.openInPopup(url);
+        };
+        
 
         $scope.doExit = function() {
             var url = '';
