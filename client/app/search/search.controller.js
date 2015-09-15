@@ -5,12 +5,17 @@ angular.module('kf6App')
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
+        $community.refreshViews(function() {
+            $scope.views = $community.getViews();
+        });
         $scope.communityMembers = $community.getCommunityData().membersArray;
 
         $kfutil.mixIn($scope);
 
         //Query String
         $scope.queryString = '';
+        $scope.selected = {}; //currently using only for views
+        $scope.selected.views = [];
 
         //General Status
         $scope.status = {};
@@ -64,8 +69,8 @@ angular.module('kf6App')
             $http.post('/api/contributions/' + communityId + '/search', {
                 query: $scope.pager.query
             }).success(function(contributions) {
-                contributions.forEach(function(c){
-                    if(!$ac.isReadable(c)){
+                contributions.forEach(function(c) {
+                    if (!$ac.isReadable(c)) {
                         c.title = 'forbidden';
                         c.authors = [];
                         c.data.body = '(forbidden)';
@@ -92,6 +97,14 @@ angular.module('kf6App')
             var tokens = queryString.split(' ');
             tokens.forEach(function(token) {
                 if (token.length === 0) {
+                    return;
+                }
+                if (token.indexOf('-view:') >= 0) {
+                    token = token.replace('-view:', '');
+                    if (!query.viewIds) {
+                        query.viewIds = [];
+                    }
+                    query.viewIds.push(token);
                     return;
                 }
                 if (token.indexOf('-from:') >= 0) {
@@ -145,6 +158,15 @@ angular.module('kf6App')
                 $scope.queryString += ' -to:' + $scope.to.toISOString();
             }
         });
+
+        $scope.addViews = function() {
+            if ($scope.selected.views && $scope.selected.views.length >= 1) {
+                $scope.selected.views.forEach(function(each) {
+                    $scope.queryString += ' -view:' + each._id;
+                });
+                $scope.selected.views = [];
+            }
+        };
 
         $scope.authorSelected = function(author) {
             $scope.queryString += ' -author:' + author.userName;

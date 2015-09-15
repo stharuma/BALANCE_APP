@@ -71,6 +71,31 @@ exports.search = function(req, res) {
 
 function makeMongoQuery(req, res, success) {
     var query = req.body.query;
+    if (!query.viewIds) {
+        makeMongoQuery0(req, res, success);
+    } else { //has viewIds
+        KLink.find({
+            from: {
+                $in: query.viewIds
+            }
+        }, function(err, links) {
+            if (err) {
+                return handleError(res, err);
+            }
+            var ids = [];
+            links.forEach(function(each) {
+                if (each._from.status === 'active') {
+                    ids.push(each.to);
+                }
+            });
+            req.ids = ids;
+            makeMongoQuery0(req, res, success);
+        });
+    }
+}
+
+function makeMongoQuery0(req, res, success) {
+    var query = req.body.query;
     var communityId = query.communityId;
     if (!communityId) {
         return res.json(500, {
@@ -84,6 +109,14 @@ function makeMongoQuery(req, res, success) {
     mongoQuery.$and.push({
         communityId: communityId
     });
+
+    if (req.ids && req.ids.length > 0) {      
+        mongoQuery.$and.push({
+            _id: {
+                $in: req.ids
+            }
+        });
+    }
 
     if (query.authors && query.authors.length > 0) {
         var authorIds = [];
