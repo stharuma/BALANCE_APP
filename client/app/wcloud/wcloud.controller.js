@@ -14,6 +14,7 @@ angular.module('kf6App')
             $http.post('/api/contributions/' + $scope.view.communityId + '/search', {
                 query: {
                     communityId: $scope.view.communityId,
+                    viewIds: [$scope.view._id],
                     pagesize: 1000
                 }
             }).success(function(contributions) {
