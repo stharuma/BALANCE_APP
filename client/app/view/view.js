@@ -452,11 +452,25 @@ angular.module('kf6App')
                         });
                     } else { //External DnD
                         var data = e.dataTransfer.getData('text');
-                        var index = data.indexOf('postref:');
+                        var index = data.indexOf('objectIds:');
+                        var text = '';
+                        if (index === 0) {
+                            text = data.replace('objectIds:', '');
+                            var ids = JSON.parse(text);
+                            ids.forEach(function(each) {
+                                $scope.createContainsLink(each, {
+                                    x: newX,
+                                    y: newY
+                                });
+                            });
+                            return;
+                        }
+
+                        index = data.indexOf('postref:');
                         if (index !== 0) {
                             return;
                         }
-                        var text = data.replace('postref:', '');
+                        text = data.replace('postref:', '');
                         var models = JSON.parse(text);
                         models.forEach(function(each) {
                             $scope.createContainsLink(each.to, {

@@ -186,4 +186,12 @@ angular.module('kf6App')
             return $community.makeAuthorStringByIds(obj.authors);
         };
 
+        $scope.getIcon = function(contribution) {
+            if ($community.amIAuthor(contribution)) {
+                return 'manual_assets/kf4images/icon-note-unknown-auth-.gif';
+            } else {
+                return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
+            }
+        };
+
     });
