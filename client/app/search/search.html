@@ -12,6 +12,10 @@
     <div collapse="status.detailCollapsed">
         <div class="well well-lg">
             <div style="padding: 15px;">
+                <label>Private Mode:</label>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addPrivateMode()">Set</button>
+            </div>
+            <div style="padding: 15px;">
                 <label>Views:</label>
                 <ui-select ng-model="selected.views" theme="select2" multiple ng-disabled="disabled" style="width: 80%;">
                     <ui-select-match placeholder="Select view...">{{$item.title}}</ui-select-match>

@@ -99,6 +99,12 @@ angular.module('kf6App')
                 if (token.length === 0) {
                     return;
                 }
+
+                if (token.indexOf('-private') >= 0) {
+                    query.privateMode = $community.getAuthor()._id;
+                    return;
+                }
+
                 if (token.indexOf('-view:') >= 0) {
                     token = token.replace('-view:', '');
                     if (!query.viewIds) {
@@ -166,6 +172,10 @@ angular.module('kf6App')
                 });
                 $scope.selected.views = [];
             }
+        };
+
+        $scope.addPrivateMode = function() {
+            $scope.queryString += ' -private';
         };
 
         $scope.authorSelected = function(author) {

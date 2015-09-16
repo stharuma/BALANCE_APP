@@ -110,7 +110,23 @@ function makeMongoQuery0(req, res, success) {
         communityId: communityId
     });
 
-    if (req.ids && req.ids.length > 0) {      
+    mongoQuery.$and.push({
+        status: 'active'
+    });
+
+    if (!query.privateMode) {
+        mongoQuery.$and.push({
+            permission: {
+                $in: ['public', 'protected']
+            }
+        });
+    } else { //private mode
+        mongoQuery.$and.push({
+            authors: mongoose.Types.ObjectId(req.author._id)
+        });
+    }
+
+    if (req.ids && req.ids.length > 0) {
         mongoQuery.$and.push({
             _id: {
                 $in: req.ids

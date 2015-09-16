@@ -512,6 +512,7 @@ angular.module('kf6App')
             modifyObject: modifyObject,
             getObject: getObject,
             read: read,
+            getAuthor: getAuthor,
             getViews: function() {
                 return communityData.views;
             },
