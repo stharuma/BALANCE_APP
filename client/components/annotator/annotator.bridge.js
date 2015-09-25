@@ -22,6 +22,14 @@ angular.module('kf6App').directive('annotatable', function() {
                 }
             };
             contents.annotator('addPlugin', 'KFPlugin');
+            contents.annotator('addPlugin', 'Tags');
+            contents.annotator('addPlugin', 'Permissions', {
+                user: 'me',
+                permissions: {
+                    read: 'me'
+                },
+                showEditPermissionsCheckbox: false
+            });
         }
     };
 });
