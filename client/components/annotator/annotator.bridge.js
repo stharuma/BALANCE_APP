@@ -1,14 +1,14 @@
 /*global Annotator*/
 'use strict';
 
-angular.module('kf6App').directive('annotatable', function() {
+angular.module('kf6App').directive('annotatable', function($community) {
     return {
         restrict: 'A',
         link: function(scope, element /*, attrs */ ) {
 
             var contents = angular.element(element).annotator();
 
-            Annotator.Plugin.KFPlugin = function(/*element*/) {
+            Annotator.Plugin.KFPlugin = function( /*element*/ ) {
                 return {
                     pluginInit: function() {
                         this.annotator
@@ -27,7 +27,7 @@ angular.module('kf6App').directive('annotatable', function() {
                                     scope.annotatorHandler.annotationDeleted(annotation);
                                 }
                             });
-                        if(scope.annotatorHandler){
+                        if (scope.annotatorHandler) {
                             scope.annotatorHandler.annotatorInitialized(this.annotator);
                         }
                     }
@@ -35,12 +35,21 @@ angular.module('kf6App').directive('annotatable', function() {
             };
             contents.annotator('addPlugin', 'KFPlugin');
             contents.annotator('addPlugin', 'Tags');
-            contents.annotator('addPlugin', 'Permissions', {
-                user: 'me',
-                permissions: {
-                    read: 'me'
-                },
-                showEditPermissionsCheckbox: false
+            $community.refreshAuthor(function(author) {
+                var uname = author.userName;
+                if (!uname) {
+                    uname = '*undefined user*';
+                }
+                contents.annotator('addPlugin', 'Permissions', {
+                    user: uname,
+                    permissions: {
+                        read: [uname],
+                        update: [uname],
+                        delete: [uname],
+                        admin: [uname]
+                    },
+                    showEditPermissionsCheckbox: false
+                });
             });
         }
     };
