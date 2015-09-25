@@ -4,7 +4,7 @@
 angular.module('kf6App').directive('annotatable', function() {
     return {
         restrict: 'A',
-        link: function(scope /* , element, attrs */ ) {
+        link: function(scope, element /*, attrs */ ) {
 
             var contents = angular.element(element).annotator();
 
