@@ -29,7 +29,7 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
     if (!_.contains(req.body.authors, req.author._id.toString())) {
         console.error('author must be included in authors.');
-        return res.json(403);
+        return res.send(403);
     }
     KObject.create(req.body, function(err, obj) {
         if (err) {

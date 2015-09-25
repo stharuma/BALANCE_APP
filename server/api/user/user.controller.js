@@ -9,7 +9,7 @@ var KAuthor = require('../KAuthor/KAuthor.model');
 
 var validationError = function(res, err) {
     console.error(err);
-    return res.json(422, err);
+    return res.send(422, err);
 };
 
 /**
@@ -78,12 +78,12 @@ exports.create = function(req, res, next) {
 
     //Here is a temporary registration password system.
     if (!req.body.registrationKey) {
-        return res.json(422, {
+        return res.send(422, {
             errorCode: 'invalidRegistrationKey'
         });
     }
     if (req.body.registrationKey !== 'kcreation') {
-        return res.json(422, {
+        return res.send(422, {
             errorCode: 'invalidRegistrationKey'
         });
     }
@@ -182,7 +182,7 @@ exports.me = function(req, res, next) {
         _id: userId
     }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
         if (err) return next(err);
-        if (!user) return res.json(401);
+        if (!user) return res.send(401);
         res.json(user);
     });
 };
