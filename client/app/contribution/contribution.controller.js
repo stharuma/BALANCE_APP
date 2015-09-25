@@ -91,6 +91,7 @@ angular.module('kf6App')
                 });
                 $community.refreshGroups();
                 $scope.updateToConnections(function() {
+                    $scope.updateAnnotations();
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();
                         $scope.updateAttachments(links);
@@ -549,6 +550,83 @@ angular.module('kf6App')
                 original += '; ';
             }
             $scope.copy.keywords = original + selectedText;
+        };
+
+        /*********** annotator ***********/
+        var annotator;
+        $scope.annotatorHandler = {};
+        $scope.annos = {};        
+        $scope.annoLinks = {};
+        $scope.annotatorHandler.annotatorInitialized = function(anAnnotator) {
+            annotator = anAnnotator;
+        };
+        $scope.annotatorHandler.annotationCreated = function(annoVM) {
+            createAnnotation(annoVM);
+        };
+        $scope.annotatorHandler.annotationUpdated = function(annoVM) {
+            if (!annoVM.linkId || !annoVM.modelId) {
+                console.log('ERROR! annoVM doesn\'t have id on update');
+            }
+            var model = $scope.annos[annoVM.modelId];
+            model.data = annoVM;
+            $community.modifyObject(model);
+        };
+        $scope.annotatorHandler.annotationDeleted = function(annoVM) {
+            if (!annoVM.linkId || !annoVM.modelId) {
+                console.log('ERROR! annoVM doesn\'t have id on delete');                
+            }
+            $http.delete('/api/links/' + annoVM.linkId);
+        };
+
+        $scope.updateAnnotations = function() {
+            if (!annotator) {
+                console.log('annotator was not initialized');
+                return;
+            }
+            window.setTimeout(function() {
+                var annoLinks = $scope.toConnections.filter(function(each) {
+                    return each.type === 'annotates';
+                });
+                annoLinks.forEach(function(annoLink) {
+                    $community.getObject(annoLink.from, function(anno) {
+                        $scope.annoLinks[annoLink._id] = annoLink;
+                        $scope.annos[anno._id] = anno;
+                        var annoVM = anno.data;
+                        annoVM.linkId = annoLink._id;
+                        annoVM.modelId = anno._id;
+                        annotator.loadAnnotations([annoVM]);
+                    });
+                });
+            }, 3000);
+        };
+
+        var createAnnotation = function(annoVM) {
+            var communityId = $community.getCommunityData().community._id;
+            var newobj = {
+                communityId: communityId,
+                type: 'Annotation',
+                title: 'an Annotation',
+                authors: [$community.getAuthor()._id],
+                status: 'active',
+                permission: 'private',
+                data: annoVM
+            };
+            $http.post('/api/contributions/' + communityId, newobj)
+                .success(function(annotation) {
+                    createAnnotationLink(annotation, annoVM);
+                });
+        };
+
+        var createAnnotationLink = function(annotation, annoVM) {
+            var link = {};
+            link.to = $scope.contribution._id;
+            link.from = annotation._id;
+            link.type = 'annotates';
+            $http.post('/api/links', link).success(function(link) {
+                annoVM.linkId = link._id;
+                $scope.annoLinks[link._id] = link;
+                $scope.annos[annotation._id] = annotation;
+            });
         };
 
         /*********** svg-edit ************/
