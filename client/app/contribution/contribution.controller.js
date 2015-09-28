@@ -210,6 +210,11 @@ angular.module('kf6App')
                 return;
             }
 
+            if (!$scope.mceEditor) { //avoid contribution in empty body
+                window.alert('mceEditor have not initialized yet.');
+                return;
+            }
+
             $scope.status.isContributionCollapsed = false;
             $scope.status.contribution = 'saving';
 
