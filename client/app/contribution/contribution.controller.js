@@ -498,8 +498,6 @@ angular.module('kf6App')
             forced_root_block: false,
             force_br_newlines: true,
             force_p_newlines: false,
-            extended_valid_elements: 'kf-*[*]',
-            custom_elements: '~kf-[a-zA-Z0-9]+$',
             toolbar_items_size: 'small',
             content_css: '/manual_assets/kfmce.css',
             inline_styles: true,
