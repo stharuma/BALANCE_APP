@@ -11,7 +11,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('kfDragSource', function($kftag) {
+    .directive('kfDragSource', function($kftag, $kfutil) {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -19,7 +19,10 @@ angular.module('kf6App')
                 var el = element[0];
                 //el.draggable = true;
                 el.addEventListener('dragstart', function(e) {
-                    var dt = e.dataTransfer;
+                    var dt = e.dataTransfer; //error in IE
+                    if (!dt && $kfutil.isIE()) {
+                        return; //surrender to create reference
+                    }
                     var original = dt.getData('text/plain');
                     var contrib = $scope.contribution;
                     var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
@@ -29,7 +32,10 @@ angular.module('kf6App')
                     dt.setData('text/plain', original);
                 });
                 el.addEventListener('copy', function(e) {
-                    var dt = e.clipboardData;
+                    var dt = e.clipboardData; //error in IE
+                    if (!dt && $kfutil.isIE()) {
+                        return; //surrender to create reference
+                    }
                     var original = getSelected();
                     var contrib = $scope.contribution;
                     var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
