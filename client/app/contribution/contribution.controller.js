@@ -49,7 +49,7 @@ angular.module('kf6App')
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
 
-                $scope.setTitle();
+                $scope.updateTitle();
                 if ($scope.contribution.keywords) {
                     var keywordsStr = '';
                     $scope.contribution.keywords.forEach(function(keyword) {
@@ -402,10 +402,16 @@ angular.module('kf6App')
 
         /*********** title ************/
 
-        $scope.setTitle = function(title) {
-            if (window.setInternalWindowTitle) {
-                window.setInternalWindowTitle(title);
-            } else {
+        $scope.updateTitle = function() {
+            if (window.setInternalWindowTitle) { //Internal
+                if ($scope.contribution.type === 'View') {
+                    window.setInternalWindowTitle('View Property');
+                } else {
+                    //Susana doesnt like to put title here.
+                }
+            } else { //External
+                var title = '*';
+                title = $scope.contribution.type + ': ' + $scope.contribution.title;
                 document.title = title;
             }
         };
