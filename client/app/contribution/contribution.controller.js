@@ -210,7 +210,7 @@ angular.module('kf6App')
                 return;
             }
 
-            if (!$scope.mceEditor) { //avoid contribution in empty body
+            if (cont.type === 'Note' && !$scope.mceEditor) { //avoid contribution in empty body
                 window.alert('mceEditor have not initialized yet.');
                 return;
             }
@@ -577,6 +577,9 @@ angular.module('kf6App')
         };
 
         $scope.updateAnnotations = function() {
+            if ($scope.contribution.type !== 'Note') {
+                return;
+            }
             if (!annotator) {
                 console.error('annotator was not initialized');
                 return;
