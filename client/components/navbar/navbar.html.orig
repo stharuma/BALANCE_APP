@@ -1,0 +1,41 @@
+<div class="navbar navbar-default navbar-static-top" ng-controller="NavbarCtrl">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" ng-click="isCollapsed = !isCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">Knowledge Forum 6</a><span class="navbar-text">beta v6.4.0</span>
+        </div>
+        <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
+                    <a ng-href="{{item.link}}">{{item.title}}</a>
+                </li>
+                <li ng-class="{active: isActive('/')}"><a href="/">{{ 'home' | translate }}</a>
+                <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">{{ 'admin' | translate }}</a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+<<<<<<< HEAD
+                <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/signup')}"><a href="/signup">New Account</a>
+=======
+                <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/signup')}"><a href="/signup">{{ 'register' | translate }}</a>
+>>>>>>> i18n-fr and harmonizing lowercase translation keys to prepare for eventual external JSON objets
+                </li>
+                <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/login')}"><a href="/login">{{ 'login' | translate }}</a>
+                </li>
+                <li ng-show="isLoggedIn()">
+                    <p class="navbar-text">{{ getCurrentUser().getName() }}</p>
+                </li>
+                <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}"><a href="/settings"><span class="glyphicon glyphicon-cog"></span></a>
+                </li>
+                <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()">{{ 'logout' | translate }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
