@@ -30,13 +30,9 @@
                 </div>
 
                 <div>
-                  <p>
                     <button class="btn btn-default btn-lg btn-login btn-primary" type="submit">
                         {{ 'login' | translate }}
                     </button>
-                  </p>
-                  <br />
-                  <p>{{ 'login_signup_invite' | translate }}: <a href="/signup"><strong>{{ 'register' | translate }}</strong></a></p>
                 </div>
                 <!-- <hr> -->
                 <!-- <div>
@@ -54,8 +50,7 @@
         </div>
     </div>
     <hr>
-    <div style="text-align:right;">
-        For the first user, click
-        <a href="/signup">New Account</a> to create an account.
+    <div>
+        {{ 'login_signup_invite' | translate }}: <a href="/signup"><strong>{{ 'register' | translate }}</strong></a>
     </div>
 </div>
