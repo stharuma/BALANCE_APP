@@ -26,7 +26,8 @@ angular.module('kf6App')
         $scope.status.isSettingCollapsed = true;
         $scope.setting = {
             buildson: true,
-            references: true
+          // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
+            references: false
         };
         $scope.dragging = 'none';
 
@@ -301,13 +302,15 @@ angular.module('kf6App')
             }
             if (link.type === 'references' && $scope.setting.references) {
                 var text = '';
-                if (link.data && link.data.text && link.data.text.length > 0) {
-                    text = link.data.text;
-                    if (text.length > 24) {
-                        text = text.substring(0, 24) + '...';
-                    }
-                    text = '"' + text + '"';
-                }
+              // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
+
+                //if (link.data && link.data.text && link.data.text.length > 0) {
+                //    text = link.data.text;
+                //    if (text.length > 24) {
+                //        text = text.substring(0, 24) + '...';
+                //    }
+                //    text = '"' + text + '"';
+                //}
                 $scope.createConnection0(link, 'black', text);
             }
         };
