@@ -68,7 +68,7 @@ angular.module('kf6App')
                 if (word.match(stopWordsExp)) {
                     return false;
                 }
-                if (word.length == 0) {//one-character word in ChineseCharacter like 車 cannot be detected if threshold is 1.
+                if (word.length === 0) {//one-character word in ChineseCharacter like 車 cannot be detected if threshold is 1.
                     return false;
                 }
                 return true;
