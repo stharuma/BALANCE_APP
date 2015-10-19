@@ -1,0 +1,6 @@
+<div ng-controller="RelatedwordCtrl">
+  <p>Related words:</p>
+  <div>
+    <button ng-repeat="word in refreshKeywords(copy.body)" ng-click="insertwords(word)"> {{word}} </button>
+  </div>
+</div>

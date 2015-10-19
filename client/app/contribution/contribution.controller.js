@@ -7,6 +7,7 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil) {
         var contributionId = $stateParams.contributionId;
+        $scope.relatedwordID = contributionId;
 
         $ac.mixIn($scope, null);
         $kfutil.mixIn($scope);
@@ -486,7 +487,7 @@ angular.module('kf6App')
             }],
             plugins: ['advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table directionality emoticons template textcolor paste textcolor noneditable fullpage'],
             toolbar: 'styleselect | bold italic underline strikethrough | forecolor backcolor bullist numlist link | code',
-            //toolbar: 'undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code',            
+            //toolbar: 'undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code',
             //toolbar1: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
             //toolbar2: 'forecolor backcolor | emotions link unlink image media | code | styleselect fontselect fontsizeselect',
             forced_root_block: false,

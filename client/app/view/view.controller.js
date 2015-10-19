@@ -586,7 +586,7 @@ angular.module('kf6App')
             var url = 'wcloud/' + $scope.view._id;
             $scope.openInPopup(url);
         };
-        
+
 
         $scope.doExit = function() {
             var url = '';

@@ -30,7 +30,7 @@ angular.module('kf6App')
             var words = createWords(notes, 50, stopWords); //[{word: 'home', count: 20}..]
 
             //scaling count to word size
-            //change data format from words into d3-cloud 
+            //change data format from words into d3-cloud
             var countMax = d3.max(words, function(d) {
                 return d.count;
             });
