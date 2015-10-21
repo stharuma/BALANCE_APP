@@ -14,9 +14,7 @@ function onConnect(socket) {}
 
 module.exports = function(socketio) {
     socketio.on('connection', function(socket) {
-        socket.address = socket.handshake.address !== null ?
-            socket.handshake.address.address + ':' + socket.handshake.address.port :
-            process.env.DOMAIN;
+        socket.address = socket.handshake.address;
 
         socket.connectedAt = new Date();
 
@@ -30,7 +28,7 @@ module.exports = function(socketio) {
         socket.on('unsubscribe', function(room) {
             console.info('[%s] unsubscribes %s', socket.address, room);
             socket.leave(room);
-        });
+        });          
         console.info('[%s] CONNECTED', socket.address);
     });
 

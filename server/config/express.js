@@ -45,11 +45,14 @@ module.exports = function(app) {
         })
     }));
 
+    morgan.format('kf-format', ':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" (:response-time ms)');
+
     if ('production' === env) {
         app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
         app.use(express.static(path.join(config.root, 'public')));
         app.set('appPath', config.root + '/public');
-        app.use(morgan('dev'));
+        //app.use(morgan('dev'));
+        app.use(morgan('kf-format'));    
     }
 
     if ('development' === env || 'test' === env) {
@@ -58,6 +61,8 @@ module.exports = function(app) {
         app.use(express.static(path.join(config.root, 'client')));
         app.set('appPath', 'client');
         app.use(morgan('dev'));
+        //app.use(morgan('default'));
+        //app.use(morgan('kf-format'));        
         app.use(errorHandler()); // Error handler - has to be last
     }
 
