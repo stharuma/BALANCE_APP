@@ -14,7 +14,7 @@ exports.create = function(req, res) {
         console.error(req.body.authors)
         console.error(req.author._id);
         console.error('author must be included in authors.');
-        return res.json(403);
+        return res.send(403);
     }
     KContribution.create(req.body, function(err, contribution) {
         if (err) {
@@ -98,7 +98,7 @@ function makeMongoQuery0(req, res, success) {
     var query = req.body.query;
     var communityId = query.communityId;
     if (!communityId) {
-        return res.json(500, {
+        return res.send(500, {
             'err': 'communityId is necessary'
         });
     }
