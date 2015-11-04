@@ -22,6 +22,7 @@ angular.module('kf6App')
         $scope.status.isViewlinkCollapsed = true;
         $scope.status.isViewManagerCollapsed = true;
         $scope.status.isAttachmentCollapsed = true;
+        $scope.status.isAnalyticsCollapsed = true;
         $scope.status.isSettingCollapsed = true;
         $scope.setting = {
             buildson: true,
@@ -557,9 +558,14 @@ angular.module('kf6App')
                 }
                 author.data.workspaces.push(view._id);
                 $community.modifyObject(author, function() {
+                    /* success */
                     if (handler) {
                         handler(view);
                     }
+                }, function(err) {
+                    /* error */
+                    window.alert(JSON.stringify(err));
+                    author.data.workspaces = undefined; /* roll back */
                 });
             }, true, {
                 permission: 'private'
@@ -570,6 +576,17 @@ angular.module('kf6App')
             var url = './view/' + viewId;
             $scope.openInPopup(url);
         };
+
+        $scope.openAnalytics = function() {
+            $scope.status.isAnalyticsCollapsed = !$scope.status.isAnalyticsCollapsed;
+        };
+
+        $scope.openTagCloud = function() {
+            $scope.openAnalytics();
+            var url = 'wcloud/' + $scope.view._id;
+            $scope.openInPopup(url);
+        };
+
 
         $scope.doExit = function() {
             var url = '';
@@ -743,21 +760,98 @@ angular.module('kf6App')
             $scope.saveRef($scope.contextTarget);
         };
 
-        $scope.fix = function() {
-            if ($scope.contextTarget) {
-                var ref = $scope.contextTarget;
-                ref.data.fixed = true;
-                $scope.saveRef(ref);
-                $scope.clearSelection();
+        $scope.fix = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
             }
+            if (!ref) {
+                window.alert('ERROR: no reference on fix/unfix');
+                return;
+            }
+            if (!$scope.isFixable(ref)) {
+                window.alert('You are not able to fix this object.');
+                return;
+            }
+            ref.data.fixed = true;
+            $scope.saveRef(ref);
+            $scope.clearSelection();
         };
 
-        $scope.unfix = function() {
-            if ($scope.contextTarget) {
-                var ref = $scope.contextTarget;
-                ref.data.fixed = false;
-                $scope.saveRef(ref);
+        $scope.fixAndLock = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
             }
+            if (!ref) {
+                window.alert('ERROR: no reference on fix/unfix');
+                return;
+            }
+            if (!$scope.isFixable(ref)) {
+                window.alert('You are not able to fix this object.');
+                return;
+            }
+            if (!$scope.isLockable(ref)) {
+                window.alert('You are not able to lock this object.');
+                return;
+            }
+            ref.data.fixed = true;
+            ref.data.locked = true;
+            $scope.saveRef(ref);
+            $scope.clearSelection();
+        };
+
+        $scope.unfix = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                window.alert('ERROR: no reference on fix/unfix');
+                return;
+            }
+            if (!$scope.isUnfixable(ref)) {
+                window.alert('You are not able to unfix this object.');
+                return;
+            }
+            ref.data.fixed = false;
+            ref.data.locked = false;
+            $scope.saveRef(ref);
+        };
+
+        $scope.isLockable = function() {
+            return $scope.hasLockControl();
+        };
+
+        $scope.isFixable = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                return false;
+            }
+            return !ref.data.fixed && $scope.isEditable();
+        };
+
+        $scope.isUnfixable = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                return false;
+            }
+            return !$scope.isLocked(ref) || $scope.hasLockControl();
+        };
+
+        $scope.hasLockControl = function() {
+            return $community.amIAuthor($scope.view);
+        };
+
+        $scope.isLocked = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                return false;
+            }
+            return ref.data && ref.data.locked;
         };
 
         $scope.delete = function(ref) {

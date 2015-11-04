@@ -1,9 +1,8 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>{{ 'login' | translate }}</h1>
+            <h1>Login</h1>
             <!-- <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test@test.com</code> / <code>test</code>
             </p>
             <p>Admin account is <code>admin@admin.com</code> / <code>admin</code>
@@ -11,40 +10,31 @@
         </div>
         <div class="col-sm-12">
             <form class="form" name="form" ng-submit="login(form)" novalidate>
-
                 <div class="form-group">
-                    <label>{{ 'username' | translate }}</label>
-
+                    <label>Username</label>
                     <input type="username" name="username" class="form-control" ng-model="user.username" required>
                 </div>
-
                 <div class="form-group">
-                    <label>{{ 'password' | translate }}</label>
-
+                    <label>Password</label>
                     <input type="password" name="password" class="form-control" ng-model="user.password" required>
                 </div>
-
                 <div class="form-group has-error">
                     <p class="help-block" ng-show="form.username.$error.required && form.password.$error.required && submitted">
-                        {{ 'login_error_nameAndPass' | translate }}
+                        Please enter your username and password.
                     </p>
                     <p class="help-block" ng-show="form.username.$error.email && submitted">
-                        {{ 'login_error_email' | translate }}
+                        Please enter a valid username.
                     </p>
-
                     <p class="help-block">{{ errors.other }}</p>
                 </div>
-
-                <div>
-                  <p>
-                    <button class="btn btn-default btn-lg btn-login btn-primary" type="submit">
-                        {{ 'login' | translate }}
+                <div style="text-align:right;">
+                    <button class="btn btn-default btn-lg btn-login" type="submit">
+                        Login
                     </button>
-                  </p>
-                  <br />
-                  <p>{{ 'login_signup_invite' | translate }}: <a href="/signup"><strong>{{ 'register' | translate }}</strong></a></p>
+                    <!--<a class="btn btn-default btn-lg btn-register" href="/signup">
+            Register
+          </a>-->
                 </div>
-
                 <!-- <hr> -->
                 <!-- <div>
     <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
@@ -61,4 +51,8 @@
         </div>
     </div>
     <hr>
+    <div style="text-align:right;">
+        For the first user, click
+        <a href="/signup">New Account</a> to create an account.
+    </div>
 </div>

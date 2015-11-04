@@ -71,6 +71,31 @@ exports.search = function(req, res) {
 
 function makeMongoQuery(req, res, success) {
     var query = req.body.query;
+    if (!query.viewIds) {
+        makeMongoQuery0(req, res, success);
+    } else { //has viewIds
+        KLink.find({
+            from: {
+                $in: query.viewIds
+            }
+        }, function(err, links) {
+            if (err) {
+                return handleError(res, err);
+            }
+            var ids = [];
+            links.forEach(function(each) {
+                if (each._from.status === 'active') {
+                    ids.push(each.to);
+                }
+            });
+            req.ids = ids;
+            makeMongoQuery0(req, res, success);
+        });
+    }
+}
+
+function makeMongoQuery0(req, res, success) {
+    var query = req.body.query;
     var communityId = query.communityId;
     if (!communityId) {
         return res.json(500, {
@@ -81,12 +106,35 @@ function makeMongoQuery(req, res, success) {
     var mongoQuery = {
         $and: []
     };
-
     mongoQuery.$and.push({
         communityId: communityId
     });
 
-    if (query.authors.length > 0) {
+    mongoQuery.$and.push({
+        status: 'active'
+    });
+
+    if (!query.privateMode) {
+        mongoQuery.$and.push({
+            permission: {
+                $in: ['public', 'protected']
+            }
+        });
+    } else { //private mode
+        mongoQuery.$and.push({
+            authors: mongoose.Types.ObjectId(req.author._id)
+        });
+    }
+
+    if (req.ids && req.ids.length > 0) {
+        mongoQuery.$and.push({
+            _id: {
+                $in: req.ids
+            }
+        });
+    }
+
+    if (query.authors && query.authors.length > 0) {
         var authorIds = [];
         query.authors.forEach(function(authorIdStr) {
             authorIds.push(mongoose.Types.ObjectId(authorIdStr));
@@ -119,10 +167,12 @@ function makeMongoQuery(req, res, success) {
     //http://stackoverflow.com/questions/10913568/mongoose-how-to-find-3-words-in-any-order-and-in-any-place-in-the-string-sql
     //(?=.*comp)(?=.*abc)(?=.*300).*
     var regexpstr = '';
-    query.words.forEach(function(word) {
-        regexpstr += '(?=.*' + word + ')';
-    });
-    regexpstr += '.*';
+    if (query.words) {
+        query.words.forEach(function(word) {
+            regexpstr += '(?=.*' + word + ')';
+        });
+        regexpstr += '.*';
+    }
     mongoQuery.$and.push({
         text4search: new RegExp(regexpstr, 'i')
     });

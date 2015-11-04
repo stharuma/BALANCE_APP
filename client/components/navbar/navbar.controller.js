@@ -1,21 +1,11 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('NavbarCtrl', function($scope, $location, Auth, $translate) {
-        /*
+    .controller('NavbarCtrl', function($scope, $location, Auth) {
         $scope.menu = [{
             'title': 'Home',
             'link': '/'
         }];
-        */
-
-        // TODO: selected detected user-agent locale
-        //$scope.selectedLanguage = 'en';
-        $scope.languages = ['en', 'fr'];
-
-        $scope.languageSelected = function() {
-            $translate.use($scope.selectedLanguage);
-        };
 
         $scope.isCollapsed = true;
         $scope.isLoggedIn = Auth.isLoggedIn;

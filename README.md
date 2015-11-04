@@ -28,10 +28,10 @@ $ npm install --global yo bower grunt-cli
 
 2. Download kf6 from git  
 ```shell
-$ git clone https://git.tact.fse.ulaval.ca/kf/kf6.git
+$ git clone https://github.com/matsuzawalab/kf6.git
 ```
 
-3. Install Server-side Packages  
+3. Install Server-side Packages
 ```shell
 $ npm install
 ```

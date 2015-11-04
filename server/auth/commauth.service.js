@@ -24,13 +24,16 @@ function checkPermissionById(requiredPermission) {
 
 function setObjectById(req, res, next) {
     if (!req.params.id) {
+        console.error('error in commauth.js, id param not found');
         return res.send(500, 'id param not found');
     }
     KObject.findById(req.params.id, function(err, object) {
         if (err) {
+            console.error('error in commauth.js' + err);
             return res.send(500, err);
         }
         if (!object) {
+            console.error('error in commauth.js, object not found');
             return res.send(500, 'object not found');
         }
         req.object = object;
@@ -47,13 +50,16 @@ function isLinkAuthenticatedById() {
 
 function setLinkById(req, res, next) {
     if (!req.params.id) {
+        console.error('error in commauth.js, id param not found');
         return res.send(500, 'id param not found');
     }
     KLink.findById(req.params.id, function(err, link) {
         if (err) {
+            console.error('error in commauth.js' + err);
             return res.send(500, err);
         }
         if (!link) {
+            console.error('error in commauth.js, link not found');
             return res.send(500, 'link not found');
         }
         if (!req.body) {
@@ -69,13 +75,16 @@ function isLinkAuthenticated() {
     return compose()
         .use(function(req, res, next) {
             if (!req.body.from) {
+                console.error('error in commauth.js, from field not found');
                 return res.send(500, 'from field not found');
             }
             KObject.findById(req.body.from, function(err, obj) {
                 if (err) {
+                    console.error('error in commauth.js' + err);
                     return res.send(500, err);
                 }
                 if (!obj) {
+                    console.error('error in commauth.js, object was not found');
                     return res.send(500, 'object was not found');
                 }
                 req.from = obj;
@@ -85,10 +94,12 @@ function isLinkAuthenticated() {
         })
         .use(function(req, res, next) {
             if (!req.body.to) {
+                console.error('error in commauth.js, to field not found');
                 return res.send(500, 'to field not found');
             }
             KObject.findById(req.body.to, function(err, obj) {
                 if (err) {
+                    console.error('error in commauth.js' + err);
                     return res.send(500, err);
                 }
                 req.to = obj;
@@ -119,6 +130,7 @@ function isAuthenticated() {
             }, function(err, author) {
 
                 if (err) {
+                    console.error('error in commauth.js' + err);
                     return res.send(500, err);
                 }
                 if (!author) {

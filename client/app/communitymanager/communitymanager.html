@@ -1,53 +1,53 @@
 <div class="col-md-12" style="padding-left: 50px;">
-    <label>{{ 'kbc_myKBCsTitle' | translate }}:</label>
+    <label>Communities:</label>
     <table>
         <tr ng-repeat="registration in myRegistrations">
             <td style="padding-left: 20px;">{{registration._community.title}}</td>
             <td style="padding-left: 10px;">(created: {{toTimeString(registration._community.created)}})</td>
             <td style="padding-left: 20px;">{{registration.role}}</td>
             <td style="padding-left: 20px;">
-                <button ng-click="enterCommunity(registration)">{{ 'community_enter' | translate }}</button>
+                <button ng-click="enterCommunity(registration)">Enter</button>
             </td>
             <!-- <td style="padding-left: 20px;"><a href='viewmanager/{{community._id}}'>Manager</a>
             </td> -->
         </tr>
     </table>
     <div style="height: 100px;"></div>
-    <label>{{ 'community_join' | translate }}:</label>
+    <label>Join Community:</label>
     <div style="padding-left: 50px;">
         <table>
             <tr>
-                <td style="text-align: right;">{{ 'community' | translate }}:</td>
+                <td style="text-align: right;">Community:</td>
                 <td>
                     <ui-select ng-model="selected.community" theme="bootstrap" ng-disabled="disabled" style="width: 400px;">
-                        <ui-select-match placeholder="{{ 'community_select' | translate }}">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
+                        <ui-select-match placeholder="Select community...">{{selected.community.title}} &lt;{{toTimeString(selected.community.created)}}&gt;</ui-select-match>
                         <ui-select-choices repeat="community in communities | filter: {title: $select.search} | orderBy:'created':true | orderBy:'title'">
                             <div ng-bind-html="community.title | highlight: $select.search"></div>
                             <small><div ng-bind-html="toTimeString(community.created)"></div></small>
                         </ui-select-choices>
                     </ui-select>
-                    <p style="text-align: right;">{{communities.length}} {{ 'community_possible' | translate }}.</p>
+                    <p style="text-align: right;">{{communities.length}} possible communities.</p>
                 </td>
             </tr>
             <tr ng-show="isAdmin()">
                 <td></td>
                 <td style="float: right;">
                     <span class="input-group-btn">
-                        <button type="submit" class="btn btn-primary" ng-click="openManager()">{{ 'manage' | translate }}</button>
+                        <button type="submit" class="btn btn-primary" ng-click="openManager()">Manage</button>
                     </span>
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right;">{{ 'community_registration_key' | translate }}:</td>
+                <td style="text-align: right;">RegistrationKey:</td>
                 <td>
-                    <input type="text" class="form-control" placeholder="" ng-model="selected.key">
+                    <input type="text" class="form-control" placeholder="Enter registrationKey" ng-model="selected.key">
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td style="float: right;">
                     <span class="input-group-btn">
-                        <button type="submit" class="btn btn-primary" ng-click="addRegistration()">{{ 'join' | translate }}</button>
+                        <button type="submit" class="btn btn-primary" ng-click="addRegistration()">Join</button>
                     </span>
                 </td>
         </table>
@@ -73,14 +73,14 @@
                     <td></td>
                     <td style="float: right;">
                         <span class="input-group-btn">
-                        <button type="submit" class="btn btn-primary" ng-click="addNewCommunity()">{{ 'add' | translate }}</button>
+                        <button type="submit" class="btn btn-primary" ng-click="addNewCommunity()">Add</button>
                     </span>
                     </td>
             </table>
         </div>
     </div>
     <div>
-        <label>{{ 'user_agent' | translate }} ({{ 'technical_data' | translate }}):</label>
+        <label>User Agent:</label>
         <table>
             <tr>
                 <td>browser?:</td>
