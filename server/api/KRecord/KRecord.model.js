@@ -16,7 +16,7 @@ var KRecordSchema = new Schema({
     },
     targetId: {
         type: Schema.ObjectId,
-        required: true,
+        required: false,
         index: true
     },
     type: { /* created, read, modified, or deleted */
@@ -27,6 +27,10 @@ var KRecordSchema = new Schema({
     timestamp: {
         type: Date,
         default: Date.now
+    },
+    data: {
+        type: Schema.Types.Mixed,
+        default: {}
     },
 
     /* historical information will be set in modified type */
