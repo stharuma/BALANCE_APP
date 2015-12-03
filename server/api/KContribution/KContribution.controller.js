@@ -52,7 +52,23 @@ exports.searchCount = function(req, res) {
 };
 
 exports.search = function(req, res) {
+    //assure req.body.query
+    if (!req.body.query) {
+        console.err('search parameter error: ' + req.body);
+        return res.send(400);
+    }
+
     var query = req.body.query;
+
+    //assure communityId
+    if (!query.communityId) {
+        if (!req.author) {
+            console.err('search query error: ' + req.body.query);
+            return res.send(400);
+        } else {
+            query.communityId = req.author.communityId;
+        }
+    }
     var pagesize = query.pagesize ? query.pagesize : 50;
     var page = query.page ? query.page : 1;
     var skip = pagesize * (page - 1);
