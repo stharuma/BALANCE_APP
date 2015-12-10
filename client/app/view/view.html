@@ -61,72 +61,72 @@
     <div class='KFViewToolBar' ng-if="!menuStatus">
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createNote()"><img class="KFToolBarImage" src="manual_assets/kf6images/01-toolbar-newwriting.png" title="New writing contribution"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createNote()"><img class="KFToolBarImage" src="manual_assets/kf6images/01-toolbar-newwriting.png" title="{{ 'note_add' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createDrawing()"><img class="KFToolBarImage" src="manual_assets/kf6images/02-toolbar-newdrawing.png" title="New drawing contribution"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createDrawing()"><img class="KFToolBarImage" src="manual_assets/kf6images/02-toolbar-newdrawing.png" title="{{ 'drawing_add' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAttachment()"><img class="KFToolBarImage" src="manual_assets/kf6images/03-toolbar-attachment.png" title="Attachment"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAttachment()"><img class="KFToolBarImage" src="manual_assets/kf6images/03-toolbar-attachment.png" title="{{ 'attachments_add' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img class="KFToolBarImage" src="manual_assets/kf6images/04-toolbar-viewmanagement.png" title="View management"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img class="KFToolBarImage" src="manual_assets/kf6images/04-toolbar-viewmanagement.png" title="{{ 'view_management' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createViewlink()"><img class="KFToolBarImage" src="manual_assets/kf6images/05-toolbar-viewlink.png" title="View link"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createViewlink()"><img class="KFToolBarImage" src="manual_assets/kf6images/05-toolbar-viewlink.png" title="{{ 'view_link_add' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openScaffolds();"><img class="KFToolBarImage" src="manual_assets/kf6images/06-toolbar-scaffolds.png" title="Scaffolds"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openScaffolds();"><img class="KFToolBarImage" src="manual_assets/kf6images/06-toolbar-scaffolds.png" title="{{ 'scaffolds' | translate }}"></button>
             </span>
         </span>
         <span ng-show="isManager()" class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAuthors();"><img class="KFToolBarImage" src="manual_assets/kf6images/11-user.png" title="Authors"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAuthors();"><img class="KFToolBarImage" src="manual_assets/kf6images/11-user.png" title="{{ 'authors' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openGroups();"><img class="KFToolBarImage" src="manual_assets/kf6images/12-users.png" title="Groups"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openGroups();"><img class="KFToolBarImage" src="manual_assets/kf6images/12-users.png" title="{{ 'groups' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openWorkspace()"><img class="KFToolBarImage" src="manual_assets/kf6images/07-toolbar-personalworkspace.png" title="Personal workspace"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openWorkspace()"><img class="KFToolBarImage" src="manual_assets/kf6images/07-toolbar-personalworkspace.png" title="{{ 'personal_workspace' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openSearch()"><img class="KFToolBarImage" src="manual_assets/kf6images/08-toolbar-search.png" title="Search"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openSearch()"><img class="KFToolBarImage" src="manual_assets/kf6images/08-toolbar-search.png" title="{{ 'search' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openContribution(view._id, $event)"><img class="KFToolBarImage" src="manual_assets/kf6images/13-settings.png" title="Settings"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openContribution(view._id, $event)"><img class="KFToolBarImage" src="manual_assets/kf6images/13-settings.png" title="{{ 'settings' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAnalytics()"><img class="KFToolBarImage" src="manual_assets/kf6images/analytics.png" title="Exit community"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openAnalytics()"><img class="KFToolBarImage" src="manual_assets/kf6images/analytics.png" title="{{ 'assessment_tools' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isSettingCollapsed = !status.isSettingCollapsed"><img class="" src="manual_assets/kf4images/button-info.gif" title="Settings"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isSettingCollapsed = !status.isSettingCollapsed"><img class="" src="manual_assets/kf4images/button-info.gif" title="{{ 'informations' | translate }}"></button>
             </span>
         </span>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="doExit()"><img class="KFToolBarImage" src="manual_assets/kf6images/10-toolbar-exit.png" title="Exit community"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="doExit()"><img class="KFToolBarImage" src="manual_assets/kf6images/10-toolbar-exit.png" title="{{ 'community_exit' | translate }}"></button>
             </span>
         </span>
     </div>
@@ -179,13 +179,11 @@
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenView()">{{ 'open' | translate }}</li>
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInInternal()">{{ 'openInInternal' | translate }}</li>
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInPopup()">{{ 'openInWindow' | translate }}</li>
-            <li ng-if="contextTarget.data.showInPlace === true && isEditable()" class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
-            <li ng-if="contextTarget.data.showInPlace !== true && contextTarget._to.type !== 'Note' && isEditable()" class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
-            <li ng-if="isFixable()" class="menuitem" ng-click="fix()">Fix</li>
-            <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">Fix and Lock</li>
-            <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">Unfix</li>
-            <li ng-if="contextTarget.data.fixed !== true && isEditable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
-            <li ng-if="contextTarget.data.fixed === true && isEditable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
+            <li ng-if="contextTarget.data.showInPlace === true && isEditable()" class="menuitem" ng-click="showAsIcon()">{{ 'show_as_icon' | translate }}</li>
+            <li ng-if="contextTarget.data.showInPlace !== true && contextTarget._to.type !== 'Note' && isEditable()" class="menuitem" ng-click="showInPlace()">{{ 'show_in_place' | translate }}</li>
+            <li ng-if="isFixable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
+            <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">{{ 'position_fixAndLock' | translate }}</li>
+            <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
             <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabove()">{{ 'rise-above_create' | translate }}</li>
             <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
         </ul>
