@@ -179,16 +179,15 @@
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenView()">{{ 'open' | translate }}</li>
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInInternal()">{{ 'openInInternal' | translate }}</li>
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInPopup()">{{ 'openInWindow' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
             <li ng-if="contextTarget.data.showInPlace === true && isEditable()" class="menuitem" ng-click="showAsIcon()">ShowAsIcon</li>
             <li ng-if="contextTarget.data.showInPlace !== true && contextTarget._to.type !== 'Note' && isEditable()" class="menuitem" ng-click="showInPlace()">ShowInPlace</li>
             <li ng-if="isFixable()" class="menuitem" ng-click="fix()">Fix</li>
             <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">Fix and Lock</li>
             <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">Unfix</li>
-            <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabove()">Riseabove</li>
             <li ng-if="contextTarget.data.fixed !== true && isEditable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
             <li ng-if="contextTarget.data.fixed === true && isEditable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
             <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabove()">{{ 'rise-above_create' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
         </ul>
     </div>
 </div>
