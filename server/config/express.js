@@ -45,6 +45,9 @@ module.exports = function(app) {
         })
     }));
 
+    // for proxy
+    app.enable('trust proxy');
+
     //morgan.format('kf-format', ':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" (:response-time ms)');
     //Apache combined format for fluentd
     morgan.format('kf-format', ':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"');
