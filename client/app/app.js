@@ -88,6 +88,8 @@ var translationsEN = {
   "save": "Save",
   "scaffolds": "Scaffolds",
   "technical_data": "Technical data",
+  "title_placeholder": "Put your title here.",
+  "title_required": "Please write a title.",
   "upload": "Upload",
   "user_agent": "User Agent",
   "username": "Username",
@@ -186,6 +188,8 @@ var translationsFR = {
   "user_agent": "Agent utilisateur",
   "username": "Nom d'utilisateur",
   "technical_data": "Données techniques",
+  "title_placeholder": "Veuillez rédiger un titre.",
+  "title_required": "Veuillez rédiger un titre.",
   "tools": "Outils"
 };
 

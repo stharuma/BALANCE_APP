@@ -82,7 +82,7 @@
                         <div style="overflow: hidden;">
                             <!-- <div style="float: left;">title:</div> -->
                             <div style="overflow: hidden;">
-                                <input type="text" class="form-control" style="overflow: hidden;" placeholder="put your title here." ng-model="contribution.title">
+                                <input type="text" class="form-control" style="overflow: hidden;" placeholder="{{ 'title_placeholder' | translate }}" ng-model="contribution.title">
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                         <div style="overflow: hidden;">
-                            <div ng-show="!mceEditor">Editor have not initialized yet. <span>Never edit now</span></div> 
+                            <div ng-show="!mceEditor">Editor have not initialized yet. <span>Never edit now</span></div>
                             <textarea ng-show="mceEditor" ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
                         </div>
                     </div>

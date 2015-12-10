@@ -176,7 +176,7 @@ angular.module('kf6App')
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
-                title: 'New Note',
+                title: '',
                 authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
