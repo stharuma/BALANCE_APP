@@ -87,7 +87,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(link);
     });
@@ -166,7 +166,7 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.status(404);
         }
 
         var updated = _.merge(link, req.body);
@@ -191,14 +191,14 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.status(404);
         }
         link.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
             record(req, link, 'deleted');
-            return res.send(204);
+            return res.status(204);
         });
     });
 };
@@ -260,7 +260,7 @@ exports.updateAllCashRec = function(req, res) {
         console.info(len + ' links to update!');
         if (len <= 0) {
             console.info('no links to update!');
-            return res.send(200);
+            return res.status(200);
         }
         var numFinished = 0;
         links.forEach(function(link) {

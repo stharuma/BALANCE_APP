@@ -25,7 +25,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(community);
     });
@@ -38,7 +38,7 @@ exports.showviews = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         var ids = community.views;
         KContribution.find({
@@ -128,7 +128,7 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         var updated = _.merge(community, req.body);
         updated.views = req.body.views;
@@ -151,13 +151,13 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         community.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.send(204);
+            return res.status(204);
         });
     });
 };

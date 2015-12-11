@@ -10,7 +10,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!KHistoricalObject) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(KHistoricalObject);
     });

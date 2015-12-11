@@ -19,7 +19,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!obj) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(obj);
     });
@@ -29,7 +29,7 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
     if (!_.contains(req.body.authors, req.author._id.toString())) {
         console.error('author must be included in authors.');
-        return res.send(403);
+        return res.status(403);
     }
     KObject.create(req.body, function(err, obj) {
         if (err) {
@@ -61,12 +61,12 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!contribution) {
-            return res.send(404);
+            return res.status(404);
         }
 
         // exceptional case restriction
         if (contribution.type === 'Author' && contribution.role !== newobj.role && req.author.role !== 'manager') {
-            return res.send(403);
+            return res.status(403);
         }
 
         var updated = _.merge(contribution, newobj);
@@ -119,7 +119,7 @@ exports.update = function(req, res) {
 // Deletes a KObject from the DB.
 exports.destroy = function(req, res) {
     //not implemented yet
-    res.send(500);
+    res.status(500);
 };
 
 function handleError(res, err) {
