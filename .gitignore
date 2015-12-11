@@ -8,4 +8,4 @@ dist
 attachments/
 *.bak
 *.log
-
+client/index.html
