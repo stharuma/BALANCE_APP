@@ -601,7 +601,8 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    'cdnify',
+    //  Disable CDNify to host everything on the server, minimizing firefall rules to add if needed
+    // 'cdnify',
     'cssmin',
     'uglify',
     'rev',
