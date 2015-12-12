@@ -253,7 +253,6 @@ angular.module('kf6App', [
         $locationProvider.html5Mode(true);
         $httpProvider.interceptors.push('authInterceptor');
     })
-
     .config(['$translateProvider', function($translateProvider) {
         $translateProvider
           .translations('en', translationsEN)
