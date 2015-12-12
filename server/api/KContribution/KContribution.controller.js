@@ -98,7 +98,7 @@ function makeMongoQuery0(req, res, success) {
     var query = req.body.query;
     var communityId = query.communityId;
     if (!communityId) {
-        return res.send(500, {
+        return res.status(500).json({
             'err': 'communityId is necessary'
         });
     }
