@@ -14,4 +14,8 @@ router.get('/myreadstatus/:communityId/:contributionId', commauth.isAuthenticate
 router.get('/myreadstatusview/:communityId/:viewId', commauth.isAuthenticated(), controller.myReadStatusView);
 router.post('/read/:communityId/:contributionId', commauth.isAuthenticated(), controller.read);
 
+/* for custom log */
+router.post('/:communityId', commauth.isAuthenticated(), controller.create);
+router.get('/mine/:communityId', commauth.isAuthenticated(), controller.mine);
+
 module.exports = router;

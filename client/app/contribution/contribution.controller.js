@@ -7,7 +7,7 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil) {
         var contributionId = $stateParams.contributionId;
-        $scope.relatedwordID = contributionId;
+        $scope.relatedwordID = contributionId;  //added by Xing Liu
 
         $ac.mixIn($scope, null);
         $kfutil.mixIn($scope);
