@@ -416,8 +416,56 @@ angular.module('kf6App')
             }
         };
 
-        /*********** tinymce ************/
+        /*********** DnD Reference Related ************/
+        $scope.kfdragstart = function(e) {
+            var dt = e.dataTransfer; //error in IE
+            if (!dt && $kfutil.isIE()) {
+                return; //surrender to create reference
+            }
+            var original = dt.getData('text/plain');
+            var contrib = $scope.contribution;
+            var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
+            dt.setData('kf', 'true');
+            dt.setData('kfid', $scope.contribution._id);
+            dt.setData('text/html', html);
+            dt.setData('text/plain', original);
+        };
+        $scope.kfcopy = function(e) {
+            var dt = e.clipboardData; //error in IE
+            if (!dt && $kfutil.isIE()) {
+                return; //surrender to create reference
+            }
+            var original = getSelected();
+            var contrib = $scope.contribution;
+            var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
+            dt.setData('kf', 'true');
+            dt.setData('kfid', $scope.contribution._id);
+            dt.setData('text/html', html);
+            dt.setData('text/plain', original);
+            e.stopPropagation();
+            e.preventDefault();
+        };
 
+        //http://stackoverflow.com/questions/5643635/how-to-get-selected-html-text-with-javascript
+        function getSelected() {
+            var text = '';
+            if (window.getSelection && window.getSelection().toString() && $(window.getSelection()).attr('type') !== 'Caret') {
+                text = window.getSelection().toString();
+                return text;
+            } else if (document.getSelection && document.getSelection().toString() && $(document.getSelection()).attr('type') !== 'Caret') {
+                text = window.getSelection().toString();
+                return text;
+            } else {
+                var selection = document.selection && document.selection.createRange();
+                if ((typeof selection !== 'undefined') && selection.text && selection.text.toString()) {
+                    text = selection.text;
+                    return text;
+                }
+            }
+            return false;
+        }
+
+        /*********** tinymce ************/
         $scope.mcesetupHandler = function(ed) {
             $scope.mceEditor = ed;
             $scope.mceResize();
@@ -429,6 +477,8 @@ angular.module('kf6App')
                 e.stopPropagation();
                 ed.focus();
             });
+            ed.on('dragstart', $scope.kfdragstart);
+            ed.on('copy', $scope.kfcopy);
         };
 
         $scope.mceResize = function() {
