@@ -442,9 +442,14 @@ angular.module('kf6App')
         window.onresize = $scope.mceResize;
 
         $scope.tinymceOptions = {
+            // TODO i18n Dynamize language switch
+            language: "fr_FR",
+            language_url: '/manual_components/tinymce-langs/fr_FR.js',
             theme: 'modern',
             menubar: false,
             statusbar: false,
+          // TODO decide if internationalize or remove font size
+            /*
             style_formats_merge: true,
             style_formats: [{
                 title: 'Font Size',
@@ -484,7 +489,7 @@ angular.module('kf6App')
                         'font-size': '16px'
                     }
                 }]
-            }],
+            }], */
             plugins: ['advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table directionality emoticons template textcolor paste textcolor noneditable fullpage'],
             toolbar: 'styleselect | bold italic underline strikethrough | forecolor backcolor bullist numlist link | code',
             //toolbar: 'undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code',
