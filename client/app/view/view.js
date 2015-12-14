@@ -226,20 +226,29 @@ angular.module('kf6App')
                         return;
                     }
                     var found = findObject(e);
-                    if (found) {
-                        var model = $scope.searchById($scope.refs, found.id);
-                        if (!model) {
-                            console.log('model is null for ' + found.id);
-                            return;
-                        }
-                        var confirmation = window.confirm('here is a fixed object, would you like to unfix?');
-                        if (confirmation) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            model.data.fixed = false;
-                            $scope.saveRef(model);
-                        }
+                    if (!found) {
+                        return; //not found
                     }
+
+                    //found
+                    var model = $scope.searchById($scope.refs, found.id);
+                    if (!model) {
+                        window.alert('model not found for ' + found.id);
+                        return;
+                    }
+                    if (!$scope.isUnfixable(model)) {
+                        window.alert('You cannot edit this object on your privilege.');
+                        return;
+                    }
+
+                    var confirmation = window.confirm('here is a fixed object, would you like to unfix?');
+                    if (!confirmation) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $scope.unfix(model);
                 });
 
                 function findObject(e) {

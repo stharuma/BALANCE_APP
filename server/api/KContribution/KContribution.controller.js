@@ -14,7 +14,7 @@ exports.create = function(req, res) {
         console.error(req.body.authors)
         console.error(req.author._id);
         console.error('author must be included in authors.');
-        return res.json(403);
+        return res.send(403);
     }
     KContribution.create(req.body, function(err, contribution) {
         if (err) {
@@ -52,7 +52,23 @@ exports.searchCount = function(req, res) {
 };
 
 exports.search = function(req, res) {
+    //assure req.body.query
+    if (!req.body.query) {
+        console.err('search parameter error: ' + req.body);
+        return res.send(400);
+    }
+
     var query = req.body.query;
+
+    //assure communityId
+    if (!query.communityId) {
+        if (!req.author) {
+            console.err('search query error: ' + req.body.query);
+            return res.send(400);
+        } else {
+            query.communityId = req.author.communityId;
+        }
+    }
     var pagesize = query.pagesize ? query.pagesize : 50;
     var page = query.page ? query.page : 1;
     var skip = pagesize * (page - 1);
@@ -98,7 +114,7 @@ function makeMongoQuery0(req, res, success) {
     var query = req.body.query;
     var communityId = query.communityId;
     if (!communityId) {
-        return res.json(500, {
+        return res.send(500, {
             'err': 'communityId is necessary'
         });
     }

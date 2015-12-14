@@ -14,9 +14,8 @@ function onConnect(socket) {}
 
 module.exports = function(socketio) {
     socketio.on('connection', function(socket) {
-        socket.address = socket.handshake.address !== null ?
-            socket.handshake.address.address + ':' + socket.handshake.address.port :
-            process.env.DOMAIN;
+        //the first one for access via proxy 
+        socket.address = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
 
         socket.connectedAt = new Date();
 

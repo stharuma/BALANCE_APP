@@ -42,7 +42,7 @@
                 <div style="padding: 10px; height: 100%;">
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
-                        <div ng-show="!contribution.isRiseabove()">
+                        <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
                             <div class="kfDragSource" ng-bind-html="copy.body"></div>
                         </div>
                         <div style="height: 100%; width: 100%;" ng-hide="!contribution.isRiseabove()">
@@ -123,7 +123,8 @@
                             </div>
                         </div>
                         <div style="overflow: hidden;">
-                            <textarea ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
+                            <div ng-show="!mceEditor">Editor have not initialized yet. <span>Never edit now</span></div> 
+                            <textarea ng-show="mceEditor" ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
                         </div>
                     </div>
                     <div ng-if="contribution.type === 'Drawing'">

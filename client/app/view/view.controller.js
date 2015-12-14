@@ -760,21 +760,98 @@ angular.module('kf6App')
             $scope.saveRef($scope.contextTarget);
         };
 
-        $scope.fix = function() {
-            if ($scope.contextTarget) {
-                var ref = $scope.contextTarget;
-                ref.data.fixed = true;
-                $scope.saveRef(ref);
-                $scope.clearSelection();
+        $scope.fix = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
             }
+            if (!ref) {
+                window.alert('ERROR: no reference on fix/unfix');
+                return;
+            }
+            if (!$scope.isFixable(ref)) {
+                window.alert('You are not able to fix this object.');
+                return;
+            }
+            ref.data.fixed = true;
+            $scope.saveRef(ref);
+            $scope.clearSelection();
         };
 
-        $scope.unfix = function() {
-            if ($scope.contextTarget) {
-                var ref = $scope.contextTarget;
-                ref.data.fixed = false;
-                $scope.saveRef(ref);
+        $scope.fixAndLock = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
             }
+            if (!ref) {
+                window.alert('ERROR: no reference on fix/unfix');
+                return;
+            }
+            if (!$scope.isFixable(ref)) {
+                window.alert('You are not able to fix this object.');
+                return;
+            }
+            if (!$scope.isLockable(ref)) {
+                window.alert('You are not able to lock this object.');
+                return;
+            }
+            ref.data.fixed = true;
+            ref.data.locked = true;
+            $scope.saveRef(ref);
+            $scope.clearSelection();
+        };
+
+        $scope.unfix = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                window.alert('ERROR: no reference on fix/unfix');
+                return;
+            }
+            if (!$scope.isUnfixable(ref)) {
+                window.alert('You are not able to unfix this object.');
+                return;
+            }
+            ref.data.fixed = false;
+            ref.data.locked = false;
+            $scope.saveRef(ref);
+        };
+
+        $scope.isLockable = function() {
+            return $scope.hasLockControl();
+        };
+
+        $scope.isFixable = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                return false;
+            }
+            return !ref.data.fixed && $scope.isEditable();
+        };
+
+        $scope.isUnfixable = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                return false;
+            }
+            return !$scope.isLocked(ref) || $scope.hasLockControl();
+        };
+
+        $scope.hasLockControl = function() {
+            return $community.amIAuthor($scope.view);
+        };
+
+        $scope.isLocked = function(ref) {
+            if (!ref) {
+                ref = $scope.contextTarget;
+            }
+            if (!ref) {
+                return false;
+            }
+            return ref.data && ref.data.locked;
         };
 
         $scope.delete = function(ref) {

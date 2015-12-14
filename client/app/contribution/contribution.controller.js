@@ -50,7 +50,7 @@ angular.module('kf6App')
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
 
-                $scope.setTitle();
+                $scope.updateTitle();
                 if ($scope.contribution.keywords) {
                     var keywordsStr = '';
                     $scope.contribution.keywords.forEach(function(keyword) {
@@ -92,6 +92,7 @@ angular.module('kf6App')
                 });
                 $community.refreshGroups();
                 $scope.updateToConnections(function() {
+                    $scope.updateAnnotations();
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();
                         $scope.updateAttachments(links);
@@ -207,6 +208,11 @@ angular.module('kf6App')
 
             if (cont.title.length === 0 || cont.title === 'New Note') {
                 window.alert('You must input the title.');
+                return;
+            }
+
+            if (cont.type === 'Note' && !$scope.mceEditor) { //avoid contribution in empty body
+                window.alert('mceEditor have not initialized yet.');
                 return;
             }
 
@@ -397,10 +403,16 @@ angular.module('kf6App')
 
         /*********** title ************/
 
-        $scope.setTitle = function(title) {
-            if (window.setInternalWindowTitle) {
-                window.setInternalWindowTitle(title);
-            } else {
+        $scope.updateTitle = function() {
+            if (window.setInternalWindowTitle) { //Internal
+                if ($scope.contribution.type === 'View') {
+                    window.setInternalWindowTitle('View Property');
+                } else {
+                    //Susana doesnt like to put title here.
+                }
+            } else { //External
+                var title = '*';
+                title = $scope.contribution.type + ': ' + $scope.contribution.title;
                 document.title = title;
             }
         };
@@ -418,18 +430,6 @@ angular.module('kf6App')
                 e.stopPropagation();
                 ed.focus();
             });
-
-            // this is necessary 4.0 not necessary on 4.1.7
-            // 4.1.7 does not work in IE, 4.0 is used in IE
-            var version = tinymce.majorVersion + '.' + tinymce.minorVersion;
-            if (version === '4.0') {
-                ed.on('drop', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var data = e.dataTransfer.getData('text/html');
-                    tinymce.execCommand('mceInsertContent', true, data);
-                });
-            }
         };
 
         $scope.mceResize = function() {
@@ -493,8 +493,6 @@ angular.module('kf6App')
             forced_root_block: false,
             force_br_newlines: true,
             force_p_newlines: false,
-            extended_valid_elements: 'kf-*[*]',
-            custom_elements: '~kf-[a-zA-Z0-9]+$',
             toolbar_items_size: 'small',
             content_css: '/manual_assets/kfmce.css',
             inline_styles: true,
@@ -550,6 +548,123 @@ angular.module('kf6App')
                 original += '; ';
             }
             $scope.copy.keywords = original + selectedText;
+        };
+
+        /*********** annotator ***********/
+        var annotator;
+        $scope.annotatorHandler = {};
+        $scope.annos = {};
+        $scope.annoLinks = {};
+        $scope.annotatorHandler.annotatorInitialized = function(anAnnotator) {
+            annotator = anAnnotator;
+        };
+        $scope.annotatorHandler.annotationCreated = function(annoVM) {
+            createAnnotation(annoVM);
+        };
+        $scope.annotatorHandler.annotationUpdated = function(annoVM) {
+            if (!annoVM.linkId || !annoVM.modelId) {
+                console.error('ERROR! annoVM doesn\'t have id on update');
+                return;
+            }
+            var model = $scope.annos[annoVM.modelId];
+            if (!model) {
+                console.error('ERROR! model couldn\'t find');
+                return;
+            }
+            model.data = annoVM;
+            vm2m(model);
+            $community.modifyObject(model);
+        };
+        $scope.annotatorHandler.annotationDeleted = function(annoVM) {
+            if (!annoVM.linkId || !annoVM.modelId) {
+                console.error('ERROR! annoVM doesn\'t have id on delete');
+                return;
+            }
+            $http.delete('/api/links/' + annoVM.linkId);
+        };
+
+        $scope.updateAnnotations = function() {
+            if ($scope.contribution.type !== 'Note') {
+                return;
+            }
+            if (!annotator) {
+                console.error('annotator was not initialized');
+                return;
+            }
+            window.setTimeout(function() {
+                var annoLinks = $scope.toConnections.filter(function(each) {
+                    return each.type === 'annotates';
+                });
+                annoLinks.forEach(function(annoLink) {
+                    if (!$ac.isReadable(annoLink._from)) {
+                        return;
+                    }
+                    $community.getObject(annoLink.from, function(anno) {
+                        m2vm(anno);
+                        $scope.annoLinks[annoLink._id] = annoLink;
+                        $scope.annos[anno._id] = anno;
+                        var annoVM = anno.data;
+                        annoVM.linkId = annoLink._id;
+                        annoVM.modelId = anno._id;
+                        annotator.loadAnnotations([annoVM]);
+                    });
+                });
+            }, 3000);
+        };
+
+        var createAnnotation = function(annoVM) {
+            var communityId = $community.getCommunityData().community._id;
+            var newobj = {
+                communityId: communityId,
+                type: 'Annotation',
+                title: 'an Annotation',
+                authors: [$community.getAuthor()._id],
+                status: 'active',
+                permission: 'private',
+                data: annoVM
+            };
+            vm2m(newobj);
+            $http.post('/api/contributions/' + communityId, newobj)
+                .success(function(annotation) {
+                    createAnnotationLink(annotation, annoVM);
+                });
+        };
+
+        var vm2m = function(anno) {
+            var isPublic = anno.data.permissions.read.length === 0;
+            if (isPublic) {
+                anno.permission = 'protected';
+            } else {
+                anno.permission = 'private';
+            }
+            var loc = anno.data.ranges[0];
+            if (loc.start.indexOf('/div[1]') === 0) {
+                loc.start = loc.start.substring(7);
+            }
+            if (loc.end.indexOf('/div[1]') === 0) {
+                loc.end = loc.end.substring(7);
+            }
+            return anno;
+        };
+
+        var m2vm = function(anno) {
+            var loc = anno.data.ranges[0];
+            loc.start = '/div[1]' + loc.start;
+            loc.end = '/div[1]' + loc.end;
+            return anno;
+        };
+
+        var createAnnotationLink = function(annotation, annoVM) {
+            var link = {};
+            link.to = $scope.contribution._id;
+            link.from = annotation._id;
+            link.type = 'annotates';
+            $http.post('/api/links', link).success(function(link) {
+                annoVM.linkId = link._id;
+                annoVM.modelId = annotation._id;
+                $scope.annoLinks[link._id] = link;
+                $scope.annos[annotation._id] = annotation;
+            });
         };
 
         /*********** svg-edit ************/
