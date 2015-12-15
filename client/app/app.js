@@ -278,7 +278,8 @@ angular.module('kf6App', [
           .translations('en', translationsEN)
           .translations('fr', translationsFR)
           .preferredLanguage('fr')
-          .fallbackLanguage('en');
+          .fallbackLanguage('en')
+          .useSanitizeValueStrategy('escape');
           //.determinePreferredLanguage();
     }])
   .controller('LanguageCtrl', function ($scope, $translate) {
