@@ -32,6 +32,7 @@ User.find({
     if (data.length <= 0) {
         User.create({
             provider: 'local',
+            username: "admin@admin.com",
             role: 'admin',
             firstName: 'KF',
             lastName: 'Admin',
