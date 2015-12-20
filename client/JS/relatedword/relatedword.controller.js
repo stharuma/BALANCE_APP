@@ -83,24 +83,12 @@ angular.module('kf6App')
         $scope.insertwords = function(str){
             $scope.mceEditor.insertContent(str + " ");
 
-            window.alert(_.pluck($scope.authors, '_id'));
-
-            var jsId = document.cookie.match(/JSESSIONID=[^;]+/);
-            if(jsId != null) {
-                if (jsId instanceof Array)
-                    jsId = jsId[0].substring(11);
-                else
-                    jsId = jsId.substring(11);
-            }
-            window.alert(jsId);
-            kf6.connect('POST', 'api/records/' + communityId, {
+            $http.post('api/records/' + $scope.view.communityId, {
             type: 'click_word',
             data: {
                 word: str,
                 contributionId: viewId,
-                time: new Date(),
-                userId: _.pluck($scope.authors, '_id'),
-                sessionId: ,
+                //sessionId:
               }
             });
         };
@@ -121,6 +109,7 @@ angular.module('kf6App')
               return word["weight"] >= topNword["weight"];
           });
 
+          //filter the word according cosin similarity
           keywordfromcurrentnote.forEach(function(word){
                 if(keywordmap.hasOwnProperty(word["str"])){
                 var cossimilarities = keywordmap[word["str"]];
@@ -194,7 +183,6 @@ angular.module('kf6App')
               return a["str"].localeCompare(b["str"]);
             });
 
-            // resultkeywords = temp;
             resultkeywords.forEach(function(word){
                 prekeytermsresult.push(word);
                 prekeyterms.push(word["str"]);
