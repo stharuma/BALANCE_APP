@@ -1,4 +1,5 @@
 #!/bin/bash                                                                                 
+# chkconfig: 345 98 20
 
 # important location                                                                        
 KF6_HOME=/opt/kf6
