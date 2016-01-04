@@ -18,6 +18,8 @@ var passport = require('passport');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
+var log4js = require('log4js');
+var fs = require('fs');
 
 module.exports = function(app) {
     var env = app.get('env');
@@ -48,15 +50,43 @@ module.exports = function(app) {
     // for proxy
     app.enable('trust proxy');
 
+    // for logging
     //morgan.format('kf-format', ':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" (:response-time ms)');
-    //Apache combined format for fluentd
+    //Apache combined format in morgan for fluentd
     morgan.format('kf-format', ':remote-addr - - [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"');
 
     if ('production' === env) {
         app.use(favicon(path.join(config.root, 'public', 'favicon.ico')));
         app.use(express.static(path.join(config.root, 'public')));
         app.set('appPath', config.root + '/public');
-        app.use(morgan('kf-format'));    
+
+        //logging
+        var logDir = config.logDir;
+        if(fs.existsSync(logDir) === false){
+            fs.mkdirSync(logDir);
+        }
+        log4js.configure({
+            appenders: [{
+                'type': 'dateFile',
+                'filename': logDir + '/access.log',
+                'pattern': '-yyyyMMdd',
+                'layout': {
+                    'type': 'pattern',
+                    'pattern': '%m'
+                }
+            }]
+        });
+        var appLogger = log4js.getLogger('dateFile');
+        var HTTPLogger = morgan({
+            'format': 'kf-format',
+            'stream': {
+                write: function(str) {
+                    appLogger.info(str);
+                }
+            }
+        });
+        app.use(HTTPLogger);
+        //app.use(morgan('kf-format'));
     }
 
     if ('development' === env || 'test' === env) {
