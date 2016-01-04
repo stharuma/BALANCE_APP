@@ -81,6 +81,7 @@ module.exports = function(app) {
             'format': 'kf-format',
             'stream': {
                 write: function(str) {
+                    str = str.slice(0, -1);//chop
                     appLogger.info(str);
                 }
             }
