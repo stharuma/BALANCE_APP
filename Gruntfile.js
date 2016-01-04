@@ -377,6 +377,15 @@ module.exports = function(grunt) {
             }
         },
 
+        chmod: {
+            options: {
+              mode: '770'
+            },
+            target1: {
+              src: ['dist/bin/*'],        
+            }
+        },
+
         buildcontrol: {
             options: {
                 dir: 'dist',
@@ -606,6 +615,7 @@ module.exports = function(grunt) {
         'concat',
         'ngAnnotate',
         'copy:dist',
+        'chmod',
         'cdnify',
         'cssmin',
         'uglify',
