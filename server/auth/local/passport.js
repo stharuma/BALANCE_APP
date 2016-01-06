@@ -3,18 +3,20 @@ var LocalStrategy = require('passport-local').Strategy;
 
 exports.setup = function(User, config) {
     passport.use(new LocalStrategy({
-            usernameField: 'username',
+            usernameField: 'userName',
             passwordField: 'password' // this is the virtual field on the model
         },
-        function(username, password, done) {
+        function(userName, password, done) {
             User.findOne({
-                username: username.toLowerCase()
+                userName: userName.toLowerCase()
             }, function(err, user) {
+                console.log(err);
+                console.log(userName);                
                 if (err) return done(err);
 
                 if (!user) {
                     return done(null, false, {
-                        message: 'This username is not registered.'
+                        message: 'This userName is not registered.'
                     });
                 }
                 if (!user.authenticate(password)) {
