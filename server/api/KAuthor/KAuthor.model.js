@@ -9,9 +9,14 @@ var KAuthorSchema = new Schema({
         required: true,
         index: true
     },
-    userName: { /* generally, user.email field will be copied to this field */
+    userName: { /* user.userName field will be copied to this field */
         type: String,
         required: true,
+        index: true
+    },
+    email: { /* user.email field will be copied if available */
+        type: String,
+        required: false,
         index: true
     },
     firstName: {

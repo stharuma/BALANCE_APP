@@ -50,27 +50,33 @@ exports.create = function(req, res) {
                 return res.send(400, 'You have already registered.'); //already exists
             }
 
-            req.body.communityId = communityId;
-            req.body.type = 'Author';
-            req.body.role = role;
-            req.body.permission = 'protected';
-            req.body.userName = req.user.email;            
-            req.body.firstName = req.user.firstName;
-            req.body.lastName = req.user.lastName;
-            req.body._community = {
-                title: community.title,
-                created: community.created
-            };
-            KAuthor.create(req.body, function(err, author) {
-                if (err) {
-                    return handleError(res, err);
-                }
-                return res.json(201, author);
-            });
+            exports.createAuthor(req, res, community, role, req.user);
         });
     });
 };
 
+exports.createAuthor = function(req, res, community, role, user) {
+    var seed = {};
+    seed.communityId = community._id;
+    seed.userId = user._id;
+    seed.type = 'Author';
+    seed.role = role;
+    seed.permission = 'protected';
+    seed.userName = user.userName;
+    seed.email = user.email;
+    seed.firstName = user.firstName;
+    seed.lastName = user.lastName;
+    seed._community = {
+        title: community.title,
+        created: community.created
+    };
+    KAuthor.create(seed, function(err, author) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(201, author);
+    });
+};
 
 function handleError(res, err) {
     console.error(err);
