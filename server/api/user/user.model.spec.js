@@ -42,8 +42,8 @@ describe('User Model', function() {
         });
     });
 
-    it('should fail when saving without an email', function(done) {
-        user.email = '';
+    it('should fail when saving without an userName', function(done) {
+        user.userName = '';
         user.save(function(err) {
             should.exist(err);
             done();
