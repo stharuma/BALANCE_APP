@@ -41,6 +41,18 @@
                     </p>
                 </div>
 
+              <div class="form-group" ng-class="{ 'has-success': form.username.$valid && submitted, 'has-error': form.username.$invalid && submitted }">
+                <label>Username</label>
+
+                <input type="text" name="username" class="form-control" ng-model="user.username" required mongoose-error/>
+                <p class="help-block" ng-show="form.username.$error.required && submitted">
+                  A username is required.
+                </p>
+                <p class="help-block" ng-show="form.username.$error.mongoose">
+                  {{ errors.username }}
+                </p>
+              </div>
+
                 <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted, 'has-error': form.password.$invalid && submitted }">
                     <label>Password</label>
 
