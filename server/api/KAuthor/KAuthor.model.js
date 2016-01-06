@@ -44,4 +44,35 @@ var KAuthorSchema = new Schema({
 });
 
 var KObject = require('../KObject/KObject.model');
-module.exports = KObject.discriminator('KAuthor', KAuthorSchema);
+var KAuthor = KObject.discriminator('KAuthor', KAuthorSchema);
+
+KAuthor.createAuthor = function(community, role, user, success, failure) {
+    var seed = {};
+    seed.communityId = community._id;
+    seed.userId = user._id;
+    seed.type = 'Author';
+    seed.role = role;
+    seed.permission = 'protected';
+    seed.userName = user.userName;
+    seed.email = user.email;
+    seed.firstName = user.firstName;
+    seed.lastName = user.lastName;
+    seed._community = {
+        title: community.title,
+        created: community.created
+    };
+    KAuthor.create(seed, function(err, author) {
+        if (err) {
+            if (failure) {
+                failure(err);
+            }
+            return;
+        }
+        if (success) {
+            success(author);
+        }
+        return;
+    });
+};
+
+module.exports = KAuthor;

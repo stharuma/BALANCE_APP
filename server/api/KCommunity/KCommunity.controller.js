@@ -89,7 +89,6 @@ exports.showgroups = function(req, res) {
     });
 };
 
-
 // Creates a new community in the DB.
 exports.create = function(req, res) {
     KCommunity.create(req.body, function(err, community) {
@@ -97,23 +96,10 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
 
-        var author = {};
-        author.communityId = community._id;
-        author.userId = req.user._id;
-        author.type = 'Author';
-        author.role = 'manager';
-        author.userName = req.user.email;
-        author.firstName = req.user.firstName;
-        author.lastName = req.user.lastName;
-        author._community = {
-            title: community.title,
-            created: community.created
-        };
-        KAuthor.create(author, function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
+        KAuthor.createAuthor(community, 'manager', req.user, function(author) {
             return res.json(201, community);
+        }, function(err) {
+            return handleError(res, err);
         });
     });
 };
