@@ -361,12 +361,10 @@ module.exports = function(grunt) {
                     dest: '<%= yeoman.dist %>',
                     src: [
                         'package.json',
-                        'server/**/*'
+                        'server/**/*',
+                        'bin/**/*', //added
+                        'node_modules/**/*', //added 6.5.2
                     ]
-                }, {
-                    expand: true,
-                    dest: '<%= yeoman.dist %>',
-                    src: ['bin/**/*']
                 }]
             },
             styles: {
@@ -379,10 +377,10 @@ module.exports = function(grunt) {
 
         chmod: {
             options: {
-              mode: '770'
+                mode: '770'
             },
             target1: {
-              src: ['dist/bin/*'],        
+                src: ['dist/bin/*'],
             }
         },
 
