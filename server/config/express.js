@@ -77,8 +77,7 @@ module.exports = function(app) {
             }]
         });
         var appLogger = log4js.getLogger('dateFile');
-        var HTTPLogger = morgan({
-            'format': 'kf-format',
+        var HTTPLogger = morgan('kf-format', {
             'stream': {
                 write: function(str) {
                     str = str.slice(0, -1);//chop
