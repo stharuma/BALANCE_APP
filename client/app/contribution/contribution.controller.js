@@ -420,9 +420,13 @@ angular.module('kf6App')
         $scope.kfdragstart = function(e) {
             var dt = e.dataTransfer; //error in IE
             if (!dt && $kfutil.isIE()) {
+                window.alert('Sorry, making reference function doesn\'t work on IE');
                 return; //surrender to create reference
             }
             var original = dt.getData('text/plain');
+            if (!original && $kfutil.isSafari()) {
+                original = getSelected();
+            }
             var contrib = $scope.contribution;
             var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
             dt.setData('kf', 'true');
@@ -433,6 +437,7 @@ angular.module('kf6App')
         $scope.kfcopy = function(e) {
             var dt = e.clipboardData; //error in IE
             if (!dt && $kfutil.isIE()) {
+                window.alert('Sorry, making reference function doesn\'t work on IE');
                 return; //surrender to create reference
             }
             var original = getSelected();
@@ -449,7 +454,9 @@ angular.module('kf6App')
         //http://stackoverflow.com/questions/5643635/how-to-get-selected-html-text-with-javascript
         function getSelected() {
             var text = '';
-            if (window.getSelection && window.getSelection().toString() && $(window.getSelection()).attr('type') !== 'Caret') {
+            if ($scope.status.edittabActive && tinymce.activeEditor.selection) {
+                return tinymce.activeEditor.selection.getContent();
+            } else if (window.getSelection && window.getSelection().toString() && $(window.getSelection()).attr('type') !== 'Caret') {
                 text = window.getSelection().toString();
                 return text;
             } else if (document.getSelection && document.getSelection().toString() && $(document.getSelection()).attr('type') !== 'Caret') {
