@@ -214,7 +214,7 @@ module.exports = function(grunt) {
             target: {
                 src: '<%= yeoman.client %>/index.html',
                 ignorePath: '<%= yeoman.client %>/',
-                exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/']
+                exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', '/tinymce-dist/']
             }
         },
 
@@ -361,12 +361,10 @@ module.exports = function(grunt) {
                     dest: '<%= yeoman.dist %>',
                     src: [
                         'package.json',
-                        'server/**/*'
+                        'server/**/*',
+                        'bin/**/*', //added
+                        'node_modules/**/*', //added 6.5.2
                     ]
-                }, {
-                    expand: true,
-                    dest: '<%= yeoman.dist %>',
-                    src: ['bin/**/*']
                 }]
             },
             styles: {
@@ -374,6 +372,15 @@ module.exports = function(grunt) {
                 cwd: '<%= yeoman.client %>',
                 dest: '.tmp/',
                 src: ['{app,components}/**/*.css']
+            }
+        },
+
+        chmod: {
+            options: {
+                mode: '770'
+            },
+            target1: {
+                src: ['dist/bin/*'],
             }
         },
 
@@ -606,6 +613,7 @@ module.exports = function(grunt) {
         'concat',
         'ngAnnotate',
         'copy:dist',
+        'chmod',
         'cdnify',
         'cssmin',
         'uglify',
