@@ -123,19 +123,19 @@ angular.module('kf6App')
             });
         };
 
-        var getContext = function(viewId, success) {
-            searchContext(viewId, function(context) {
+        var getContext = function(objId, success) {
+            searchContext(objId, function(context) {
                 success(context);
             }, function() {
-                createContextOfView(viewId, success);
+                createContext(objId, success);
             });
         };
 
-        var searchContext = function(viewId, success, failure) {
-            $http.get('/api/links/from/' + viewId).success(function(links) {
+        var searchContext = function(objId, success, failure) {
+            $http.get('/api/links/from/' + objId).success(function(links) {
                 var contextIds = [];
                 links.forEach(function(link) {
-                    if (link.type === 'has' && link._from.type === 'View' && link._to.type === 'Context') {
+                    if (link.type === 'has' && link._to.type === 'Context') {
                         contextIds.push(link.from);
                     }
                 });
@@ -154,15 +154,15 @@ angular.module('kf6App')
             });
         };
 
-        var createContextOfView = function(viewId, success) {
+        var createContext = function(objId, success) {
             $http.post('/api/contexts/' + communityId, {
                 type: 'Context'
             }).success(function(context) {
                 $http.post('/api/links/', {
                     type: 'has',
-                    from: viewId,
+                    from: objId,
                     to: context._id
-                }).success(function(/*link*/) {
+                }).success(function( /*link*/ ) {
                     success(context);
                 });
             });
