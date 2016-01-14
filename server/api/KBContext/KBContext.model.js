@@ -4,9 +4,10 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var KBContextSchema = new Schema({
-  name: String,
-  info: String,
-  active: Boolean
+	//nothing special
 });
+
+var KObject = require('../KObject/KObject.model');
+var KBContext = KObject.discriminator('KBContext', KBContextSchema);
 
 module.exports = mongoose.model('KBContext', KBContextSchema);

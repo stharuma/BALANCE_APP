@@ -55,6 +55,9 @@
             <input type="checkbox" ng-model="setting.showAuthor" ng-change="settingChanged()">author
             <input type="checkbox" ng-model="setting.showTime" ng-change="settingChanged()">time
         </div>
+        <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="saveContext()">save</button>
+        </div>
     </div>
     <div class="KFViewNavBar" ng-if="!menuStatus">
         <div class="KFCommunityTitle">{{community.community.title}}</div>

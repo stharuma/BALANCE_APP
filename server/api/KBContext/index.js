@@ -5,11 +5,10 @@ var controller = require('./KBContext.controller');
 
 var router = express.Router();
 
-router.get('/', controller.index);
-router.get('/:id', controller.show);
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);
+var auth = require('../../auth/auth.service');
+var commauth = require('../../auth/commauth.service');
+
+router.post('/:communityId', commauth.isAuthenticated(), controller.create);
+router.get('/:viewId', commauth.isAuthenticated(), controller.show);
 
 module.exports = router;

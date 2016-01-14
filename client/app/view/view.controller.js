@@ -29,7 +29,7 @@ angular.module('kf6App')
             references: true
         };
         $scope.setting.showAuthor = true;
-        $scope.setting.showTime = true;        
+        $scope.setting.showTime = true;
         $scope.dragging = 'none';
 
         $scope.initialize = function() {
@@ -40,9 +40,28 @@ angular.module('kf6App')
                 $scope.community = $community.getCommunityData();
                 $scope.views = $community.getViews();
                 $scope.updateCanvas();
+                $scope.updateContext();
             }, function(msg, status) {
                 $scope.status.error = true;
                 $scope.status.errorMessage = msg;
+            });
+        };
+
+        $scope.saveContext = function() {
+            var context = $scope.context;
+            if (!context.data) {
+                context.data = {};
+            }
+            context.data.viewSetting = $scope.setting;
+            $community.modifyObject(context);
+        };
+
+        $scope.updateContext = function() {
+            $community.getContext(viewId, function(context) {
+                if (context.data.viewSetting) {
+                    $scope.setting = context.data.viewSetting;
+                }
+                $scope.context = context;
             });
         };
 
