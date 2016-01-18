@@ -82,6 +82,8 @@ KObjectSchema.post('save', function(obj) {
             $set: {
                 _groupMembers: obj.members
             }
+        }, {
+            multi: true
         }, function(err) {
             if (err) {
                 console.error(err);
