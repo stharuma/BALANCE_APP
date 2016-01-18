@@ -22,6 +22,9 @@ var KCommunitySchema = new Schema({
     },
     scaffolds: [Schema.ObjectId],
     views: [Schema.ObjectId],
+    rootContextId: {
+        type: Schema.ObjectId
+    }
 });
 
 module.exports = mongoose.model('KCommunity', KCommunitySchema);

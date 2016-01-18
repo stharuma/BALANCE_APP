@@ -3,14 +3,15 @@
 angular.module('kf6App')
     .controller('ScaffoldmanagerCtrl', function($scope, $stateParams, $community) {
         if ($stateParams.communityId) {
-            $community.enter($stateParams.communityId);
+            $community.enter($stateParams.communityId, function() {}, function() {
+                $community.refreshScaffolds(function() {});
+            });
         }
 
         $scope.status = {};
         $scope.status.isSavingProgressMonitorCollapsed = true;
 
         $scope.scaffolds = $community.getScaffolds();
-        $community.refreshScaffolds(function() {});
 
         $scope.showSaved = function() {
             $scope.status.isSavingProgressMonitorCollapsed = false;

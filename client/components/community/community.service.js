@@ -17,7 +17,9 @@ angular.module('kf6App')
         communityData.groupsArray = [];
         communityData.scaffolds = [];
 
-        var enter = function(newId, authorHandler) {
+        var rootContext;
+
+        var enter = function(newId, authorHandler, communityHandler) {
             if (!newId) {
                 console.warn('bad newId: ' + newId);
                 return;
@@ -28,12 +30,15 @@ angular.module('kf6App')
                 communityId = newId;
 
                 refreshAuthor(authorHandler);
-                refreshCommunity();
+                refreshCommunity(communityHandler);
                 refreshViews();
                 //refreshMembers(); // it takes cost
             } else {
                 if (authorHandler) {
                     authorHandler();
+                }
+                if (communityHandler) {
+                    communityHandler();
                 }
             }
         };
@@ -124,11 +129,24 @@ angular.module('kf6App')
         };
 
         var getContext = function(objId, success) {
-            searchContext(objId, function(context) {
-                success(context);
-            }, function() {
-                createContext(objId, success);
-            });
+            var postprocess = function(context) {
+                if (!context.data) {
+                    context.data = {};
+                }
+                if (success) {
+                    success(context);
+                }
+            }
+            if (rootContext) {
+                postprocess(rootContext);
+            } else {
+                getRootContext(postprocess);
+            }
+            // searchContext(objId, function(context) {
+            //     success(context);
+            // }, function() {
+            //     createContext(objId, success);
+            // });
         };
 
         var searchContext = function(objId, success, failure) {
@@ -168,10 +186,47 @@ angular.module('kf6App')
             });
         };
 
+        var getRootContext = function(handler) {
+            var contextId = communityData.community.rootContextId;
+            if (contextId) {
+                getObject(contextId, function(context) {
+                    rootContext = context;
+                    handler(context);
+                }, function() {
+                    console.err('context undefined. dont come this state.');
+                    handler(null);
+                    //createRootContext(handler, handler);
+                });
+            } else {
+                createRootContext(handler, handler);
+            }
+        };
+
+        var createRootContext = function(success, failure) {
+            $http.post('/api/contexts/' + communityId, {
+                type: 'Context',
+                data: {
+                    scaffolds: communityData.community.scaffolds
+                }
+            }).success(function(context) {
+                updateCommunity({
+                    rootContextId: context._id
+                }, function() {
+                    rootContext = context;
+                    success(context);
+                });
+            }).error(function() {
+                failure();
+            });
+        };
+
         var refreshScaffolds = function(handler) {
-            $http.get('/api/communities/' + communityId).success(function(community) {
+            getContext(null, function(context) {
                 communityData.scaffolds.length = 0; //clear once
-                var scaffoldIds = community.scaffolds;
+                var scaffoldIds = context.data.scaffolds;
+                if (!scaffoldIds) {
+                    scaffoldIds = [];
+                }
                 var len = scaffoldIds.length;
                 var numOfFinished = 0;
                 if (numOfFinished >= len) {
@@ -327,13 +382,7 @@ angular.module('kf6App')
                 permission: 'protected'
             };
             $http.post('/api/contributions/' + communityId, newobj).success(function(scaffold) {
-                var url = 'api/communities/' + communityId;
-                $http.get(url).success(function(community) {
-                    community.scaffolds.push(scaffold._id);
-                    $http.put(url, community).success(function() {
-                        success(scaffold);
-                    });
-                });
+                success(scaffold);
             });
         };
 
@@ -446,7 +495,7 @@ angular.module('kf6App')
                 createSupport(scaffold, 'This theory cannot explain', 2, function() {});
                 createSupport(scaffold, 'I need to understand', 2, function() {});
                 createSupport(scaffold, 'Putting our knowledge together', 2, function() {});
-                handler();
+                handler(scaffold);
             });
         };
 

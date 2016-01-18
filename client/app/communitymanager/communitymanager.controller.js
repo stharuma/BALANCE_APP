@@ -3,7 +3,7 @@
 angular.module('kf6App')
     .controller('CommunitymanagerCtrl', function($scope, $http, $state, Auth, $location, $community, $kfutil) {
         $kfutil.mixIn($scope);
-        
+
         $scope.selected = {};
         $scope.myRegistrations = [];
         $scope.communities = [];
@@ -47,10 +47,16 @@ angular.module('kf6App')
                 title: $scope.newCommunity.title,
                 registrationKey: $scope.newCommunity.key
             }).success(function(community) {
-                $community.enter(community._id, function() {
+                $community.enter(community._id, function() {}, function() {
                     $community.createView('Welcome', function() {
-                        $community.createDefaultScaffold(function() {
-                            $state.reload();
+                        $community.createDefaultScaffold(function(scaffold) {
+                            $community.getContext(null, function(context) {
+                                context.data.scaffolds.push(scaffold._id);
+                                $community.modifyObject(context, function() {
+                                    $state.reload();
+                                });
+                            });
+
                         });
                     });
                 });

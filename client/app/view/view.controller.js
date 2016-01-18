@@ -36,11 +36,12 @@ angular.module('kf6App')
             $community.getObject(viewId, function(view) {
                 $scope.view = view;
                 $ac.mixIn($scope, view);
-                $community.enter(view.communityId);
-                $scope.community = $community.getCommunityData();
-                $scope.views = $community.getViews();
-                $scope.updateCanvas();
-                $scope.updateContext();
+                $community.enter(view.communityId, function() {}, function() {
+                    $scope.community = $community.getCommunityData();
+                    $scope.views = $community.getViews();
+                    $scope.updateCanvas();
+                    $scope.updateContext();
+                });
             }, function(msg, status) {
                 $scope.status.error = true;
                 $scope.status.errorMessage = msg;
