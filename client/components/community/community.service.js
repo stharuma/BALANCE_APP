@@ -136,7 +136,7 @@ angular.module('kf6App')
                 if (success) {
                     success(context);
                 }
-            }
+            };
             if (rootContext) {
                 postprocess(rootContext);
             } else {
@@ -149,42 +149,42 @@ angular.module('kf6App')
             // });
         };
 
-        var searchContext = function(objId, success, failure) {
-            $http.get('/api/links/from/' + objId).success(function(links) {
-                var contextIds = [];
-                links.forEach(function(link) {
-                    if (link.type === 'has' && link._to.type === 'Context') {
-                        contextIds.push(link.from);
-                    }
-                });
+        // var searchContext = function(objId, success, failure) {
+        //     $http.get('/api/links/from/' + objId).success(function(links) {
+        //         var contextIds = [];
+        //         links.forEach(function(link) {
+        //             if (link.type === 'has' && link._to.type === 'Context') {
+        //                 contextIds.push(link.from);
+        //             }
+        //         });
 
-                if (contextIds.length > 0) {
-                    return $http.get('/api/objects/' + contextIds[0]).success(function(context) {
-                        success(context);
-                    }).error(function() {
-                        failure();
-                    });
-                } else {
-                    failure();
-                }
-            }).error(function() {
-                failure();
-            });
-        };
+        //         if (contextIds.length > 0) {
+        //             return $http.get('/api/objects/' + contextIds[0]).success(function(context) {
+        //                 success(context);
+        //             }).error(function() {
+        //                 failure();
+        //             });
+        //         } else {
+        //             failure();
+        //         }
+        //     }).error(function() {
+        //         failure();
+        //     });
+        // };
 
-        var createContext = function(objId, success) {
-            $http.post('/api/contexts/' + communityId, {
-                type: 'Context'
-            }).success(function(context) {
-                $http.post('/api/links/', {
-                    type: 'has',
-                    from: objId,
-                    to: context._id
-                }).success(function( /*link*/ ) {
-                    success(context);
-                });
-            });
-        };
+        // var createContext = function(objId, success) {
+        //     $http.post('/api/contexts/' + communityId, {
+        //         type: 'Context'
+        //     }).success(function(context) {
+        //         $http.post('/api/links/', {
+        //             type: 'has',
+        //             from: objId,
+        //             to: context._id
+        //         }).success(function( /*link*/ ) {
+        //             success(context);
+        //         });
+        //     });
+        // };
 
         var getRootContext = function(handler) {
             var contextId = communityData.community.rootContextId;
@@ -258,14 +258,16 @@ angular.module('kf6App')
             });
         };
 
+        var orderComparator = function(n) {
+            if (n.data && n.data.order) {
+                return n.data.order;
+            }
+            return 0;
+        };
+
         var fillSupport = function(scaffold, handler) {
             $http.get('/api/links/from/' + scaffold._id).success(function(supports) {
-                scaffold.supports = _.sortBy(supports, function(n) {
-                    if (n.data && n.data.order) {
-                        return n.data.order;
-                    }
-                    return 0;
-                });
+                scaffold.supports = _.sortBy(supports, orderComparator);
                 if (handler) {
                     handler();
                 }

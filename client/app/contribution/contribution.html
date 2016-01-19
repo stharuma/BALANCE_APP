@@ -12,7 +12,6 @@
             <button ng-show="status.contribution==='success'" type="submit" class="btn btn-primary kfbutton" ng-click="closeRequest()">Finish editing (Close this window)</button>
         </div>
     </div>
-
     <div class="well" collapse="status.isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isAttachmentCollapsed = true;">close</button>
@@ -21,9 +20,7 @@
             <div ng-include="'components/kfutils/attachmentuploader/attachmentuploader.html'"></div>
         </div>
     </div>
-
     <!-- title header part -->
-
     <div style="overflow: hidden;">
         <div style="float: left; overflow: hidden;">
             <span class="KFTitle">&nbsp;{{contribution.title}}</span>
@@ -33,9 +30,7 @@
             <p class="KFModified">Last modified: {{getTimeString(contribution.modified)}}</p>
         </div>
     </div>
-
     <!-- tab and contents part -->
-
     <div class="KFTabSet">
         <tabset>
             <tab heading="Read" class="KFTab" select="readSelected()">
@@ -53,7 +48,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div ng-if="contribution.type === 'Attachment'">
                         <div ng-if="isImage(contribution)">
                             <img ng-attr-src="{{contribution.data.url}}">
@@ -62,7 +56,6 @@
                             <a ng-click="downloadAttachment(contribution)">Download</a> ({{contribution.data.filename}}, {{contribution.data.type}}, {{contribution.data.size}}Bytes)
                         </div>
                     </div>
-
                     <div ng-if="contribution.type === 'Group'">
                         <div ng-include="'components/kfutils/group/groupreader.html'"></div>
                     </div>
@@ -120,7 +113,7 @@
                             </div>
                         </div>
                         <div style="overflow: hidden;">
-                            <div ng-show="!mceEditor">Editor have not initialized yet. <span>Never edit now</span></div> 
+                            <div ng-show="!mceEditor">Editor have not initialized yet. <span>Never edit now</span></div>
                             <textarea ng-show="mceEditor" ui-tinymce="tinymceOptions" ng-model="copy.body"></textarea>
                         </div>
                     </div>
@@ -133,10 +126,14 @@
                     <div ng-if="contribution.type === 'Scaffold'">
                         <div ng-include="'components/kfutils/scaffoldeditor/scaffoldeditor.html'"></div>
                     </div>
-
+                    <div ng-if="contribution.type === 'View'">
+                        <div ng-include="'components/kfutils/vieweditor/vieweditor.html'"></div>
+                    </div>
+                    <div ng-if="contribution.type === 'Context'">
+                        <div ng-include="'components/kfutils/contexteditor/contexteditor.html'"></div>
+                    </div>
                 </div>
             </tab>
-
             <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"> -->
             <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css">
             <tab class="KFTab" heading="Authors">
@@ -174,7 +171,6 @@
                     </table>
                 </div>
             </tab>
-
             <tab class="KFTab" heading="Connections">
                 <div>
                     <label>This note builds onto:</label>
@@ -231,7 +227,6 @@
                     </ul>
                 </div>
             </tab>
-
             <tab class="KFTab" heading="Logs">
                 <div>
                     <label>edit logs:</label>
@@ -249,7 +244,6 @@
                     </ul>
                 </div>
             </tab>
-
             <tab class="KFTab" heading="Attachments">
                 <div>
                     <label>Attachments:</label>
@@ -259,13 +253,11 @@
                         </li>
                     </ul>
                 </div>
-
                 <div ng-show="isEditable()">
                     <label>Upload:</label>
                     <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">Upload</button>
                 </div>
             </tab>
-
             <tab class="KFTab" ng-show="isEditable()" heading="Property">
                 <div>
                     <label>Properties:</label>
@@ -323,7 +315,6 @@
             </tab>
         </tabset>
     </div>
-
     <div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button ng-disabled="!status.dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">Contribute</button>
@@ -333,7 +324,6 @@
         </div>
     </div>
 </div>
-
 <div ng-show="status.error">
     Error: {{status.errorMessage}}
 </div>
