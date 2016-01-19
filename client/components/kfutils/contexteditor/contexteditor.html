@@ -9,4 +9,24 @@
         <input type="checkbox" ng-model="contribution.data.viewSetting.showAuthor" ng-change="settingChanged()">author
         <input type="checkbox" ng-model="contribution.data.viewSetting.showTime" ng-change="settingChanged()">time
     </div>
+
+    <label>Scaffold Editor:</label>
+    <div>
+        <label>Scaffolds</label>
+        <ul ui-sortable ng-model="scaffoldlinks">
+            <li ng-repeat="scaffoldlink in scaffoldlinks">
+                <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(scaffoldlink)">{{scaffoldlink._to.title}}</a>&nbsp;&nbsp;
+                <a class="KFGroupManagerAnchor trash" ng-click="removeSupport(scaffoldlink)"><span class="glyphicon glyphicon-trash"></span></a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <label>New Scaffold</label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="Input New Scaffold Title" ng-model="input.scaffoldTitle">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary" ng-click="addScaffold()">Add New Scaffold</button>
+             </span>
+        </p>
+    </div>
 </div>

@@ -258,6 +258,30 @@ angular.module('kf6App')
             });
         };
 
+        var loadScaffoldLinks = function(context, handler) {
+            getLinksFrom(context._id, 'uses', handler);
+        };
+
+        // var links2ToObjs = function(links) {
+        //     return _.map(links, function(link) {
+        //         link._to;
+        //     });
+        // };
+
+        var getLinksFrom = function(fromId, type, success, failure) {
+            $http.get('/api/links/from/' + fromId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
         var orderComparator = function(n) {
             if (n.data && n.data.order) {
                 return n.data.order;
@@ -385,6 +409,19 @@ angular.module('kf6App')
             };
             $http.post('/api/contributions/' + communityId, newobj).success(function(scaffold) {
                 success(scaffold);
+            });
+        };
+
+        var usesScaffold = function(context, scaffold, order, success) {
+            var link = {};
+            link.to = scaffold._id;
+            link.from = context._id;
+            link.type = 'uses';
+            link.data = {
+                order: order
+            };
+            $http.post('/api/links', link).success(function() {
+                success(link);
             });
         };
 
@@ -612,6 +649,8 @@ angular.module('kf6App')
             read: read,
             getAuthor: getAuthor,
             refreshAuthor: refreshAuthor,
+            loadScaffoldLinks: loadScaffoldLinks,
+            usesScaffold: usesScaffold,
             getViews: function() {
                 return communityData.views;
             },
