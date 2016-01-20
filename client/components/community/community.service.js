@@ -222,38 +222,39 @@ angular.module('kf6App')
 
         var refreshScaffolds = function(handler) {
             getContext(null, function(context) {
-                communityData.scaffolds.length = 0; //clear once
-                var scaffoldIds = context.data.scaffolds;
-                if (!scaffoldIds) {
-                    scaffoldIds = [];
-                }
-                var len = scaffoldIds.length;
-                var numOfFinished = 0;
-                if (numOfFinished >= len) {
-                    if (handler) {
-                        handler();
-                    }
-                }
-                scaffoldIds.forEach(function(scaffoldId) {
-                    var newScaffold = {};
-                    communityData.scaffolds.push(newScaffold);
-                    getObject(scaffoldId, function(scaffold) {
-                        _.extend(newScaffold, scaffold);
-                        fillSupport(newScaffold, function() {
-                            numOfFinished++;
-                            if (numOfFinished >= len) {
-                                if (handler) {
-                                    handler();
-                                }
-                            }
+                loadScaffoldLinks(context, function(links) {
+                    communityData.scaffolds.length = 0; //clear once
+                    var funcs = [];
+                    links.forEach(function(link) {
+                        funcs.push(function(handler) {
+                            var scaffold = link._to;
+                            scaffold._id = link.to;
+                            communityData.scaffolds.push(scaffold);
+                            fillSupport(scaffold, handler);
                         });
-                    }, function() {
-                        if (numOfFinished >= len) {
-                            if (handler) {
-                                handler();
-                            }
-                        }
                     });
+                    waitFor(funcs, handler);
+                });
+            });
+        };
+
+        var waitFor = function(funcs, handler) {
+            var len = funcs.length;
+            if (len <= 0) {
+                if (handler) {
+                    handler();
+                }
+                return;
+            }
+            var numOfFinished = 0;
+            funcs.forEach(function(func) {
+                func(function() {
+                    numOfFinished++;
+                    if (numOfFinished >= len) {
+                        if (handler) {
+                            handler();
+                        }
+                    }
                 });
             });
         };
@@ -528,13 +529,30 @@ angular.module('kf6App')
 
         var createDefaultScaffold = function(handler) {
             createScaffold('Theory Building', function(scaffold) {
-                createSupport(scaffold, 'My theory', 0, function() {});
-                createSupport(scaffold, 'A better theory', 1, function() {});
-                createSupport(scaffold, 'New Information', 2, function() {});
-                createSupport(scaffold, 'This theory cannot explain', 2, function() {});
-                createSupport(scaffold, 'I need to understand', 2, function() {});
-                createSupport(scaffold, 'Putting our knowledge together', 2, function() {});
-                handler(scaffold);
+                var tasks = [];
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'My theory', 0, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'A better theory', 1, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'New Information', 2, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'This theory cannot explain', 3, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'I need to understand', 4, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'Putting our knowledge together', 5, handler);
+                });
+                waitFor(tasks, function() {
+                    getContext(null, function(context) {
+                        usesScaffold(context, scaffold, 0, handler);
+                    });
+                });
             });
         };
 

@@ -22,7 +22,7 @@ angular.module('kf6App')
                 return;
             }
             $community.createScaffold($scope.input.scaffoldTitle, function(scaffold) {
-                $community.usesScaffold($scope.contribution, scaffold, 1, function() {
+                $community.usesScaffold($scope.contribution, scaffold, 100, function() {
                     $scope.update();
                 });
             });

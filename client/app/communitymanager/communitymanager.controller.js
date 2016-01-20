@@ -49,14 +49,8 @@ angular.module('kf6App')
             }).success(function(community) {
                 $community.enter(community._id, function() {}, function() {
                     $community.createView('Welcome', function() {
-                        $community.createDefaultScaffold(function(scaffold) {
-                            $community.getContext(null, function(context) {
-                                context.data.scaffolds.push(scaffold._id);
-                                $community.modifyObject(context, function() {
-                                    $state.reload();
-                                });
-                            });
-
+                        $community.createDefaultScaffold(function() {
+                            $state.reload();
                         });
                     });
                 });
