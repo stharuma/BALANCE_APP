@@ -4,14 +4,14 @@ angular.module('kf6App')
     .controller('ScaffoldmanagerCtrl', function($scope, $stateParams, $community) {
         if ($stateParams.communityId) {
             $community.enter($stateParams.communityId, function() {}, function() {
-                $community.refreshScaffolds(function() {});
+                $community.refreshRegisteredScaffolds();
             });
         }
 
         $scope.status = {};
         $scope.status.isSavingProgressMonitorCollapsed = true;
 
-        $scope.scaffolds = $community.getScaffolds();
+        $scope.scaffolds = $community.getCommunityData().registeredScaffolds;
 
         $scope.showSaved = function() {
             $scope.status.isSavingProgressMonitorCollapsed = false;
@@ -26,7 +26,7 @@ angular.module('kf6App')
                 return;
             }
             $community.createScaffold($scope.input.scaffoldTitle, function() {
-                $community.refreshScaffolds(function() {});
+                $community.refreshRegisteredScaffolds();
                 //$state.reload();                
             });
             $scope.input.scaffoldTitle = '';
