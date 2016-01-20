@@ -194,7 +194,7 @@ angular.module('kf6App')
                     rootContext = context;
                     handler(context);
                 }, function() {
-                    console.err('context undefined. dont come this state.');
+                    console.error('context undefined. dont come this state.');
                     handler(null);
                     //createRootContext(handler, handler);
                 });
