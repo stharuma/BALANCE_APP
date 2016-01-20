@@ -203,6 +203,7 @@ angular.module('kf6App')
             }
         };
 
+        /* bridging program from 6.5.x to 6.6.x */
         var createRootContext = function(success, failure) {
             $http.post('/api/contexts/' + communityId, {
                 title: 'RootContext of ' + communityData.community.title,
@@ -213,7 +214,14 @@ angular.module('kf6App')
                     rootContextId: context._id
                 }, function() {
                     rootContext = context;
-                    success(context);
+                    refreshRegisteredScaffolds(function() {
+                        if (communityData.scaffolds.length > 0) {
+                            var scaffold = communityData.scaffolds[0];
+                            usesScaffold(context, scaffold, 1, function() {
+                                success(context);
+                            });
+                        }
+                    });
                 });
             }).error(function() {
                 failure();
