@@ -37,10 +37,17 @@ angular.module('kf6App')
             if (!confirmation) {
                 return;
             }
-            _.remove($scope.scaffolds, function(n) {
-                return n._id === scaffold._id;
+
+            $community.getLinksTo(scaffold._id, 'uses', function(links) {
+                if(links.length > 0){
+                    window.alert('You cannot delete a scaffold which is used');
+                    return;
+                }
+                _.remove($scope.scaffolds, function(n) {
+                    return n._id === scaffold._id;
+                });
+                $scope.save();
             });
-            $scope.save();
         };
 
         $scope.editScaffold = function(scaffold) {

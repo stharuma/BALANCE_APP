@@ -205,6 +205,7 @@ angular.module('kf6App')
 
         var createRootContext = function(success, failure) {
             $http.post('/api/contexts/' + communityId, {
+                title: 'RootContext of ' + communityData.community.title,
                 type: 'Context',
                 data: {}
             }).success(function(context) {
@@ -294,6 +295,20 @@ angular.module('kf6App')
 
         var getLinksFrom = function(fromId, type, success, failure) {
             $http.get('/api/links/from/' + fromId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
+        var getLinksTo = function(toId, type, success, failure) {
+            $http.get('/api/links/to/' + toId).success(function(links) {
                 if (type) {
                     links = links.filter(function(each) {
                         return each.type === type;
@@ -706,6 +721,8 @@ angular.module('kf6App')
             loadScaffoldLinks: loadScaffoldLinks,
             usesScaffold: usesScaffold,
             refreshRegisteredScaffolds: refreshRegisteredScaffolds,
+            getLinksTo: getLinksTo,
+            getLinksFrom: getLinksFrom,
             getViews: function() {
                 return communityData.views;
             },

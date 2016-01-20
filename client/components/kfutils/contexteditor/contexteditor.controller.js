@@ -5,11 +5,13 @@ angular.module('kf6App')
 
         $scope.input = {};
         $scope.settingChanged = function() {};
+        $scope.registeredScaffolds = $community.getCommunityData().registeredScaffolds;
 
         $scope.update = function() {
             $community.loadScaffoldLinks($scope.contribution, function(scaffoldlinks) {
                 $scope.scaffoldlinks = scaffoldlinks;
             });
+            $community.refreshRegisteredScaffolds();
         };
         $scope.update();
 
@@ -59,6 +61,26 @@ angular.module('kf6App')
                 $http.put('/api/links/' + each._id, each);
             });
         });
+
+        $scope.useScaffold = function(scaffold) {
+            if (includes(scaffold)) {
+                window.alert('The scaffold is already in use.');
+                return;
+            }
+            $community.usesScaffold($scope.contribution, scaffold, 100, function() {
+                $scope.update();
+            });
+        };
+
+        var includes = function(scaffold) {
+            var len = $scope.scaffoldlinks.length;
+            for (var i = 0; i < len; i++) {
+                if ($scope.scaffoldlinks[i].to === scaffold._id) {
+                    return true;
+                }
+            }
+            return false;
+        };
 
         $scope.selectSupport = function(scaffoldlink) {
             var url = 'contribution/' + scaffoldlink.to;
