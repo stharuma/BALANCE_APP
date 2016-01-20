@@ -18,8 +18,6 @@ angular.module('kf6App')
                 var contribution = scope.contribution;
                 var el = element[0];
                 el.addEventListener('dragstart', function(e) {
-                    console.log('dragstart');
-
                     var ids = [contribution._id];
                     e.dataTransfer.setData('text', 'objectIds:' + JSON.stringify(ids));
                 });
