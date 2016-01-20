@@ -250,7 +250,9 @@ angular.module('kf6App')
                 var funcs = [];
                 scaffoldIds.forEach(function(scaffoldId) {
                     funcs.push(function(handler) {
-                        var newScaffold = {};
+                        var newScaffold = {
+                            _id: scaffoldId
+                        };
                         communityData.registeredScaffolds.push(newScaffold);
                         getObject(scaffoldId, function(scaffold) {
                             _.extend(newScaffold, scaffold);

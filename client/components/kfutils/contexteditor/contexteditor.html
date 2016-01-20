@@ -11,19 +11,30 @@
     </div>
     <label>Scaffold Editor:</label>
     <div>
-        <label>Scaffolds</label>
-        <ul ui-sortable ng-model="scaffoldlinks">
-            <li ng-repeat="scaffoldlink in scaffoldlinks">
-                <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(scaffoldlink)">{{scaffoldlink._to.title}}</a>&nbsp;&nbsp;
-                <a class="KFGroupManagerAnchor trash" ng-click="removeSupport(scaffoldlink)"><span class="glyphicon glyphicon-trash"></span></a>
-            </li>
-        </ul>
-    </div>
-    <div>
-        <label>Scaffold Repository</label>        
-        <ul>
-            <li ng-repeat="scaffold in registeredScaffolds">{{scaffold.title}} <button type="submit" class="btn btn-primary" ng-click="useScaffold(scaffold)">Use in this context</button></li>
-        </ul>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 50%; vertical-align: top;">
+                    <label>Scaffolds</label>
+                    <ul ui-sortable ng-model="scaffoldlinks">
+                        <li ng-repeat="scaffoldlink in scaffoldlinks">
+                            <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(scaffoldlink)">{{scaffoldlink._to.title}}</a>&nbsp;&nbsp;
+                            <a class="KFGroupManagerAnchor trash" ng-click="removeSupport(scaffoldlink)"><span class="glyphicon glyphicon-trash"></span></a>
+                        </li>
+                    </ul>
+                </td>
+                <td style="vertical-align: top;">
+                    <label>Scaffold Repository</label>
+                    <ul>
+                        <li ng-repeat="scaffold in registeredScaffolds" ng-if="!includes(scaffold)">
+                            <span>
+                                <button type="submit" class="btn btn-primary" ng-click="useScaffold(scaffold)">&lt;- Use</button>
+                                {{scaffold.title}}                   
+                            </span>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
     </div>
     <div>
         <label>New Scaffold</label>

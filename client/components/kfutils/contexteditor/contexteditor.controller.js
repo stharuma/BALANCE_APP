@@ -63,7 +63,7 @@ angular.module('kf6App')
         });
 
         $scope.useScaffold = function(scaffold) {
-            if (includes(scaffold)) {
+            if ($scope.includes(scaffold)) {
                 window.alert('The scaffold is already in use.');
                 return;
             }
@@ -72,7 +72,7 @@ angular.module('kf6App')
             });
         };
 
-        var includes = function(scaffold) {
+        $scope.includes = function(scaffold) {
             var len = $scope.scaffoldlinks.length;
             for (var i = 0; i < len; i++) {
                 if ($scope.scaffoldlinks[i].to === scaffold._id) {
