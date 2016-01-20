@@ -3,10 +3,8 @@
     <table>
         <tr ng-repeat="registration in myRegistrations">
             <td style="padding-left: 20px;">{{registration._community.title}}</td>
-            <td style="padding-left: 10px;"><!-- TODO i18n
-             (created: {{toTimeString(registration._community.created)}}) --></td>
-            <td style="padding-left: 20px;"><!-- TODO i18n
-            {{registration.role}} --></td>
+            <td style="padding-left: 10px;"><!-- TODO i18n (created: {{toTimeString(registration._community.created)}}) --></td>
+            <td style="padding-left: 20px;"><!-- TODO i18n {{registration.role}} --></td>
             <td style="padding-left: 20px;">
                 <button ng-click="enterCommunity(registration)">{{ 'community_enter' | translate }}</button>
             </td>
@@ -81,27 +79,4 @@
             </table>
         </div>
     </div>
-  <!-- TODO put this technical data elsewhere
-    <div>
-        <label>{{ 'user_agent' | translate }} ({{ 'technical_data' | translate }}):</label>
-        <table>
-            <tr>
-                <td>browser?:</td>
-                <td>{{browser()}}</td>
-            </tr>
-            <tr>
-                <td>iOS?:</td>
-                <td>{{isiOS()}}</td>
-            </tr>
-            <tr>
-                <td>Android?:</td>
-                <td>{{isAndroid()}}</td>
-            </tr>
-            <tr>
-                <td>Mobile?:</td>
-                <td>{{isMobile()}}</td>
-            </tr>
-        </table>
-    </div>
-    -->
 </div>

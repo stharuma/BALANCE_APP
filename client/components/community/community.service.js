@@ -123,6 +123,51 @@ angular.module('kf6App')
             });
         };
 
+        var getContext = function(objId, success) {
+            searchContext(objId, function(context) {
+                success(context);
+            }, function() {
+                createContext(objId, success);
+            });
+        };
+
+        var searchContext = function(objId, success, failure) {
+            $http.get('/api/links/from/' + objId).success(function(links) {
+                var contextIds = [];
+                links.forEach(function(link) {
+                    if (link.type === 'has' && link._to.type === 'Context') {
+                        contextIds.push(link.from);
+                    }
+                });
+
+                if (contextIds.length > 0) {
+                    return $http.get('/api/objects/' + contextIds[0]).success(function(context) {
+                        success(context);
+                    }).error(function() {
+                        failure();
+                    });
+                } else {
+                    failure();
+                }
+            }).error(function() {
+                failure();
+            });
+        };
+
+        var createContext = function(objId, success) {
+            $http.post('/api/contexts/' + communityId, {
+                type: 'Context'
+            }).success(function(context) {
+                $http.post('/api/links/', {
+                    type: 'has',
+                    from: objId,
+                    to: context._id
+                }).success(function( /*link*/ ) {
+                    success(context);
+                });
+            });
+        };
+
         var refreshScaffolds = function(handler) {
             $http.get('/api/communities/' + communityId).success(function(community) {
                 communityData.scaffolds.length = 0; //clear once
@@ -488,6 +533,8 @@ angular.module('kf6App')
         };
 
         return {
+            getContext: getContext,
+
             enter: enter,
             getMember: getMember,
             refreshMembers: refreshMembers,

@@ -71,12 +71,45 @@
     // ga('create', 'UA-XXXXX-X');
     // ga('send', 'pageview');
     </script>
-    <script src="bower_components/tinymce/tinymce.min.js"></script>    
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
     <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
+    <!-- (Yoshiaki) Tinymce should be installed manually for plugin loading -->
+    <script src="bower_components/tinymce-dist/tinymce.min.js"></script>       
     <!-- build:js({client,node_modules}) app/vendor.js -->
+    <!-- (Yoshiaki) Preload plugins for optimization and reducing traffic of 301 non-modified -->
+    <script src="bower_components/tinymce-dist/themes/modern/theme.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/advlist/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/autolink/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/autosave/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/link/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/image/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/lists/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/charmap/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/print/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/preview/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/hr/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/anchor/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/pagebreak/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/spellchecker/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/searchreplace/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/wordcount/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/visualblocks/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/visualchars/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/code/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/fullscreen/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/insertdatetime/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/media/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/nonbreaking/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/table/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/directionality/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/emoticons/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/template/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/textcolor/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/paste/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/noneditable/plugin.min.js"></script>
+    <script src="bower_components/tinymce-dist/plugins/fullpage/plugin.min.js"></script>
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -88,7 +121,6 @@
     <script src="bower_components/angular-socket-io/socket.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="bower_components/tinymce-dist/tinymce.js"></script>
     <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
     <script src="bower_components/angular-ui-sortable/sortable.js"></script>
     <script src="bower_components/ng-context-menu/dist/ng-context-menu.js"></script>

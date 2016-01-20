@@ -21,7 +21,7 @@ angular.module('kf6App')
                 var deferred = $q.defer();
 
                 $http.post('/auth/local', {
-                    username: user.username,
+                    userName: user.userName,
                     password: user.password
                 }).
                 success(function(data) {

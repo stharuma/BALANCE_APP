@@ -19,6 +19,9 @@ var all = {
     root: path.normalize(__dirname + '/../../..'),
 
     // Server port
+    logDir: process.env.LOGDIR || '/var/log/kf6',
+
+    // Server port
     port: process.env.PORT || 9000,
 
     // Should we populate the DB with sample data?

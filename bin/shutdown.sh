@@ -14,7 +14,7 @@ else
 	rm lock;
 fi
 
-kill `ps -ef | grep kf6 | grep -v grep | awk '{print $2}'`
+kill `ps -ef | grep node | grep -v grep | awk '{print $2}'`
 kill `ps -ef | grep grunt | grep -v grep | awk '{print $2}'`
 
 
