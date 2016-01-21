@@ -205,11 +205,14 @@ angular.module('kf6App')
         $scope.contribute = function() {
             var cont = $scope.contribution;
 
-            if (cont.title.length === 0 || cont.title === '') {
-                // TODO i18n
-                window.alert('Veuillez saisir un titre.');
-                return;
-            }
+          if (cont.title.length === 0 || cont.title === '') {
+            $translate('title_required').then(function(translation) {
+              window.alert(translation);
+            }, function(translationId){
+              // TODO do something if unable to provide translation
+            });
+            return;
+          }
 
             if (cont.type === 'Note' && !$scope.mceEditor) { //avoid contribution in empty body
                 window.alert('mceEditor have not initialized yet.');
