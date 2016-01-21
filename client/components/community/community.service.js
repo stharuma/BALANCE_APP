@@ -199,34 +199,35 @@ angular.module('kf6App')
                     //createRootContext(handler, handler);
                 });
             } else {
-                createRootContext(handler, handler);
+                console.error('context undefined. dont come this state.');
+                //createRootContextX(handler, handler);
             }
         };
 
         /* bridging program from 6.5.x to 6.6.x */
-        var createRootContext = function(success, failure) {
-            $http.post('/api/contexts/' + communityId, {
-                title: 'RootContext of ' + communityData.community.title,
-                type: 'Context',
-                data: {}
-            }).success(function(context) {
-                updateCommunity({
-                    rootContextId: context._id
-                }, function() {
-                    rootContext = context;
-                    refreshRegisteredScaffolds(function() {
-                        if (communityData.scaffolds.length > 0) {
-                            var scaffold = communityData.scaffolds[0];
-                            usesScaffold(context, scaffold, 1, function() {
-                                success(context);
-                            });
-                        }
-                    });
-                });
-            }).error(function() {
-                failure();
-            });
-        };
+        // var createRootContextX = function(success, failure) {
+        //     $http.post('/api/contexts/' + communityId, {
+        //         title: 'RootContext of ' + communityData.community.title,
+        //         type: 'Context',
+        //         data: {}
+        //     }).success(function(context) {
+        //         updateCommunity({
+        //             rootContextId: context._id
+        //         }, function() {
+        //             rootContext = context;
+        //             refreshRegisteredScaffolds(function() {
+        //                 if (communityData.scaffolds.length > 0) {
+        //                     var scaffold = communityData.scaffolds[0];
+        //                     usesScaffold(context, scaffold, 1, function() {
+        //                         success(context);
+        //                     });
+        //                 }
+        //             });
+        //         });
+        //     }).error(function() {
+        //         failure();
+        //     });
+        // };
 
         var refreshScaffolds = function(handler) {
             getContext(null, function(context) {
@@ -288,6 +289,74 @@ angular.module('kf6App')
                         if (handler) {
                             handler();
                         }
+                    }
+                });
+            });
+        };
+
+        var createCommunity = function(title, key, success, failure) {
+            $http.post('/api/communities', {
+                title: title,
+                registrationKey: key
+            }).success(function(community) {
+                createRootContext(community, function(context) {
+                    enter(community._id, function() {}, function() {
+                        createView('Welcome', function() {
+                            createDefaultScaffold(function(scaffold) {
+                                usesScaffold(context, scaffold, 1, function() {
+                                    if (success) {
+                                        success(community);
+                                    }
+                                });
+                            });
+                        });
+                    });
+                }, failure);
+            }).error(failure);
+        };
+
+        /* private */
+        var createRootContext = function(community, success, failure) {
+            $http.get('/api/authors/' + community._id + '/me').success(function(author) {
+                $http.post('/api/contexts/' + community._id, {
+                    title: 'the RootContext of ' + community.title,
+                    type: 'Context',
+                    authors: [author._id],
+                    permission: 'protected',
+                    data: {}
+                }).success(function(context) {
+                    updateCommunity({
+                        rootContextId: context._id
+                    }, success(context));
+                }).error(failure);
+            }).error(failure);
+        };
+
+        /* private */
+        var createDefaultScaffold = function(handler) {
+            createScaffold('Theory Building', function(scaffold) {
+                var tasks = [];
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'My theory', 0, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'A better theory', 1, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'New Information', 2, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'This theory cannot explain', 3, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'I need to understand', 4, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'Putting our knowledge together', 5, handler);
+                });
+                waitFor(tasks, function() {
+                    if (handler) {
+                        handler(scaffold);
                     }
                 });
             });
@@ -588,35 +657,6 @@ angular.module('kf6App')
             return _.contains(authorIds, communityData.author._id);
         };
 
-        var createDefaultScaffold = function(handler) {
-            createScaffold('Theory Building', function(scaffold) {
-                var tasks = [];
-                tasks.push(function(handler) {
-                    createSupport(scaffold, 'My theory', 0, handler);
-                });
-                tasks.push(function(handler) {
-                    createSupport(scaffold, 'A better theory', 1, handler);
-                });
-                tasks.push(function(handler) {
-                    createSupport(scaffold, 'New Information', 2, handler);
-                });
-                tasks.push(function(handler) {
-                    createSupport(scaffold, 'This theory cannot explain', 3, handler);
-                });
-                tasks.push(function(handler) {
-                    createSupport(scaffold, 'I need to understand', 4, handler);
-                });
-                tasks.push(function(handler) {
-                    createSupport(scaffold, 'Putting our knowledge together', 5, handler);
-                });
-                waitFor(tasks, function() {
-                    getContext(null, function(context) {
-                        usesScaffold(context, scaffold, 0, handler);
-                    });
-                });
-            });
-        };
-
         var modifyObject = function(object, success, error) {
             $http.put('/api/objects/' + communityId + '/' + object._id, object).success(function(newobject) {
                 if (newobject._id === communityData.author._id) {
@@ -715,7 +755,9 @@ angular.module('kf6App')
             createScaffold: createScaffold,
             createSupport: createSupport,
             createGroup: createGroup,
-            createDefaultScaffold: createDefaultScaffold,
+
+            createCommunity: createCommunity,
+            //createDefaultScaffold: createDefaultScaffold,
             fillSupport: fillSupport,
             removeView: removeView,
             updateCommunity: updateCommunity,

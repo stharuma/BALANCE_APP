@@ -43,20 +43,14 @@ angular.module('kf6App')
                 window.alert('RegistrationKey must be input');
                 return;
             }
-            $http.post('/api/communities', {
-                title: $scope.newCommunity.title,
-                registrationKey: $scope.newCommunity.key
-            }).success(function(community) {
-                $community.enter(community._id, function() {}, function() {
-                    $community.createView('Welcome', function() {
-                        $community.createDefaultScaffold(function() {
-                            $state.reload();
-                        });
-                    });
-                });
-            }).error(function() {
-                console.error('error in creating community');
+
+            $community.createCommunity($scope.newCommunity.title, $scope.newCommunity.key, function() {
+                $state.reload();
+            }, function(err) {
+                console.error(err);
+                window.alert('error in creating community');
             });
+
             $scope.newCommunity = {};
         };
 
