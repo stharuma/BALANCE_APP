@@ -134,7 +134,7 @@ angular.module('kf6App')
 
         var getContext = function(objId, success) {
             var postprocess = function(context) {
-                if (!context.data) {
+                if (context && !context.data) {
                     context.data = {};
                 }
                 if (success) {
