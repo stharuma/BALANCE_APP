@@ -12,7 +12,8 @@ angular.module('kf6App', [
         'angularFileUpload',
         'ng-context-menu',
         'ui.select',
-        'pascalprecht.translate'
+        'pascalprecht.translate',
+        'ngCookies'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');
@@ -36,7 +37,8 @@ angular.module('kf6App', [
           .determinePreferredLanguage() // position before fallbackLanguage() seems crucial
           //.preferredLanguage('fr')
           .fallbackLanguage('en')
-          .useSanitizeValueStrategy('escape');
+          .useSanitizeValueStrategy('escape')
+          .useCookieStorage();
     }])
   .controller('LanguageCtrl', function ($scope, $translate) {
     $scope.changeLanguage = function (key) {
