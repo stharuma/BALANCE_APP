@@ -30,16 +30,19 @@ angular.module('kf6App')
                 communityId = newId;
                 rootContext = null; //clear
 
-                refreshAuthor(authorHandler);
-                refreshCommunity(communityHandler);
-                refreshViews();
-                //refreshMembers(); // it takes cost
+                refreshCommunity(function() {
+                    if (communityHandler) {
+                        communityHandler();
+                    }
+                    refreshViews();
+                    refreshAuthor(authorHandler);
+                });
             } else {
-                if (authorHandler) {
-                    authorHandler();
-                }
                 if (communityHandler) {
                     communityHandler();
+                }
+                if (authorHandler) {
+                    authorHandler();
                 }
             }
         };
@@ -199,35 +202,27 @@ angular.module('kf6App')
                     //createRootContext(handler, handler);
                 });
             } else {
-                console.error('context undefined. dont come this state.');
-                //createRootContextX(handler, handler);
+                console.log('Call CreateRootContextBridge');
+                createRootContextBridge(communityData.community, handler, handler);
             }
         };
 
         /* bridging program from 6.5.x to 6.6.x */
-        // var createRootContextX = function(success, failure) {
-        //     $http.post('/api/contexts/' + communityId, {
-        //         title: 'RootContext of ' + communityData.community.title,
-        //         type: 'Context',
-        //         data: {}
-        //     }).success(function(context) {
-        //         updateCommunity({
-        //             rootContextId: context._id
-        //         }, function() {
-        //             rootContext = context;
-        //             refreshRegisteredScaffolds(function() {
-        //                 if (communityData.scaffolds.length > 0) {
-        //                     var scaffold = communityData.scaffolds[0];
-        //                     usesScaffold(context, scaffold, 1, function() {
-        //                         success(context);
-        //                     });
-        //                 }
-        //             });
-        //         });
-        //     }).error(function() {
-        //         failure();
-        //     });
-        // };
+        var createRootContextBridge = function(community, success, failure) {
+            createRootContext(community, function(context) {
+                rootContext = context;
+                refreshRegisteredScaffolds(function(scaffolds) {
+                    if (scaffolds.length > 0) {
+                        var scaffold = scaffolds[0];
+                        usesScaffold(context, scaffold, 1, function() {
+                            if (success) {
+                                success(context);
+                            }
+                        });
+                    }
+                }, failure);
+            }, failure);
+        };
 
         var refreshScaffolds = function(handler) {
             getContext(null, function(context) {
@@ -269,7 +264,11 @@ angular.module('kf6App')
                         });
                     });
                 });
-                waitFor(funcs, handler);
+                waitFor(funcs, function() {
+                    if (handler) {
+                        handler(communityData.registeredScaffolds);
+                    }
+                });
             });
         };
 
@@ -294,13 +293,19 @@ angular.module('kf6App')
             });
         };
 
+        var objs2Ids = function(objs) {
+            return _.map(objs, function(obj) {
+                return obj._id;
+            });
+        };
+
         var createCommunity = function(title, key, success, failure) {
             $http.post('/api/communities', {
                 title: title,
                 registrationKey: key
             }).success(function(community) {
                 createRootContext(community, function(context) {
-                    enter(community._id, function() {}, function() {
+                    enter(community._id, function() {
                         createView('Welcome', function() {
                             createDefaultScaffold(function(scaffold) {
                                 usesScaffold(context, scaffold, 1, function() {
@@ -317,18 +322,41 @@ angular.module('kf6App')
 
         /* private */
         var createRootContext = function(community, success, failure) {
-            $http.get('/api/authors/' + community._id + '/me').success(function(author) {
+            retrieveManagers(community._id, function(managers) {
+                var managerIds = objs2Ids(managers);
                 $http.post('/api/contexts/' + community._id, {
                     title: 'the RootContext of ' + community.title,
                     type: 'Context',
-                    authors: [author._id],
+                    authors: managerIds,
                     permission: 'protected',
                     data: {}
                 }).success(function(context) {
-                    updateCommunity({
+                    updateCommunityWithId(community._id, {
                         rootContextId: context._id
-                    }, success(context));
+                    }, function() {
+                        success(context);
+                    }, failure);
                 }).error(failure);
+            }, failure);
+        };
+
+        var retrieveManagers = function(communityId, success, failure) {
+            $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
+                var managers = [];
+                authors.forEach(function(author) {
+                    if (author.role === 'manager') {
+                        managers.push(author);
+                    }
+                });
+                if (managers.length <= 0) {
+                    if (failure) {
+                        failure();
+                    }
+                    return;
+                }
+                if (success) {
+                    success(managers);
+                }
             }).error(failure);
         };
 
@@ -365,12 +393,6 @@ angular.module('kf6App')
         var loadScaffoldLinks = function(context, handler) {
             getLinksFrom(context._id, 'uses', handler);
         };
-
-        // var links2ToObjs = function(links) {
-        //     return _.map(links, function(link) {
-        //         link._to;
-        //     });
-        // };
 
         var getLinksFrom = function(fromId, type, success, failure) {
             $http.get('/api/links/from/' + fromId).success(function(links) {
@@ -544,8 +566,14 @@ angular.module('kf6App')
         };
 
         var usesScaffold = function(context, scaffold, order, success) {
+            var scaffoldId;
+            if (scaffold._id) {
+                scaffoldId = scaffold._id;
+            } else {
+                scaffoldId = scaffold;
+            }
             var link = {};
-            link.to = scaffold._id;
+            link.to = scaffoldId;
             link.from = context._id;
             link.type = 'uses';
             link.data = {
@@ -611,14 +639,26 @@ angular.module('kf6App')
             });
         };
 
-        var updateCommunity = function(obj, success) {
+        var updateCommunityWithId = function(communityId, obj, success, failure) {
             var url = 'api/communities/' + communityId;
             $http.get(url).success(function(community) {
                 _.extend(community, obj); /* dont use merge, for overriding array */
                 $http.put(url, community).success(function() {
-                    success();
-                });
-            });
+                    if (success) {
+                        success(community);
+                    }
+                }).error(failure);
+            }).error(failure);
+        };
+
+        var updateCommunity = function(obj, success, failure) {
+            if (!communityId) {
+                if (failure) {
+                    failure('no communityId');
+                }
+                return;
+            }
+            updateCommunityWithId(communityId, obj, success, failure);
         };
 
         var makeAuthorString = function(authorObjects) {
