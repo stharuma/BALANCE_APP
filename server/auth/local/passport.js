@@ -8,7 +8,7 @@ exports.setup = function(User, config) {
         },
         function(userName, password, done) {
             User.findOne({
-                username: new RegExp(userName, 'i')
+                userName: new RegExp(userName, 'i')
             }, function(err, user) {
                 if (err) return done(err);
 
