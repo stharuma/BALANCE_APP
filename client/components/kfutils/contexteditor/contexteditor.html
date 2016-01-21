@@ -1,5 +1,5 @@
 <div ng-controller="ContexteditorCtrl" class="col-md-12">
-    <label>Context Editor</label>
+    <label>View Setting in this Context</label>
     <div style="padding: 10px;">
         <label>Connection showing:</label>
         <input type="checkbox" ng-model="contribution.data.viewSetting.buildson" ng-change="settingChanged()">buildson
@@ -9,12 +9,12 @@
         <input type="checkbox" ng-model="contribution.data.viewSetting.showAuthor" ng-change="settingChanged()">author
         <input type="checkbox" ng-model="contribution.data.viewSetting.showTime" ng-change="settingChanged()">time
     </div>
-    <label>Scaffold Editor:</label>
+    <label>Scaffold Setting in this Context</label>    
     <div>
         <table style="width: 100%;">
             <tr>
                 <td style="width: 50%; vertical-align: top;">
-                    <label>Scaffolds</label>
+                    <label>Scaffolds to use</label>
                     <ul ui-sortable ng-model="scaffoldlinks">
                         <li ng-repeat="scaffoldlink in scaffoldlinks">
                             <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(scaffoldlink)">{{scaffoldlink._to.title}}</a>&nbsp;&nbsp;
@@ -23,7 +23,7 @@
                     </ul>
                 </td>
                 <td style="vertical-align: top;">
-                    <label>Scaffold Repository</label>
+                    <label>Scaffold Repository: </label> <a ng-click="openScaffoldManager()">Click</a> to open
                     <ul>
                         <li ng-repeat="scaffold in registeredScaffolds" ng-if="!includes(scaffold)">
                             <span>
@@ -35,14 +35,16 @@
                 </td>
             </tr>
         </table>
-    </div>
-    <div>
-        <label>New Scaffold</label>
-        <p class="input-group">
-            <input type="text" class="form-control" placeholder="Input New Scaffold Title" ng-model="input.scaffoldTitle">
-            <span class="input-group-btn">
+
+        <div style="height: 10px;"></div>
+        <div>
+            <label>New Scaffold: </label>
+            <p class="input-group">
+                <input type="text" class="form-control" placeholder="Input New Scaffold Title" ng-model="input.scaffoldTitle">
+                <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary" ng-click="addScaffold()">Add New Scaffold</button>
              </span>
-        </p>
+            </p>
+        </div>
     </div>
 </div>

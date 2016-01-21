@@ -556,7 +556,13 @@ angular.module('kf6App')
 
         $scope.openScaffolds = function() {
             var url = '/scaffoldmanager/' + $scope.view.communityId;
+            window.open(url, '_scaffoldmanager');
+        };
+
+        $scope.openViewSetting = function() {
+            var url = '/contribution/' + $scope.view._id;
             window.open(url, '_blank');
+            $scope.status.isSettingCollapsed = true;
         };
 
         $scope.openAuthors = function() {

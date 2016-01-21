@@ -5,6 +5,9 @@ angular.module('kf6App')
         if ($stateParams.communityId) {
             $community.enter($stateParams.communityId, function() {}, function() {
                 $community.refreshRegisteredScaffolds();
+                $community.getContext(null, function(context) {
+                    $scope.rootContext = context;
+                });
             });
         }
 
@@ -39,7 +42,7 @@ angular.module('kf6App')
             }
 
             $community.getLinksTo(scaffold._id, 'uses', function(links) {
-                if(links.length > 0){
+                if (links.length > 0) {
                     window.alert('You cannot delete a scaffold which is used');
                     return;
                 }
@@ -74,5 +77,10 @@ angular.module('kf6App')
                 $community.refreshScaffolds(function() {});
                 $scope.showSaved();
             });
+        };
+
+        $scope.openRootContext = function() {
+            var url = '/contribution/' + $scope.rootContext._id;
+            window.open(url, '_rootcontext');
         };
     });

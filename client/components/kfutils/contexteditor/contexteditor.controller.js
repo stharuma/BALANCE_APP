@@ -87,4 +87,9 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
+        $scope.openScaffoldManager = function() {
+            var url = '/scaffoldmanager/' + $scope.contribution.communityId;
+            window.open(url, '_scaffoldmanager');
+        };
+
     });

@@ -325,7 +325,7 @@ angular.module('kf6App')
             retrieveManagers(community._id, function(managers) {
                 var managerIds = objs2Ids(managers);
                 $http.post('/api/contexts/' + community._id, {
-                    title: 'the RootContext of ' + community.title,
+                    title: 'Community Setting: ' + community.title,
                     type: 'Context',
                     authors: managerIds,
                     permission: 'protected',
