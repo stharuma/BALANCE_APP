@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
         var contributionId = $stateParams.contributionId;
 
         $ac.mixIn($scope, null);
@@ -499,9 +499,8 @@ angular.module('kf6App')
         window.onresize = $scope.mceResize;
 
         $scope.tinymceOptions = {
-            // TODO i18n Dynamize language switch
-            language: "fr_FR",
-            language_url: '/manual_components/tinymce-langs/fr_FR.js',
+            language: $translate.use(),
+            language_url: '/manual_components/tinymce-langs/' + $translate.use() + '.js',
             theme: 'modern',
             menubar: false,
             statusbar: false,
