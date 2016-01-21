@@ -277,16 +277,17 @@ angular.module('kf6App', [
         $translateProvider
           .translations('en', translationsEN)
           .translations('fr', translationsFR)
-          .preferredLanguage('fr')
+          .registerAvailableLanguageKeys(['en', 'fr'])
+          .determinePreferredLanguage() // position before fallbackLanguage() seems crucial
+          //.preferredLanguage('fr')
           .fallbackLanguage('en')
           .useSanitizeValueStrategy('escape');
-          //.determinePreferredLanguage();
     }])
   .controller('LanguageCtrl', function ($scope, $translate) {
-  $scope.changeLanguage = function (key) {
-    console.log('proposedLanguage', $translate.proposedLanguage());
-    console.log('new language', key);
-    $translate.use(key);
+    $scope.changeLanguage = function (key) {
+      console.log('proposedLanguage', $translate.proposedLanguage());
+      console.log('new language', key);
+      $translate.use(key);
   };
 })
 
