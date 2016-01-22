@@ -28,6 +28,8 @@ angular.module('kf6App')
             buildson: true,
             references: true
         };
+        $scope.setting.showAuthor = true;
+        $scope.setting.showTime = true;        
         $scope.dragging = 'none';
 
         $scope.initialize = function() {

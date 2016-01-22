@@ -85,11 +85,12 @@ exports.update = function(req, res) {
         if (newobj.data) {
             updated.markModified('data');
         }
-        /* bridge program: old user does not have userName which cannot update (e.g. workspace creation problem caused by this) */
+        /* Database validation check from 6.5.x */
+        /* (A workspace creation problem was caused by this on 6.4.x) */
         if (updated.__t === 'KAuthor' && !updated.userName) {
-            updated.userName = req.user.email;
+            return res.send(500);
         }
-        /* bridge program end */
+        /* Database validation check end */
 
         updated.modified = Date.now();
         if (updated.group !== newobj.group) {

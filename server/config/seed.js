@@ -27,16 +27,17 @@ var User = require('../api/user/user.model');
 // });
 
 User.find({
-    email: 'admin@admin.com'
+    role: 'admin'
 }, function(err, data) {
     if (data.length <= 0) {
         User.create({
             provider: 'local',
+            userName: 'admin',
             role: 'admin',
             firstName: 'KF',
             lastName: 'Admin',
             email: 'admin@admin.com',
-            password: 'admin'
+            password: 'build'
         });
     }
 });

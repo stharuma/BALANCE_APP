@@ -50,6 +50,10 @@
             <label>Connection showing:</label>
             <input type="checkbox" ng-model="setting.buildson" ng-change="settingChanged()">buildson
             <input type="checkbox" ng-model="setting.references" ng-change="settingChanged()">reference
+            <br>
+            <label>Label:</label>
+            <input type="checkbox" ng-model="setting.showAuthor" ng-change="settingChanged()">author
+            <input type="checkbox" ng-model="setting.showTime" ng-change="settingChanged()">time
         </div>
     </div>
     <div class="KFViewNavBar" ng-if="!menuStatus">
@@ -140,11 +144,11 @@
                         </span>
                         <a ng-click="openContribution(ref.to, $event)" class='kfIcon'>{{ref._to.title}}</a>
                         <br />
-                        <span style="font-size: 10px; color: #777777; white-space: nowrap;">
+                        <span ng-if="setting.showAuthor" style="font-size: 10px; color: #777777; white-space: nowrap;">
                             {{ref.getAuthorString()}}
+                            <br/>
                         </span>
-                        <br />
-                        <span class="KFTimeLabel">{{getTimeString(ref._to.modified)}}</span>
+                        <span ng-if="setting.showTime" class="KFTimeLabel">{{getTimeString(ref._to.modified)}}</span>
                     </div>
                     <div ng-if="ref._to.type === 'View'" style="white-space: nowrap;">
                         <span kf-refid="{{ref._id}}" ng-attr-class="icon{{ref.to}}">

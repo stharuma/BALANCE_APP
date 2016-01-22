@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('NavbarCtrl', function($scope, $location, Auth) {
+    .controller('NavbarCtrl', function($scope, $location, Auth, $http, $modal) {
         $scope.menu = [{
             'title': 'Home',
             'link': '/'
@@ -20,4 +20,27 @@ angular.module('kf6App')
         $scope.isActive = function(route) {
             return route === $location.path();
         };
+
+        $scope.openDialog = function(size) {
+            $modal.open({
+                animation: true,
+                templateUrl: 'VersionModalContent.html',
+                controller: 'VersionModalCtrl',
+                size: size
+            });
+        };
+
+    });
+
+angular.module('kf6App')
+    .controller('VersionModalCtrl', function($scope, $http, $kfutil) {
+        $kfutil.mixIn($scope);
+        $scope.loadVersion = function() {
+            if (!$scope.version) {
+                $http.get('api/version').success(function(res) {
+                    $scope.version = res;
+                });
+            }
+        };
+        $scope.loadVersion();
     });
