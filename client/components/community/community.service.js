@@ -262,8 +262,7 @@ angular.module('kf6App')
             var newobj = {
                 communityId: communityId,
                 type: 'Drawing',
-                // TODO i18n dynamize statis translation below
-                title: 'Dessin',
+                title: '',
                 authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
