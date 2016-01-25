@@ -131,9 +131,10 @@ function checkAndPrepareSeed(seed, handler) {
         }
         if (!seed.communityId) {
             seed.communityId = from.communityId;
-            console.info('communityId missing automatically complimented:' + seed);
+            console.info('communityId missing automatically complimented:' + seed.communityId);
         }
         if (from.communityId.toString() !== to.communityId.toString()) {
+            console.error('from.communityId' + from.communityId + ' !== to.communityId' + to.communityId);
             return handler('from.communityId !== to.communityId');
         }
         if (seed.communityId.toString() !== from.communityId.toString()) {

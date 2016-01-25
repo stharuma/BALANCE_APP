@@ -43,7 +43,6 @@ angular.module('kf6App')
                 };
             });
 
-            //console.log(JSON.stringify(d3CloudData));
             return d3CloudData;
         };
 

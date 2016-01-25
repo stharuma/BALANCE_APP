@@ -39,7 +39,6 @@ exports.searchCount = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        console.log(count);
         return res.json(200, {
             count: count
         });

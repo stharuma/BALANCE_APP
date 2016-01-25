@@ -3,14 +3,18 @@
 angular.module('kf6App')
     .controller('ScaffoldmanagerCtrl', function($scope, $stateParams, $community) {
         if ($stateParams.communityId) {
-            $community.enter($stateParams.communityId);
+            $community.enter($stateParams.communityId, function() {}, function() {
+                $community.refreshRegisteredScaffolds();
+                $community.getContext(null, function(context) {
+                    $scope.rootContext = context;
+                });
+            });
         }
 
         $scope.status = {};
         $scope.status.isSavingProgressMonitorCollapsed = true;
 
-        $scope.scaffolds = $community.getScaffolds();
-        $community.refreshScaffolds(function() {});
+        $scope.scaffolds = $community.getCommunityData().registeredScaffolds;
 
         $scope.showSaved = function() {
             $scope.status.isSavingProgressMonitorCollapsed = false;
@@ -25,7 +29,7 @@ angular.module('kf6App')
                 return;
             }
             $community.createScaffold($scope.input.scaffoldTitle, function() {
-                $community.refreshScaffolds(function() {});
+                $community.refreshRegisteredScaffolds();
                 //$state.reload();                
             });
             $scope.input.scaffoldTitle = '';
@@ -36,10 +40,17 @@ angular.module('kf6App')
             if (!confirmation) {
                 return;
             }
-            _.remove($scope.scaffolds, function(n) {
-                return n._id === scaffold._id;
+
+            $community.getLinksTo(scaffold._id, 'uses', function(links) {
+                if (links.length > 0) {
+                    window.alert('You cannot delete a scaffold which is used');
+                    return;
+                }
+                _.remove($scope.scaffolds, function(n) {
+                    return n._id === scaffold._id;
+                });
+                $scope.save();
             });
-            $scope.save();
         };
 
         $scope.editScaffold = function(scaffold) {
@@ -66,5 +77,10 @@ angular.module('kf6App')
                 $community.refreshScaffolds(function() {});
                 $scope.showSaved();
             });
+        };
+
+        $scope.openRootContext = function() {
+            var url = '/contribution/' + $scope.rootContext._id;
+            window.open(url, '_rootcontext');
         };
     });

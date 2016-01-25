@@ -223,7 +223,7 @@ module.exports = function(grunt) {
             dist: {
                 files: {
                     src: [
-                        '<%= yeoman.dist %>/public/{,*/}*.js',
+                        '<%= yeoman.dist %>/public/{,*/,Chart.js/}*.{js}',
                         '<%= yeoman.dist %>/public/app/{,*/}*.css',
                         '<%= yeoman.dist %>/public/assets/{,*/}*.css',
                         '<%= yeoman.dist %>/public/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
@@ -247,7 +247,7 @@ module.exports = function(grunt) {
         usemin: {
             html: ['<%= yeoman.dist %>/public/{,*/}*.html'],
             css: ['<%= yeoman.dist %>/public/{,*/}*.css'],
-            js: ['<%= yeoman.dist %>/public/{,*/}*.js'],
+            js: ['<%= yeoman.dist %>/public/{,*/,Chart.js/}*.{js}'],
             options: {
                 assetsDirs: [
                     '<%= yeoman.dist %>/public',

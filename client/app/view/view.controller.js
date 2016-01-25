@@ -29,20 +29,40 @@ angular.module('kf6App')
             references: true
         };
         $scope.setting.showAuthor = true;
-        $scope.setting.showTime = true;        
+        $scope.setting.showTime = true;
         $scope.dragging = 'none';
 
         $scope.initialize = function() {
             $community.getObject(viewId, function(view) {
                 $scope.view = view;
                 $ac.mixIn($scope, view);
-                $community.enter(view.communityId);
-                $scope.community = $community.getCommunityData();
-                $scope.views = $community.getViews();
-                $scope.updateCanvas();
+                $community.enter(view.communityId, function() {}, function() {
+                    $scope.community = $community.getCommunityData();
+                    $scope.views = $community.getViews();
+                    $scope.updateCanvas();
+                    $scope.updateContext();
+                });
             }, function(msg, status) {
                 $scope.status.error = true;
                 $scope.status.errorMessage = msg;
+            });
+        };
+
+        $scope.saveContext = function() {
+            var context = $scope.context;
+            if (!context.data) {
+                context.data = {};
+            }
+            context.data.viewSetting = $scope.setting;
+            $community.modifyObject(context);
+        };
+
+        $scope.updateContext = function() {
+            $community.getContext(viewId, function(context) {
+                if (context.data.viewSetting) {
+                    $scope.setting = context.data.viewSetting;
+                }
+                $scope.context = context;
             });
         };
 
@@ -536,7 +556,13 @@ angular.module('kf6App')
 
         $scope.openScaffolds = function() {
             var url = '/scaffoldmanager/' + $scope.view.communityId;
+            window.open(url, '_scaffoldmanager');
+        };
+
+        $scope.openViewSetting = function() {
+            var url = '/contribution/' + $scope.view._id;
             window.open(url, '_blank');
+            $scope.status.isSettingCollapsed = true;
         };
 
         $scope.openAuthors = function() {
