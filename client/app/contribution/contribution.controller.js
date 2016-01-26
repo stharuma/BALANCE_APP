@@ -501,9 +501,19 @@ angular.module('kf6App')
 
         window.onresize = $scope.mceResize;
 
+        var currentLang = $translate.proposedLanguage() || $translate.use();
+        var languageURL = "";
+        if (currentLang == 'en') {
+          languageURL = "";
+        } else {
+          languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
+        }
+        console.log("currentLang for TinyMCE: " + currentLang);
+        console.log("languageURL for TinyMCE: " + languageURL);
+
         $scope.tinymceOptions = {
-            language: $translate.use(),
-            language_url: '/manual_components/tinymce-langs/' + $translate.use() + '.js',
+            language: currentLang,
+            language_url: languageURL,
             theme: 'modern',
             menubar: false,
             statusbar: false,
