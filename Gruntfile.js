@@ -349,6 +349,7 @@ module.exports = function(grunt) {
                         'manual_assets/**/*',
                         'assets/images/{,*/}*.{webp}',
                         'assets/fonts/**/*',
+                        'assets/translations/{,*/}*.*',
                         'index.html'
                     ]
                 }, {
