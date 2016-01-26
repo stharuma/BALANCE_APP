@@ -22,7 +22,7 @@
                         </tr>
                     </table>
                     <br><br>
-                    <div>                        
+                    <div>
                         <label>User Agent:</label>
                         <table>
                             <tr>
@@ -51,7 +51,6 @@
                 <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
                     <a ng-href="{{item.link}}">{{item.title}}</a>
                 </li>
-                <li ng-class="{active: isActive('/')}"><a href="/">{{ 'home' | translate }}</a>
                 <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">{{ 'admin' | translate }}</a>
                 </li>
             </ul>
