@@ -503,7 +503,7 @@ angular.module('kf6App')
 
         var currentLang = $translate.proposedLanguage() || $translate.use();
         var languageURL = "";
-        if (currentLang == 'en') {
+        if (currentLang === 'en') {
           languageURL = "";
         } else {
           languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
