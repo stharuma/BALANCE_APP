@@ -1,5 +1,4 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-
 <div class="container">
     <label>User Management:</label>
     <p class="input-group">
@@ -8,7 +7,6 @@
         <button type="submit" class="btn btn-primary" ng-click="count()">Filter</button>
       </span>
     </p>
-
     <div>
         <div style="float: right;">
             <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
@@ -24,17 +22,17 @@
         <table style="width: 100%;">
           <thead>
             <tr>
-              <th>{{ 'username' | translate }}</th>
               <th>{{ 'firstName' | translate }}</th>
               <th>{{ 'lastName' | translate }}</th>
+              <th>{{ 'username' | translate }}</th>
               <th>{{ 'email' | translate }}</th>
               <th></th>
             </tr>
           </thead>
             <tr ng-repeat="user in users">
-              <td>{{user.username}}</td>
                 <td>{{user.firstName}}</td>
                 <td>{{user.lastName}}</td>
+                <td>{{user.userName}}</td>
                 <td>
                     <span class="text-muted">{{user.email}}</span>
                 </td>
