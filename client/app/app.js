@@ -11,7 +11,9 @@ angular.module('kf6App', [
         'ui.sortable',
         'angularFileUpload',
         'ng-context-menu',
-        'ui.select'
+        'ui.select',
+        'pascalprecht.translate',
+        'ngCookies'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');
@@ -25,6 +27,27 @@ angular.module('kf6App', [
         $locationProvider.html5Mode(true);
         $httpProvider.interceptors.push('authInterceptor');
     })
+    .config(['$translateProvider', function($translateProvider) {
+        $translateProvider
+          .useStaticFilesLoader({
+            prefix: '../assets/translations/',
+            suffix: '.json'
+          })
+          .registerAvailableLanguageKeys(['en', 'fr'])
+          .determinePreferredLanguage() // position before fallbackLanguage() seems crucial
+          //.preferredLanguage('fr')
+          .fallbackLanguage('en')
+          .useSanitizeValueStrategy('escape')
+          .useCookieStorage();
+    }])
+  .controller('LanguageCtrl', function ($scope, $translate) {
+    $scope.changeLanguage = function (key) {
+      console.log('proposedLanguage', $translate.proposedLanguage());
+      console.log('new language', key);
+      $translate.use(key);
+  };
+})
+
 
 .factory('authInterceptor', function($rootScope, $q, $cookieStore, $location) {
     return {

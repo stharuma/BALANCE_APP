@@ -1,13 +1,13 @@
 <div class="col-md-12">
-    <label>KF Contribution Search</label>
+    <label>{{ 'search' | translate }}</label>
     <p class="input-group">
-        <input type="text" class="form-control" placeholder="Search words here." ng-model="queryString">
+        <input type="text" class="form-control" placeholder="{{ 'search_placeholder' | translate }}" ng-model="queryString">
         <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="search()">Search</button>
+        <button type="submit" class="btn btn-primary" ng-click="search()">{{ 'search' | translate }}</button>
       </span>
     </p>
     <p style="text-align: right;">
-        <button class="btn btn-default" ng-click="status.detailCollapsed = !status.detailCollapsed">Advanced</button>
+        <button class="btn btn-default" ng-click="status.detailCollapsed = !status.detailCollapsed">{{ 'advanced' | translate }}</button>
     </p>
     <div collapse="status.detailCollapsed">
         <div class="well well-lg">
@@ -26,17 +26,17 @@
                 <button type="button" class="btn btn-primary kfbutton" ng-click="addViews()">Add</button>
             </div>
             <div style="padding: 15px;">
-                <label>Authors:</label>
+                <label>{{ 'authors' | translate }}:</label>
                 <div style="width: 400px;" ng-include="'components/kfutils/authorselector/authorselector.html'"></div>
             </div>
             <div style="height: 100px;">
                 <div class="col-md-6">
-                    <label>Dates:</label>
+                    <label>{{ 'dates' | translate }}:</label>
                     <br>
-                    <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="from" is-open="fromOpened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                    <button type="button" class="btn btn-primary kfbutton" ng-click="openFrom($event)">From</button>
-                    <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="to" is-open="toOpened" datepicker-options="dateOptions" show-weeks="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                    <button type="button" class="btn btn-primary kfbutton" ng-click="openTo($event)">To</button>
+                    <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="from" is-open="fromOpened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="{{ 'close' | translate }}" />
+                    <button type="button" class="btn btn-primary kfbutton" ng-click="openFrom($event)">{{ 'from' | translate }}</button>
+                    <input type="hidden" class="form-control" datepicker-popup="{{format}}" ng-model="to" is-open="toOpened" datepicker-options="dateOptions" show-weeks="false" date-disabled="disabled(date, mode)" ng-required="true" close-text="{{ 'close' | translate }}" />
+                    <button type="button" class="btn btn-primary kfbutton" ng-click="openTo($event)">{{ 'to' | translate }}</button>
                 </div>
             </div>
         </div>

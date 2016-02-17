@@ -14,7 +14,7 @@ exports.create = function(req, res) {
         console.error(req.body.authors)
         console.error(req.author._id);
         console.error('author must be included in authors.');
-        return res.send(403);
+        return res.status(403);
     }
     KContribution.create(req.body, function(err, contribution) {
         if (err) {
@@ -30,11 +30,11 @@ exports.create = function(req, res) {
                 if (err) {
                     return handleError(res, err);
                 }
-                return res.json(201, contribution);
+                return res.status(201).json(contribution);
             });
             return;
         }
-        return res.json(201, contribution);
+        return res.status(201).json(contribution);
     });
 };
 
@@ -44,7 +44,7 @@ exports.searchCount = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, {
+            return res.status(200).json({
                 count: count
             });
         });
@@ -80,7 +80,7 @@ exports.search = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, contributions);
+            return res.status(200).json(contributions);
         });
     });
 };
@@ -114,7 +114,7 @@ function makeMongoQuery0(req, res, success) {
     var query = req.body.query;
     var communityId = query.communityId;
     if (!communityId) {
-        return res.send(500, {
+        return res.status(500).json({
             'err': 'communityId is necessary'
         });
     }

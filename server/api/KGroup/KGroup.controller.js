@@ -9,7 +9,7 @@ exports.create = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(201, KGroup);
+        return res.status(201).json(KGroup);
     });
 };
 

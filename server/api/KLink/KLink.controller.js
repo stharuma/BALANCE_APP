@@ -8,7 +8,7 @@ var KHistoricalObject = require('../KHistoricalObject/KHistoricalObject.model.js
 
 exports.index = function(req, res) {
     //this should not be used
-    res.json(200, []);
+    res.status(200).json([]);
 };
 
 exports.fromIndex = function(req, res) {
@@ -18,7 +18,7 @@ exports.fromIndex = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, links);
+        return res.status(200).json(links);
     });
 };
 
@@ -29,7 +29,7 @@ exports.toIndex = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, links);
+        return res.status(200).json(links);
     });
 };
 
@@ -44,7 +44,7 @@ exports.eitherIndex = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, links);
+        return res.status(200).json(links);
     });
 };
 
@@ -75,7 +75,7 @@ exports.viewIndex = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, links);
+            return res.status(200).json(links);
         });
     });
 };
@@ -87,7 +87,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(link);
     });
@@ -100,7 +100,7 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
         record(req, link, 'created');
-        return res.json(201, link);
+        return res.status(201).json(link);
     });
 };
 
@@ -167,7 +167,7 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.status(404);
         }
 
         var updated = _.merge(link, req.body);
@@ -180,7 +180,7 @@ exports.update = function(req, res) {
                 return handleError(res, err);
             }
             record(req, link, 'modified');
-            return res.json(200, link);
+            return res.status(200).json(link);
         });
     });
 };
@@ -192,14 +192,14 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.status(404);
         }
         link.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
             record(req, link, 'deleted');
-            return res.send(204);
+            return res.status(204);
         });
     });
 };
@@ -261,7 +261,7 @@ exports.updateAllCashRec = function(req, res) {
         console.info(len + ' links to update!');
         if (len <= 0) {
             console.info('no links to update!');
-            return res.send(200);
+            return res.status(200);
         }
         var numFinished = 0;
         links.forEach(function(link) {

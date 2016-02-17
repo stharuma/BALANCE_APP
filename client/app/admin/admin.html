@@ -20,12 +20,15 @@
     <div style="height: 10px;"></div>
     <div>
         <table style="width: 100%;">
+          <thead>
             <tr>
-                <th>FirstName</th>
-                <th>LastName</th>
-                <th>UserName</th>
-                <th>EMail</th>
+              <th>{{ 'firstName' | translate }}</th>
+              <th>{{ 'lastName' | translate }}</th>
+              <th>{{ 'username' | translate }}</th>
+              <th>{{ 'email' | translate }}</th>
+              <th></th>
             </tr>
+          </thead>
             <tr ng-repeat="user in users">
                 <td>{{user.firstName}}</td>
                 <td>{{user.lastName}}</td>

@@ -2,7 +2,7 @@
 
 <div class="col-md-12">
     <div>
-        <label>View management</label>
+        <label>{{ 'view_management' | translate }}</label>
         <ul>
             <li ng-repeat="view in views">
                 <a href='view/{{view._id}}'>{{view.title}}</a>&nbsp;&nbsp;
@@ -10,7 +10,7 @@
             </li>
         </ul>
         <div ng-show="isManager()" style='float: right;'>
-            <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">edit</button>
+            <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">{{ 'edit' | translate }}</button>
         </div>
     </div>
 
@@ -18,11 +18,11 @@
 
     <div>
         <br>
-        <label>New View</label>
+        <label>{{ 'view_add' | translate }}</label>
         <p class="input-group">
-            <input type="text" class="form-control" placeholder="Input New View Title" ng-model="input.title">
+            <input type="text" class="form-control" placeholder="{{ 'title_placeholder' | translate }}" ng-model="input.title">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary" ng-click="addView()">Add New View</button>
+                <button type="submit" class="btn btn-primary" ng-click="addView()">{{ 'add' | translate }}</button>
             </span>
         </p>
     </div>

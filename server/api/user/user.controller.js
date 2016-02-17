@@ -9,7 +9,7 @@ var KAuthor = require('../KAuthor/KAuthor.model');
 
 var validationError = function(res, err) {
     console.error(err);
-    return res.send(422, err);
+    return res.status(422).json(err);
 };
 
 /**
@@ -17,7 +17,7 @@ var validationError = function(res, err) {
  * restriction: 'admin'
  */
 exports.index = function(req, res) {
-    res.json(200, []);
+    res.status(200).json([]);
     // User.find({}, '-salt -hashedPassword', function (err, users) {
     //   if(err) return res.send(500, err);
     //   res.json(200, users);
@@ -39,7 +39,7 @@ exports.searchCount = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, {
+        return res.status(200).json({
             count: count
         });
     });
@@ -55,7 +55,7 @@ exports.search = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, users);
+        return res.status(200).json(users);
     });
 };
 
@@ -77,12 +77,12 @@ exports.create = function(req, res, next) {
 
     //Here is a temporary registration password system.
     if (!req.body.registrationKey) {
-        return res.send(422, {
+        return res.status(422).json({
             errorCode: 'invalidRegistrationKey'
         });
     }
     if (req.body.registrationKey !== 'kcreation') {
-        return res.send(422, {
+        return res.status(422).json({
             errorCode: 'invalidRegistrationKey'
         });
     }
@@ -113,7 +113,7 @@ exports.show = function(req, res, next) {
 
     User.findById(userId, function(err, user) {
         if (err) return next(err);
-        if (!user) return res.send(401);
+        if (!user) return res.status(401);
         res.json(user.profile);
     });
 };
@@ -125,7 +125,7 @@ exports.show = function(req, res, next) {
 exports.destroy = function(req, res) {
     User.findByIdAndRemove(req.params.id, function(err, user) {
         if (err) return res.send(500, err);
-        return res.send(204);
+        return res.status(204);
     });
 };
 
@@ -144,10 +144,10 @@ exports.changePassword = function(req, res, next) {
                 if (err) {
                     return validationError(res, err);
                 }
-                res.send(200);
+                res.status(200);
             });
         } else {
-            res.send(403);
+            res.status(403);
         }
     });
 };
@@ -160,14 +160,14 @@ exports.forceUpdate = function(req, res, next) {
             return validationError(res, err);
         }
         if (!user) {
-            return res.send(403);
+            return res.status(403);
         }
         user.password = req.body.password;
         user.save(function(err) {
             if (err) {
                 return validationError(res, err);
             }
-            res.send(200);
+            res.status(200);
         });
     });
 };
@@ -181,7 +181,7 @@ exports.me = function(req, res, next) {
         _id: userId
     }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
         if (err) return next(err);
-        if (!user) return res.send(401);
+        if (!user) return res.status(401);
         res.json(user);
     });
 };

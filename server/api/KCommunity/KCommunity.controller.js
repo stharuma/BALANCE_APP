@@ -14,7 +14,7 @@ exports.index = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, communitys);
+        return res.status(200).json(communitys);
     });
 };
 
@@ -25,7 +25,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(community);
     });
@@ -38,7 +38,7 @@ exports.showviews = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         var ids = community.views;
         KContribution.find({
@@ -97,7 +97,7 @@ exports.create = function(req, res) {
         }
 
         KAuthor.createAuthor(community, 'manager', req.user, function(author) {
-            return res.json(201, community);
+            return res.status(201).json(community);
         }, function(err) {
             return handleError(res, err);
         });
@@ -114,7 +114,7 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         var updated = _.merge(community, req.body);
         updated.views = req.body.views;
@@ -125,7 +125,7 @@ exports.update = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, community);
+            return res.status(200).json(community);
         });
     });
 };
@@ -137,13 +137,13 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.status(404);
         }
         community.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.send(204);
+            return res.status(204);
         });
     });
 };

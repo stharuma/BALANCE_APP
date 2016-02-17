@@ -8,8 +8,8 @@ exports.setup = function(User, config) {
         },
         function(userName, password, done) {
             User.findOne({
-                userName: userName/*.toLowerCase()*/
-            }, function(err, user) {               
+                userName: new RegExp(userName, 'i')
+            }, function(err, user) {
                 if (err) return done(err);
 
                 if (!user) {

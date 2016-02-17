@@ -37,7 +37,7 @@ function createReadmark0(req, res, link) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, {});
+        return res.status(200).json({});
     });
 }
 
@@ -66,7 +66,7 @@ exports.myReadStatus = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, link);
+        return res.status(200).json(link);
     });
 };
 
@@ -91,7 +91,7 @@ exports.myReadStatusView = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.json(200, links);
+            return res.status(200).json(links);
         });
     });
 };
@@ -104,7 +104,7 @@ exports.index = function(req, res) {
             return handleError(res, err);
         }
         if (!records) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(records);
     });
@@ -117,7 +117,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!record) {
-            return res.send(404);
+            return res.status(404);
         }
         return res.json(record);
     });
@@ -153,7 +153,7 @@ exports.create = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(201, record);
+        return res.status(201).json(record);
     });
 };
 

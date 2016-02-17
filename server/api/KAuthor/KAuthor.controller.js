@@ -51,7 +51,7 @@ exports.create = function(req, res) {
 
             KAuthor.createAuthor(community, role, req.user,
                 function(author) {
-                    return res.json(201, author);
+                    return res.status(201).json(author);
                 },
                 function(err) {
                     return handleError(res, err);

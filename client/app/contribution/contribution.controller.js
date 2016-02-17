@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
         var contributionId = $stateParams.contributionId;
         $scope.relatedwordID = contributionId;  //added by Xing Liu
 
@@ -206,10 +206,14 @@ angular.module('kf6App')
         $scope.contribute = function() {
             var cont = $scope.contribution;
 
-            if (cont.title.length === 0 || cont.title === 'New Note') {
-                window.alert('You must input the title.');
-                return;
-            }
+          if (cont.title.length === 0 || cont.title === '') {
+            $translate('title_required').then(function(translation) {
+              window.alert(translation);
+            }, function(translationId){
+              // TODO do something if unable to provide translation
+            });
+            return;
+          }
 
             if (cont.type === 'Note' && !$scope.mceEditor) { //avoid contribution in empty body
                 window.alert('mceEditor have not initialized yet.');
@@ -498,10 +502,24 @@ angular.module('kf6App')
 
         window.onresize = $scope.mceResize;
 
+        var currentLang = $translate.proposedLanguage() || $translate.use();
+        var languageURL = "";
+        if (currentLang === 'en') {
+          languageURL = "";
+        } else {
+          languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
+        }
+        console.log("currentLang for TinyMCE: " + currentLang);
+        console.log("languageURL for TinyMCE: " + languageURL);
+
         $scope.tinymceOptions = {
+            language: currentLang,
+            language_url: languageURL,
             theme: 'modern',
             menubar: false,
             statusbar: false,
+          // TODO decide if internationalize or remove font size
+            /*
             style_formats_merge: true,
             style_formats: [{
                 title: 'Font Size',
@@ -541,7 +559,7 @@ angular.module('kf6App')
                         'font-size': '16px'
                     }
                 }]
-            }],
+            }], */
             plugins: ['advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table directionality emoticons template textcolor paste textcolor noneditable fullpage'],
             toolbar: 'styleselect | bold italic underline strikethrough | forecolor backcolor bullist numlist link | code',
             //toolbar: 'undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code',

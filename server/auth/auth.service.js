@@ -29,7 +29,7 @@ function isAuthenticated() {
         .use(function(req, res, next) {
             User.findById(req.user._id, function(err, user) {
                 if (err) return next(err);
-                if (!user) return res.send(401);
+                if (!user) return res.status(401);
 
                 req.user = user;
                 next();
@@ -49,7 +49,7 @@ function hasRole(roleRequired) {
             if (config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
                 next();
             } else {
-                res.send(403);
+                res.status(403);
             }
         });
 }
@@ -69,7 +69,7 @@ function signToken(id) {
  * Set token cookie directly for oAuth strategies
  */
 function setTokenCookie(req, res) {
-    if (!req.user) return res.json(404, {
+    if (!req.user) return res.status(404).json({
         message: 'Something went wrong, please try again.'
     });
     var token = signToken(req.user._id, req.user.role);

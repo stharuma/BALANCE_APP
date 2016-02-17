@@ -349,6 +349,7 @@ module.exports = function(grunt) {
                         'manual_assets/**/*',
                         'assets/images/{,*/}*.{webp}',
                         'assets/fonts/**/*',
+                        'assets/translations/{,*/}*.*',
                         'index.html'
                     ]
                 }, {
@@ -614,7 +615,8 @@ module.exports = function(grunt) {
         'ngAnnotate',
         'copy:dist',
         'chmod',
-        'cdnify',
+    	//  Disable CDNify to host everything on the server, minimizing firefall rules to add if needed
+    	// 'cdnify',
         'cssmin',
         'uglify',
         'rev',

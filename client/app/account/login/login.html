@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>Login</h1>
+            <h1>{{ 'login' | translate }}</h1>
             <!-- <p>Accounts are reset on server restart from <code>server/config/seed.js</code>. Default account is <code>test@test.com</code> / <code>test</code>
             </p>
             <p>Admin account is <code>admin@admin.com</code> / <code>admin</code>
@@ -11,29 +11,26 @@
         <div class="col-sm-12">
             <form class="form" name="form" ng-submit="login(form)" novalidate>
                 <div class="form-group">
-                    <label>UserName</label>
-                    <input type="userName" name="userName" class="form-control" ng-model="user.userName" required>
+                    <label>{{ 'username' | translate }}</label>
+                    <input type="text" name="userName" class="form-control" ng-model="user.userName" required>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
+                    <label>{{ 'password' | translate }}</label>
                     <input type="password" name="password" class="form-control" ng-model="user.password" required>
                 </div>
                 <div class="form-group has-error">
                     <p class="help-block" ng-show="form.userName.$error.required && form.password.$error.required && submitted">
-                        Please enter your userName and password.
+                        {{ 'login_error_nameAndPass' | translate }}
                     </p>
                     <p class="help-block" ng-show="form.userName.$error.email && submitted">
-                        Please enter a valid userName.
+                        {{ 'login_error_email' | translate }}
                     </p>
                     <p class="help-block">{{ errors.other }}</p>
                 </div>
-                <div style="text-align:right;">
-                    <button class="btn btn-default btn-lg btn-login" type="submit">
-                        Login
+                <div>
+                    <button class="btn btn-default btn-lg btn-login btn-primary" type="submit">
+                        {{ 'login' | translate }}
                     </button>
-                    <!--<a class="btn btn-default btn-lg btn-register" href="/signup">
-            Register
-          </a>-->
                 </div>
                 <!-- <hr> -->
                 <!-- <div>
@@ -51,8 +48,7 @@
         </div>
     </div>
     <hr>
-    <div style="text-align:right;">
-        For the first user, click
-        <a href="/signup">New Account</a> to create an account.
+    <div>
+        {{ 'login_signup_invite' | translate }}: <a href="/signup"><strong>{{ 'register' | translate }}</strong></a>
     </div>
 </div>
