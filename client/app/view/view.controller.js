@@ -36,7 +36,7 @@ angular.module('kf6App')
             $community.getObject(viewId, function(view) {
                 $scope.view = view;
                 $ac.mixIn($scope, view);
-                $community.enter(view.communityId, function() {}, function() {
+                $community.enter(view.communityId, function() {
                     $scope.community = $community.getCommunityData();
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
