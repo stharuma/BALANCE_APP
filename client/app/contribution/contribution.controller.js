@@ -747,7 +747,7 @@ angular.module('kf6App')
 
         $scope.editSelected = function() {
             if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
-                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.7/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
                 $('#svgeditdiv').html(xhtml);
                 $scope.svgInitialized = true;
             }
