@@ -442,7 +442,7 @@ angular.module('kf6App')
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
-                title: '',
+                title: '', /* 6.6 the default title was changed to blank by Christian */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
@@ -483,7 +483,7 @@ angular.module('kf6App')
             var newobj = {
                 communityId: communityId,
                 type: 'Drawing',
-                title: '',
+                title: 'a Drawing', /* We need a default title for convinience. We need to think i18n */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
