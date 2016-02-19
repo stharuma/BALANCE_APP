@@ -509,16 +509,13 @@ angular.module('kf6App')
         } else {
           languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
         }
-        console.log("currentLang for TinyMCE: " + currentLang);
-        console.log("languageURL for TinyMCE: " + languageURL);
-
         $scope.tinymceOptions = {
             language: currentLang,
             language_url: languageURL,
             theme: 'modern',
             menubar: false,
             statusbar: false,
-          // TODO decide if internationalize or remove font size
+            // TODO decide if internationalize or remove font size
             /*
             style_formats_merge: true,
             style_formats: [{
