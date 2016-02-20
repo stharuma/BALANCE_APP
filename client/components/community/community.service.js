@@ -146,49 +146,7 @@ angular.module('kf6App')
             } else {
                 getRootContext(postprocess);
             }
-            // searchContext(objId, function(context) {
-            //     success(context);
-            // }, function() {
-            //     createContext(objId, success);
-            // });
         };
-
-        // var searchContext = function(objId, success, failure) {
-        //     $http.get('/api/links/from/' + objId).success(function(links) {
-        //         var contextIds = [];
-        //         links.forEach(function(link) {
-        //             if (link.type === 'has' && link._to.type === 'Context') {
-        //                 contextIds.push(link.from);
-        //             }
-        //         });
-
-        //         if (contextIds.length > 0) {
-        //             return $http.get('/api/objects/' + contextIds[0]).success(function(context) {
-        //                 success(context);
-        //             }).error(function() {
-        //                 failure();
-        //             });
-        //         } else {
-        //             failure();
-        //         }
-        //     }).error(function() {
-        //         failure();
-        //     });
-        // };
-
-        // var createContext = function(objId, success) {
-        //     $http.post('/api/contexts/' + communityId, {
-        //         type: 'Context'
-        //     }).success(function(context) {
-        //         $http.post('/api/links/', {
-        //             type: 'has',
-        //             from: objId,
-        //             to: context._id
-        //         }).success(function( /*link*/ ) {
-        //             success(context);
-        //         });
-        //     });
-        // };
 
         var getRootContext = function(handler) {
             var contextId = communityData.community.rootContextId;
@@ -197,31 +155,13 @@ angular.module('kf6App')
                     rootContext = context;
                     handler(context);
                 }, function() {
-                    console.error('context undefined. dont come this state.');
-                    handler(null);
-                    //createRootContext(handler, handler);
+                    window.alert('context undefined. never come this state.');
+                    return;
                 });
             } else {
-                console.log('Call CreateRootContextBridge');
-                createRootContextBridge(communityData.community, handler, handler);
+                window.alert('RootContextId database migration from 6.5.x to 6.6.x is needed.');
+                return;
             }
-        };
-
-        /* bridging program from 6.5.x to 6.6.x */
-        var createRootContextBridge = function(community, success, failure) {
-            createRootContext(community, function(context) {
-                rootContext = context;
-                refreshRegisteredScaffolds(function(scaffolds) {
-                    if (scaffolds.length > 0) {
-                        var scaffold = scaffolds[0];
-                        usesScaffold(context, scaffold, 1, function() {
-                            if (success) {
-                                success(context);
-                            }
-                        });
-                    }
-                }, failure);
-            }, failure);
         };
 
         var refreshScaffolds = function(handler) {
@@ -320,7 +260,6 @@ angular.module('kf6App')
             }).error(failure);
         };
 
-        /* private */
         var createRootContext = function(community, success, failure) {
             retrieveManagers(community._id, function(managers) {
                 var managerIds = objs2Ids(managers);
@@ -350,7 +289,7 @@ angular.module('kf6App')
                 });
                 if (managers.length <= 0) {
                     if (failure) {
-                        failure();
+                        failure('manager\'s length is zero.');
                     }
                     return;
                 }
@@ -442,7 +381,8 @@ angular.module('kf6App')
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
-                title: '', /* 6.6 the default title was changed to blank by Christian */
+                title: '',
+                /* 6.6 the default title was changed to blank by Christian */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
@@ -483,7 +423,8 @@ angular.module('kf6App')
             var newobj = {
                 communityId: communityId,
                 type: 'Drawing',
-                title: 'a Drawing', /* We need a default title for convinience. We need to think i18n */
+                title: 'a Drawing',
+                /* We need a default title for convinience. We need to think i18n */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
@@ -580,7 +521,9 @@ angular.module('kf6App')
                 order: order
             };
             $http.post('/api/links', link).success(function() {
-                success(link);
+                if (success) {
+                    success(link);
+                }
             });
         };
 
@@ -811,7 +754,6 @@ angular.module('kf6App')
             getAuthor: getAuthor,
             refreshAuthor: refreshAuthor,
             loadScaffoldLinks: loadScaffoldLinks,
-            usesScaffold: usesScaffold,
             refreshRegisteredScaffolds: refreshRegisteredScaffolds,
             getLinksTo: getLinksTo,
             getLinksFrom: getLinksFrom,
@@ -831,6 +773,10 @@ angular.module('kf6App')
                 return communityData;
             },
             makeAuthorString: makeAuthorString,
-            makeAuthorStringByIds: makeAuthorStringByIds
+            makeAuthorStringByIds: makeAuthorStringByIds,
+
+            usesScaffold: usesScaffold,
+            createRootContext: createRootContext /*for migration tool*/
+
         };
     });
