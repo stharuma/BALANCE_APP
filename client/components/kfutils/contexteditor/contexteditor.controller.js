@@ -6,8 +6,20 @@ angular.module('kf6App')
         $scope.input = {};
         $scope.settingChanged = function() {};
         $scope.registeredScaffolds = $community.getCommunityData().registeredScaffolds;
+        $scope.viewSetting = {};
+
+        $scope.viewsettingEnabledChanged = function() {
+            if ($scope.viewSetting.enabled) {
+                $scope.contribution.data.viewSetting = $community.makeDefaultViewSetting();
+            } else {
+                $scope.contribution.data.viewSetting = null;
+            }
+        };
 
         $scope.update = function() {
+            if ($scope.contribution.data && $scope.contribution.data.viewSetting) {
+                $scope.viewSetting.enabled = true;
+            }
             $community.loadScaffoldLinks($scope.contribution, function(scaffoldlinks) {
                 $scope.scaffoldlinks = scaffoldlinks;
             });

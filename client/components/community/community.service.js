@@ -721,6 +721,21 @@ angular.module('kf6App')
             });
         };
 
+        var makeDefaultViewSetting = function(setting) {
+            var defaultSetting = {
+                buildson: true,
+                // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
+                references: false,
+                showAuthor: true,
+                showTime: true
+            };
+            if (setting) {
+                return _.merge(defaultSetting, setting);
+            } else {
+                return defaultSetting;
+            }
+        };
+
         return {
             getContext: getContext,
 
@@ -776,7 +791,8 @@ angular.module('kf6App')
             makeAuthorStringByIds: makeAuthorStringByIds,
 
             usesScaffold: usesScaffold,
-            createRootContext: createRootContext /*for migration tool*/
+            createRootContext: createRootContext /*for migration tool*/ ,
 
+            makeDefaultViewSetting: makeDefaultViewSetting
         };
     });

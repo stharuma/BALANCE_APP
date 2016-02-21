@@ -24,13 +24,7 @@ angular.module('kf6App')
         $scope.status.isAttachmentCollapsed = true;
         $scope.status.isAnalyticsCollapsed = true;
         $scope.status.isSettingCollapsed = true;
-        $scope.setting = {
-            buildson: true,
-          // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
-            references: false
-        };
-        $scope.setting.showAuthor = true;
-        $scope.setting.showTime = true;
+        $scope.setting = $community.makeDefaultViewSetting();
         $scope.dragging = 'none';
 
         $scope.initialize = function() {
@@ -41,7 +35,7 @@ angular.module('kf6App')
                     $scope.community = $community.getCommunityData();
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
-                    $scope.updateContext();
+                    $scope.updateViewSetting();
                 });
             }, function(msg, status) {
                 $scope.status.error = true;
@@ -49,22 +43,16 @@ angular.module('kf6App')
             });
         };
 
-        $scope.saveContext = function() {
-            var context = $scope.context;
-            if (!context.data) {
-                context.data = {};
+        $scope.updateViewSetting = function() {
+            if ($scope.view.data && $scope.view.data.viewSetting) {
+                $scope.setting = $scope.view.data.viewSetting;
+            } else {
+                $community.getContext(viewId, function(context) {
+                    if (context.data.viewSetting) {
+                        $scope.setting = context.data.viewSetting;
+                    }
+                });
             }
-            context.data.viewSetting = $scope.setting;
-            $community.modifyObject(context);
-        };
-
-        $scope.updateContext = function() {
-            $community.getContext(viewId, function(context) {
-                if (context.data.viewSetting) {
-                    $scope.setting = context.data.viewSetting;
-                }
-                $scope.context = context;
-            });
         };
 
         $scope.updateCanvas = function() {
@@ -324,7 +312,7 @@ angular.module('kf6App')
             }
             if (link.type === 'references' && $scope.setting.references) {
                 var text = '';
-              // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
+                // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
 
                 //if (link.data && link.data.text && link.data.text.length > 0) {
                 //    text = link.data.text;

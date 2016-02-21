@@ -1,15 +1,8 @@
 <div ng-controller="ContexteditorCtrl" class="col-md-12">
-    <label>View Setting in this Context</label>
-    <div style="padding: 10px;">
-        <label>Connection showing:</label>
-        <input type="checkbox" ng-model="contribution.data.viewSetting.buildson" ng-change="settingChanged()">buildson
-        <input type="checkbox" ng-model="contribution.data.viewSetting.references" ng-change="settingChanged()">reference
-        <br>
-        <label>Label:</label>
-        <input type="checkbox" ng-model="contribution.data.viewSetting.showAuthor" ng-change="settingChanged()">author
-        <input type="checkbox" ng-model="contribution.data.viewSetting.showTime" ng-change="settingChanged()">time
-    </div>
-    <label>Scaffold Setting in this Context</label>    
+    <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+    <div ng-show="viewSetting.enabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <div style="height: 10px;"></div>
+    <label>Scaffold Setting in this Context</label>
     <div>
         <table style="width: 100%;">
             <tr>
@@ -28,14 +21,13 @@
                         <li ng-repeat="scaffold in registeredScaffolds" ng-if="!includes(scaffold)">
                             <span>
                                 <button type="submit" class="btn btn-primary" ng-click="useScaffold(scaffold)">&lt;- Use</button>
-                                {{scaffold.title}}                   
+                                {{scaffold.title}}
                             </span>
                         </li>
                     </ul>
                 </td>
             </tr>
         </table>
-
         <div style="height: 10px;"></div>
         <div>
             <label>New Scaffold: </label>

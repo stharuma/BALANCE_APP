@@ -1,8 +1,11 @@
 <div ng-controller="VieweditorCtrl" class="col-md-12">
-    <label>View Context Setting</label>
-
-    <div>
-        <label>Use Community Setting</label>
-        <a ng-click="openRootContext()">Go</a>
+    <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+    <div ng-show="viewSetting.enabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <div style="height: 10px;"></div>
+    <div ng-show="isAdmin()">
+        <label>Community Setting: </label>
+        <div style="padding: 20px;">
+            <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openRootContext()"><img class="KFToolBarImage" src="manual_assets/kf6images/13-settings.png" title="Settings"></button>
+        </div>
     </div>
 </div>
