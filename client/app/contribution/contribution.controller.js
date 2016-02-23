@@ -7,7 +7,7 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
         var contributionId = $stateParams.contributionId;
-        $scope.relatedwordID = contributionId;  //added by Xing Liu
+        $scope.relatedwordID = contributionId; //added by Xing Liu
 
         $ac.mixIn($scope, null);
         $kfutil.mixIn($scope);
@@ -35,6 +35,7 @@ angular.module('kf6App')
         $scope.selected = {};
 
         $scope.preContributeHooks = [];
+        $scope.initializingHooks = [];
 
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
@@ -50,6 +51,9 @@ angular.module('kf6App')
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
 
+                $scope.initializingHooks.forEach(function(func) {
+                    func();
+                });
                 $scope.updateTitle();
                 if ($scope.contribution.keywords) {
                     var keywordsStr = '';
@@ -206,14 +210,14 @@ angular.module('kf6App')
         $scope.contribute = function() {
             var cont = $scope.contribution;
 
-          if (cont.title.length === 0 || cont.title === '') {
-            $translate('title_required').then(function(translation) {
-              window.alert(translation);
-            }, function(translationId){
-              // TODO do something if unable to provide translation
-            });
-            return;
-          }
+            if (cont.title.length === 0 || cont.title === '') {
+                $translate('title_required').then(function(translation) {
+                    window.alert(translation);
+                }, function(translationId) {
+                    // TODO do something if unable to provide translation
+                });
+                return;
+            }
 
             if (cont.type === 'Note' && !$scope.mceEditor) { //avoid contribution in empty body
                 window.alert('mceEditor have not initialized yet.');
@@ -505,9 +509,9 @@ angular.module('kf6App')
         var currentLang = $translate.proposedLanguage() || $translate.use();
         var languageURL = "";
         if (currentLang === 'en') {
-          languageURL = "";
+            languageURL = "";
         } else {
-          languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
+            languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
         }
         $scope.tinymceOptions = {
             language: currentLang,

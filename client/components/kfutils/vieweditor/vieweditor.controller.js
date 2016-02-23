@@ -22,7 +22,12 @@ angular.module('kf6App')
             });
         };
 
-        $scope.update();
+        if (!$scope.initializingHooks) {
+            window.alert('error !$scope.initializingHooks');
+        }
+        $scope.initializingHooks.push(function() {
+            $scope.update();
+        });
 
         $scope.openRootContext = function() {
             var url = '/contribution/' + $scope.rootContext._id;

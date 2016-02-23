@@ -149,6 +149,9 @@ angular.module('kf6App')
         };
 
         var getRootContext = function(handler) {
+            if (!communityData.community) {
+                window.alert('getRootContext(): communityData is not initialized.');
+            }
             var contextId = communityData.community.rootContextId;
             if (contextId) {
                 getObject(contextId, function(context) {

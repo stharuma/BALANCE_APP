@@ -25,7 +25,13 @@ angular.module('kf6App')
             });
             $community.refreshRegisteredScaffolds();
         };
-        $scope.update();
+
+        if (!$scope.initializingHooks) {
+            window.alert('error !$scope.initializingHooks');
+        }
+        $scope.initializingHooks.push(function() {
+            $scope.update();
+        });
 
         $scope.addScaffold = function() {
             if ($scope.input.scaffoldTitle === '') {
