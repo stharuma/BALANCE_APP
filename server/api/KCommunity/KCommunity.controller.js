@@ -116,6 +116,7 @@ exports.update = function(req, res) {
         if (!community) {
             return res.send(404);
         }
+        delete req.body.__v; /* this allows consective updating */
         var titleChanged = community.title !== req.body.title;
         var updated = _.merge(community, req.body);
         updated.views = req.body.views;
