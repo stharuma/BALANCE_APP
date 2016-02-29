@@ -116,6 +116,7 @@ exports.update = function(req, res) {
         if (!community) {
             return res.send(404);
         }
+        var titleChanged = community.title !== req.body.title;
         var updated = _.merge(community, req.body);
         updated.views = req.body.views;
         updated.markModified('views');
@@ -125,6 +126,19 @@ exports.update = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
+            //update community names for every author{
+            if (titleChanged) {
+                KAuthor.find({ communityId: community._id }, function(err, authors) {
+                    if (err) {
+                        return;
+                    }
+                    authors.forEach(function(author) {
+                        author._community = updated;
+                        author.save();
+                    });
+                });
+            }
+            //}
             return res.status(200).json(community);
         });
     });
