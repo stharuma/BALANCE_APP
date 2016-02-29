@@ -14,7 +14,7 @@ exports.create = function(req, res) {
         console.error(req.body.authors)
         console.error(req.author._id);
         console.error('author must be included in authors.');
-        return res.status(403);
+        return res.send(403);
     }
     KContribution.create(req.body, function(err, contribution) {
         if (err) {
