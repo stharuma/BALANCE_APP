@@ -50,6 +50,9 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
+                $community.getContext(null, function(context) {
+                    $scope.context = context;
+                });
 
                 $scope.initializingHooks.forEach(function(func) {
                     func();
