@@ -36,6 +36,7 @@ angular.module('kf6App')
 
         $scope.preContributeHooks = [];
         $scope.initializingHooks = [];
+        $scope.initializingHookInvoked = false;
 
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
@@ -54,9 +55,11 @@ angular.module('kf6App')
                     $scope.context = context;
                 });
 
+                $scope.initializingHookInvoked = true;
                 $scope.initializingHooks.forEach(function(func) {
                     func();
                 });
+
                 $scope.updateTitle();
                 if ($scope.contribution.keywords) {
                     var keywordsStr = '';

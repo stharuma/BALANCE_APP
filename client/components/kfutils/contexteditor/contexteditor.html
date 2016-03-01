@@ -1,45 +1,11 @@
 <div ng-controller="ContexteditorCtrl" class="col-md-12">
+    <!-- view setting -->
     <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
     <div ng-show="viewSetting.enabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <!-- scaffold setting -->
     <div style="height: 10px;"></div>
-    <label>Scaffold Setting in this Context</label>
-    <div>
-        <table style="width: 100%;">
-            <tr>
-                <td style="width: 50%; vertical-align: top;">
-                    <label>Scaffolds to use</label>
-                    <ul ui-sortable ng-model="scaffoldlinks">
-                        <li ng-repeat="scaffoldlink in scaffoldlinks">
-                            <a class="KFScaffoldManagerAnchor" ng-click="selectSupport(scaffoldlink)">{{scaffoldlink._to.title}}</a>&nbsp;&nbsp;
-                            <a class="KFGroupManagerAnchor trash" ng-click="removeSupport(scaffoldlink)"><span class="glyphicon glyphicon-trash"></span></a>
-                        </li>
-                    </ul>
-                </td>
-                <td style="vertical-align: top;">
-                    <label>Scaffold Repository: </label> <a ng-click="openScaffoldManager()">Click</a> to open
-                    <ul>
-                        <li ng-repeat="scaffold in registeredScaffolds" ng-if="!includes(scaffold)">
-                            <span>
-                                <button type="submit" class="btn btn-primary" ng-click="useScaffold(scaffold)">&lt;- Use</button>
-                                {{scaffold.title}}
-                            </span>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        </table>
-        <div style="height: 10px;"></div>
-        <div>
-            <label>New Scaffold: </label>
-            <p class="input-group">
-                <input type="text" class="form-control" placeholder="Input New Scaffold Title" ng-model="input.scaffoldTitle">
-                <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary" ng-click="addScaffold()">Add New Scaffold</button>
-             </span>
-            </p>
-        </div>
-    </div>
-
+    <div ng-include="'components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.html'"></div>
+    <!-- plugin setting -->
     <div style="height: 10px;"></div>
     <label>Plugin Setting in this Context</label>
     <div>
