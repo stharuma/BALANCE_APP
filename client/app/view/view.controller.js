@@ -556,6 +556,14 @@ angular.module('kf6App')
             $scope.status.isSettingCollapsed = true;
         };
 
+        $scope.openCommunitySetting = function() {
+            $community.getContext(null, function(context) {
+                var url = '/contribution/' + context._id;
+                window.open(url, '_blank');
+                $scope.status.isSettingCollapsed = true;
+            });
+        };
+
         $scope.openAuthors = function() {
             var url = '/authormanager/' + $scope.view.communityId;
             window.open(url, '_blank');
