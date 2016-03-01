@@ -3,10 +3,10 @@
 angular.module('kf6App')
     .controller('VieweditorCtrl', function($scope, $community, Auth) {
         $scope.isAdmin = Auth.isAdmin;
-        $scope.viewSetting = {};
+        $scope.setting = {};
 
         $scope.viewsettingEnabledChanged = function() {
-            if ($scope.viewSetting.enabled) {
+            if ($scope.setting.viewSettingEnabled) {
                 $scope.contribution.data.viewSetting = $community.makeDefaultViewSetting();
             } else {
                 $scope.contribution.data.viewSetting = null;
@@ -15,7 +15,7 @@ angular.module('kf6App')
 
         $scope.update = function() {
             if ($scope.contribution.data && $scope.contribution.data.viewSetting) {
-                $scope.viewSetting.enabled = true;
+                $scope.setting.viewSettingEnabled = true;
             }
             $community.getContext($scope.contribution._id, function(context) {
                 $scope.rootContext = context;

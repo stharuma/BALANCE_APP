@@ -7,15 +7,6 @@ angular.module('kf6App')
         $scope.registeredScaffolds = $community.getCommunityData().registeredScaffolds;
 
         $scope.update = function() {
-            if (!$scope.contribution.data) {
-                $scope.contribution.data = {};
-            }
-            if ($scope.contribution.data.viewSetting) {
-                $scope.viewSetting.enabled = true;
-            }
-            if (!$scope.contribution.data.plugins) {
-                $scope.contribution.data.plugins = {};
-            }
             $community.loadScaffoldLinks($scope.contribution, function(scaffoldlinks) {
                 $scope.scaffoldlinks = scaffoldlinks;
             });
@@ -25,7 +16,6 @@ angular.module('kf6App')
         if (!$scope.initializingHooks) {
             window.alert('error !$scope.initializingHooks');
         }
-
         if ($scope.initializingHookInvoked === true) {
             $scope.update();
         } else {

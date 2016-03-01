@@ -1,6 +1,12 @@
 <div ng-controller="VieweditorCtrl" class="col-md-12">
-    <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
-    <div ng-show="viewSetting.enabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <!-- view setting -->
+    <input type="checkbox" ng-model="setting.viewSettingEnabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+    <div ng-show="setting.viewSettingEnabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <!-- scaffold setting -->
+    <div style="height: 10px;"></div>
+    <input type="checkbox" ng-model="contribution.data.scaffoldSettingEnabled"> Enable Specific Scaffold Setting</input>
+    <div ng-if="contribution.data.scaffoldSettingEnabled" ng-include="'components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.html'"></div>
+    <!-- community setting -->
     <div style="height: 10px;"></div>
     <div ng-show="isAdmin()">
         <label>Community Setting: </label>
