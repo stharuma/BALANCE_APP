@@ -3,6 +3,12 @@
 angular.module('kf6App')
     .config(function($stateProvider) {
         $stateProvider
+            .state('contribution2', {
+                url: '/contribution/:contributionId/:contextId',
+                templateUrl: 'app/contribution/contribution.html',
+                controller: 'ContributionCtrl'
+            });
+        $stateProvider
             .state('contribution', {
                 url: '/contribution/:contributionId',
                 templateUrl: 'app/contribution/contribution.html',

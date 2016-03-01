@@ -620,7 +620,7 @@ angular.module('kf6App')
                     return;
                 }
             }
-            var url = 'contribution/' + id;
+            var url = 'contribution/' + id + '/' + viewId;
 
             if (w) {
                 w.location.href = url;
@@ -644,12 +644,12 @@ angular.module('kf6App')
         };
 
         $scope.mOpenContributionInTab = function() {
-            var url = 'contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to + '/' + viewId;
             window.open(url, '_blank');
         };
 
         $scope.mOpenContributionInPopup = function() {
-            var url = 'contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to + '/' + viewId;
             $scope.openInPopup(url);
         };
 

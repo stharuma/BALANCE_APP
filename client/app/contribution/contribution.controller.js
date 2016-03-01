@@ -7,6 +7,8 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
         var contributionId = $stateParams.contributionId;
+        var contextId = $stateParams.contextId;
+
         $scope.relatedwordID = contributionId; //added by Xing Liu
 
         $ac.mixIn($scope, null);
@@ -51,15 +53,15 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
-                $community.getContext(null, function(context) {
-                    $scope.context = context;
+                $community.refreshContext(contextId, function(context) {
+                    $community.getContext(null, function(context) {
+                        $scope.context = context;
+                    });
+                    $scope.initializingHookInvoked = true;
+                    $scope.initializingHooks.forEach(function(func) {
+                        func();
+                    });
                 });
-
-                $scope.initializingHookInvoked = true;
-                $scope.initializingHooks.forEach(function(func) {
-                    func();
-                });
-
                 $scope.updateTitle();
                 if ($scope.contribution.keywords) {
                     var keywordsStr = '';
