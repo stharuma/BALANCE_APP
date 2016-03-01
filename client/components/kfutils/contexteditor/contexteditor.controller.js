@@ -17,8 +17,14 @@ angular.module('kf6App')
         };
 
         $scope.update = function() {
-            if ($scope.contribution.data && $scope.contribution.data.viewSetting) {
+            if (!$scope.contribution.data) {
+                $scope.contribution.data = {};
+            }
+            if ($scope.contribution.data.viewSetting) {
                 $scope.viewSetting.enabled = true;
+            }
+            if (!$scope.contribution.data.plugins) {
+                $scope.contribution.data.plugins = {};
             }
             $community.loadScaffoldLinks($scope.contribution, function(scaffoldlinks) {
                 $scope.scaffoldlinks = scaffoldlinks;
