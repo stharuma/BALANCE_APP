@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('VieweditorCtrl', function($scope, $community, Auth) {
-        $scope.isAdmin = Auth.isAdmin;
+    .controller('VieweditorCtrl', function($scope, $community) {
         $scope.setting = {};
 
         $scope.viewsettingEnabledChanged = function() {
