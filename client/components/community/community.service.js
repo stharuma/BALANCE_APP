@@ -389,6 +389,41 @@ angular.module('kf6App')
             }, failure);
         };
 
+        var getLinksFromTo = function(fromId, toId, type, success, failure) {
+            $http.get('/api/links/from/' + fromId + '/to/' + toId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
+        var createLink = function(fromId, toId, type, data, success, failure) {
+            var link = {};
+            link.from = fromId;
+            link.to = toId;
+            link.type = type;
+            link.data = data;
+            $http.post('/api/links/', link).success(function(arg) {
+                if (success) {
+                    success(arg);
+                }
+            }).error(function(arg) {
+                if (failure) {
+                    failure(arg);
+                }
+            });
+        };
+
+        var saveLink = function(ref) {
+            $http.put('/api/links/' + ref._id, ref);
+        };
+
         var orderComparator = function(n) {
             if (n.data && n.data.order) {
                 return n.data.order;
@@ -800,6 +835,9 @@ angular.module('kf6App')
             refreshRegisteredScaffolds: refreshRegisteredScaffolds,
             getLinksTo: getLinksTo,
             getLinksFrom: getLinksFrom,
+            getLinksFromTo: getLinksFromTo,
+            createLink: createLink,
+            saveLink: saveLink,
             getViews: function() {
                 return communityData.views;
             },

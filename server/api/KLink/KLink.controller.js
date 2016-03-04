@@ -48,6 +48,18 @@ exports.eitherIndex = function(req, res) {
     });
 };
 
+exports.fromtoIndex = function(req, res) {
+    KLink.find({
+        from: req.params.fromId,
+        to: req.params.toId
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.status(200).json(links);
+    });
+};
+
 // Get links between contributions on view
 exports.viewIndex = function(req, res) {
     KLink.find({

@@ -477,20 +477,11 @@ angular.module('kf6App')
         };
 
         $scope.createContainsLink0 = function(viewId, toId, data, handler) {
-            var link = {};
-            link.from = viewId;
-            link.to = toId;
-            link.type = 'contains';
-            link.data = data;
-            $http.post('/api/links', link).success(function() {
-                if (handler) {
-                    handler();
-                }
-            });
+            $community.createLink(viewId, toId, 'contains', data, handler);
         };
 
         $scope.saveRef = function(ref) {
-            $http.put('/api/links/' + ref._id, ref);
+            $community.saveLink(ref);
         };
 
         $scope.openAttachment = function() {
