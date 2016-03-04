@@ -2,7 +2,19 @@
 
 angular.module('kf6App')
     .controller('VieweditorCtrl', function($scope, $community) {
-        $scope.setting = {};
+        $scope.setting = {
+            notificationSettingEnabled: false,
+            receiveNotification: true
+        };
+        $scope.notification = null;
+
+        $scope.notificationSettingEnabledChanged = function() {
+            //do nothing
+        };
+
+        $scope.notificationSettingChanged = function() {
+            //do nothing
+        };
 
         $scope.viewsettingEnabledChanged = function() {
             if ($scope.setting.viewSettingEnabled) {
@@ -19,6 +31,14 @@ angular.module('kf6App')
             $community.getContext($scope.contribution._id, function(context) {
                 $scope.rootContext = context;
             });
+            $community.getLinksFromTo($scope.contribution._id, $community.getAuthor()._id, 'notifies', function(links) {
+                console.log(links);
+                if (links.length > 0) {
+                    $scope.notification = links[0];
+                    $scope.setting.notificationSettingEnabled = $scope.notification.data.notificationSettingEnabled;
+                    $scope.setting.receiveNotification = $scope.notification.data.receiveNotification;
+                }
+            });
         };
 
         if (!$scope.initializingHooks) {
@@ -26,6 +46,21 @@ angular.module('kf6App')
         }
         $scope.initializingHooks.push(function() {
             $scope.update();
+        });
+
+        $scope.preContributeHooks.push(function() {
+            var data = {};
+            if ($scope.notification) {
+                data = $scope.notification.data;
+            }
+
+            data.notificationSettingEnabled = $scope.setting.notificationSettingEnabled;
+            data.receiveNotification = $scope.setting.receiveNotification;
+            if ($scope.notification) {
+                $community.saveLink($scope.notification);
+            } else {
+                $community.createLink($scope.contribution._id, $community.getAuthor()._id, 'notifies', data, function() {});
+            }
         });
 
         $scope.openRootContext = function() {

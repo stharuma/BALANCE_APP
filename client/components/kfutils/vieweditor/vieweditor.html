@@ -1,7 +1,20 @@
 <div ng-controller="VieweditorCtrl" class="col-md-12">
+    <!-- notification setting -->
+    <div>
+        <input type="checkbox" ng-model="setting.notificationSettingEnabled" ng-change="notificationSettingEnabledChanged()">Enable Specific Notification Setting</input>
+        <div style="padding-left: 20px;" ng-show="setting.notificationSettingEnabled">
+            <label>Notification: </label>
+            <div>
+                <input type="checkbox" ng-model="setting.receiveNotification" ng-change="notificationSettingChanged()">Receive Notification</input>
+            </div>
+        </div>
+    </div>
     <!-- view setting -->
-    <input type="checkbox" ng-model="setting.viewSettingEnabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
-    <div ng-show="setting.viewSettingEnabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <div style="height: 10px;"></div>
+    <div>
+        <input type="checkbox" ng-model="setting.viewSettingEnabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+        <div ng-show="setting.viewSettingEnabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    </div>
     <!-- scaffold setting -->
     <div style="height: 10px;"></div>
     <input type="checkbox" ng-model="contribution.data.scaffoldSettingEnabled"> Enable Specific Scaffold Setting</input>
