@@ -1,9 +1,23 @@
 'use strict';
 
-var setting = require('./setting.js');
+try {
+    var setting = require('./setting.js');
+    var enabled = true;
+} catch (e) {
+    var enabled = false;
+    if (e instanceof Error && e.code === 'MODULE_NOT_FOUND') {
+        console.log('The file kfmail/setting.js doesnt exist. disabled');
+    } else {
+        throw e;
+    }
+}
+
 var nodemailer = require('nodemailer');
 
 exports.sendNotification = function(to, subject, body) {
+    if (!enabled) {
+        return;
+    }
     var smtp = nodemailer.createTransport('SMTP', {
         service: 'Gmail',
         auth: {
