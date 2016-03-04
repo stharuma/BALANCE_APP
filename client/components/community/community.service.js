@@ -185,7 +185,7 @@ angular.module('kf6App')
         };
 
         var refreshScaffolds = function(handler) {
-            if (context && context.data.scaffoldSettingEnabled) {
+            if (context && context.data && context.data.scaffoldSettingEnabled) {
                 refreshScaffolds0(context, handler);
             } else {
                 getContext(null, function(context) {
