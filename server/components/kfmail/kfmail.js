@@ -14,7 +14,7 @@ try {
 
 var nodemailer = require('nodemailer');
 
-exports.sendNotification = function(to, subject, body) {
+exports.send = function(to, subject, body) {
     if (!enabled) {
         return;
     }
