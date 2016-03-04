@@ -288,6 +288,10 @@ angular.module('kf6App')
                 $scope.status.contribution = 'success';
                 /* contributor should be a first reader */
                 $community.read($scope.contribution);
+                /* notification */
+                if ($scope.contribution.type === 'Note') {
+                    $community.notify($scope.contribution, contextId);
+                }
             }, function() {
                 $scope.status.contribution = 'failure';
                 if (window.localStorage) {

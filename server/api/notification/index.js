@@ -5,6 +5,6 @@ var controller = require('./notification.controller');
 
 var router = express.Router();
 
-router.get('/notify/:contextId', controller.notify);
+router.post('/notify', controller.notify);
 
 module.exports = router;

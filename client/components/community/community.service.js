@@ -799,6 +799,14 @@ angular.module('kf6App')
             }
         };
 
+        var notify = function(contribution, contextId) {
+            var obj = {};
+            obj.author = getAuthor();
+            obj.contribution = contribution;
+            obj.contextId = contextId;
+            $http.post('/api/notifications/notify', obj);
+        };
+
         return {
             getContext: getContext,
 
@@ -838,6 +846,7 @@ angular.module('kf6App')
             getLinksFromTo: getLinksFromTo,
             createLink: createLink,
             saveLink: saveLink,
+            notify: notify,
             getViews: function() {
                 return communityData.views;
             },
