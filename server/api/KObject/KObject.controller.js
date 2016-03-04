@@ -39,6 +39,8 @@ exports.create = function(req, res) {
     });
 };
 
+var kfmail = require('../../components/kfmail/kfmail.js');
+
 // Updates an existing contribution in the DB.
 exports.update = function(req, res) {
     var newobj = req.body;
@@ -100,6 +102,7 @@ exports.update = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
+            kfmail.sendNotification(['matsuzawa@si.aoyama.ac.jp'], '[kf6-notification] Note Added:' + newContribution.title, newContribution.data.body);
             KHistoricalObject.createByObject(newContribution, function(err, historical) {
                 if (err) {
                     return handleError(res, err);
