@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $kfcommon) {
         var contributionId = $stateParams.contributionId;
         $scope.relatedwordID = contributionId; //added by Xing Liu
 
@@ -906,7 +906,7 @@ angular.module('kf6App')
                 window.alert('View is not selected');
                 return;
             }
-            $kfutil.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
+            $kfcommon.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
             $scope.selectedViewIds.length = 0;
             $scope.setnewnoteIndex(-1);
         };

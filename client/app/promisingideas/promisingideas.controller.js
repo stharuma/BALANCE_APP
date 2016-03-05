@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $kfutil, $ac) {
+    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams,  $ac,  $kfcommon) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
@@ -133,8 +133,8 @@ angular.module('kf6App')
             } else {
                 $scope.status.communityCollapsed = false;
             }
-            $scope.pager.query = $kfutil.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
-            $kfutil.count($scope.status, $scope.pager, communityId, $ac, $http, checkedPromisingtLinkInNote);
+            $scope.pager.query =  $kfcommon.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
+            $kfcommon.count($scope.status, $scope.pager, communityId, $ac, $http, checkedPromisingtLinkInNote);
             $scope.status.detailCollapsed = false;
             $scope.queryString = '';
         };
