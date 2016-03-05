@@ -804,7 +804,7 @@ angular.module('kf6App')
             obj.author = getAuthor();
             obj.contribution = contribution;
             obj.contextId = contextId;
-            $http.post('/api/notifications/notify', obj);
+            $http.post('/api/notifications/notify/' + communityId, obj);
         };
 
         return {

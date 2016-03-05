@@ -241,6 +241,24 @@ function record(req, link, operationType) {
 // ----- cache remaking function ------
 // ----- cache remaking is unnecessary in normal usage ------
 
+exports.updateCash = function(req, res) {
+    KLink.findById(req.linkId, function(err, link) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!link) {
+            return res.send(404);
+        }
+        updateCash0(link, function(err, link) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(link);
+        });
+    });
+}
+
+
 // Get a single link
 exports.updateAllCash = function(req, res) {
     KLink.update({
@@ -277,7 +295,7 @@ exports.updateAllCashRec = function(req, res) {
         }
         var numFinished = 0;
         links.forEach(function(link) {
-            updateCash(link, function() {
+            updateCash0(link, function() {
                 numFinished++;
                 if (numFinished >= len) {
                     exports.updateAllCashRec(req, res);
@@ -287,7 +305,7 @@ exports.updateAllCashRec = function(req, res) {
     });
 };
 
-function updateCash(link, handler) {
+function updateCash0(link, handler) {
     getFromToContributions(link.from, link.to, function(from, to) {
         if (from === null || to === null) {
             showMissingLinkMsg(link, from, to);

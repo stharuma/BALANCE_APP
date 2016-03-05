@@ -5,9 +5,10 @@ var KLink = require('../KLink/KLink.model');
 var Notification = require('./notification.model');
 var kfmail = require('../../components/kfmail/kfmail.js');
 
-function push(email, content) {
+function push(email, contrib) {
+    var content = JSON.stringify(contrib);
     if (email) {
-        kfmail.send(email, '[KF6 notification]', body);
+        kfmail.send(email, '[KF6 notification]', content);
     }
 }
 
@@ -24,7 +25,7 @@ exports.notify = function(req, res) {
         links.forEach(function(link) {
             var email = link._to.email;
             if (email) {
-                push(email, req.body)
+                push(email, req.body);
             }
         });
     });

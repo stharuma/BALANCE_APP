@@ -13,6 +13,7 @@ router.get('/either/:id', controller.eitherIndex);
 router.get('/from/:fromId/to/:toId', controller.fromtoIndex);
 router.get('/view/:id', controller.viewIndex);
 
+router.get('/updatecache/:linkId', controller.updateCash);
 router.get('/updateallcache/:communityId', controller.updateAllCash);
 
 router.get('/:id', controller.show);
