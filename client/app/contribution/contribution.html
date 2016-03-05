@@ -34,11 +34,14 @@
     <div class="KFTabSet">
         <tabset>
             <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()">
-                <div style="padding: 10px; height: 100%;">
+                <div style="float: left; padding-top: 0px; padding-left 0px; position:absolute; z-index:100">
+                    <button type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed;" ng--show="selectedText!=''"><img style="width:15px" src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea"></button>
+                </div>
+                <div ng-mouseup="showpromisingIdeaWindow()" style="padding: 10px; height: 100%;">
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
-                            <div class="kfDragSource" ng-bind-html="copy.body"></div>
+                            <div class="kfDragSource" ng-bind-html="trustAsHtml(copy.body)"></div>
                         </div>
                         <div style="height: 100%; width: 100%;" ng-hide="!contribution.isRiseabove()">
                             <div class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
@@ -322,8 +325,73 @@
                     </div>
                 </div>
             </tab>
+             <tab class="KFTab" heading="Promisingiedas" ng-show="status.ispromisingideaTabDisplayed">
+                <label>Promising Ideas:</label>
+                <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
+                    <div ng-hide="deletedIndex==$index">
+                        <div ng-hide="selectedIndex==$index ||newnoteIndex==$index ">
+                            <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index)">To New Contribution</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex($index)">edit</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index">delete</button>
+                            </div>
+                            <label style="font-size:  9pt"> <b> Color :</b></label>{{promisingIdeaobjs[conn.from].data.color}}
+                            </br>
+                            <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            </br>
+                            <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
+                            </br>{{promisingIdeaobjs[conn.from].data.reason}}
+                        </div>
+                        <div style="padding: 1px ;" ng-show="newnoteIndex==$index">
+                            <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,conn.data.idea);">create</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">cancel</button>
+                            </div>
+                            <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle">
+                            <label>Views:</label>
+                            <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
+                            </br>
+                            <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                        </div>
+                        <div ng-show="selectedIndex==$index ">
+                            <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">save</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1)">cancel</button>
+                            </div>
+                            <label style="font-size:  9pt"> <b> Color :</b></label>
+                            <input colorpicker type="text" ng-model="promisingIdeaobjs[conn.from].data.color" style="width:60px;" />
+                            </br>
+                            <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            </br>
+                            <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
+                            </br>
+                            <textarea id="text" cols="50" rows="10" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </tab>
         </tabset>
     </div>
+
+        <div class="well" collapse="status.ispromisingideaCollapsed" style="padding-left: 50px; position: absolute; top:0px; left: 50px; width: 90%; height: 80%; background-color: white; z-index: 100;">
+            <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
+                <label style="font-size:  11pt;float: left"><b>Add Promising Idea For {{contribution.title}}</b></label>
+                <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true">save</button>
+                <button type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; selectedText=''">close</button>
+            </div>
+            <div style="height:300px; overflow: scroll; width:100%; float: left">
+                <label style="font-size:  9pt"> <b> Color :</b></label>
+                <input colorpicker type="text" ng-model="targetColor" style="width:60px;" />
+                </br>
+                <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': targetColor }" ng-bind-html="trustAsHtml(selectedText)"></tt>
+                </br>
+                <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
+                </br>
+                <textarea id="text" cols="50" rows="10" ng-model="textareaText"></textarea>
+            </div>
+            <hr>
+        </div>
     <div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button ng-disabled="!status.dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">{{ 'contribute' | translate }}</button>

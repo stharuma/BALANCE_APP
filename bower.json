@@ -28,7 +28,8 @@
     "annotator": "~1.2.9",
     "angular-translate": "~2.8.1",
     "angular-translate-loader-static-files": "~2.8.1",
-    "angular-translate-storage-cookie": "~2.8.1"
+    "angular-translate-storage-cookie": "~2.8.1",
+    "angular-bootstrap-colorpicker": "^3.0.24"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
@@ -36,6 +37,6 @@
   },
   "resolutions": {
     "tinymce-dist": "4.1.7",
-    "angular": "1.4.0"
+    "angular": "~1.x"
   }
 }
