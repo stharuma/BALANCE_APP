@@ -4,9 +4,16 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var NotificationSchema = new Schema({
-    name: String,
-    info: String,
-    active: Boolean
+    email: { type: String, required: true, index: true },
+    time: {
+        type: Date,
+        default: Date.now
+    },
+    data: {
+        type: Schema.Types.Mixed,
+        required: true,
+        default: {}
+    }
 });
 
 module.exports = mongoose.model('Notification', NotificationSchema);

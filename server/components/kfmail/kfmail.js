@@ -40,3 +40,7 @@ exports.send = function(to, subject, body) {
         smtp.close();
     });
 }
+
+exports.getBaseURL = function() {
+    return setting.baseURL;
+}
