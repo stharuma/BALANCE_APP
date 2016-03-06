@@ -7,6 +7,8 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $kfcommon) {
         var contributionId = $stateParams.contributionId;
+        var contextId = $stateParams.contextId;
+
         $scope.relatedwordID = contributionId; //added by Xing Liu
 
         $ac.mixIn($scope, null);
@@ -51,6 +53,7 @@ angular.module('kf6App')
 
         $scope.preContributeHooks = [];
         $scope.initializingHooks = [];
+        $scope.initializingHookInvoked = false;
 
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
@@ -65,9 +68,14 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
-
-                $scope.initializingHooks.forEach(function(func) {
-                    func();
+                $community.refreshContext(contextId, function(context) {
+                    $community.getContext(null, function(context) {
+                        $scope.context = context;
+                    });
+                    $scope.initializingHookInvoked = true;
+                    $scope.initializingHooks.forEach(function(func) {
+                        func();
+                    });
                 });
                 $scope.updateTitle();
                 if ($scope.contribution.keywords) {
@@ -296,6 +304,10 @@ angular.module('kf6App')
                 $scope.status.contribution = 'success';
                 /* contributor should be a first reader */
                 $community.read($scope.contribution);
+                /* notification */
+                if ($scope.contribution.type === 'Note') {
+                    $community.notify($scope.contribution, contextId);
+                }
             }, function() {
                 $scope.status.contribution = 'failure';
                 if (window.localStorage) {

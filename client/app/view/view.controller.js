@@ -477,20 +477,11 @@ angular.module('kf6App')
         };
 
         $scope.createContainsLink0 = function(viewId, toId, data, handler) {
-            var link = {};
-            link.from = viewId;
-            link.to = toId;
-            link.type = 'contains';
-            link.data = data;
-            $http.post('/api/links', link).success(function() {
-                if (handler) {
-                    handler();
-                }
-            });
+            $community.createLink(viewId, toId, 'contains', data, handler);
         };
 
         $scope.saveRef = function(ref) {
-            $http.put('/api/links/' + ref._id, ref);
+            $community.saveLink(ref);
         };
 
         $scope.openAttachment = function() {
@@ -554,6 +545,14 @@ angular.module('kf6App')
             var url = '/contribution/' + $scope.view._id;
             window.open(url, '_blank');
             $scope.status.isSettingCollapsed = true;
+        };
+
+        $scope.openCommunitySetting = function() {
+            $community.getContext(null, function(context) {
+                var url = '/contribution/' + context._id;
+                window.open(url, '_blank');
+                $scope.status.isSettingCollapsed = true;
+            });
         };
 
         $scope.openAuthors = function() {
@@ -625,7 +624,7 @@ angular.module('kf6App')
                     return;
                 }
             }
-            var url = 'contribution/' + id;
+            var url = 'contribution/' + id + '/' + viewId;
 
             if (w) {
                 w.location.href = url;
@@ -649,12 +648,12 @@ angular.module('kf6App')
         };
 
         $scope.mOpenContributionInTab = function() {
-            var url = 'contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to + '/' + viewId;
             window.open(url, '_blank');
         };
 
         $scope.mOpenContributionInPopup = function() {
-            var url = 'contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to + '/' + viewId;
             $scope.openInPopup(url);
         };
 

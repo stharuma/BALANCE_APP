@@ -18,6 +18,7 @@ angular.module('kf6App')
         communityData.scaffolds = [];
 
         var rootContext;
+        var context;
 
         var enter = function(newId, authorHandler, communityHandler) {
             if (!newId) {
@@ -45,6 +46,22 @@ angular.module('kf6App')
                     authorHandler();
                 }
             }
+        };
+
+        var refreshContext = function(contextId, handler) {
+            if (!context && !contextId) {
+                return handler(context);
+            }
+            if (context && context._id === contextId) {
+                return handler(context);
+            }
+            //refresh
+            getObject(contextId, function(obj) {
+                context = obj;
+                if (handler) {
+                    handler(context);
+                }
+            });
         };
 
         var refreshCommunity = function(handler) {
@@ -168,24 +185,32 @@ angular.module('kf6App')
         };
 
         var refreshScaffolds = function(handler) {
-            getContext(null, function(context) {
-                loadScaffoldLinks(context, function(links) {
-                    communityData.scaffolds.length = 0; //clear once
-                    var funcs = [];
-                    links.forEach(function(link) {
-                        funcs.push(function(handler) {
-                            var scaffold = link._to;
-                            scaffold._id = link.to;
-                            communityData.scaffolds.push(scaffold);
-                            fillSupport(scaffold, handler);
-                        });
-                    });
-                    waitFor(funcs, handler);
+            if (context && context.data && context.data.scaffoldSettingEnabled) {
+                refreshScaffolds0(context, handler);
+            } else {
+                getContext(null, function(context) {
+                    refreshScaffolds0(context, handler);
                 });
-            });
+            }
         };
 
         communityData.registeredScaffolds = [];
+
+        var refreshScaffolds0 = function(context, handler) {
+            loadScaffoldLinks(context, function(links) {
+                communityData.scaffolds.length = 0; //clear once
+                var funcs = [];
+                links.forEach(function(link) {
+                    funcs.push(function(handler) {
+                        var scaffold = link._to;
+                        scaffold._id = link.to;
+                        communityData.scaffolds.push(scaffold);
+                        fillSupport(scaffold, handler);
+                    });
+                });
+                waitFor(funcs, handler);
+            });
+        };
 
         var refreshRegisteredScaffolds = function(handler) {
             $http.get('/api/communities/' + communityId).success(function(community) {
@@ -362,6 +387,41 @@ angular.module('kf6App')
                     success(links);
                 }
             }, failure);
+        };
+
+        var getLinksFromTo = function(fromId, toId, type, success, failure) {
+            $http.get('/api/links/from/' + fromId + '/to/' + toId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
+        var createLink = function(fromId, toId, type, data, success, failure) {
+            var link = {};
+            link.from = fromId;
+            link.to = toId;
+            link.type = type;
+            link.data = data;
+            $http.post('/api/links/', link).success(function(arg) {
+                if (success) {
+                    success(arg);
+                }
+            }).error(function(arg) {
+                if (failure) {
+                    failure(arg);
+                }
+            });
+        };
+
+        var saveLink = function(ref) {
+            $http.put('/api/links/' + ref._id, ref);
         };
 
         var orderComparator = function(n) {
@@ -739,6 +799,14 @@ angular.module('kf6App')
             }
         };
 
+        var notify = function(contribution, contextId) {
+            var obj = {};
+            obj.author = getAuthor();
+            obj.contribution = contribution;
+            obj.contextId = contextId;
+            $http.post('/api/notifications/notify/' + communityId, obj);
+        };
+
         return {
             getContext: getContext,
 
@@ -775,6 +843,10 @@ angular.module('kf6App')
             refreshRegisteredScaffolds: refreshRegisteredScaffolds,
             getLinksTo: getLinksTo,
             getLinksFrom: getLinksFrom,
+            getLinksFromTo: getLinksFromTo,
+            createLink: createLink,
+            saveLink: saveLink,
+            notify: notify,
             getViews: function() {
                 return communityData.views;
             },
@@ -795,7 +867,10 @@ angular.module('kf6App')
 
             usesScaffold: usesScaffold,
             createRootContext: createRootContext /*for migration tool*/ ,
+            refreshContext: refreshContext,
 
             makeDefaultViewSetting: makeDefaultViewSetting
+
+
         };
     });

@@ -63,6 +63,12 @@
                 <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openViewSetting()"><img class="KFToolBarImage" src="manual_assets/kf6images/13-settings.png" title="Settings"></button>
             </div>
         </div>
+        <div ng-show="isManager()">
+            <label> Community Setting: </label>
+            <div style="padding: 20px;">
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openCommunitySetting()"><img class="KFToolBarImage" src="manual_assets/kf6images/13-settings.png" title="Settings"></button>
+            </div>
+        </div>
     </div>
     <div class="KFViewNavBar" ng-if="!menuStatus">
         <div class="KFCommunityTitle">{{community.community.title}}</div>
