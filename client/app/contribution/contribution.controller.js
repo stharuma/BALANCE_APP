@@ -362,7 +362,10 @@ angular.module('kf6App')
             if ($scope.isMobile()) {
                 w = window.open('');
             }
-            $community.createNoteOn($scope.contribution._id, function(newContribution) {
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
+            $community.createNoteOn(mode, $scope.contribution._id, function(newContribution) {
                 var url = './contribution/' + newContribution._id;
                 if (w) {
                     w.location.href = url;
@@ -375,6 +378,9 @@ angular.module('kf6App')
         };
 
         $scope.makeRiseabove = function() {
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
             $community.createView('riseabove:' + $scope.contribution._id, function(view) {
                 var riseabove = {
                     viewId: view._id
@@ -385,7 +391,7 @@ angular.module('kf6App')
                 $scope.contribution.data.riseabove = riseabove;
                 $scope.contribute();
                 $scope.prepareRiseabove();
-            }, true);
+            }, true, mode);
         };
 
         $scope.prepareRiseabove = function() {

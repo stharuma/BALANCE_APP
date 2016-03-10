@@ -440,7 +440,18 @@ angular.module('kf6App')
             });
         };
 
-        var createNoteCommon = function(fromId, success) {
+        var createNoteCommon = function(mode, fromId, success) {
+            if (!mode) {
+                mode = {};
+                mode.permission = 'protected';
+                mode.group = undefined;
+            }
+
+            if (mode && !mode.permission) {
+                window.alert('invalid mode object');
+                return;
+            }
+
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
@@ -448,7 +459,8 @@ angular.module('kf6App')
                 /* 6.6 the default title was changed to blank by Christian */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
-                permission: 'protected',
+                permission: mode.permission,
+                group: mode.group,
                 data: {
                     body: ''
                 },
@@ -460,12 +472,12 @@ angular.module('kf6App')
                 });
         };
 
-        var createNote = function(success) {
-            createNoteCommon(null, success);
+        var createNote = function(mode, success) {
+            createNoteCommon(mode, null, success);
         };
 
-        var createNoteOn = function(fromId, success) {
-            createNoteCommon(fromId, success);
+        var createNoteOn = function(mode, fromId, success) {
+            createNoteCommon(mode, fromId, success);
         };
 
         var makeRiseabove = function(note, viewId, success) {

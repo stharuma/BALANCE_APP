@@ -433,7 +433,10 @@ angular.module('kf6App')
             if ($scope.isMobile()) {
                 w = window.open('');
             }
-            $community.createNote(function(note) {
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
+            $community.createNote(mode, function(note) {
                 $scope.createContainsLink(note._id, {
                     x: 100,
                     y: 100
@@ -897,8 +900,11 @@ angular.module('kf6App')
                 topleft.x = Math.min(topleft.x, ref.data.x);
                 topleft.y = Math.min(topleft.y, ref.data.y);
             });
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
             $community.createView('riseabove:', function(view) {
-                $community.createNote(function(note) {
+                $community.createNote(mode, function(note) {
                     note.title = 'Riseabove';
                     $community.makeRiseabove(note, view._id, function(note) {
                         $scope.createContainsLink(note._id, {
@@ -916,7 +922,7 @@ angular.module('kf6App')
                         });
                     });
                 });
-            }, true);
+            }, true, mode);
         };
 
     });
