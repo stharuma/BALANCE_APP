@@ -7,6 +7,12 @@ var kfmail = require('../../components/kfmail/kfmail.js');
 
 exports.notify = function(req, res) {
     var contextId = req.body.contextId;
+
+    /* Don't make any notification for private note */
+    var note = req.body.contribution;
+    if (note.permission === 'private') {
+        return;
+    }
     KLink.find({
         from: contextId,
         type: 'notifies'
