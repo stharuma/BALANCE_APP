@@ -34,14 +34,6 @@ angular.module('kf6App')
             });
         };
 
-        $scope.activateWriters = function() {
-            $scope.changeWritersState(function(member) {
-                return member.status === 'inactive';
-            }, function(member) {
-                member.status = 'active';
-            });
-        };
-
         $scope.changeWritersState = function(test, change) {
             var key = window.prompt('Please community registration key to confirm');
             if (key === $scope.community.registrationKey) {
