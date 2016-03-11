@@ -29,7 +29,17 @@ angular.module('kf6App')
             if (communityId !== newId || userId !== currentUserId) {
                 userId = currentUserId;
                 communityId = newId;
-                rootContext = null; //clear
+
+                //clear
+                rootContext = null;
+                communityData.community = null;
+                communityData.author = null;
+                communityData.views = [];
+                communityData.members = {};
+                communityData.membersArray = [];
+                communityData.groups = {};
+                communityData.groupsArray = [];
+                communityData.scaffolds = [];
 
                 refreshCommunity(function() {
                     if (communityHandler) {
