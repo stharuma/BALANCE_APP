@@ -29,7 +29,17 @@ angular.module('kf6App')
             if (communityId !== newId || userId !== currentUserId) {
                 userId = currentUserId;
                 communityId = newId;
-                rootContext = null; //clear
+
+                //clear
+                rootContext = null;
+                communityData.community = null;
+                communityData.author = null;
+                communityData.views = [];
+                communityData.members = {};
+                communityData.membersArray = [];
+                communityData.groups = {};
+                communityData.groupsArray = [];
+                communityData.scaffolds = [];
 
                 refreshCommunity(function() {
                     if (communityHandler) {
@@ -440,7 +450,18 @@ angular.module('kf6App')
             });
         };
 
-        var createNoteCommon = function(fromId, success) {
+        var createNoteCommon = function(mode, fromId, success) {
+            if (!mode) {
+                mode = {};
+                mode.permission = 'protected';
+                mode.group = undefined;
+            }
+
+            if (mode && !mode.permission) {
+                window.alert('invalid mode object');
+                return;
+            }
+
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
@@ -448,7 +469,8 @@ angular.module('kf6App')
                 /* 6.6 the default title was changed to blank by Christian */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
-                permission: 'protected',
+                permission: mode.permission,
+                group: mode.group,
                 data: {
                     body: ''
                 },
@@ -460,12 +482,12 @@ angular.module('kf6App')
                 });
         };
 
-        var createNote = function(success) {
-            createNoteCommon(null, success);
+        var createNote = function(mode, success) {
+            createNoteCommon(mode, null, success);
         };
 
-        var createNoteOn = function(fromId, success) {
-            createNoteCommon(fromId, success);
+        var createNoteOn = function(mode, fromId, success) {
+            createNoteCommon(mode, fromId, success);
         };
 
         var makeRiseabove = function(note, viewId, success) {
@@ -703,6 +725,16 @@ angular.module('kf6App')
             return _.contains(authorIds, communityData.author._id);
         };
 
+        var modifyObjects = function(objects, success, error) {
+            var funcs = [];
+            objects.forEach(function(object) {
+                funcs.push(function(handler) {
+                    modifyObject(object, handler, error);
+                });
+            });
+            waitFor(funcs, success);
+        };
+
         var modifyObject = function(object, success, error) {
             $http.put('/api/objects/' + communityId + '/' + object._id, object).success(function(newobject) {
                 if (newobject._id === communityData.author._id) {
@@ -835,6 +867,7 @@ angular.module('kf6App')
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
             modifyObject: modifyObject,
+            modifyObjects: modifyObjects,
             getObject: getObject,
             read: read,
             getAuthor: getAuthor,

@@ -365,7 +365,11 @@ module.exports = function(grunt) {
                         'server/**/*',
                         'bin/**/*', //added
                         'node_modules/**/*', //added 6.5.2
+                        '!server/components/kfmail/setting.js' //added 6.7.0
                     ]
+                }, {// added 6.7.0
+                    src: 'gitignore.dest',
+                    dest: '<%= yeoman.dist %>/.gitignore'
                 }]
             },
             styles: {
@@ -615,8 +619,8 @@ module.exports = function(grunt) {
         'ngAnnotate',
         'copy:dist',
         'chmod',
-    	//  Disable CDNify to host everything on the server, minimizing firefall rules to add if needed
-    	// 'cdnify',
+        //  Disable CDNify to host everything on the server, minimizing firefall rules to add if needed
+        // 'cdnify',
         'cssmin',
         'uglify',
         'rev',

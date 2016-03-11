@@ -32,6 +32,11 @@ var KAuthorSchema = new Schema({
         required: true,
         index: true
     },
+    blockLogin: { /* temporary for blocking login*/
+        type: Boolean,
+        required: false,
+        index: true
+    },
 
     /* here are cache to work read faster */
     _community: {
