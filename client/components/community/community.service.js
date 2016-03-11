@@ -719,7 +719,7 @@ angular.module('kf6App')
             var funcs = [];
             objects.forEach(function(object) {
                 funcs.push(function(handler) {
-                    modifyObject(object, handler);
+                    modifyObject(object, handler, error);
                 });
             });
             waitFor(funcs, success);
