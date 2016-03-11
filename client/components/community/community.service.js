@@ -715,6 +715,16 @@ angular.module('kf6App')
             return _.contains(authorIds, communityData.author._id);
         };
 
+        var modifyObjects = function(objects, success, error) {
+            var funcs = [];
+            objects.forEach(function(object) {
+                funcs.push(function(handler) {
+                    modifyObject(object, handler);
+                });
+            });
+            waitFor(funcs, success);
+        };
+
         var modifyObject = function(object, success, error) {
             $http.put('/api/objects/' + communityId + '/' + object._id, object).success(function(newobject) {
                 if (newobject._id === communityData.author._id) {
@@ -847,6 +857,7 @@ angular.module('kf6App')
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
             modifyObject: modifyObject,
+            modifyObjects: modifyObjects,
             getObject: getObject,
             read: read,
             getAuthor: getAuthor,

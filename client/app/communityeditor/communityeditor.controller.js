@@ -23,7 +23,6 @@ angular.module('kf6App')
                 return member.role === 'writer';
             }, function(member) {
                 member.blockLogin = true;
-                $community.modifyObject(member);
             });
         };
 
@@ -32,16 +31,14 @@ angular.module('kf6App')
                 return member.role === 'writer';
             }, function(member) {
                 member.blockLogin = false;
-                $community.modifyObject(member);
             });
         };
 
-        $scope.activateWriters = function(){
+        $scope.activateWriters = function() {
             $scope.changeWritersState(function(member) {
                 return member.status === 'inactive';
             }, function(member) {
                 member.status = 'active';
-                $community.modifyObject(member);
             });
         };
 
@@ -60,9 +57,14 @@ angular.module('kf6App')
                         targets.forEach(function(member) {
                             change(member);
                         });
-                        window.alert('OK: ' + targets.length);
+                        window.alert(targets.length + ' objects will be updated.');
+                        $community.modifyObjects(targets, function() {
+                            window.alert('finished.');
+                        });
                     });
                 });
+            } else {
+                window.alert('The key didn\'t match.');
             }
         };
 
