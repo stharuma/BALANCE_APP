@@ -61,7 +61,8 @@ exports.search = function(req, res) {
 
 exports.myRegistrations = function(req, res) {
     KAuthor.find({
-        userId: req.user._id
+        userId: req.user._id,
+        blockLogin: { $ne: true }
     }, function(err, authors) {
         if (err) {
             return handleError(res, err);

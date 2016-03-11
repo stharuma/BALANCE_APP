@@ -1,5 +1,4 @@
 <div class="col-md-12">
-
     <label>Administration</label>
     <div>
         <label>title:</label>
@@ -10,14 +9,24 @@
         <br>
         <label>manager key:</label>
         <input type="text" class="form-control" placeholder="" ng-model="community.managerRegistrationKey">
-
         <div style="text-align: right;">
             <button type="submit" class="btn btn-primary" ng-click="save()">Save</button>
         </div>
     </div>
     <div>
-        <label>updateCash</label>
-        <br> (don't use this except administrator.)
+        <label>Block Writers Login</label>
+        <br> (don't use this except administrator.) <br>
+        <button type="submit" class="btn btn-primary" ng-click="blockLoginWriters()">BlockLoginWriters</button>
+        <button type="submit" class="btn btn-primary" ng-click="unblockLoginWriters()">UnblockLoginWriters</button>
+    </div>
+    <div>
+        <br> (don't use this except administrator.) <br>
+        <label>Activate Writer</label>
+        <button type="submit" class="btn btn-primary" ng-click="activateWriters()">ActivateWriters</button>
+    </div>
+    <div>
+        <label>UpdateCash</label>
+        <br> (don't use this except administrator.) <br>
         <button type="submit" class="btn btn-primary" ng-click="updateAllCash()">UpdateAllCash</button>
     </div>
 </div>
