@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams,  $ac,  $kfcommon) {
+    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $kfcommon) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
@@ -37,14 +37,17 @@ angular.module('kf6App')
                 $http.get('/api/links/to/' + note._id).success(function (links) {
                     links.forEach(function (link) {
                         if (link.type === 'promisings') {
-                            $scope.tableData.push({
-                                promisingidea: link.data.idea,
-                                color: link.data.color,
-                                inContribution: note
+                            $community.getObject(link.from, function (promisingIdeaobj) {
+                                $scope.tableData.push({
+                                    promisingidea: promisingIdeaobj.data.idea,
+                                    color: promisingIdeaobj.data.color,
+                                    inContribution: note
+                                });
+
+                                if (!contains($scope.colors, promisingIdeaobj.data.color)) {
+                                    $scope.colors.push(promisingIdeaobj.data.color);
+                                }
                             });
-                            if (!contains($scope.colors, link.data.color)) {
-                                $scope.colors.push(link.data.color);
-                            }
                             if (promisingnotefound === true) {
                                 $scope.promisngNotes.push(note);
                                 promisingnotefound = false;
@@ -133,7 +136,7 @@ angular.module('kf6App')
             } else {
                 $scope.status.communityCollapsed = false;
             }
-            $scope.pager.query =  $kfcommon.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
+            $scope.pager.query = $kfcommon.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
             $kfcommon.count($scope.status, $scope.pager, communityId, $ac, $http, checkedPromisingtLinkInNote);
             $scope.status.detailCollapsed = false;
             $scope.queryString = '';
@@ -145,6 +148,21 @@ angular.module('kf6App')
             } else {
                 return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
+        };
+
+        $scope.updatepromisingIdeaobjs = function () {
+            var promisingIdeaobjLinks = $scope.toConnections.filter(function (each) {
+                return each.type === 'promisings';
+            });
+            promisingIdeaobjLinks.forEach(function (promisingIdeaobjLink) {
+                if (!$ac.isReadable(promisingIdeaobjLink._from)) {
+                    return;
+                }
+                $community.getObject(promisingIdeaobjLink.from, function (promisingIdeaobj) {
+                    $scope.promisingIdeaobjLinks[promisingIdeaobjLink._id] = promisingIdeaobjLink;
+                    $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
+                });
+            });
         };
 
 
