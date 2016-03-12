@@ -38,6 +38,9 @@ angular.module('kf6App')
                     links.forEach(function (link) {
                         if (link.type === 'promisings') {
                             $community.getObject(link.from, function (promisingIdeaobj) {
+                                if (promisingIdeaobj.data.color === '') {
+                                    promisingIdeaobj.data.color = 'None';
+                                }
                                 $scope.tableData.push({
                                     promisingidea: promisingIdeaobj.data.idea,
                                     color: promisingIdeaobj.data.color,
@@ -45,7 +48,11 @@ angular.module('kf6App')
                                 });
 
                                 if (!contains($scope.colors, promisingIdeaobj.data.color)) {
-                                    $scope.colors.push(promisingIdeaobj.data.color);
+                                    if (promisingIdeaobj.data.color === '') {
+                                        $scope.colors.push('None');
+                                    } else {
+                                        $scope.colors.push(promisingIdeaobj.data.color);
+                                    }
                                 }
                             });
                             if (promisingnotefound === true) {
@@ -149,21 +156,5 @@ angular.module('kf6App')
                 return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
         };
-
-        $scope.updatepromisingIdeaobjs = function () {
-            var promisingIdeaobjLinks = $scope.toConnections.filter(function (each) {
-                return each.type === 'promisings';
-            });
-            promisingIdeaobjLinks.forEach(function (promisingIdeaobjLink) {
-                if (!$ac.isReadable(promisingIdeaobjLink._from)) {
-                    return;
-                }
-                $community.getObject(promisingIdeaobjLink.from, function (promisingIdeaobj) {
-                    $scope.promisingIdeaobjLinks[promisingIdeaobjLink._id] = promisingIdeaobjLink;
-                    $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
-                });
-            });
-        };
-
 
     });
