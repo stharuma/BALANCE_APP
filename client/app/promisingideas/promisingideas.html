@@ -42,24 +42,29 @@
                                 <div ng-repeat=" data in tableData" ng-if=" contribution===data .inContribution">
                                     <div ng-show="selectedColor===colors[0]">
                                         <tt ng-style="{ 'background-color': data.color }" ng-bind-html="data .promisingidea"></tt>
+                                        <br>
+                                        <b><tt ng-bind-html="data .count"></tt></b>
+                                        <br>
+                                        <b> Criteria: -  </b><tt ng-bind-html="data .reason"></tt>
                                         <hr>
                                     </div>
                                     <div ng-show="selectedColor=== data.color">
                                         <tt ng-style="{ 'background-color': data.color }" ng-bind-html="data .promisingidea"></tt>
+                                        <br>
+                                        <b><tt ng-bind-html="data .count"></tt></b>
+                                        <br>
+                                        <b> Criteria: -  </b><tt ng-bind-html="data .reason"></tt>
                                         <hr>
                                     </div>
                                 </div>
                             </td>
                             <td>
-
                                 <div kfelement draggable="true">
                                     <span><img ng-src="{{getIcon(contribution)}}" draggable="false"></span>
                                     <a class="KFSearchLink" href="contribution/{{contribution.note._id}}" target="_blank" draggable="false">{{contribution.title}}</a>
                                 </div>
-
                             </td>
                         </tr>
-
                     </table>
                     <div style="height: 20px;"></div>
                 </div>

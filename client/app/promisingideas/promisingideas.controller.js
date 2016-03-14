@@ -44,6 +44,7 @@ angular.module('kf6App')
                                 $scope.tableData.push({
                                     promisingidea: promisingIdeaobj.data.idea,
                                     color: promisingIdeaobj.data.color,
+                                    reason: promisingIdeaobj.data.reason,
                                     inContribution: note
                                 });
 
@@ -69,6 +70,31 @@ angular.module('kf6App')
             $scope.selectedColor = $scope.colors[0];
         };
 
+        function setpromisingoverlappedcounted() {
+            $scope.tableData.forEach(function (promising, index, data) {
+                counted(promising, index, data)
+            });
+        }
+
+        function counted(promising, idx, data) {
+            var hit = 1;
+            $scope.tableData.forEach(function (promising_, index) {
+                if (promising_.promisingidea.length <= promising.promisingidea.length) {
+                    if (promising.promisingidea.indexOf(promising_.promisingidea) !== -1 && index !== idx) {
+                        hit++;
+                    }
+
+                }
+            });
+            if (hit === 1) {
+                hit = hit + ' hit       '
+            } else {
+                hit = hit + ' hits     '
+            }
+            data[idx].count = hit;
+        }
+
+
         function contains(a, obj) {
             var i = a.length;
             while (i--) {
@@ -89,6 +115,7 @@ angular.module('kf6App')
 
         $scope.hascolorinPromisingnote = function (note) {
             var hascolor = false;
+            setpromisingoverlappedcounted();
             if ($scope.selectedColor !== $scope.colors[0]) {
                 $scope.tableData.forEach(function (promising) {
                     if (note === promising.inContribution) {
