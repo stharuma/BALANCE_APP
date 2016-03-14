@@ -60,15 +60,6 @@ exports.search = function(req, res) {
 
     var query = req.body.query;
 
-    //assure communityId
-    if (!query.communityId) {
-        if (!req.author) {
-            console.err('search query error: ' + req.body.query);
-            return res.send(400);
-        } else {
-            query.communityId = req.author.communityId;
-        }
-    }
     var pagesize = query.pagesize ? query.pagesize : 50;
     var page = query.page ? query.page : 1;
     var skip = pagesize * (page - 1);
@@ -87,6 +78,17 @@ exports.search = function(req, res) {
 
 function makeMongoQuery(req, res, success) {
     var query = req.body.query;
+
+    //assure communityId
+    if (!query.communityId) {
+        if (!req.author) {
+            console.err('search query error: ' + query);
+            return res.send(400);
+        } else {
+            query.communityId = req.author.communityId;
+        }
+    }
+
     if (!query.viewIds) {
         makeMongoQuery0(req, res, success);
     } else { //has viewIds
