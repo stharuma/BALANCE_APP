@@ -33,6 +33,7 @@ module.exports = function(config) {
             'client/bower_components/ng-file-upload/angular-file-upload.min.js',
             'client/bower_components/angular-ui-select/dist/select.min.js',
             'client/bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
+            'client/bower_components/ng-csv/build/ng-csv.min.js',
             'client/app/app.js',
             //'client/app/app.coffee',
             'client/app/**/*.js',

@@ -32,7 +32,7 @@ angular.module('kf6App')
         $scope.selectedViewIds = [];
 
         $scope.getHeader = function () {
-            return ['PromisingIIdeas', 'In Contribution'];
+            return ['Color', 'PromisingIIdeas', 'Reason', 'In ContributionTitle', 'Weight/s'];
         };
 
         var checkedPromisingtLinkInNote = function (notes) {
@@ -47,10 +47,10 @@ angular.module('kf6App')
                                     promisingIdeaobj.data.color = 'None';
                                 }
                                 $scope.tableData.push({
-                                    promisingidea: promisingIdeaobj.data.idea,
                                     color: promisingIdeaobj.data.color,
+                                    promisingidea: promisingIdeaobj.data.idea,
                                     reason: promisingIdeaobj.data.reason,
-                                    inContribution: note
+                                    inContributionTitle: note.title
                                 });
 
                                 if (!contains($scope.colors, promisingIdeaobj.data.color)) {
@@ -92,9 +92,9 @@ angular.module('kf6App')
                 }
             });
             if (hit === 1) {
-                hit = '< ' + hit + ' hit >';
+                hit = '< ' + hit + ' Weight>';
             } else {
-                hit = '< ' + hit + ' hits >';
+                hit = '< ' + hit + ' Weights>';
             }
             data[idx].count = hit;
         }
@@ -132,12 +132,10 @@ angular.module('kf6App')
 
         $scope.hascolorinPromisingnote = function (note) {
             var hascolor = false;
-            // alert( $scope.selectedPromisingIdeas.length);
-            // $scope.selectedPromisingIdeas.length=0;
             setpromisingoverlappedcounted();
             if ($scope.selectedColor !== $scope.colors[0]) {
                 $scope.tableData.forEach(function (promising) {
-                    if (note === promising.inContribution) {
+                    if (note.title === promising.inContributionTitle) {
                         if (promising.color === $scope.selectedColor) {
                             hascolor = true;
                             return;

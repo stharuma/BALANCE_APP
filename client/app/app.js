@@ -14,7 +14,8 @@ angular.module('kf6App', [
         'ui.select',
         'pascalprecht.translate',
         'colorpicker.module',
-        'ngCookies'
+        'ngCookies',
+        'ngCsv'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');
