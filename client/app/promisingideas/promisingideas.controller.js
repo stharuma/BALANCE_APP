@@ -24,8 +24,13 @@ angular.module('kf6App')
         $scope.promisngNotes = [];
         $scope.colors = [];
         $scope.selectedColor = '';
+        $scope.status.isnewNoteCollapsed = true;
         //export to CSV
         $scope.tableData = [];
+        $scope.selectedPromisingIdeas = [];
+        $scope.promisingnoteTitle = '';
+        $scope.selectedViewIds = [];
+
         $scope.getHeader = function () {
             return ['PromisingIIdeas', 'In Contribution'];
         };
@@ -72,7 +77,7 @@ angular.module('kf6App')
 
         function setpromisingoverlappedcounted() {
             $scope.tableData.forEach(function (promising, index, data) {
-                counted(promising, index, data)
+                counted(promising, index, data);
             });
         }
 
@@ -87,12 +92,24 @@ angular.module('kf6App')
                 }
             });
             if (hit === 1) {
-                hit = hit + ' hit       '
+                hit = '< ' + hit + ' hit >';
             } else {
-                hit = hit + ' hits     '
+                hit = '< ' + hit + ' hits >';
             }
             data[idx].count = hit;
         }
+
+        $scope.toggleSelection = function toggleSelection(promising) {
+            var idx = $scope.selectedPromisingIdeas.indexOf(promising + '<br />');
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedPromisingIdeas.splice(idx, 1);
+            }
+            // is newly selected
+            else {
+                $scope.selectedPromisingIdeas.push(promising + '<br />');
+            }
+        };
 
 
         function contains(a, obj) {
@@ -115,6 +132,8 @@ angular.module('kf6App')
 
         $scope.hascolorinPromisingnote = function (note) {
             var hascolor = false;
+            // alert( $scope.selectedPromisingIdeas.length);
+            // $scope.selectedPromisingIdeas.length=0;
             setpromisingoverlappedcounted();
             if ($scope.selectedColor !== $scope.colors[0]) {
                 $scope.tableData.forEach(function (promising) {
@@ -132,10 +151,14 @@ angular.module('kf6App')
         };
 
         $scope.viewSelected = function (view) {
-            $scope.viewTitlescopy = '';
-            $scope.viewTitles.push(view.title);
-            $scope.queryString += ' -view:' + view._id;
-            $scope.status.detailCollapsed = true;
+            if ($scope.status.isnewNoteCollapsed) {
+                $scope.viewTitlescopy = '';
+                $scope.viewTitles.push(view.title);
+                $scope.queryString += ' -view:' + view._id;
+                $scope.status.detailCollapsed = true;
+            } else {
+                $scope.selectedViewIds.push(view._id);
+            }
         };
 
 
@@ -182,6 +205,22 @@ angular.module('kf6App')
             } else {
                 return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
+        };
+
+        $scope.makepromisingnote = function (title, body) {
+            if (title === '') {
+                window.alert('Note title is empty ');
+                return;
+            }
+            if ($scope.selectedViewIds.length === 0) {
+                window.alert('View is not selected');
+                return;
+            }
+            $kfcommon.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
+            $scope.selectedViewIds.length = 0;
+            $scope.status.isnewNoteCollapsed = true;
+
+
         };
 
     });

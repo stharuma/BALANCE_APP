@@ -141,7 +141,7 @@ angular.module('kf6App')
         };
 
         obj.createnewnote = function (title, viewId, $community, body, $http) {
-            $community.createNote(function (note) {
+            $community.createNote(null, function (note) {
                 createContainsLink(viewId, note._id, $http, {
                     x: 100,
                     y: 100

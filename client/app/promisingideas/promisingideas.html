@@ -1,18 +1,37 @@
-<br/>
-<br/>
 <label>Views:</label>
 <div style="width: 400px" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
 <button ng-click=" search()" ng-model="queryString">Selected Ideas </button>
-<br/>
-<br/>
 <hr>
 <div collapse="status.detailCollapsed">
-    <br/>
     <label style="font-size:  15pt; " ng-if="viewTitlescopy !==''"><b>PromisingIdeas in {{viewTitlescopy}} (View/s)</b></label>
     <label style="font-size:  15pt; " ng-if=" !status.communityCollapsed"><b>PromisingIdeas in {{currentCommunity.community.title}} (CurrentCommunity)</b></label>
     <br/>
-    <label>Colours::</label>
-    <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue;" ng-model="selectedColor" ng-options="s for s in colors " />
+    <div style="text-align: left; padding-left: 20px; padding-top: 1px;">
+        <label>Colours::</label>
+        <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue;" ng-model="selectedColor" ng-options="s for s in colors " ng-click="selectedPromisingIdeas.length=0" />
+        <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed=false">To New Contribution</button>
+    </div>
+    <div class="well" collapse="status.isnewNoteCollapsed" style="padding-left: 50px; position: absolute; top:0px; left: 50px; width: 90%; height: 80%; background-color: white; z-index: 100;">
+        <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
+            <label style="font-size:  11pt;float: left"><b>Create New Note</b></label>
+        </div>
+        <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,selectedPromisingIdeas.toString());">create</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed = true; ">cancel</button>
+        </div>
+        <div style="height : 250px ;overflow: scroll; width:100%; float: left">
+
+            <input type="text" class="form-control" style="height : 20px; overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle">
+            <label>Views:</label>
+            <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
+            </br>
+            <label style="font-size:  9pt">Idea : </label>
+            <div ng-repeat="idea in selectedPromisingIdeas">
+                <tt ng-bind-html="idea"></tt>
+            </div>
+        </div>
+        <hr>
+    </div>
     <div style="padding: 5px;">
         <div class="KFSearchResult">
             <div ng-if="status.status === 'searching'">
@@ -40,18 +59,20 @@
                         <tr class="KFSearchResult" ng-repeat="contribution  in   promisngNotes" ng-show="hascolorinPromisingnote(contribution)">
                             <td>
                                 <div ng-repeat=" data in tableData" ng-if=" contribution===data .inContribution">
-                                    <div ng-show="selectedColor===colors[0]">
+                                    <div ng-if="selectedColor===colors[0]">
+                                        <input id="{{data .promisingidea}}" type="checkbox" value="{{data .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(data .promisingidea) > -1" ng-click="toggleSelection(data .promisingidea)" />
+                                        <label for="{{data .promisingidea}}"></label>
+                                        <tt ng-bind-html="data .count"></tt>
                                         <tt ng-style="{ 'background-color': data.color }" ng-bind-html="data .promisingidea"></tt>
-                                        <br>
-                                        <b><tt ng-bind-html="data .count"></tt></b>
                                         <br>
                                         <b> Criteria: -  </b><tt ng-bind-html="data .reason"></tt>
                                         <hr>
                                     </div>
-                                    <div ng-show="selectedColor=== data.color">
+                                    <div ng-if="selectedColor=== data.color">
+                                        <input id="{{data .promisingidea}}" type="checkbox" value="{{data .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(data .promisingidea) > -1" ng-click="toggleSelection(data .promisingidea)" />
+                                        <label for="{{data .promisingidea}}"></label>
+                                        <tt ng-bind-html="data .count"></tt>
                                         <tt ng-style="{ 'background-color': data.color }" ng-bind-html="data .promisingidea"></tt>
-                                        <br>
-                                        <b><tt ng-bind-html="data .count"></tt></b>
                                         <br>
                                         <b> Criteria: -  </b><tt ng-bind-html="data .reason"></tt>
                                         <hr>
