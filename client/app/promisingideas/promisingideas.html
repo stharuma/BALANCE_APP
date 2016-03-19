@@ -2,6 +2,7 @@
 <div style="width: 400px" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
 <button ng-click=" search()" ng-model="queryString">Selected Ideas </button>
 <hr>
+<div collapse="status.noPromisingCollapsed"><b>There are no promising ideas</b> </div>
 <div collapse="status.detailCollapsed">
     <label style="font-size:  15pt; " ng-if="viewTitlescopy !==''"><b>Promising Ideas in {{viewTitlescopy}} (View/s)</b></label>
     <label style="font-size:  15pt; " ng-if=" !status.communityCollapsed"><b>PromisingIdeas in {{currentCommunity.community.title}} (CurrentCommunity)</b></label>

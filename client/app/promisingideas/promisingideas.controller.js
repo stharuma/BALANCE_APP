@@ -17,6 +17,7 @@ angular.module('kf6App')
         $scope.viewTitles = [];
         $scope.status = {};
         $scope.status.detailCollapsed = true;
+        $scope.status.noPromisingCollapsed = true;
         $scope.show = true;
         $scope.status.communityCollapsed = true;
         $scope.status.status = 'init';
@@ -37,7 +38,7 @@ angular.module('kf6App')
 
         var checkedPromisingtLinkInNote = function (notes) {
             intilize(notes);
-            notes.forEach(function (note) {
+            notes.forEach(function (note, index) {
                 var promisingnotefound = true;
                 $http.get('/api/links/to/' + note._id).success(function (links) {
                     links.forEach(function (link) {
@@ -65,15 +66,26 @@ angular.module('kf6App')
                                 $scope.promisngNotes.push(note);
                                 promisingnotefound = false;
                             }
+                            $scope.status.detailCollapsed = false;
                         }
 
                     });
+                    setNopromising(index, notes);
+
                 });
 
             });
 
             $scope.selectedColor = $scope.colors[0];
         };
+
+        function setNopromising(index, notes) {
+            if (index === notes.length - 1) {
+                if ($scope.promisngNotes.length === 0) {
+                    $scope.status.noPromisingCollapsed = false;
+                }
+            }
+        }
 
         function setpromisingoverlappedcounted() {
             $scope.tableData.forEach(function (promising, index, data) {
@@ -193,7 +205,6 @@ angular.module('kf6App')
             }
             $scope.pager.query = $kfcommon.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
             $kfcommon.count($scope.status, $scope.pager, communityId, $ac, $http, checkedPromisingtLinkInNote);
-            $scope.status.detailCollapsed = false;
             $scope.queryString = '';
         };
 
