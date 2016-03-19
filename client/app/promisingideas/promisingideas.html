@@ -1,11 +1,16 @@
+<label style="font-size:  12pt; "><b>Promising Ideas</b></label>
+<br/>
 <label>Views:</label>
 <div style="width: 400px" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
 <button ng-click=" search()" ng-model="queryString">Selected Ideas </button>
 <hr>
-<div collapse="status.noPromisingCollapsed"><b>There are no promising ideas</b> </div>
+<div collapse="status.noPromisingCollapsed">
+    <label style="font-size:  12pt; " ng-if="viewTitlescopy !==''"><b>There are no  ideas in {{viewTitlescopy}} (View/s)</b></label>
+    <label style="font-size:  12pt; " ng-if=" !status.communityCollapsed"><b>There are no ideas in {{currentCommunity.community.title}} (CurrentCommunity)</b></label>
+</div>
 <div collapse="status.detailCollapsed">
-    <label style="font-size:  15pt; " ng-if="viewTitlescopy !==''"><b>Promising Ideas in {{viewTitlescopy}} (View/s)</b></label>
-    <label style="font-size:  15pt; " ng-if=" !status.communityCollapsed"><b>PromisingIdeas in {{currentCommunity.community.title}} (CurrentCommunity)</b></label>
+    <label style="font-size:  12pt; " ng-if="viewTitlescopy !==''"><b>Ideas in {{viewTitlescopy}} (View/s)</b></label>
+    <label style="font-size:  12pt; " ng-if=" !status.communityCollapsed"><b>Ideas in {{currentCommunity.community.title}} (CurrentCommunity)</b></label>
     <br/>
     <div style="text-align: left; padding-left: 20px; padding-top: 1px;">
         <label>Colours::</label>
