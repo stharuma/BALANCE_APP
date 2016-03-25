@@ -778,16 +778,16 @@ angular.module('kf6App')
         };
 
        /***********promising Ideas ************/
-          $scope.setIndex = function (index) {
+          $scope.setIndex = function(index) {
             $scope.selectedIndex = index;
         };
 
-        $scope.setnewnoteIndex = function (index) {
+        $scope.setnewnoteIndex = function(index) {
             $community.refreshViews();
             $scope.newnoteIndex = index;
         };
 
-        $scope.promisingIdeaobjProcess = function () {
+        $scope.promisingIdeaobjProcess = function() {
             // var content ='<span style="background-color: '+$scope.targetColor+"\" >"+$scope.selectedText+ '</span>';
             // var re = new RegExp($scope.selectedText, 'gi');
             // $scope.copy.body =$scope.copy.body.replace(re,content);
@@ -801,15 +801,15 @@ angular.module('kf6App')
             $scope.selectedText = '';
         };
 
-        $scope.trustAsHtml = function (html) {
+        $scope.trustAsHtml = function(html) {
             return $sce.trustAsHtml(html);
         };
 
-        $scope.showpromisingIdeaWindow = function () {
+        $scope.showpromisingIdeaWindow = function() {
             $scope.selectedText = $scope.getSelectionText();
         };
 
-        $scope.getSelectionText = function () {
+        $scope.getSelectionText = function() {
             var text = '';
             if (window.getSelection) {
                 text = window.getSelection().toString();
@@ -819,7 +819,7 @@ angular.module('kf6App')
             return text;
         };
 
-        $scope.getSelectionHtml = function () {
+        $scope.getSelectionHtml = function() {
             var html = '';
             if (typeof window.getSelection !== 'undefined') {
                 var sel = window.getSelection();
@@ -838,7 +838,7 @@ angular.module('kf6App')
             return html;
         };
 
-        $scope.createPromisngIdeaobj = function (promisingIdeaobj) {
+        $scope.createPromisngIdeaobj = function(promisingIdeaobj) {
             var communityId = $community.getCommunityData().community._id;
             var newobj = {
                 communityId: communityId,
@@ -855,13 +855,13 @@ angular.module('kf6App')
                 });
         };
 
-        var createpromisingIdeaobjLink = function (promisingIdeaobj) {
+        var createpromisingIdeaobjLink = function(promisingIdeaobj) {
             var link = {};
             link.to = $scope.contribution._id;
             link.from = promisingIdeaobj._id;
             link.type = 'promisings';
             link.data = promisingIdeaobj.data;
-            $http.post('/api/links', link).success(function (link) {
+            $http.post('/api/links', link).success(function(link) {
                 $scope.promisingIdeaobjLinks[link._id] = link;
                 $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
                 $scope.toConnections.push(link);
@@ -869,7 +869,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.promisingIdeaobjUpdated = function (promisingIdeaobjLink) {
+        $scope.promisingIdeaobjUpdated = function(promisingIdeaobjLink) {
             if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
                 console.error('ERROR! promisingIdeaobj doesn\'t have id on update');
                 return;
@@ -882,7 +882,7 @@ angular.module('kf6App')
             $community.modifyObject(model);
         };
 
-        $scope.promisingIdeaobjDeleted = function (promisingIdeaobjLink) {
+        $scope.promisingIdeaobjDeleted = function(promisingIdeaobjLink) {
             if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
                 console.error('ERROR! promisingIdeaobj doesn\'t have id on delete');
                 return;
@@ -890,7 +890,7 @@ angular.module('kf6App')
             $http.delete('/api/links/' + promisingIdeaobjLink._id);
         };
 
-        $scope.updatepromisingIdeaobjs = function () {
+        $scope.updatepromisingIdeaobjs = function() {
             if ($scope.contribution.type !== 'Note') {
                 return;
             }
@@ -898,11 +898,11 @@ angular.module('kf6App')
             var promisingIdeaobjLinks = $scope.toConnections.filter(function (each) {
                 return each.type === 'promisings';
             });
-            promisingIdeaobjLinks.forEach(function (promisingIdeaobjLink) {
+            promisingIdeaobjLinks.forEach(function(promisingIdeaobjLink) {
                 if (!$ac.isReadable(promisingIdeaobjLink._from)) {
                     return;
                 }
-                $community.getObject(promisingIdeaobjLink.from, function (promisingIdeaobj) {
+                $community.getObject(promisingIdeaobjLink.from, function(promisingIdeaobj) {
                     $scope.promisingIdeaobjLinks[promisingIdeaobjLink._id] = promisingIdeaobjLink;
                     $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
                     $scope.status.ispromisingideaTabDisplayed = true;
@@ -911,11 +911,11 @@ angular.module('kf6App')
             //  }, 1000);
         };
 
-        $scope.viewSelected = function (view) {
+        $scope.viewSelected = function(view) {
             $scope.selectedViewIds.push(view._id);
         };
 
-        $scope.makepromisingnote = function (title, body) {
+        $scope.makepromisingnote = function(title, body) {
             if (title === '') {
                 window.alert('Note title is empty ');
                 return;
