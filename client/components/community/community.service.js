@@ -450,16 +450,19 @@ angular.module('kf6App')
             });
         };
 
-        var createNoteCommon = function(mode, fromId, success) {
-            if (!mode) {
-                mode = {};
-                mode.permission = 'protected';
-                mode.group = undefined;
-            }
-
-            if (mode && !mode.permission) {
+        var createNoteCommon = function(contextmode, fromId, success) {
+            if (contextmode && !contextmode.permission) {
                 window.alert('invalid mode object');
                 return;
+            }
+
+            var mode = {};
+            if (contextmode && contextmode.permission === 'private') {
+                mode.permission = contextmode.permission;
+                mode.group = contextmode.group;
+            } else {
+                mode.permission = 'protected';
+                mode.group = undefined;
             }
 
             var newobj = {
