@@ -5,10 +5,18 @@ angular.module('kf6App')
 
         $scope.selected = {};
 
-        $scope.initializingHooks.push(function() {
+        var initialize = function() {
             $scope.community = $community.getCommunityData();
             $scope.authors = $scope.community.membersArray;
-        });
+        };
+
+        if ($scope.initializingHooks) {
+            $scope.initializingHooks.push(function() {
+                initialize();
+            });
+        } else {
+            initialize();
+        }
 
         $scope.addAuthor = function() {
             if (!$scope.selected.author) {
@@ -24,4 +32,3 @@ angular.module('kf6App')
             $scope.authorSelected($scope.selected.author);
         };
     });
-
