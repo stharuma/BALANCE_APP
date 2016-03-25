@@ -602,7 +602,7 @@ angular.module('kf6App')
             $scope.status.isAnalyticsCollapsed = !$scope.status.isAnalyticsCollapsed;
         };
 
-          $scope.openPromisingIdeas = function () {
+          $scope.openPromisingIdeas = function() {
             var url = 'promisingideas/' + $scope.view.communityId;
             $scope.openInPopup(url);
         };
