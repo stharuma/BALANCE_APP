@@ -3,7 +3,6 @@
 angular.module('kf6App')
     .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $kfcommon) {
         var communityId = $stateParams.communityId;
-        $community.enter(communityId);
         $community.refreshMembers();
         $scope.communityMembers = $community.getCommunityData().membersArray;
         $scope.currentCommunity = {};
@@ -31,6 +30,12 @@ angular.module('kf6App')
         $scope.selectedPromisingIdeas = [];
         $scope.promisingnoteTitle = '';
         $scope.selectedViewIds = [];
+
+        $scope.pager = {};
+        $community.enter(communityId, function () {
+            $scope.search();
+        });
+
 
         $scope.getHeader = function () {
             return ['Color', 'PromisingIIdeas', 'Reason', 'In ContributionTitle', 'Weight/s'];
@@ -173,7 +178,6 @@ angular.module('kf6App')
 
 
         //Pager Status
-        $scope.pager = {};
         $scope.pager.getStart = function () {
             return (($scope.pager.page - 1) * $scope.pager.pagesize) + 1;
         };
