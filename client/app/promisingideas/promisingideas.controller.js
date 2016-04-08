@@ -3,6 +3,9 @@
 angular.module('kf6App')
     .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $kfcommon) {
         var communityId = $stateParams.communityId;
+        $community.enter(communityId, function () {
+           $scope.search();
+        });
         $community.refreshMembers();
         $scope.communityMembers = $community.getCommunityData().membersArray;
         $scope.currentCommunity = {};
@@ -32,10 +35,6 @@ angular.module('kf6App')
         $scope.selectedViewIds = [];
 
         $scope.pager = {};
-        $community.enter(communityId, function () {
-            $scope.search();
-        });
-
 
         $scope.getHeader = function () {
             return ['Color', 'PromisingIIdeas', 'Reason', 'In ContributionTitle', 'Weight/s'];
