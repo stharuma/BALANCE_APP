@@ -23,6 +23,7 @@ module.exports = function(app) {
     });
 
     // Insert routes below
+    app.use('/api/notifications', require('./api/notification'));
     app.use('/api/contexts', require('./api/KBContext'));
     app.use('/api/groups', require('./api/KGroup'));
     app.use('/api/historicalobjects/', require('./api/KHistoricalObject'));

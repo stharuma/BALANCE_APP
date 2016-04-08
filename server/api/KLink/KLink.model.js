@@ -104,6 +104,9 @@ KLink.createCashObj = function(obj) {
     if (obj.lastName) {
         cache.lastName = obj.lastName;
     }
+    if (obj.email) {
+        cache.email = obj.email;
+    }
 
     /* for note */
     if (obj.data && obj.data.riseabove) {

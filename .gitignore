@@ -8,3 +8,5 @@ dist
 attachments/
 *.bak
 *.log
+/server/components/kfmail/setting.js
+

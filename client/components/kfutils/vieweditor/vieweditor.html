@@ -1,8 +1,27 @@
 <div ng-controller="VieweditorCtrl" class="col-md-12">
-    <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
-    <div ng-show="viewSetting.enabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <!-- notification setting -->
+    <div>
+        <input type="checkbox" ng-model="setting.notificationSettingEnabled" ng-change="notificationSettingEnabledChanged()">Enable Specific Notification Setting</input>
+        <div style="padding-left: 20px;" ng-show="setting.notificationSettingEnabled">
+            <label>Notification: </label>
+            <div>
+                <input type="checkbox" ng-model="setting.receiveNotification" ng-change="notificationSettingChanged()">I will receive notification for this view.</input>
+            </div>
+        </div>
+    </div>
+    <!-- view setting -->
     <div style="height: 10px;"></div>
-    <div ng-show="isAdmin()">
+    <div>
+        <input type="checkbox" ng-model="setting.viewSettingEnabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+        <div ng-show="setting.viewSettingEnabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    </div>
+    <!-- scaffold setting -->
+    <div style="height: 10px;"></div>
+    <input type="checkbox" ng-model="contribution.data.scaffoldSettingEnabled"> Enable Specific Scaffold Setting</input>
+    <div ng-if="contribution.data.scaffoldSettingEnabled" ng-include="'components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.html'"></div>
+    <!-- community setting -->
+    <div style="height: 10px;"></div>
+    <div ng-show="isManager()">
         <label>Community Setting: </label>
         <div style="padding: 20px;">
             <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openRootContext()"><img class="KFToolBarImage" src="manual_assets/kf6images/13-settings.png" title="Settings"></button>

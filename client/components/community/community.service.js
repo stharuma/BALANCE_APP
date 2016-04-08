@@ -18,6 +18,7 @@ angular.module('kf6App')
         communityData.scaffolds = [];
 
         var rootContext;
+        var context;
 
         var enter = function(newId, authorHandler, communityHandler) {
             if (!newId) {
@@ -28,7 +29,17 @@ angular.module('kf6App')
             if (communityId !== newId || userId !== currentUserId) {
                 userId = currentUserId;
                 communityId = newId;
-                rootContext = null; //clear
+
+                //clear
+                rootContext = null;
+                communityData.community = null;
+                communityData.author = null;
+                communityData.views = [];
+                communityData.members = {};
+                communityData.membersArray = [];
+                communityData.groups = {};
+                communityData.groupsArray = [];
+                communityData.scaffolds = [];
 
                 refreshCommunity(function() {
                     if (communityHandler) {
@@ -45,6 +56,22 @@ angular.module('kf6App')
                     authorHandler();
                 }
             }
+        };
+
+        var refreshContext = function(contextId, handler) {
+            if (!context && !contextId) {
+                return handler(context);
+            }
+            if (context && context._id === contextId) {
+                return handler(context);
+            }
+            //refresh
+            getObject(contextId, function(obj) {
+                context = obj;
+                if (handler) {
+                    handler(context);
+                }
+            });
         };
 
         var refreshCommunity = function(handler) {
@@ -168,24 +195,32 @@ angular.module('kf6App')
         };
 
         var refreshScaffolds = function(handler) {
-            getContext(null, function(context) {
-                loadScaffoldLinks(context, function(links) {
-                    communityData.scaffolds.length = 0; //clear once
-                    var funcs = [];
-                    links.forEach(function(link) {
-                        funcs.push(function(handler) {
-                            var scaffold = link._to;
-                            scaffold._id = link.to;
-                            communityData.scaffolds.push(scaffold);
-                            fillSupport(scaffold, handler);
-                        });
-                    });
-                    waitFor(funcs, handler);
+            if (context && context.data && context.data.scaffoldSettingEnabled) {
+                refreshScaffolds0(context, handler);
+            } else {
+                getContext(null, function(context) {
+                    refreshScaffolds0(context, handler);
                 });
-            });
+            }
         };
 
         communityData.registeredScaffolds = [];
+
+        var refreshScaffolds0 = function(context, handler) {
+            loadScaffoldLinks(context, function(links) {
+                communityData.scaffolds.length = 0; //clear once
+                var funcs = [];
+                links.forEach(function(link) {
+                    funcs.push(function(handler) {
+                        var scaffold = link._to;
+                        scaffold._id = link.to;
+                        communityData.scaffolds.push(scaffold);
+                        fillSupport(scaffold, handler);
+                    });
+                });
+                waitFor(funcs, handler);
+            });
+        };
 
         var refreshRegisteredScaffolds = function(handler) {
             $http.get('/api/communities/' + communityId).success(function(community) {
@@ -364,6 +399,41 @@ angular.module('kf6App')
             }, failure);
         };
 
+        var getLinksFromTo = function(fromId, toId, type, success, failure) {
+            $http.get('/api/links/from/' + fromId + '/to/' + toId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
+        var createLink = function(fromId, toId, type, data, success, failure) {
+            var link = {};
+            link.from = fromId;
+            link.to = toId;
+            link.type = type;
+            link.data = data;
+            $http.post('/api/links/', link).success(function(arg) {
+                if (success) {
+                    success(arg);
+                }
+            }).error(function(arg) {
+                if (failure) {
+                    failure(arg);
+                }
+            });
+        };
+
+        var saveLink = function(ref) {
+            $http.put('/api/links/' + ref._id, ref);
+        };
+
         var orderComparator = function(n) {
             if (n.data && n.data.order) {
                 return n.data.order;
@@ -380,7 +450,21 @@ angular.module('kf6App')
             });
         };
 
-        var createNoteCommon = function(fromId, success) {
+        var createNoteCommon = function(contextmode, fromId, success) {
+            if (contextmode && !contextmode.permission) {
+                window.alert('invalid mode object');
+                return;
+            }
+
+            var mode = {};
+            if (contextmode && contextmode.permission === 'private') {
+                mode.permission = contextmode.permission;
+                mode.group = contextmode.group;
+            } else {
+                mode.permission = 'protected';
+                mode.group = undefined;
+            }
+
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
@@ -388,7 +472,8 @@ angular.module('kf6App')
                 /* 6.6 the default title was changed to blank by Christian */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
-                permission: 'protected',
+                permission: mode.permission,
+                group: mode.group,
                 data: {
                     body: ''
                 },
@@ -400,12 +485,12 @@ angular.module('kf6App')
                 });
         };
 
-        var createNote = function(success) {
-            createNoteCommon(null, success);
+        var createNote = function(mode, success) {
+            createNoteCommon(mode, null, success);
         };
 
-        var createNoteOn = function(fromId, success) {
-            createNoteCommon(fromId, success);
+        var createNoteOn = function(mode, fromId, success) {
+            createNoteCommon(mode, fromId, success);
         };
 
         var makeRiseabove = function(note, viewId, success) {
@@ -643,6 +728,16 @@ angular.module('kf6App')
             return _.contains(authorIds, communityData.author._id);
         };
 
+        var modifyObjects = function(objects, success, error) {
+            var funcs = [];
+            objects.forEach(function(object) {
+                funcs.push(function(handler) {
+                    modifyObject(object, handler, error);
+                });
+            });
+            waitFor(funcs, success);
+        };
+
         var modifyObject = function(object, success, error) {
             $http.put('/api/objects/' + communityId + '/' + object._id, object).success(function(newobject) {
                 if (newobject._id === communityData.author._id) {
@@ -739,6 +834,14 @@ angular.module('kf6App')
             }
         };
 
+        var notify = function(contribution, contextId) {
+            var obj = {};
+            obj.author = getAuthor();
+            obj.contribution = contribution;
+            obj.contextId = contextId;
+            $http.post('/api/notifications/notify/' + communityId, obj);
+        };
+
         return {
             getContext: getContext,
 
@@ -767,6 +870,7 @@ angular.module('kf6App')
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
             modifyObject: modifyObject,
+            modifyObjects: modifyObjects,
             getObject: getObject,
             read: read,
             getAuthor: getAuthor,
@@ -775,6 +879,10 @@ angular.module('kf6App')
             refreshRegisteredScaffolds: refreshRegisteredScaffolds,
             getLinksTo: getLinksTo,
             getLinksFrom: getLinksFrom,
+            getLinksFromTo: getLinksFromTo,
+            createLink: createLink,
+            saveLink: saveLink,
+            notify: notify,
             getViews: function() {
                 return communityData.views;
             },
@@ -795,7 +903,10 @@ angular.module('kf6App')
 
             usesScaffold: usesScaffold,
             createRootContext: createRootContext /*for migration tool*/ ,
+            refreshContext: refreshContext,
 
             makeDefaultViewSetting: makeDefaultViewSetting
+
+
         };
     });
