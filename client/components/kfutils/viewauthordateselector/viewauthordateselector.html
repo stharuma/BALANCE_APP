@@ -1,0 +1,30 @@
+<div ng-controller="ViewAuthorDateSelectorCtrl ">
+    <div style="width: 45%; float:left;height: 300px">
+        <div style="padding: 15px ;">
+            <label>Views:</label>
+            <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
+        </div>
+        <div style="padding: 15px;">
+            <label>Authors:</label>
+            <div style="width: 400px;" ng-include="'components/kfutils/authorselector/authorselector.html'"></div>
+        </div>
+        <div style="height: 100px;">
+            <div class="col-md-6">
+                <label>Dates:</label>
+                <br>
+                <div style="width: 400px;" ng-include="'components/kfutils/dateselector/dateselector.html'"></div>
+            </div>
+        </div>
+    </div>
+    <div style="width: 55%; float:right;;">
+        <button ng-click="clearSelectedItems()">Clear Selected Items</button>
+        <div class="panel" style="height: 250px;">
+            <div class="check-box-panel">
+                <span style="color:white;" class="selected-item">Selected  Items:</span>
+                <div ng-repeat="item in selectedItems" class="selected-item">
+                    {{item.viewTitle}} {{item.author}} {{item.toDate}} {{item.fromDate}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

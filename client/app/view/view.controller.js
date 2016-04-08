@@ -606,6 +606,11 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+         $scope.openScafoldSupportTracker = function () {
+            $scope.openAnalytics();
+            var url = 'scaffoldsupporttracker/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
 
         $scope.doExit = function() {
             var url = '';

@@ -13,7 +13,9 @@ angular.module('kf6App', [
         'ng-context-menu',
         'ui.select',
         'pascalprecht.translate',
-        'ngCookies'
+        'ngCookies',
+        'chart.js',
+        'ngCsv'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');
