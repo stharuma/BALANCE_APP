@@ -8,9 +8,11 @@ exports.setup = function(User, config) {
         },
         function(userName, password, done) {
             User.findOne({
-                userName: new RegExp(userName, 'i')
+                userName: userName
             }, function(err, user) {
-                if (err) return done(err);
+                if (err) {
+                    return done(err);
+                }
 
                 if (!user) {
                     return done(null, false, {

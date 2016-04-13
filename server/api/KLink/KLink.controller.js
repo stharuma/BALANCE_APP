@@ -48,6 +48,18 @@ exports.eitherIndex = function(req, res) {
     });
 };
 
+exports.fromtoIndex = function(req, res) {
+    KLink.find({
+        from: req.params.fromId,
+        to: req.params.toId
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.status(200).json(links);
+    });
+};
+
 // Get links between contributions on view
 exports.viewIndex = function(req, res) {
     KLink.find({
@@ -87,7 +99,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.status(404);
+            return res.send(404);
         }
         return res.json(link);
     });
@@ -131,9 +143,10 @@ function checkAndPrepareSeed(seed, handler) {
         }
         if (!seed.communityId) {
             seed.communityId = from.communityId;
-            console.info('communityId missing automatically complimented:' + seed);
+            console.info('communityId missing automatically complimented:' + seed.communityId);
         }
         if (from.communityId.toString() !== to.communityId.toString()) {
+            console.error('from.communityId' + from.communityId + ' !== to.communityId' + to.communityId);
             return handler('from.communityId !== to.communityId');
         }
         if (seed.communityId.toString() !== from.communityId.toString()) {
@@ -166,7 +179,7 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.status(404);
+            return res.send(404);
         }
 
         var updated = _.merge(link, req.body);
@@ -191,14 +204,14 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.status(404);
+            return res.send(404);
         }
         link.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
             record(req, link, 'deleted');
-            return res.status(204);
+            return res.send(204);
         });
     });
 };
@@ -227,6 +240,24 @@ function record(req, link, operationType) {
 
 // ----- cache remaking function ------
 // ----- cache remaking is unnecessary in normal usage ------
+
+exports.updateCash = function(req, res) {
+    KLink.findById(req.linkId, function(err, link) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!link) {
+            return res.send(404);
+        }
+        updateCash0(link, function(err, link) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(link);
+        });
+    });
+}
+
 
 // Get a single link
 exports.updateAllCash = function(req, res) {
@@ -260,11 +291,11 @@ exports.updateAllCashRec = function(req, res) {
         console.info(len + ' links to update!');
         if (len <= 0) {
             console.info('no links to update!');
-            return res.status(200);
+            return res.send(200);
         }
         var numFinished = 0;
         links.forEach(function(link) {
-            updateCash(link, function() {
+            updateCash0(link, function() {
                 numFinished++;
                 if (numFinished >= len) {
                     exports.updateAllCashRec(req, res);
@@ -274,7 +305,7 @@ exports.updateAllCashRec = function(req, res) {
     });
 };
 
-function updateCash(link, handler) {
+function updateCash0(link, handler) {
     getFromToContributions(link.from, link.to, function(from, to) {
         if (from === null || to === null) {
             showMissingLinkMsg(link, from, to);

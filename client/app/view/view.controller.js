@@ -24,46 +24,35 @@ angular.module('kf6App')
         $scope.status.isAttachmentCollapsed = true;
         $scope.status.isAnalyticsCollapsed = true;
         $scope.status.isSettingCollapsed = true;
-        $scope.setting = {
-            buildson: true,
-          // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
-            references: false
-        };
-        $scope.setting.showAuthor = true;
-        $scope.setting.showTime = true;
+        $scope.setting = $community.makeDefaultViewSetting();
         $scope.dragging = 'none';
 
         $scope.initialize = function() {
             $community.getObject(viewId, function(view) {
                 $scope.view = view;
                 $ac.mixIn($scope, view);
-                $community.enter(view.communityId);
-                $scope.community = $community.getCommunityData();
-                $scope.views = $community.getViews();
-                $scope.updateCanvas();
-                $scope.updateContext();
+                $community.enter(view.communityId, function() {
+                    $scope.community = $community.getCommunityData();
+                    $scope.views = $community.getViews();
+                    $scope.updateCanvas();
+                    $scope.updateViewSetting();
+                });
             }, function(msg, status) {
                 $scope.status.error = true;
                 $scope.status.errorMessage = msg;
             });
         };
 
-        $scope.saveContext = function() {
-            var context = $scope.context;
-            if (!context.data) {
-                context.data = {};
+        $scope.updateViewSetting = function() {
+            if ($scope.view.data && $scope.view.data.viewSetting) {
+                $scope.setting = $scope.view.data.viewSetting;
+            } else {
+                $community.getContext(viewId, function(context) {
+                    if (context.data.viewSetting) {
+                        $scope.setting = context.data.viewSetting;
+                    }
+                });
             }
-            context.data.viewSetting = $scope.setting;
-            $community.modifyObject(context);
-        };
-
-        $scope.updateContext = function() {
-            $community.getContext(viewId, function(context) {
-                if (context.data.viewSetting) {
-                    $scope.setting = context.data.viewSetting;
-                }
-                $scope.context = context;
-            });
         };
 
         $scope.updateCanvas = function() {
@@ -323,7 +312,7 @@ angular.module('kf6App')
             }
             if (link.type === 'references' && $scope.setting.references) {
                 var text = '';
-              // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
+                // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
 
                 //if (link.data && link.data.text && link.data.text.length > 0) {
                 //    text = link.data.text;
@@ -444,7 +433,10 @@ angular.module('kf6App')
             if ($scope.isMobile()) {
                 w = window.open('');
             }
-            $community.createNote(function(note) {
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
+            $community.createNote(mode, function(note) {
                 $scope.createContainsLink(note._id, {
                     x: 100,
                     y: 100
@@ -488,20 +480,11 @@ angular.module('kf6App')
         };
 
         $scope.createContainsLink0 = function(viewId, toId, data, handler) {
-            var link = {};
-            link.from = viewId;
-            link.to = toId;
-            link.type = 'contains';
-            link.data = data;
-            $http.post('/api/links', link).success(function() {
-                if (handler) {
-                    handler();
-                }
-            });
+            $community.createLink(viewId, toId, 'contains', data, handler);
         };
 
         $scope.saveRef = function(ref) {
-            $http.put('/api/links/' + ref._id, ref);
+            $community.saveLink(ref);
         };
 
         $scope.openAttachment = function() {
@@ -558,7 +541,21 @@ angular.module('kf6App')
 
         $scope.openScaffolds = function() {
             var url = '/scaffoldmanager/' + $scope.view.communityId;
+            window.open(url, '_scaffoldmanager');
+        };
+
+        $scope.openViewSetting = function() {
+            var url = '/contribution/' + $scope.view._id;
             window.open(url, '_blank');
+            $scope.status.isSettingCollapsed = true;
+        };
+
+        $scope.openCommunitySetting = function() {
+            $community.getContext(null, function(context) {
+                var url = '/contribution/' + context._id;
+                window.open(url, '_blank');
+                $scope.status.isSettingCollapsed = true;
+            });
         };
 
         $scope.openAuthors = function() {
@@ -625,7 +622,7 @@ angular.module('kf6App')
                     return;
                 }
             }
-            var url = 'contribution/' + id;
+            var url = 'contribution/' + id + '/' + viewId;
 
             if (w) {
                 w.location.href = url;
@@ -649,12 +646,12 @@ angular.module('kf6App')
         };
 
         $scope.mOpenContributionInTab = function() {
-            var url = 'contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to + '/' + viewId;
             window.open(url, '_blank');
         };
 
         $scope.mOpenContributionInPopup = function() {
-            var url = 'contribution/' + $scope.contextTarget.to;
+            var url = 'contribution/' + $scope.contextTarget.to + '/' + viewId;
             $scope.openInPopup(url);
         };
 
@@ -903,8 +900,11 @@ angular.module('kf6App')
                 topleft.x = Math.min(topleft.x, ref.data.x);
                 topleft.y = Math.min(topleft.y, ref.data.y);
             });
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
             $community.createView('riseabove:', function(view) {
-                $community.createNote(function(note) {
+                $community.createNote(mode, function(note) {
                     note.title = 'Riseabove';
                     $community.makeRiseabove(note, view._id, function(note) {
                         $scope.createContainsLink(note._id, {
@@ -922,7 +922,7 @@ angular.module('kf6App')
                         });
                     });
                 });
-            }, true);
+            }, true, mode);
         };
 
     });

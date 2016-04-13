@@ -17,7 +17,10 @@ angular.module('kf6App')
         communityData.groupsArray = [];
         communityData.scaffolds = [];
 
-        var enter = function(newId, authorHandler) {
+        var rootContext;
+        var context;
+
+        var enter = function(newId, authorHandler, communityHandler) {
             if (!newId) {
                 console.warn('bad newId: ' + newId);
                 return;
@@ -27,15 +30,48 @@ angular.module('kf6App')
                 userId = currentUserId;
                 communityId = newId;
 
-                refreshAuthor(authorHandler);
-                refreshCommunity();
-                refreshViews();
-                //refreshMembers(); // it takes cost
+                //clear
+                rootContext = null;
+                communityData.community = null;
+                communityData.author = null;
+                communityData.views = [];
+                communityData.members = {};
+                communityData.membersArray = [];
+                communityData.groups = {};
+                communityData.groupsArray = [];
+                communityData.scaffolds = [];
+
+                refreshCommunity(function() {
+                    if (communityHandler) {
+                        communityHandler();
+                    }
+                    refreshViews();
+                    refreshAuthor(authorHandler);
+                });
             } else {
+                if (communityHandler) {
+                    communityHandler();
+                }
                 if (authorHandler) {
                     authorHandler();
                 }
             }
+        };
+
+        var refreshContext = function(contextId, handler) {
+            if (!context && !contextId) {
+                return handler(context);
+            }
+            if (context && context._id === contextId) {
+                return handler(context);
+            }
+            //refresh
+            getObject(contextId, function(obj) {
+                context = obj;
+                if (handler) {
+                    handler(context);
+                }
+            });
         };
 
         var refreshCommunity = function(handler) {
@@ -124,107 +160,320 @@ angular.module('kf6App')
         };
 
         var getContext = function(objId, success) {
-            searchContext(objId, function(context) {
-                success(context);
-            }, function() {
-                createContext(objId, success);
-            });
-        };
-
-        var searchContext = function(objId, success, failure) {
-            $http.get('/api/links/from/' + objId).success(function(links) {
-                var contextIds = [];
-                links.forEach(function(link) {
-                    if (link.type === 'has' && link._to.type === 'Context') {
-                        contextIds.push(link.from);
-                    }
-                });
-
-                if (contextIds.length > 0) {
-                    return $http.get('/api/objects/' + contextIds[0]).success(function(context) {
-                        success(context);
-                    }).error(function() {
-                        failure();
-                    });
-                } else {
-                    failure();
+            var postprocess = function(context) {
+                if (context && !context.data) {
+                    context.data = {};
                 }
-            }).error(function() {
-                failure();
-            });
+                if (success) {
+                    success(context);
+                }
+            };
+            if (rootContext) {
+                postprocess(rootContext);
+            } else {
+                getRootContext(postprocess);
+            }
         };
 
-        var createContext = function(objId, success) {
-            $http.post('/api/contexts/' + communityId, {
-                type: 'Context'
-            }).success(function(context) {
-                $http.post('/api/links/', {
-                    type: 'has',
-                    from: objId,
-                    to: context._id
-                }).success(function( /*link*/ ) {
-                    success(context);
+        var getRootContext = function(handler) {
+            if (!communityData.community) {
+                window.alert('getRootContext(): communityData is not initialized.');
+            }
+            var contextId = communityData.community.rootContextId;
+            if (contextId) {
+                getObject(contextId, function(context) {
+                    rootContext = context;
+                    handler(context);
+                }, function() {
+                    window.alert('context undefined. never come this state.');
+                    return;
                 });
-            });
+            } else {
+                window.alert('RootContextId database migration from 6.5.x to 6.6.x is needed.');
+                return;
+            }
         };
 
         var refreshScaffolds = function(handler) {
-            $http.get('/api/communities/' + communityId).success(function(community) {
+            if (context && context.data && context.data.scaffoldSettingEnabled) {
+                refreshScaffolds0(context, handler);
+            } else {
+                getContext(null, function(context) {
+                    refreshScaffolds0(context, handler);
+                });
+            }
+        };
+
+        communityData.registeredScaffolds = [];
+
+        var refreshScaffolds0 = function(context, handler) {
+            loadScaffoldLinks(context, function(links) {
                 communityData.scaffolds.length = 0; //clear once
-                var scaffoldIds = community.scaffolds;
-                var len = scaffoldIds.length;
-                var numOfFinished = 0;
-                if (numOfFinished >= len) {
-                    if (handler) {
-                        handler();
-                    }
-                }
-                scaffoldIds.forEach(function(scaffoldId) {
-                    var newScaffold = {};
-                    communityData.scaffolds.push(newScaffold);
-                    getObject(scaffoldId, function(scaffold) {
-                        _.extend(newScaffold, scaffold);
-                        fillSupport(newScaffold, function() {
-                            numOfFinished++;
-                            if (numOfFinished >= len) {
-                                if (handler) {
-                                    handler();
-                                }
-                            }
-                        });
-                    }, function() {
-                        if (numOfFinished >= len) {
-                            if (handler) {
-                                handler();
-                            }
-                        }
+                var funcs = [];
+                links.forEach(function(link) {
+                    funcs.push(function(handler) {
+                        var scaffold = link._to;
+                        scaffold._id = link.to;
+                        communityData.scaffolds.push(scaffold);
+                        fillSupport(scaffold, handler);
                     });
                 });
+                waitFor(funcs, handler);
             });
+        };
+
+        var refreshRegisteredScaffolds = function(handler) {
+            $http.get('/api/communities/' + communityId).success(function(community) {
+                communityData.registeredScaffolds.length = 0; //clear once
+                var scaffoldIds = community.scaffolds;
+                if (!scaffoldIds) {
+                    scaffoldIds = [];
+                }
+                var funcs = [];
+                scaffoldIds.forEach(function(scaffoldId) {
+                    funcs.push(function(handler) {
+                        var newScaffold = {
+                            _id: scaffoldId
+                        };
+                        communityData.registeredScaffolds.push(newScaffold);
+                        getObject(scaffoldId, function(scaffold) {
+                            _.extend(newScaffold, scaffold);
+                            fillSupport(newScaffold, handler);
+                        });
+                    });
+                });
+                waitFor(funcs, function() {
+                    if (handler) {
+                        handler(communityData.registeredScaffolds);
+                    }
+                });
+            });
+        };
+
+        var waitFor = function(funcs, handler) {
+            var len = funcs.length;
+            if (len <= 0) {
+                if (handler) {
+                    handler();
+                }
+                return;
+            }
+            var numOfFinished = 0;
+            funcs.forEach(function(func) {
+                func(function() {
+                    numOfFinished++;
+                    if (numOfFinished >= len) {
+                        if (handler) {
+                            handler();
+                        }
+                    }
+                });
+            });
+        };
+
+        var objs2Ids = function(objs) {
+            return _.map(objs, function(obj) {
+                return obj._id;
+            });
+        };
+
+        var createCommunity = function(title, key, success, failure) {
+            $http.post('/api/communities', {
+                title: title,
+                registrationKey: key
+            }).success(function(community) {
+                createRootContext(community, function(context) {
+                    enter(community._id, function() {
+                        createView('Welcome', function() {
+                            createDefaultScaffold(function(scaffold) {
+                                usesScaffold(context, scaffold, 1, function() {
+                                    if (success) {
+                                        success(community);
+                                    }
+                                });
+                            });
+                        });
+                    });
+                }, failure);
+            }).error(failure);
+        };
+
+        var createRootContext = function(community, success, failure) {
+            retrieveManagers(community._id, function(managers) {
+                var managerIds = objs2Ids(managers);
+                $http.post('/api/contexts/' + community._id, {
+                    title: 'Community Setting: ' + community.title,
+                    type: 'Context',
+                    authors: managerIds,
+                    permission: 'protected',
+                    data: {}
+                }).success(function(context) {
+                    updateCommunityWithId(community._id, {
+                        rootContextId: context._id
+                    }, function() {
+                        success(context);
+                    }, failure);
+                }).error(failure);
+            }, failure);
+        };
+
+        var retrieveManagers = function(communityId, success, failure) {
+            $http.get('/api/communities/' + communityId + '/authors').success(function(authors) {
+                var managers = [];
+                authors.forEach(function(author) {
+                    if (author.role === 'manager') {
+                        managers.push(author);
+                    }
+                });
+                if (managers.length <= 0) {
+                    if (failure) {
+                        failure('manager\'s length is zero.');
+                    }
+                    return;
+                }
+                if (success) {
+                    success(managers);
+                }
+            }).error(failure);
+        };
+
+        /* private */
+        var createDefaultScaffold = function(handler) {
+            createScaffold('Theory Building', function(scaffold) {
+                var tasks = [];
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'My theory', 0, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'A better theory', 1, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'New Information', 2, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'This theory cannot explain', 3, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'I need to understand', 4, handler);
+                });
+                tasks.push(function(handler) {
+                    createSupport(scaffold, 'Putting our knowledge together', 5, handler);
+                });
+                waitFor(tasks, function() {
+                    if (handler) {
+                        handler(scaffold);
+                    }
+                });
+            });
+        };
+
+        var loadScaffoldLinks = function(context, handler) {
+            getLinksFrom(context._id, 'uses', handler);
+        };
+
+        var getLinksFrom = function(fromId, type, success, failure) {
+            $http.get('/api/links/from/' + fromId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
+        var getLinksTo = function(toId, type, success, failure) {
+            $http.get('/api/links/to/' + toId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
+        var getLinksFromTo = function(fromId, toId, type, success, failure) {
+            $http.get('/api/links/from/' + fromId + '/to/' + toId).success(function(links) {
+                if (type) {
+                    links = links.filter(function(each) {
+                        return each.type === type;
+                    });
+                }
+                links = _.sortBy(links, orderComparator);
+                if (success) {
+                    success(links);
+                }
+            }, failure);
+        };
+
+        var createLink = function(fromId, toId, type, data, success, failure) {
+            var link = {};
+            link.from = fromId;
+            link.to = toId;
+            link.type = type;
+            link.data = data;
+            $http.post('/api/links/', link).success(function(arg) {
+                if (success) {
+                    success(arg);
+                }
+            }).error(function(arg) {
+                if (failure) {
+                    failure(arg);
+                }
+            });
+        };
+
+        var saveLink = function(ref) {
+            $http.put('/api/links/' + ref._id, ref);
+        };
+
+        var orderComparator = function(n) {
+            if (n.data && n.data.order) {
+                return n.data.order;
+            }
+            return 0;
         };
 
         var fillSupport = function(scaffold, handler) {
             $http.get('/api/links/from/' + scaffold._id).success(function(supports) {
-                scaffold.supports = _.sortBy(supports, function(n) {
-                    if (n.data && n.data.order) {
-                        return n.data.order;
-                    }
-                    return 0;
-                });
+                scaffold.supports = _.sortBy(supports, orderComparator);
                 if (handler) {
                     handler();
                 }
             });
         };
 
-        var createNoteCommon = function(fromId, success) {
+        var createNoteCommon = function(contextmode, fromId, success) {
+            if (contextmode && !contextmode.permission) {
+                window.alert('invalid mode object');
+                return;
+            }
+
+            var mode = {};
+            if (contextmode && contextmode.permission === 'private') {
+                mode.permission = contextmode.permission;
+                mode.group = contextmode.group;
+            } else {
+                mode.permission = 'protected';
+                mode.group = undefined;
+            }
+
             var newobj = {
                 communityId: communityId,
                 type: 'Note',
                 title: '',
+                /* 6.6 the default title was changed to blank by Christian */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
-                permission: 'protected',
+                permission: mode.permission,
+                group: mode.group,
                 data: {
                     body: ''
                 },
@@ -236,12 +485,12 @@ angular.module('kf6App')
                 });
         };
 
-        var createNote = function(success) {
-            createNoteCommon(null, success);
+        var createNote = function(mode, success) {
+            createNoteCommon(mode, null, success);
         };
 
-        var createNoteOn = function(fromId, success) {
-            createNoteCommon(fromId, success);
+        var createNoteOn = function(mode, fromId, success) {
+            createNoteCommon(mode, fromId, success);
         };
 
         var makeRiseabove = function(note, viewId, success) {
@@ -262,7 +511,8 @@ angular.module('kf6App')
             var newobj = {
                 communityId: communityId,
                 type: 'Drawing',
-                title: '',
+                title: 'a Drawing',
+                /* We need a default title for convinience. We need to think i18n */
                 authors: [getAuthor()._id],
                 status: 'unsaved',
                 permission: 'protected',
@@ -327,13 +577,41 @@ angular.module('kf6App')
                 permission: 'protected'
             };
             $http.post('/api/contributions/' + communityId, newobj).success(function(scaffold) {
-                var url = 'api/communities/' + communityId;
-                $http.get(url).success(function(community) {
-                    community.scaffolds.push(scaffold._id);
-                    $http.put(url, community).success(function() {
+                registerScaffold(scaffold, success);
+            });
+        };
+
+        /* private */
+        var registerScaffold = function(scaffold, success) {
+            var url = 'api/communities/' + communityId;
+            $http.get(url).success(function(community) {
+                community.scaffolds.push(scaffold._id);
+                $http.put(url, community).success(function() {
+                    if (success) {
                         success(scaffold);
-                    });
+                    }
                 });
+            });
+        };
+
+        var usesScaffold = function(context, scaffold, order, success) {
+            var scaffoldId;
+            if (scaffold._id) {
+                scaffoldId = scaffold._id;
+            } else {
+                scaffoldId = scaffold;
+            }
+            var link = {};
+            link.to = scaffoldId;
+            link.from = context._id;
+            link.type = 'uses';
+            link.data = {
+                order: order
+            };
+            $http.post('/api/links', link).success(function() {
+                if (success) {
+                    success(link);
+                }
             });
         };
 
@@ -392,14 +670,26 @@ angular.module('kf6App')
             });
         };
 
-        var updateCommunity = function(obj, success) {
+        var updateCommunityWithId = function(communityId, obj, success, failure) {
             var url = 'api/communities/' + communityId;
             $http.get(url).success(function(community) {
                 _.extend(community, obj); /* dont use merge, for overriding array */
                 $http.put(url, community).success(function() {
-                    success();
-                });
-            });
+                    if (success) {
+                        success(community);
+                    }
+                }).error(failure);
+            }).error(failure);
+        };
+
+        var updateCommunity = function(obj, success, failure) {
+            if (!communityId) {
+                if (failure) {
+                    failure('no communityId');
+                }
+                return;
+            }
+            updateCommunityWithId(communityId, obj, success, failure);
         };
 
         var makeAuthorString = function(authorObjects) {
@@ -438,16 +728,14 @@ angular.module('kf6App')
             return _.contains(authorIds, communityData.author._id);
         };
 
-        var createDefaultScaffold = function(handler) {
-            createScaffold('Theory Building', function(scaffold) {
-                createSupport(scaffold, 'My theory', 0, function() {});
-                createSupport(scaffold, 'A better theory', 1, function() {});
-                createSupport(scaffold, 'New Information', 2, function() {});
-                createSupport(scaffold, 'This theory cannot explain', 2, function() {});
-                createSupport(scaffold, 'I need to understand', 2, function() {});
-                createSupport(scaffold, 'Putting our knowledge together', 2, function() {});
-                handler();
+        var modifyObjects = function(objects, success, error) {
+            var funcs = [];
+            objects.forEach(function(object) {
+                funcs.push(function(handler) {
+                    modifyObject(object, handler, error);
+                });
             });
+            waitFor(funcs, success);
         };
 
         var modifyObject = function(object, success, error) {
@@ -531,6 +819,29 @@ angular.module('kf6App')
             });
         };
 
+        var makeDefaultViewSetting = function(setting) {
+            var defaultSetting = {
+                buildson: true,
+                // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
+                references: false,
+                showAuthor: true,
+                showTime: true
+            };
+            if (setting) {
+                return _.merge(defaultSetting, setting);
+            } else {
+                return defaultSetting;
+            }
+        };
+
+        var notify = function(contribution, contextId) {
+            var obj = {};
+            obj.author = getAuthor();
+            obj.contribution = contribution;
+            obj.contextId = contextId;
+            $http.post('/api/notifications/notify/' + communityId, obj);
+        };
+
         return {
             getContext: getContext,
 
@@ -548,7 +859,9 @@ angular.module('kf6App')
             createScaffold: createScaffold,
             createSupport: createSupport,
             createGroup: createGroup,
-            createDefaultScaffold: createDefaultScaffold,
+
+            createCommunity: createCommunity,
+            //createDefaultScaffold: createDefaultScaffold,
             fillSupport: fillSupport,
             removeView: removeView,
             updateCommunity: updateCommunity,
@@ -557,10 +870,19 @@ angular.module('kf6App')
             refreshScaffolds: refreshScaffolds,
             amIAuthor: amIAuthor,
             modifyObject: modifyObject,
+            modifyObjects: modifyObjects,
             getObject: getObject,
             read: read,
             getAuthor: getAuthor,
             refreshAuthor: refreshAuthor,
+            loadScaffoldLinks: loadScaffoldLinks,
+            refreshRegisteredScaffolds: refreshRegisteredScaffolds,
+            getLinksTo: getLinksTo,
+            getLinksFrom: getLinksFrom,
+            getLinksFromTo: getLinksFromTo,
+            createLink: createLink,
+            saveLink: saveLink,
+            notify: notify,
             getViews: function() {
                 return communityData.views;
             },
@@ -577,6 +899,14 @@ angular.module('kf6App')
                 return communityData;
             },
             makeAuthorString: makeAuthorString,
-            makeAuthorStringByIds: makeAuthorStringByIds
+            makeAuthorStringByIds: makeAuthorStringByIds,
+
+            usesScaffold: usesScaffold,
+            createRootContext: createRootContext /*for migration tool*/ ,
+            refreshContext: refreshContext,
+
+            makeDefaultViewSetting: makeDefaultViewSetting
+
+
         };
     });

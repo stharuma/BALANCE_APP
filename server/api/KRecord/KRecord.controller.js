@@ -104,7 +104,7 @@ exports.index = function(req, res) {
             return handleError(res, err);
         }
         if (!records) {
-            return res.status(404);
+            return res.send(404);
         }
         return res.json(records);
     });
@@ -117,7 +117,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!record) {
-            return res.status(404);
+            return res.send(404);
         }
         return res.json(record);
     });

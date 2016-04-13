@@ -7,6 +7,9 @@
 angular.module('kf6App')
     .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
         var contributionId = $stateParams.contributionId;
+        var contextId = $stateParams.contextId;
+
+        $scope.relatedwordID = contributionId; //added by Xing Liu
 
         $ac.mixIn($scope, null);
         $kfutil.mixIn($scope);
@@ -34,6 +37,8 @@ angular.module('kf6App')
         $scope.selected = {};
 
         $scope.preContributeHooks = [];
+        $scope.initializingHooks = [];
+        $scope.initializingHookInvoked = false;
 
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
@@ -48,7 +53,15 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
-
+                $community.refreshContext(contextId, function(context) {
+                    $community.getContext(null, function(context) {
+                        $scope.context = context;
+                    });
+                    $scope.initializingHookInvoked = true;
+                    $scope.initializingHooks.forEach(function(func) {
+                        func();
+                    });
+                });
                 $scope.updateTitle();
                 if ($scope.contribution.keywords) {
                     var keywordsStr = '';
@@ -205,14 +218,14 @@ angular.module('kf6App')
         $scope.contribute = function() {
             var cont = $scope.contribution;
 
-          if (cont.title.length === 0 || cont.title === '') {
-            $translate('title_required').then(function(translation) {
-              window.alert(translation);
-            }, function(translationId){
-              // TODO do something if unable to provide translation
-            });
-            return;
-          }
+            if (cont.title.length === 0 || cont.title === '') {
+                $translate('title_required').then(function(translation) {
+                    window.alert(translation);
+                }, function(translationId) {
+                    // TODO do something if unable to provide translation
+                });
+                return;
+            }
 
             if (cont.type === 'Note' && !$scope.mceEditor) { //avoid contribution in empty body
                 window.alert('mceEditor have not initialized yet.');
@@ -275,6 +288,10 @@ angular.module('kf6App')
                 $scope.status.contribution = 'success';
                 /* contributor should be a first reader */
                 $community.read($scope.contribution);
+                /* notification */
+                if ($scope.contribution.type === 'Note') {
+                    $community.notify($scope.contribution, contextId);
+                }
             }, function() {
                 $scope.status.contribution = 'failure';
                 if (window.localStorage) {
@@ -345,7 +362,10 @@ angular.module('kf6App')
             if ($scope.isMobile()) {
                 w = window.open('');
             }
-            $community.createNoteOn($scope.contribution._id, function(newContribution) {
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
+            $community.createNoteOn(mode, $scope.contribution._id, function(newContribution) {
                 var url = './contribution/' + newContribution._id;
                 if (w) {
                     w.location.href = url;
@@ -358,6 +378,9 @@ angular.module('kf6App')
         };
 
         $scope.makeRiseabove = function() {
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
             $community.createView('riseabove:' + $scope.contribution._id, function(view) {
                 var riseabove = {
                     viewId: view._id
@@ -368,7 +391,7 @@ angular.module('kf6App')
                 $scope.contribution.data.riseabove = riseabove;
                 $scope.contribute();
                 $scope.prepareRiseabove();
-            }, true);
+            }, true, mode);
         };
 
         $scope.prepareRiseabove = function() {
@@ -504,20 +527,17 @@ angular.module('kf6App')
         var currentLang = $translate.proposedLanguage() || $translate.use();
         var languageURL = "";
         if (currentLang === 'en') {
-          languageURL = "";
+            languageURL = "";
         } else {
-          languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
+            languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
         }
-        console.log("currentLang for TinyMCE: " + currentLang);
-        console.log("languageURL for TinyMCE: " + languageURL);
-
         $scope.tinymceOptions = {
             language: currentLang,
             language_url: languageURL,
             theme: 'modern',
             menubar: false,
             statusbar: false,
-          // TODO decide if internationalize or remove font size
+            // TODO decide if internationalize or remove font size
             /*
             style_formats_merge: true,
             style_formats: [{
@@ -746,7 +766,7 @@ angular.module('kf6App')
 
         $scope.editSelected = function() {
             if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
-                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.7/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
                 $('#svgeditdiv').html(xhtml);
                 $scope.svgInitialized = true;
             }

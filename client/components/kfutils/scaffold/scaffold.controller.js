@@ -3,8 +3,14 @@
 angular.module('kf6App')
     .controller('ScaffoldCtrl', function($scope, $community) {
         $scope.scaffolds = $community.getScaffolds();
-        $community.refreshScaffolds(function() {
-            $scope.current = $scope.scaffolds[0];
+
+        if (!$scope.initializingHooks) {
+            window.alert('error !$scope.initializingHooks');
+        }
+        $scope.initializingHooks.push(function() {
+            $community.refreshScaffolds(function() {
+                $scope.current = $scope.scaffolds[0];
+            });
         });
 
         $scope.supportClicked = function(supportLink) {
