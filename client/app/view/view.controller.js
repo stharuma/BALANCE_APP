@@ -608,6 +608,12 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+         $scope.openLexicalAnalysis = function () {
+            $scope.openAnalytics();
+            var url = 'lexicalanalysis/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
          $scope.openScafoldSupportTracker = function () {
             $scope.openAnalytics();
             var url = 'scaffoldsupporttracker/' + $scope.view.communityId;
