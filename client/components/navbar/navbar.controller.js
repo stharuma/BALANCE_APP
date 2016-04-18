@@ -1,13 +1,11 @@
 'use strict';
 
 angular.module('kf6App')
-        .controller('NavbarCtrl', function($scope, $location, Auth, $http, $modal, $translate) {
-          $translate(['home']).then(function (translations) {
-            $scope.menu = [{
-              'title': translations.home,
+        .controller('NavbarCtrl', function($scope, $location, Auth, $http, $modal) {
+          $scope.menu = [{
+              'title': 'home',
               'link': '/'
             }];
-          });
         $scope.isCollapsed = true;
         $scope.isLoggedIn = Auth.isLoggedIn;
         $scope.isAdmin = Auth.isAdmin;
