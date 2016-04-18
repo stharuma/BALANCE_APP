@@ -33,7 +33,7 @@ angular.module('kf6App', [
             prefix: '../assets/translations/',
             suffix: '.json'
           })
-          .registerAvailableLanguageKeys(['en', 'fr'])
+          .registerAvailableLanguageKeys(['en', 'es', 'fr'])
           .determinePreferredLanguage() // position before fallbackLanguage() seems crucial
           //.preferredLanguage('fr')
           .fallbackLanguage('en')
