@@ -1,4 +1,5 @@
 <div class="col-md-12">
+    <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
     <label>{{ 'search' | translate }}</label>
     <p class="input-group">
         <input type="text" class="form-control" placeholder="{{ 'search_placeholder' | translate }}" ng-model="queryString">
@@ -55,6 +56,7 @@
             </div>
             <div style="width: 100%; float: left; text-align: right;">
                 CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
+                <br>
             </div>
             <div ng-if="status.loading === true">
             </div>
@@ -63,7 +65,8 @@
                     <tr>
                         <th style="width: 15%;">Title</th>
                         <th style="width: 15%;">Author(s)</th>
-                        <th>Body</th>
+                        <th>Body
+                            <button type="button" class="btn btn-default" ng-click="showScaffold()">show scaffold</button></th>
                         <th style="width: 15%;">Created</th>
                     </tr>
                     <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note'">
