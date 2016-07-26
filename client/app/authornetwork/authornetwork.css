@@ -1,0 +1,64 @@
+#network{
+  width: 70%;
+  float: left;
+}
+#infos{
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+  font-size: 12px;
+  width: 30%;
+  float: left;
+  margin: 100px 0 0 0;
+}
+ul{
+  margin: 0;
+}
+
+path.link {
+  fill: none;
+  stroke: #666;
+}
+
+path.marker_only {
+  fill: none;
+  stroke-opacity: .5;
+}
+
+#flechenoire{
+  fill: #000;
+  fill-opacity: 1;
+}
+#flecherouge{
+  fill: #800;
+  fill-opacity: 1;
+}
+#flecheverte{
+  fill: #080;
+  fill-opacity: 1;
+}
+
+#flecheinactif{
+  fill: #666;
+  fill-opacity: .2;
+}
+
+.inactif{
+  stroke-opacity: .2;
+  stroke: #666;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-opacity: .8;
+}
