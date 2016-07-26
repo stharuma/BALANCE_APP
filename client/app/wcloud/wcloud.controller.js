@@ -3,6 +3,7 @@
 
 angular.module('kf6App')
     .controller('WcloudCtrl', function($stateParams, $scope, $community, $http) {
+        var STOP_WORDS = /^(i|me|my|myself|we|us|our|ours|ourselves|you|your|yours|yourself|yourselves|he|him|his|himself|she|her|hers|herself|it|its|itself|they|them|their|theirs|themselves|what|which|who|whom|whose|this|that|these|those|am|is|are|was|were|be|been|being|have|has|had|having|do|does|did|doing|will|would|should|can|could|ought|i'm|you're|he's|she's|it's|we're|they're|i've|you've|we've|they've|i'd|you'd|he'd|she'd|we'd|they'd|i'll|you'll|he'll|she'll|we'll|they'll|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|doesn't|don't|didn't|won't|wouldn't|shan't|shouldn't|can't|cannot|couldn't|mustn't|let's|that's|who's|what's|here's|there's|when's|where's|why's|how's|a|an|the|and|but|if|or|because|as|until|while|of|at|by|for|with|about|against|between|into|through|during|before|after|above|below|to|from|up|upon|down|in|out|on|off|over|under|again|further|then|once|here|there|when|where|why|how|all|any|both|each|few|more|most|other|some|such|no|nor|not|only|own|same|so|than|too|very|say|says|said|shall)$/;
         var viewId = $stateParams.viewId;
 
         $community.getObject(viewId, function(view) {
@@ -27,10 +28,10 @@ angular.module('kf6App')
         var processData = function(notes) {
 
             //create words list and count, filter, sort, and chop
-            var words = createWords(notes, 50, stopWords); //[{word: 'home', count: 20}..]
+            var words = createWords(notes, 50, STOP_WORDS); //[{word: 'home', count: 20}..]
 
             //scaling count to word size
-            //change data format from words into d3-cloud 
+            //change data format from words into d3-cloud
             var countMax = d3.max(words, function(d) {
                 return d.count;
             });
@@ -42,13 +43,10 @@ angular.module('kf6App')
                 };
             });
 
-            //console.log(JSON.stringify(d3CloudData));
             return d3CloudData;
         };
 
-        var stopWords = /^(i|me|my|myself|we|us|our|ours|ourselves|you|your|yours|yourself|yourselves|he|him|his|himself|she|her|hers|herself|it|its|itself|they|them|their|theirs|themselves|what|which|who|whom|whose|this|that|these|those|am|is|are|was|were|be|been|being|have|has|had|having|do|does|did|doing|will|would|should|can|could|ought|i'm|you're|he's|she's|it's|we're|they're|i've|you've|we've|they've|i'd|you'd|he'd|she'd|we'd|they'd|i'll|you'll|he'll|she'll|we'll|they'll|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|doesn't|don't|didn't|won't|wouldn't|shan't|shouldn't|can't|cannot|couldn't|mustn't|let's|that's|who's|what's|here's|there's|when's|where's|why's|how's|a|an|the|and|but|if|or|because|as|until|while|of|at|by|for|with|about|against|between|into|through|during|before|after|above|below|to|from|up|upon|down|in|out|on|off|over|under|again|further|then|once|here|there|when|where|why|how|all|any|both|each|few|more|most|other|some|such|no|nor|not|only|own|same|so|than|too|very|say|says|said|shall)$/;
-
-        var createWords = function(notes, topN, stopWords) {
+        var createWords = function(notes, topN, stopWordsExp) {
             // concatinate all note's contents to the text
             var text = '';
             notes.forEach(function(note) {
@@ -56,14 +54,23 @@ angular.module('kf6App')
             });
 
             // break into words
-            var processedText = text.toLowerCase().replace(/[\+\.,\/#!$%\^&\*{}=_`~]/g, '');
-            processedText = processedText.replace(/[\r\n\t]/g, ' ');
-            processedText = processedText.replace(stopWords, '');
-            var words = processedText.split(' ');
+            var processedText = text.toLowerCase().replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '');
+            processedText = processedText.replace(/[\r\n\t\u00A0\u3000]/g, ' ');
+            //\u00A0 means &nbsp; \u3000 means full-space
+
+            //dont do this, "This" will be changed "Th" by replacing is.
+            //processedText = processedText.replace(stopWordsExp, '');
+            var words = processedText.split(' ');           
 
             // filter words
             words = words.filter(function(word) {
-                return word.length >= 2;
+                if (word.match(stopWordsExp)) {
+                    return false;
+                }
+                if (word.length === 0) {//one-character word in ChineseCharacter like 車 cannot be detected if threshold is 1.
+                    return false;
+                }
+                return true;
             });
 
             // count frequency using hashtable

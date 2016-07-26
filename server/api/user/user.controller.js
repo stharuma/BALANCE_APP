@@ -39,7 +39,6 @@ exports.searchCount = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        console.log(count);
         return res.status(200).json({
             count: count
         });
@@ -62,7 +61,8 @@ exports.search = function(req, res) {
 
 exports.myRegistrations = function(req, res) {
     KAuthor.find({
-        userId: req.user._id
+        userId: req.user._id,
+        blockLogin: { $ne: true }
     }, function(err, authors) {
         if (err) {
             return handleError(res, err);
@@ -114,7 +114,7 @@ exports.show = function(req, res, next) {
 
     User.findById(userId, function(err, user) {
         if (err) return next(err);
-        if (!user) return res.status(401);
+        if (!user) return res.send(401);
         res.json(user.profile);
     });
 };
@@ -126,7 +126,7 @@ exports.show = function(req, res, next) {
 exports.destroy = function(req, res) {
     User.findByIdAndRemove(req.params.id, function(err, user) {
         if (err) return res.send(500, err);
-        return res.status(204);
+        return res.send(204);
     });
 };
 
@@ -145,10 +145,10 @@ exports.changePassword = function(req, res, next) {
                 if (err) {
                     return validationError(res, err);
                 }
-                res.status(200);
+                res.send(200);
             });
         } else {
-            res.status(403);
+            res.send(403);
         }
     });
 };
@@ -161,14 +161,14 @@ exports.forceUpdate = function(req, res, next) {
             return validationError(res, err);
         }
         if (!user) {
-            return res.status(403);
+            return res.send(403);
         }
         user.password = req.body.password;
         user.save(function(err) {
             if (err) {
                 return validationError(res, err);
             }
-            res.status(200);
+            res.send(200);
         });
     });
 };

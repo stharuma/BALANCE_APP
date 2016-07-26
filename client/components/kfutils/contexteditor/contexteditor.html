@@ -1,0 +1,14 @@
+<div ng-controller="ContexteditorCtrl" class="col-md-12">
+    <!-- view setting -->
+    <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+    <div ng-show="viewSetting.enabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
+    <!-- scaffold setting -->
+    <div style="height: 10px;"></div>
+    <div ng-include="'components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.html'"></div>
+    <!-- plugin setting -->
+    <div style="height: 10px;"></div>
+    <label>Plugin Setting in this Context</label>
+    <div>
+        <input type="checkbox" ng-model="contribution.data.plugins.relatedword" ng-change=""> RelatedWord</input>
+    </div>
+</div>

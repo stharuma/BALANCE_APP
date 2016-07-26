@@ -104,7 +104,7 @@ exports.index = function(req, res) {
             return handleError(res, err);
         }
         if (!records) {
-            return res.status(404);
+            return res.send(404);
         }
         return res.json(records);
     });
@@ -117,14 +117,38 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!record) {
-            return res.status(404);
+            return res.send(404);
         }
         return res.json(record);
     });
 };
 
+// Get my records
+exports.mine = function(req, res) {
+    var authorId = req.author._id; //mongoose.Types.ObjectId(req.author._id);
+    KRecord.find({
+        authorId: authorId
+    }, function(err, records) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!records) {
+            return res.send(404);
+        }
+        return res.json(records);
+    });
+};
+
 // Creates a new record in the DB.
 exports.create = function(req, res) {
+    var seed = req.body;
+    seed = _.merge(req.body, {
+        communityId: req.author.communityId,
+        authorId: req.author._id
+    });
+    if (!seed.type) {
+        return res.send(400); //Bad request
+    }
     exports.createInternal(req.body, function(err, record) {
         if (err) {
             return handleError(res, err);

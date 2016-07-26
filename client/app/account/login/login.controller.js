@@ -10,7 +10,7 @@ angular.module('kf6App')
 
             if (form.$valid) {
                 Auth.login({
-                        username: $scope.user.username,
+                        userName: $scope.user.userName,
                         password: $scope.user.password
                     })
                     .then(function() {

@@ -5,11 +5,16 @@ angular.module('kf6App')
 
         $scope.group = {};
 
-        $community.refreshGroups(function() {
-            $scope.group = $scope.community.groups[$scope.contribution._id];
-            $scope.group._members = [];
-            $scope.group.members.forEach(function(authorId) {
-                $scope.group._members.push($community.getMember(authorId));
+        if (!$scope.initializingHooks) {
+            window.alert('error !$scope.initializingHooks');
+        }
+        $scope.initializingHooks.push(function() {
+            $community.refreshGroups(function() {
+                $scope.group = $scope.community.groups[$scope.contribution._id];
+                $scope.group._members = [];
+                $scope.group.members.forEach(function(authorId) {
+                    $scope.group._members.push($community.getMember(authorId));
+                });
             });
         });
 

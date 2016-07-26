@@ -10,9 +10,11 @@ router.get('/', controller.index);
 router.get('/from/:id', controller.fromIndex);
 router.get('/to/:id', controller.toIndex);
 router.get('/either/:id', controller.eitherIndex);
+router.get('/from/:fromId/to/:toId', controller.fromtoIndex);
 router.get('/view/:id', controller.viewIndex);
 router.get('/buildson/:id', controller.buildsonIndex); // ajout michelle janvier 2016
 
+router.get('/updatecache/:linkId', controller.updateCash);
 router.get('/updateallcache/:communityId', controller.updateAllCash);
 
 router.get('/:id', controller.show);

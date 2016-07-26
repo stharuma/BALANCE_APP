@@ -5,8 +5,11 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
         var contributionId = $stateParams.contributionId;
+        var contextId = $stateParams.contextId;
+
+        $scope.relatedwordID = contributionId; //added by Xing Liu
 
         $ac.mixIn($scope, null);
         $kfutil.mixIn($scope);
@@ -34,6 +37,8 @@ angular.module('kf6App')
         $scope.selected = {};
 
         $scope.preContributeHooks = [];
+        $scope.initializingHooks = [];
+        $scope.initializingHookInvoked = false;
 
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
@@ -48,7 +53,15 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
-
+                $community.refreshContext(contextId, function(context) {
+                    $community.getContext(null, function(context) {
+                        $scope.context = context;
+                    });
+                    $scope.initializingHookInvoked = true;
+                    $scope.initializingHooks.forEach(function(func) {
+                        func();
+                    });
+                });
                 $scope.updateTitle();
                 if ($scope.contribution.keywords) {
                     var keywordsStr = '';
@@ -206,8 +219,11 @@ angular.module('kf6App')
             var cont = $scope.contribution;
 
             if (cont.title.length === 0 || cont.title === '') {
-                // TODO i18n
-                window.alert('Veuillez saisir un titre.');
+                $translate('title_required').then(function(translation) {
+                    window.alert(translation);
+                }, function(translationId) {
+                    // TODO do something if unable to provide translation
+                });
                 return;
             }
 
@@ -272,6 +288,10 @@ angular.module('kf6App')
                 $scope.status.contribution = 'success';
                 /* contributor should be a first reader */
                 $community.read($scope.contribution);
+                /* notification */
+                if ($scope.contribution.type === 'Note') {
+                    $community.notify($scope.contribution, contextId);
+                }
             }, function() {
                 $scope.status.contribution = 'failure';
                 if (window.localStorage) {
@@ -342,7 +362,10 @@ angular.module('kf6App')
             if ($scope.isMobile()) {
                 w = window.open('');
             }
-            $community.createNoteOn($scope.contribution._id, function(newContribution) {
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
+            $community.createNoteOn(mode, $scope.contribution._id, function(newContribution) {
                 var url = './contribution/' + newContribution._id;
                 if (w) {
                     w.location.href = url;
@@ -355,6 +378,9 @@ angular.module('kf6App')
         };
 
         $scope.makeRiseabove = function() {
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
             $community.createView('riseabove:' + $scope.contribution._id, function(view) {
                 var riseabove = {
                     viewId: view._id
@@ -365,7 +391,7 @@ angular.module('kf6App')
                 $scope.contribution.data.riseabove = riseabove;
                 $scope.contribute();
                 $scope.prepareRiseabove();
-            }, true);
+            }, true, mode);
         };
 
         $scope.prepareRiseabove = function() {
@@ -417,8 +443,63 @@ angular.module('kf6App')
             }
         };
 
-        /*********** tinymce ************/
+        /*********** DnD Reference Related ************/
+        $scope.kfdragstart = function(e) {
+            var dt = e.dataTransfer; //error in IE
+            if (!dt && $kfutil.isIE()) {
+                window.alert('Sorry, making reference function doesn\'t work on IE');
+                return; //surrender to create reference
+            }
+            var original = dt.getData('text/plain');
+            if (!original && $kfutil.isSafari()) {
+                original = getSelected();
+            }
+            var contrib = $scope.contribution;
+            var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
+            dt.setData('kf', 'true');
+            dt.setData('kfid', $scope.contribution._id);
+            dt.setData('text/html', html);
+            dt.setData('text/plain', original);
+        };
+        $scope.kfcopy = function(e) {
+            var dt = e.clipboardData; //error in IE
+            if (!dt && $kfutil.isIE()) {
+                window.alert('Sorry, making reference function doesn\'t work on IE');
+                return; //surrender to create reference
+            }
+            var original = getSelected();
+            var contrib = $scope.contribution;
+            var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
+            dt.setData('kf', 'true');
+            dt.setData('kfid', $scope.contribution._id);
+            dt.setData('text/html', html);
+            dt.setData('text/plain', original);
+            e.stopPropagation();
+            e.preventDefault();
+        };
 
+        //http://stackoverflow.com/questions/5643635/how-to-get-selected-html-text-with-javascript
+        function getSelected() {
+            var text = '';
+            if ($scope.status.edittabActive && tinymce.activeEditor.selection) {
+                return tinymce.activeEditor.selection.getContent();
+            } else if (window.getSelection && window.getSelection().toString() && $(window.getSelection()).attr('type') !== 'Caret') {
+                text = window.getSelection().toString();
+                return text;
+            } else if (document.getSelection && document.getSelection().toString() && $(document.getSelection()).attr('type') !== 'Caret') {
+                text = window.getSelection().toString();
+                return text;
+            } else {
+                var selection = document.selection && document.selection.createRange();
+                if ((typeof selection !== 'undefined') && selection.text && selection.text.toString()) {
+                    text = selection.text;
+                    return text;
+                }
+            }
+            return false;
+        }
+
+        /*********** tinymce ************/
         $scope.mcesetupHandler = function(ed) {
             $scope.mceEditor = ed;
             $scope.mceResize();
@@ -430,6 +511,8 @@ angular.module('kf6App')
                 e.stopPropagation();
                 ed.focus();
             });
+            ed.on('dragstart', $scope.kfdragstart);
+            ed.on('copy', $scope.kfcopy);
         };
 
         $scope.mceResize = function() {
@@ -441,14 +524,20 @@ angular.module('kf6App')
 
         window.onresize = $scope.mceResize;
 
+        var currentLang = $translate.proposedLanguage() || $translate.use();
+        var languageURL = "";
+        if (currentLang === 'en') {
+            languageURL = "";
+        } else {
+            languageURL = "/manual_components/tinymce-langs/" + currentLang + ".js";
+        }
         $scope.tinymceOptions = {
-            // TODO i18n Dynamize language switch
-            language: "fr_FR",
-            language_url: '/manual_components/tinymce-langs/fr_FR.js',
+            language: currentLang,
+            language_url: languageURL,
             theme: 'modern',
             menubar: false,
             statusbar: false,
-          // TODO decide if internationalize or remove font size
+            // TODO decide if internationalize or remove font size
             /*
             style_formats_merge: true,
             style_formats: [{
@@ -677,7 +766,7 @@ angular.module('kf6App')
 
         $scope.editSelected = function() {
             if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
-                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.7/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
                 $('#svgeditdiv').html(xhtml);
                 $scope.svgInitialized = true;
             }

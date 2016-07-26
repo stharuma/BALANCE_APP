@@ -63,3 +63,7 @@ html, body {
     height: inherit;
     padding: 1px 7px;
 }
+
+a:hover{
+  cursor: pointer;
+}

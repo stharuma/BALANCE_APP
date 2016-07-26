@@ -25,7 +25,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.status(404);
+            return res.send(404);
         }
         return res.json(community);
     });
@@ -38,7 +38,7 @@ exports.showviews = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.status(404);
+            return res.send(404);
         }
         var ids = community.views;
         KContribution.find({
@@ -89,7 +89,6 @@ exports.showgroups = function(req, res) {
     });
 };
 
-
 // Creates a new community in the DB.
 exports.create = function(req, res) {
     KCommunity.create(req.body, function(err, community) {
@@ -97,23 +96,10 @@ exports.create = function(req, res) {
             return handleError(res, err);
         }
 
-        var author = {};
-        author.communityId = community._id;
-        author.userId = req.user._id;
-        author.type = 'Author';
-        author.role = 'manager';
-        author.userName = req.user.email;
-        author.firstName = req.user.firstName;
-        author.lastName = req.user.lastName;
-        author._community = {
-            title: community.title,
-            created: community.created
-        };
-        KAuthor.create(author, function(err) {
-            if (err) {
-                return handleError(res, err);
-            }
+        KAuthor.createAuthor(community, 'manager', req.user, function(author) {
             return res.status(201).json(community);
+        }, function(err) {
+            return handleError(res, err);
         });
     });
 };
@@ -128,8 +114,10 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.status(404);
+            return res.send(404);
         }
+        delete req.body.__v; /* this allows consective updating */
+        var titleChanged = community.title !== req.body.title;
         var updated = _.merge(community, req.body);
         updated.views = req.body.views;
         updated.markModified('views');
@@ -139,6 +127,19 @@ exports.update = function(req, res) {
             if (err) {
                 return handleError(res, err);
             }
+            //update community names for every author{
+            if (titleChanged) {
+                KAuthor.find({ communityId: community._id }, function(err, authors) {
+                    if (err) {
+                        return;
+                    }
+                    authors.forEach(function(author) {
+                        author._community = updated;
+                        author.save();
+                    });
+                });
+            }
+            //}
             return res.status(200).json(community);
         });
     });
@@ -151,13 +152,13 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.status(404);
+            return res.send(404);
         }
         community.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.status(204);
+            return res.send(204);
         });
     });
 };

@@ -4,3 +4,7 @@
 .KFSearchResult {
     vertical-align: top;
 }
+
+.KFSearchLink:link { color: #0000ff; }
+.KFSearchLink:visited { color: #000090; }
+.KFSearchLink:hover { color: #ff8000; }

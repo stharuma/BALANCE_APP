@@ -17,7 +17,7 @@ function checkPermissionById(requiredPermission) {
             if (kfac.fullfillRequirement(req.object, req.author, requiredPermission)) {
                 next();
             } else {
-                return res.status(403);
+                return res.send(403);
             }
         });
 }
@@ -155,7 +155,7 @@ function hasRole(roleRequired) {
             if (req.author.role === roleRequired) {
                 next();
             } else {
-                res.status(403);
+                res.send(403);
             }
         });
 }
