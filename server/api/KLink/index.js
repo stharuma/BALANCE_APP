@@ -11,6 +11,7 @@ router.get('/from/:id', controller.fromIndex);
 router.get('/to/:id', controller.toIndex);
 router.get('/either/:id', controller.eitherIndex);
 router.get('/view/:id', controller.viewIndex);
+router.get('/buildson/:id', controller.buildsonIndex); // ajout michelle janvier 2016
 
 router.get('/updateallcache/:communityId', controller.updateAllCash);
 

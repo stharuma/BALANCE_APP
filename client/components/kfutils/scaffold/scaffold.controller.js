@@ -2,6 +2,7 @@
 
 angular.module('kf6App')
     .controller('ScaffoldCtrl', function($scope, $community) {
+        
         $scope.scaffolds = $community.getScaffolds();
         $community.refreshScaffolds(function() {
             $scope.current = $scope.scaffolds[0];

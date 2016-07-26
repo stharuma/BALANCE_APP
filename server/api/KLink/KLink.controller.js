@@ -80,6 +80,22 @@ exports.viewIndex = function(req, res) {
     });
 };
 
+// ajout michelle janvier 2016
+// Get "buildson" links in commununity (every views)
+exports.buildsonIndex = function(req, res) {
+    KLink.find({
+        communityId: req.params.id,
+        type: 'buildson',
+        '_from.status': 'active', 
+        '_to.status': 'active'
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.status(200).json(links);
+    });
+};
+
 // Get a single link
 exports.show = function(req, res) {
     KLink.findById(req.params.id, function(err, link) {

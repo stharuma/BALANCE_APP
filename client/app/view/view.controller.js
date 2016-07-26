@@ -16,6 +16,8 @@ angular.module('kf6App')
         $scope.view = {};
         $scope.views = [];
         $scope.refs = [];
+        // michelle
+        $scope.isAdmin = Auth.isAdmin;
 
         $scope.status = {};
         $scope.status.error = false;
@@ -590,6 +592,37 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+        // ajout michelle - dec 2015
+        $scope.openAuthorNetwork = function() {
+            $scope.openAnalytics();
+            var url = 'authornetwork/' + $scope.view._id;
+            window.open(url, '_blank');
+        };
+        // fin ajout michelle - dec 2015
+
+        // ajout michelle - dec 2015
+        $scope.openBasicStats = function() {
+            $scope.openAnalytics();
+            var url = 'basicstats/' + $scope.view._id;
+            $scope.openInPopup(url);
+        };
+        // fin ajout michelle - dec 2015
+
+        // ajout michelle - dec 2015
+        $scope.openEvaluation = function() {
+            $scope.openAnalytics();
+            console.log($community.getAuthor())
+            //var url = 'evaluation/' + $scope.view._id;56730f58f2f4bd9122e4c2f8
+            var a = $community.getAuthor();
+            var ad = '';
+            if ($scope.isAdmin()){
+                ad = '&a'
+            }
+            var url = "http://localhost/autoevalcollective/?c=" + $scope.view.communityId  + "&i=" + a._id + "&l=" + a.lastName + "&f=" + a.firstName + ad;
+            //window.open(url, '_blank');
+            $scope.openByInternalWindow(url);
+        };
+        // fin ajout michelle - dec 2015
 
         $scope.doExit = function() {
             var url = '';
