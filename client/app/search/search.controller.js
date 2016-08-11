@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil, $ac) {
+    .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil, $ac, $kftag) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
@@ -192,6 +192,17 @@ angular.module('kf6App')
             } else {
                 return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
+        };
+
+        $scope.showScaffold = function() {
+            var query = { $or: [{type: 'supports'}, {type: 'references'}] };
+            $http.post('/api/links/' + communityId + '/search', { query: query }).success(function(links) {
+                $scope.contributions.forEach(function(contribution) {
+                    var body = contribution.data.body;
+                    var newBody = $kftag.preProcess(body, links, links);
+                    contribution.data.body = newBody;
+                });
+            });
         };
 
     });

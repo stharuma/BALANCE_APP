@@ -123,12 +123,30 @@ exports.show = function(req, res) {
     });
 };
 
-// Get my records
+// deprecated use search
 exports.mine = function(req, res) {
     var authorId = req.author._id; //mongoose.Types.ObjectId(req.author._id);
     KRecord.find({
         authorId: authorId
     }, function(err, records) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!records) {
+            return res.send(404);
+        }
+        return res.json(records);
+    });
+};
+
+// Get records
+exports.search = function(req, res) {
+    var query = {};
+    if (req.body.query) {
+        query = req.body.query;
+    }
+    query.communityId = req.params.communityId;
+    KRecord.find(query, function(err, records) {
         if (err) {
             return handleError(res, err);
         }

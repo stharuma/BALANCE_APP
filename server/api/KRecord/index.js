@@ -16,6 +16,9 @@ router.post('/read/:communityId/:contributionId', commauth.isAuthenticated(), co
 
 /* for custom log */
 router.post('/:communityId', commauth.isAuthenticated(), controller.create);
+router.post('/search/:communityId', commauth.isAuthenticated(), controller.search);
+
+// deprecated use search
 router.get('/mine/:communityId', commauth.isAuthenticated(), controller.mine);
 
 module.exports = router;
