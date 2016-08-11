@@ -49,7 +49,7 @@
         <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
-                    <a ng-href="{{item.link}}">{{item.title}}</a>
+                    <a ng-href="{{item.link}}">{{ item.title | translate}}</a>
                 </li>
                 <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">{{ 'admin' | translate }}</a>
                 </li>
