@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ScaffoldsupporttrackerCtrl', function ($scope, $http, $community, $stateParams, $kfutil, $ac) {
+    .controller('ScaffoldsupporttrackerCtrl', function ($scope, $http, $community, $stateParams, $kfshared, $ac) {
         var communityId = $stateParams.communityId;
         if ( communityId) {
             $community.enter( communityId, function() {}, function() {
@@ -112,15 +112,15 @@ angular.module('kf6App')
         };
 
         $scope.barchartControl = function () {
-            $kfutil.barchartControl($scope.status);
+            $kfshared.barchartControl($scope.status);
         };
         $scope.radarchartControl = function () {
-            $kfutil.radarchartControl($scope.status);
+            $kfshared.radarchartControl($scope.status);
         };
         $scope.detailsControl = function () {
-            $kfutil.detailsControl($scope.status);
+            $kfshared.detailsControl($scope.status);
         };
-        // $scope.getIcon = function(contribution) {$kfutil.getIcon(contribution, $community); };
+        // $scope.getIcon = function(contribution) {$kfshared.getIcon(contribution, $community); };
 
 
         //Pager Status
@@ -142,8 +142,8 @@ angular.module('kf6App')
             if ($scope.selectedSupports.length === 0) {
                 window.alert('Select Support Items:');
             } else {
-                $scope.pager.query = $kfutil.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
-                $kfutil.count($scope.status, $scope.pager, communityId, $ac, $http, checkedSupportLinkInNote);
+                $scope.pager.query = $kfshared.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
+                $kfshared.count($scope.status, $scope.pager, communityId, $ac, $http, checkedSupportLinkInNote);
                 $scope.status.detailCollapsed = true;
                 $scope.detailsControl();
             }

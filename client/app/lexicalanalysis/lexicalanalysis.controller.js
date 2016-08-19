@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('LexicalAnalysisCtrl', function ($scope, $http, $community, $stateParams, $kfutil, $ac) {
+    .controller('LexicalAnalysisCtrl', function ($scope, $http, $community, $stateParams, $kfshared, $ac) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
         $scope.communityMembers = $community.getCommunityData().membersArray;
-        $kfutil.mixIn($scope);
         $scope.currentCommunity = {};
         $scope.currentCommunity = $community.getCommunityData();
         //Query String
@@ -91,15 +90,15 @@ angular.module('kf6App')
         };
 
         $scope.barchartControl = function () {
-            $kfutil.barchartControl($scope.status);
+            $kfshared.barchartControl($scope.status);
         };
         $scope.radarchartControl = function () {
-            $kfutil.radarchartControl($scope.status);
+            $kfshared.radarchartControl($scope.status);
         };
         $scope.detailsControl = function () {
-            $kfutil.detailsControl($scope.status);
+            $kfshared.detailsControl($scope.status);
         };
-        //  $scope.getIcon = function(contribution) {$kfutil.getIcon(contribution, $community); };
+        //  $scope.getIcon = function(contribution) {$kfshared.getIcon(contribution, $community); };
 
         //Pager Status
         $scope.pager = {};
@@ -120,8 +119,8 @@ angular.module('kf6App')
             if ($scope.textareaText.length === 0) {
                 window.alert('Lexicon is  empty:');
             } else {
-                $scope.pager.query = $kfutil.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
-                $kfutil.count($scope.status, $scope.pager, communityId, $ac, $http, checkedWordInNote);
+                $scope.pager.query = $kfshared.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
+                $kfshared.count($scope.status, $scope.pager, communityId, $ac, $http, checkedWordInNote);
                 $scope.status.detailCollapsed = true;
                 $scope.detailsControl();
             }
