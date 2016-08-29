@@ -30,6 +30,13 @@
     "angular-translate-loader-static-files": "~2.8.1",
     "angular-translate-storage-cookie": "~2.8.1"
   },
+  "overrides":{
+    "bootstrap": "for wiredep bootstrap.css by Yoshiaki 2016.08.29",
+    "bootstrap": {
+      "main": "dist/css/bootstrap.css",
+      "dependencies": {}
+    }
+  },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
     "angular-scenario": ">=1.2.*"
