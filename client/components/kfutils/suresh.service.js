@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$kfshared', function () {
+    .factory('$suresh', function () {
         var obj = {};
 
         obj.makeQuery = function (queryString, communityId, communityMembers, $community) {
