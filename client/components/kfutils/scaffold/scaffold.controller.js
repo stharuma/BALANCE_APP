@@ -13,12 +13,47 @@ angular.module('kf6App')
             });
         });
 
+        $scope.allClicked = function(scaffold) {
+            if (!$scope.addSupport) {
+                window.alert('no $scope.addSupport(supportLink) defined.');
+                return;
+            }
+            if (!$scope.insertText) {
+                window.alert('no $scope.insertText(text) defined.');
+                return;
+            }
+            if (!$scope.current) {
+                console.alert('Error scaffold wasn\'t selected');
+                return;
+            }
+            var title = '<h1>' + $scope.current.title + '</h1>\n<br>';
+            $scope.insertText(title);
+            scaffold.supports.forEach(function(support) {
+                $scope.addSupportInternal($scope.current, support, false);
+            });
+        };
+
         $scope.supportClicked = function(supportLink) {
             if (!$scope.addSupport) {
                 window.alert('no $scope.addSupport(supportLink) defined.');
                 return;
             }
-            $scope.addSupport(supportLink);
+            if (!$scope.current) {
+                console.alert('Error scaffold wasn\'t selected');
+                return;
+            }
+            $scope.addSupportInternal($scope.current, supportLink, true);
+        };
+
+        $scope.addSupportInternal = function(scaffold, support, selection) {
+            var isTemplate = scaffold && scaffold.data && scaffold.data.isTemplate;
+            var addhyphen = true;
+            var initialText = '';
+            if (isTemplate) {
+                addhyphen = false;
+                initialText = '<br><br>';
+            }
+            $scope.addSupport(support, selection, addhyphen, initialText, isTemplate);
         };
 
         $scope.onContextOpen = function(childScope) {
