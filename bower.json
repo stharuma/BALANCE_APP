@@ -32,6 +32,13 @@
     "ng-csv": "^0.3.6",
     "angular-chart.js": "^0.9.0"
   },
+  "overrides":{
+    "bootstrap": "for wiredep bootstrap.css by Yoshiaki 2016.08.29",
+    "bootstrap": {
+      "main": "dist/css/bootstrap.css",
+      "dependencies": {}
+    }
+  },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
     "angular-scenario": ">=1.2.*"
