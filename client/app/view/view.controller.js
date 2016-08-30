@@ -610,7 +610,7 @@ angular.module('kf6App')
 
         $scope.openDashboard = function() {
             $scope.openAnalytics();
-            var url = 'dashboard';
+            var url = 'dashboard/' + $scope.view.communityId;
             window.open(url, '_blank');
         };
 

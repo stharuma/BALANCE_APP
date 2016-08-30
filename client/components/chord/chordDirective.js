@@ -70,7 +70,6 @@ angular.module('kf6App').directive('chordDiagram', ['$window', 'matrixFactory',
                 .attr("transform", "translate(10, 10)")
                 .text("Updating...");
 
-console.log('xx');
             $scope.drawChords = function(data) {
 
                 messages.attr("opacity", 1);
