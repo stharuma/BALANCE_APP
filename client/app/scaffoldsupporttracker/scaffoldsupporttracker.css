@@ -1,7 +1,6 @@
 .KFSupport {
     font-size: 10px;
     font: bold;
-    ;
     margin-left: 2px;
     width: 200px;
   }
@@ -16,9 +15,7 @@
     border: 1px solid transparent;
     height: 350px;
     color: white;
-    /* padding: 55px;*/
     overflow: auto;
-    ;
 }
 
 .action-checkbox {
