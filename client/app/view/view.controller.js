@@ -608,6 +608,12 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+        $scope.openDashboard = function() {
+            $scope.openAnalytics();
+            var url = 'dashboard';
+            window.open(url, '_blank');
+        };
+
 
         $scope.doExit = function() {
             var url = '';
