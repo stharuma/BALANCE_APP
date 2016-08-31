@@ -1,0 +1,96 @@
+<!-- <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css"> -->
+
+<br/>
+<label style="font-size:  15pt; "><b>KF Scaffold Growth</b></label>
+<br/>
+<br/>
+<p style="text-align: left;">
+    <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailCollapsed]" ng-click="status.detailCollapsed = !status.detailCollapsed">Selector</button </p>
+
+    <div collapse="status.detailCollapsed">
+        <div ng-include="'components/kfutils/viewauthordateselector/viewauthordateselector.html'"></div>
+        <div style="padding: 15px;">
+            <label>Scaffolds::</label>
+            <select class="KFSupport" style="width: 300px;height:25px;border: 2px  light blue;" ng-model="current" ng-options="s.title for s in scaffolds" />
+            <button ng-click=" search()" ng-model="queryString">Scaffold Count:</button>
+            <div class="panel">
+                <div class="check-box-panel">
+                    <div ng-repeat="s in current.supports">
+                        <div class="action-checkbox">
+                            <input id="{{s._to.title}}" type="checkbox"   value="{{s._to.title}}" ng-checked="selectedSupports.indexOf(s) > -1" ng-click="toggleSelection(s)" />
+                            <label for="{{s._to.title}}"></label>
+                            {{s._to.title}}
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="check-box-panel">
+                    <span style="color:white;" class="selected-item">Selected Support Items:</span>
+                    <div ng-repeat="support in selectedSupports" class="selected-item">
+                        {{support._to.title}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </br>
+    <div ng-if="selectedSupports.length != 0 &&  status.detailCollapsed ">
+        <div ng-if="queryString === ''">
+            <label style="font-size:  12pt; "><b>Scaffold Support Frequency in {{currentCommunity.community.title}}</b></label>
+        </div>
+        <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailsCollapsed]" ng-click="detailsControl()">Details:</button>
+        <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.barchartCollapsed]" ng-click="barchartControl()">Bar Chart:</button>
+        <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.radarchartCollapsed]" ng-click="radarchartControl()">Radar Chart:</button>
+        <!-- </div> -->
+        <div style="padding: 5px;" collapse="status.barchartCollapsed">
+            <canvas id="bar" class="chart chart-bar" chart-data="data" chart-labels="labels">
+            </canvas>
+        </div>
+        <div style="padding: 5px;" collapse="status.radarchartCollapsed">
+            <canvas id="radar" class="chart chart-radar" chart-data="data" chart-labels="labels">
+            </canvas>
+        </div>
+        <div style="padding: 5px;" collapse="status.detailsCollapsed">
+            <div class="KFSearchResult">
+                <div ng-if="status.status === 'searching'">
+                    searching...
+                </div>
+                <div ng-if="status.status === 'noresult'">
+                    There was no contributions to match.
+                </div>
+                <div ng-if="status.status === 'searched'">
+                    <button type="button" ng-csv="tableData" csv-header="getHeader()" filename="test.csv">ExportToCSV</button>
+                    <div style="float: right;">
+                        <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
+                    </div>
+                    <div style="width: 100%; float: left; text-align: right;">
+                        CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
+                    </div>
+                    <div ng-if="status.loading === true">
+                    </div>
+                    <div ng-if="status.loading !== true">
+                        <table border='1' style="width: 100%;" id="table1">
+                            <tr>
+                                <th style="width: 15%;"> Support</th>
+                                <th style="width: 15%;">Frequency</th>
+                                <th>In Contribution</th>
+                            </tr>
+                            <tr class="KFSearchResult" ng-repeat="data in tableData">
+                                <td>{{data .supportTitle}}</td>
+                                <td> {{data .frequency}}</td>
+                                <td>
+                                    <div ng-repeat="info in supportsCountInNote" ng-if=" info. supportTitle===data .supportTitle">
+                                        <div kfelement draggable="true">
+                                            <span><img ng-src="{{getIcon(info.note)}}" draggable="false"></span>
+                                            <a class="KFSearchLink" href="contribution/{{info.note._id}}" target="_blank" draggable="false">{{info.note.title}}</a>--{{info.count }}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="height: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
