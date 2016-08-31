@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
     <link rel="stylesheet" href="bower_components/dcjs/dc.css" />
+    <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <link rel="stylesheet" href="bower_components/annotator/annotator.min.css" />
@@ -38,9 +39,11 @@
     <link rel="stylesheet" href="app/dashboard/dashboard.css">
     <link rel="stylesheet" href="app/groupmanager/groupmanager.css">
     <link rel="stylesheet" href="app/historicalobject/historicalobject.css">
+    <link rel="stylesheet" href="app/lexicalanalysis/lexicalanalysis.css">
     <link rel="stylesheet" href="app/main/main.css">
     <link rel="stylesheet" href="app/s2viz/s2viz.css">
     <link rel="stylesheet" href="app/scaffoldmanager/scaffoldmanager.css">
+    <link rel="stylesheet" href="app/scaffoldsupporttracker/scaffoldsupporttracker.css">
     <link rel="stylesheet" href="app/search/search.css">
     <link rel="stylesheet" href="app/timemashine/timemashine.css">
     <link rel="stylesheet" href="app/view/view.css">
@@ -139,6 +142,9 @@
     <script src="bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
     <script src="bower_components/crossfilter/crossfilter.js"></script>
     <script src="bower_components/dcjs/dc.js"></script>
+    <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
+    <script src="bower_components/Chart.js/Chart.js"></script>
+    <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
     <!-- endbower -->
     <script src="bower_components/annotator/annotator-full.min.js"></script>
     <script src="socket.io-client/socket.io.js"></script>
@@ -170,6 +176,8 @@
     <script src="app/groupmanager/groupmanager.js"></script>
     <script src="app/historicalobject/historicalobject.controller.js"></script>
     <script src="app/historicalobject/historicalobject.js"></script>
+    <script src="app/lexicalanalysis/lexicalanalysis.controller.js"></script>
+    <script src="app/lexicalanalysis/lexicalanalysis.js"></script>
     <script src="app/main/main.controller.js"></script>
     <script src="app/main/main.js"></script>
     <script src="app/s2viz/chord/chordDirective.js"></script>
@@ -178,6 +186,8 @@
     <script src="app/s2viz/s2viz.js"></script>
     <script src="app/scaffoldmanager/scaffoldmanager.controller.js"></script>
     <script src="app/scaffoldmanager/scaffoldmanager.js"></script>
+    <script src="app/scaffoldsupporttracker/scaffoldsupporttracker.controller.js"></script>
+    <script src="app/scaffoldsupporttracker/scaffoldsupporttracker.js"></script>
     <script src="app/search/search.controller.js"></script>
     <script src="app/search/search.js"></script>
     <script src="app/timemashine/timemashine.controller.js"></script>
@@ -196,13 +206,17 @@
     <script src="components/kfutils/attachmentuploader/attachmentuploader.controller.js"></script>
     <script src="components/kfutils/authorselector/authorselector.controller.js"></script>
     <script src="components/kfutils/contexteditor/contexteditor.controller.js"></script>
+    <script src="components/kfutils/dateselector/dateselector.controller.js"></script>
     <script src="components/kfutils/group/groupcontroller.js"></script>
     <script src="components/kfutils/kftag.service.js"></script>
     <script src="components/kfutils/kfutil.service.js"></script>
     <script src="components/kfutils/scaffold/scaffold.controller.js"></script>
     <script src="components/kfutils/scaffoldeditor/scaffoldeditor.controller.js"></script>
     <script src="components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.controller.js"></script>
+    <script src="components/kfutils/suresh.service.js"></script>
+    <script src="components/kfutils/viewauthordateselector/viewauthordateselector.controller.js"></script>
     <script src="components/kfutils/vieweditor/vieweditor.controller.js"></script>
+    <script src="components/kfutils/viewselector/viewselector.controller.js"></script>
     <script src="components/kfutils/viewsettingsubeditor/viewsettingsubeditor.controller.js"></script>
     <script src="components/modal/modal.service.js"></script>
     <script src="components/mongoose-error/mongoose-error.directive.js"></script>

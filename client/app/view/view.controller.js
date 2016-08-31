@@ -44,6 +44,12 @@ angular.module('kf6App')
         };
 
         $scope.updateViewSetting = function() {
+            //this is temporary code. coherent plan for context management would be expected.(Yoshiaki)
+            $community.getContext(null, function(context) {
+                $scope.context = context;
+            });
+            //temporary code end
+
             if ($scope.view.data && $scope.view.data.viewSetting) {
                 $scope.setting = $scope.view.data.viewSetting;
             } else {
@@ -624,6 +630,18 @@ angular.module('kf6App')
             $scope.openAnalytics();
             var url = 'timemashine/' + $scope.view._id;
             window.open(url, '_blank');
+        };
+
+        $scope.openLexicalAnalysis = function() {
+            $scope.openAnalytics();
+            var url = 'lexicalanalysis/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
+        $scope.openScafoldSupportTracker = function() {
+            $scope.openAnalytics();
+            var url = 'scaffoldsupporttracker/' + $scope.view.communityId;
+            $scope.openInPopup(url);
         };
 
         $scope.doExit = function() {
