@@ -614,6 +614,17 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
+        $scope.openS2viz = function() {
+            $scope.openAnalytics();
+            var url = 's2viz/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openTimemashine = function() {
+            $scope.openAnalytics();
+            var url = 'timemashine/' + $scope.view._id;
+            window.open(url, '_blank');
+        };
 
         $scope.doExit = function() {
             var url = '';
