@@ -146,14 +146,8 @@ angular.module('kf6App')
                 .margins({ top: 20, left: 10, right: 10, bottom: 20 })
                 .group(authorGroup)
                 .dimension(authorDimension)
-                // Assign colors to each value in the x scale domain
-                //.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-                // .label(function(d) {
-                //     return d.key.split('.')[1];
-                // })
-                // Title sets the row text
-                .title(function(d) {
-                    return d.value;
+                .label(function(d) {
+                    return d.key + ' (' + d.value + ')';
                 })
                 .elasticX(true)
                 .xAxis().ticks(4);
