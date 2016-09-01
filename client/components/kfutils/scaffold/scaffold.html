@@ -5,6 +5,9 @@
     </div>
     <div style="height: 5px;">
     </div>
+    <div ng-if="current.data.isTemplate">
+        <div class="KFSupportButton" ng-click="allClicked(current);">All</div>
+    </div>
     <div>
         <div class="KFSupportButton" ng-repeat="s in current.supports" ng-click="supportClicked(s);" context-menu="onContextOpen(this)" data-target="menu-A">{{s._to.title}}</div>
     </div>

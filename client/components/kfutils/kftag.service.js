@@ -25,37 +25,63 @@ angular.module('kf6App')
             return tag;
         };
 
-        obj.createNewScaffoldTag = function(supportId, title, text) {
+        obj.createNewScaffoldTag = function(supportId, title, text, isTemplate) {
             var tag = '';
             tag = tag + '<br>';
             tag = tag + '&nbsp;&nbsp;'; //important for mce
-            tag = tag + '<span id="' + supportId + '" class="KFSupportStart mceNonEditable">';
-            tag = tag + obj.createScaffoldStartTag(title);
+            if (!isTemplate) {
+                tag = tag + '<span id="' + supportId + '" class="KFSupportStart mceNonEditable">';
+            } else {
+                tag = tag + '<span id="' + supportId + '" class="KFSupportStart KFTemplateStart mceNonEditable">';
+            }
+            tag = tag + obj.createScaffoldStartTag(title, isTemplate);
             tag = tag + '</span>';
+            if (isTemplate) {
+                tag = tag + '<p class="kfTemplateContent">';
+            }
             tag = tag + text;
-            tag = tag + '<span id="' + supportId + '" class="KFSupportEnd mceNonEditable">';
-            tag = tag + obj.createScaffoldEndTag();
+            if (isTemplate) {
+                tag = tag + '</p>';
+            }
+            if (!isTemplate) {
+                tag = tag + '<span id="' + supportId + '" class="KFSupportEnd mceNonEditable">';
+            } else {
+                tag = tag + '<span id="' + supportId + '" class="KFSupportEnd KFTemplateEnd mceNonEditable">';
+            }
+            tag = tag + obj.createScaffoldEndTag(isTemplate);
             tag = tag + '</span>';
             tag = tag + '&nbsp;&nbsp;'; //important for mce
             tag = tag + '<br>';
             return tag;
         };
 
-        obj.createScaffoldStartTag = function(title) {
+        obj.createScaffoldStartTag = function(title, isTemplate) {
             var tag = '';
             tag = tag + ' '; //important for mce
-            tag = tag + '<span class="kfSupportStartMark"> &nbsp; </span>';
-            tag = tag + ' '; //important for mce           
-            tag = tag + '<span class="kfSupportStartLabel">' + title + '</span>';
-            tag = tag + ' '; //important for mce           
+            if (!isTemplate) {
+                tag = tag + '<span class="kfSupportStartMark"> &nbsp; </span>';
+            } else {
+                tag = tag + '<span class="kfSupportStartMark kfTemplateStartMark"> &nbsp; </span>';
+            }
+            tag = tag + ' '; //important for mce
+            if (!isTemplate) {
+                tag = tag + '<span class="kfSupportStartLabel">' + title + '</span>';
+            } else {
+                tag = tag + '<span class="kfSupportStartLabel kfTemplateStartLabel">' + title + '</span>';
+            }
+            tag = tag + ' '; //important for mce
             return tag;
         };
 
-        obj.createScaffoldEndTag = function() {
+        obj.createScaffoldEndTag = function(isTemplate) {
             var tag = '';
-            tag = tag + ' '; //important for mce            
-            tag = tag + '<span class="kfSupportEndMark"> &nbsp; </span>';
-            tag = tag + ' '; //important for mce            
+            tag = tag + ' '; //important for mce
+            if (!isTemplate) {
+                tag = tag + '<span class="kfSupportEndMark"> &nbsp; </span>';
+            } else {
+                tag = tag + '<span class="kfSupportEndMark kfTemplateEndMark"> &nbsp; </span>';
+            }
+            tag = tag + ' '; //important for mce
             return tag;
         };
 
@@ -65,19 +91,21 @@ angular.module('kf6App')
 
             jq.find('.KFSupportStart').addClass('mceNonEditable');
             elemLoop(jq.find('.KFSupportStart'), function(elem) {
+                var isTemplate = $(elem).hasClass('KFTemplateStart');
                 var ref = _.find(toConnections, function(conn) {
                     return conn._id === elem.id;
                 });
                 if (ref) {
-                    elem.innerHTML = obj.createScaffoldStartTag(ref._from.title);
+                    elem.innerHTML = obj.createScaffoldStartTag(ref._from.title, isTemplate);
                 } else {
-                    elem.innerHTML = obj.createScaffoldStartTag('(missing link)');
+                    elem.innerHTML = obj.createScaffoldStartTag('(missing link)', isTemplate);
                 }
             });
 
             jq.find('.KFSupportEnd').addClass('mceNonEditable');
             elemLoop(jq.find('.KFSupportEnd'), function(elem) {
-                elem.innerHTML = obj.createScaffoldEndTag();
+                var isTemplate = $(elem).hasClass('KFTemplateEnd');
+                elem.innerHTML = obj.createScaffoldEndTag(isTemplate);
             });
 
             jq.find('.KFReference').addClass('mceNonEditable');
@@ -104,7 +132,7 @@ angular.module('kf6App')
             var todos = [];
             var endtags = {};
             var supportLinks = getLinks(toConnections, 'supports');
-            var dSupportLinks = getLinks(toConnections, 'supports'); //TODO we need two to support duplication the algorithm problem         
+            var dSupportLinks = getLinks(toConnections, 'supports'); //TODO we need two to support duplication the algorithm problem
 
             elemLoop(jq.find('.KFSupportStart'), function(elem) {
                 elem.innerHTML = '';

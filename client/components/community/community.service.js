@@ -204,21 +204,23 @@ angular.module('kf6App')
             }
         };
 
+        // registredScaffolds and contextScaffolds
+        // communityData.scaffolds means contextScaffolds
         communityData.registeredScaffolds = [];
 
         var refreshScaffolds0 = function(context, handler) {
-            loadScaffoldLinks(context, function(links) {
-                communityData.scaffolds.length = 0; //clear once
-                var funcs = [];
-                links.forEach(function(link) {
-                    funcs.push(function(handler) {
-                        var scaffold = link._to;
-                        scaffold._id = link.to;
-                        communityData.scaffolds.push(scaffold);
-                        fillSupport(scaffold, handler);
+            refreshRegisteredScaffolds(function() {
+                loadScaffoldLinks(context, function(links) {
+                    communityData.scaffolds.length = 0; //clear once
+                    links.forEach(function(link) {
+                        communityData.registeredScaffolds.forEach(function(each){
+                            if(link.to === each._id){
+                                communityData.scaffolds.push(each);
+                            }
+                        });
                     });
+                    handler();
                 });
-                waitFor(funcs, handler);
             });
         };
 

@@ -15,6 +15,7 @@ angular.module('kf6App', [
         'pascalprecht.translate',
         'colorpicker.module',
         'ngCookies',
+        'chart.js',
         'ngCsv'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
