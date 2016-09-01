@@ -38,6 +38,7 @@ angular.module('kf6App')
                 .dimension(dateDim)
                 .group(readGroup, 'Read')
                 //.renderArea(true)//for line chart
+                .centerBar(true) //for line chart
                 .x(d3.time.scale().domain([minDate, maxDate]))
                 .legend(dc.legend().x(50).y(10).itemHeight(13).gap(5))
                 .yAxisLabel('Hits per day');
@@ -93,4 +94,22 @@ angular.module('kf6App')
 
             dc.renderAll();
         };
+
+        //// Thinking Usability
+        // $scope.mode = 'Selecting';
+        // var hitslineChart;
+        // $scope.changeMode = function() {
+        //     if ($scope.mode === 'Selecting') {
+        //         $scope.mode = 'Zooming';
+        //         hitslineChart.mouseZoomable(true);
+        //         hitslineChart.brushOn(false);
+        //         dc.renderAll();
+        //     } else {
+        //         $scope.mode = 'Selecting';
+        //         hitslineChart.mouseZoomable(false);
+        //         hitslineChart.brushOn(true);
+        //         dc.renderAll();
+        //     }
+        // };
+
     });
