@@ -55,7 +55,8 @@ angular.module('kf6App').factory('matrixFactory', [function() {
                     });
                     entry = reduce(objs, indexHash[matrixIndex[i]], indexHash[matrixIndex[j]]);
                     entry.valueOf = function() {
-                        return +this.value };
+                        return +this.value
+                    };
                     _matrix[i][j] = entry;
                 }
             }
@@ -202,12 +203,14 @@ angular.module('kf6App').factory('matrixFactory', [function() {
                 m.sdata = d.source.value;
                 m.svalue = +d.source.value;
                 m.stotal = _matrix[d.source.index].reduce(function(k, n) {
-                    return k + n; }, 0);
+                    return k + n;
+                }, 0);
                 m.tname = d.target._id;
                 m.tdata = d.target.value;
                 m.tvalue = +d.target.value;
                 m.ttotal = _matrix[d.target.index].reduce(function(k, n) {
-                    return k + n; }, 0);
+                    return k + n;
+                }, 0);
             } else {
                 g = indexHash[d._id];
                 m.gname = g.name;
@@ -216,7 +219,8 @@ angular.module('kf6App').factory('matrixFactory', [function() {
             }
             m.mtotal = _matrix.reduce(function(m1, n1) {
                 return m1 + n1.reduce(function(m2, n2) {
-                    return m2 + n2; }, 0);
+                    return m2 + n2;
+                }, 0);
             }, 0);
             return m;
         };

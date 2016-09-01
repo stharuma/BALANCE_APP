@@ -1,8 +1,14 @@
-angular.module('kf6App').directive('chordDiagram', ['$window', 'matrixFactory',
+//
+//factroy version (Arranged by Matsuzawa)
+//
+//Usage:
+//var chord = $chord.init(scope, element);
+//chord.drawChords(data);
+//
+angular.module('kf6App').factory('$chord', function($window, matrixFactory) {
 
-    function($window, matrixFactory) {
-
-        var link = function($scope, $el, $attr) {
+    return {
+        init: function($scope, $el) {
 
             var size = [750, 750]; // SVG SIZE WIDTH, HEIGHT
             var marg = [50, 50, 50, 50]; // TOP, RIGHT, BOTTOM, LEFT
@@ -29,19 +35,13 @@ angular.module('kf6App').directive('chordDiagram', ['$window', 'matrixFactory',
                     if (!items[0]) {
                         value = 0;
                     } else {
-                        //console.log(items);
                         value = items.reduce(function(m, n) {
-                            //return m + n.flow2;
                             if (r === c) {
                                 return m + (n.flow1 + n.flow2);
                             } else {
-                                //console.log(n.importer1, r.name);
-                                //return m + n.flow2;
-                                //return m + 0.1;
                                 return m + (n.importer1 === r.name ? n.flow1 : n.flow2);
                             }
                         }, 0);
-                        //console.log(value);
                     }
                     return { value: value, data: items };
                 });
@@ -70,7 +70,7 @@ angular.module('kf6App').directive('chordDiagram', ['$window', 'matrixFactory',
                 .attr("transform", "translate(10, 10)")
                 .text("Updating...");
 
-            $scope.drawChords = function(data) {
+            var drawChords = function(data) {
 
                 messages.attr("opacity", 1);
                 messages.transition().duration(1000).attr("opacity", 0);
@@ -150,7 +150,9 @@ angular.module('kf6App').directive('chordDiagram', ['$window', 'matrixFactory',
                 function groupClick(d) {
                     d3.event.preventDefault();
                     d3.event.stopPropagation();
-                    $scope.addFilter(d._id);
+                    if ($scope.addFilter) { //changed by Matsuzawa
+                        $scope.addFilter(d._id);
+                    }
                     resetChords();
                 }
 
@@ -159,7 +161,9 @@ angular.module('kf6App').directive('chordDiagram', ['$window', 'matrixFactory',
                     d3.event.stopPropagation();
                     dimChords(d);
                     d3.select("#tooltip").style("opacity", 1);
-                    //$scope.updateTooltip(matrix.read(d));
+                    if ($scope.updateTooltip) { //changed by Matsuzawa
+                        $scope.updateTooltip(matrix.read(d));
+                    }
                 }
 
                 function hideTooltip() {
@@ -201,12 +205,9 @@ angular.module('kf6App').directive('chordDiagram', ['$window', 'matrixFactory',
             $window.addEventListener("resize", function() {
                 resize();
             });
-        }; // END LINK FUNCTION
 
-        return {
-            link: link,
-            restrict: 'EA'
-        };
+            return { drawChords: drawChords };
+        }
+    };
 
-    }
-]);
+});
