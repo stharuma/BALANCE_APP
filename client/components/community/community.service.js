@@ -898,6 +898,7 @@ angular.module('kf6App')
                             d.day = d3.time.day(d.date);
                             d.week = d3.time.week(d.date);
 
+                            d.value = 1;
                             d.read = 0;
                             d.modify = 0;
                             d.buildson = 0;

@@ -9,77 +9,13 @@ angular.module('kf6App')
 
         var communityId = $stateParams.communityId;
 
-        $community.enter(communityId);
-        $community.refreshMembers();
-
-        var communityData = $community.getCommunityData();
-        var data = [];
-        $http.post('api/records/search/' + communityId, {}).success(function(records) {
-            var query = {
-                communityId: communityId,
-                pagesize: 100000
-            };
-            $http.post('/api/contributions/' + communityId + '/search', {
-                query: query
-            }).success(function(contributions) {
-                var catalog = {};
-                contributions.forEach(function(contribution) {
-                    catalog[contribution._id] = contribution;
-                });
-                records.forEach(function(record) {
-                    if (record.type === 'read' || record.type === 'modified') {
-                        var author = communityData.members[record.authorId];
-                        var object = catalog[record.targetId];
-                        if (!object) {
-                            //console.error('object missing');
-                            return;
-                        }
-                        var toAuthor = communityData.members[object.authors[0]];
-                        var type = 'READ';
-                        if (record.type === 'modified') {
-                            type = 'MODIFY';
-                        }
-                        var aData = {
-                            from: author.name,
-                            type: type,
-                            title: object.title,
-                            to: toAuthor.name,
-                            when: record.timestamp
-                        };
-                        data.push(aData);
-                    }
-                });
-                preProcess(data);
-                initdc(data);
+        $community.enter(communityId, function() {
+            $community.getSocialInteractions(function(interactions) {
+                init(interactions);
             });
         });
 
-        var preProcess = function(data) {
-            var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ").parse;
-            data.forEach(function(d) {
-                d.date = parseDate(d.when);
-
-                // pre-calculate month for better performance
-                d.year = d3.time.year(d.date);
-                d.month = d3.time.month(d.date);
-                d.day = d3.time.day(d.date);
-                d.week = d3.time.week(d.date);
-
-                d.value = 1;
-                if (d.type === 'READ') {
-                    d.read = 1;
-                } else {
-                    d.read = 0;
-                }
-                if (d.type === 'MODIFY') {
-                    d.modify = 1;
-                } else {
-                    d.modify = 0;
-                }
-            });
-        };
-
-        var initdc = function(data) {
+        var init = function(data) {
             var ndx = crossfilter(data);
 
             var all = ndx.groupAll();
@@ -116,7 +52,7 @@ angular.module('kf6App')
 
             var typeChart = dc.pieChart('#type-chart');
             var authorChart = dc.rowChart('#author-chart');
-            var lineChart = dc.lineChart('#line-chart');
+            var lineChart = dc.barChart('#line-chart');
             var rangeChart = dc.barChart('#range-chart');
             var recordCount = dc.dataCount('.dc-data-count');
             var recordTable = dc.dataTable('.dc-data-table');
@@ -154,7 +90,8 @@ angular.module('kf6App')
 
             //LineChart
             lineChart
-                .renderArea(true)
+                //.renderArea(true)//forBarChart
+                .centerBar(true)//forBarChart
                 .width(990)
                 .height(200)
                 .transitionDuration(1000)
