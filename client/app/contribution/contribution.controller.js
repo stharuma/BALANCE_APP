@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $kfcommon) {
         var contributionId = $stateParams.contributionId;
         var contextId = $stateParams.contextId;
 
@@ -19,11 +19,18 @@ angular.module('kf6App')
         $scope.status.isScaffoldCollapsed = false;
         $scope.status.isAttachmentCollapsed = true;
         $scope.status.isContributionCollapsed = true;
+        $scope.status.ispromisingideaCollapsed = true;
+        $scope.status.ispromisingideaTabDisplayed = false;
         $scope.status.edittabActive = false;
         $scope.status.dirty = true;
         $scope.status.contribution = '';
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
+
+        $scope.selectedIndex = -1;
+        $scope.newnoteIndex = -1;
+        $scope.deletedIndex = -1;
+
 
         $scope.community = {};
         $scope.contribution = {};
@@ -35,6 +42,14 @@ angular.module('kf6App')
         $scope.communityMembers = [];
         $scope.images = [];
         $scope.selected = {};
+
+        $scope.selectedText = '';
+        $scope.targetColor = '#FFFF00';
+        $scope.textareaText = '';
+        $scope.promisingIdeaobjs = {};
+        $scope.promisingIdeaobjLinks = {};
+        $scope.selectedViewIds = [];
+        $scope.promisingnoteTitle = '';
 
         $scope.preContributeHooks = [];
         $scope.initializingHooks = [];
@@ -105,6 +120,7 @@ angular.module('kf6App')
                 $community.refreshGroups();
                 $scope.updateToConnections(function() {
                     $scope.updateAnnotations();
+                     $scope.updatepromisingIdeaobjs();
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();
                         $scope.updateAttachments(links);
@@ -776,6 +792,160 @@ angular.module('kf6App')
                 $scope.annos[annotation._id] = annotation;
             });
         };
+
+       /***********promising Ideas ************/
+          $scope.setIndex = function(index) {
+            $scope.selectedIndex = index;
+        };
+
+        $scope.setnewnoteIndex = function(index) {
+            $community.refreshViews();
+            $scope.newnoteIndex = index;
+        };
+
+        $scope.promisingIdeaobjProcess = function() {
+            // var content ='<span style="background-color: '+$scope.targetColor+"\" >"+$scope.selectedText+ '</span>';
+            // var re = new RegExp($scope.selectedText, 'gi');
+            // $scope.copy.body =$scope.copy.body.replace(re,content);
+            $scope.promisingIdeaobj = {
+                idea: $scope.selectedText,
+                reason: $scope.textareaText,
+                color: $scope.targetColor
+            };
+            $scope.createPromisngIdeaobj($scope.promisingIdeaobj);
+            $scope.textareaText = '';
+            $scope.selectedText = '';
+        };
+
+        $scope.trustAsHtml = function(html) {
+            return $sce.trustAsHtml(html);
+        };
+
+        $scope.showpromisingIdeaWindow = function() {
+            $scope.selectedText = $scope.getSelectionText();
+        };
+
+        $scope.getSelectionText = function() {
+            var text = '';
+            if (window.getSelection) {
+                text = window.getSelection().toString();
+            } else if (document.selection && document.selection.type !== 'Control') {
+                text = document.selection.createRange().text;
+            }
+            return text;
+        };
+
+        $scope.getSelectionHtml = function() {
+            var html = '';
+            if (typeof window.getSelection !== 'undefined') {
+                var sel = window.getSelection();
+                if (sel.rangeCount) {
+                    var container = document.createElement('div');
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        container.appendChild(sel.getRangeAt(i).cloneContents());
+                    }
+                    html = container.innerHTML;
+                }
+            } else if (typeof document.selection !== 'undefined') {
+                if (document.selection.type === 'Text') {
+                    html = document.selection.createRange().htmlText;
+                }
+            }
+            return html;
+        };
+
+        $scope.createPromisngIdeaobj = function(promisingIdeaobj) {
+            var communityId = $community.getCommunityData().community._id;
+            var newobj = {
+                communityId: communityId,
+                type: 'promisingIdeaobj',
+                title: 'an promisingIdeaobj',
+                authors: [$community.getAuthor()._id],
+                status: 'active',
+                permission: 'private',
+                data: promisingIdeaobj
+            };
+            $http.post('/api/contributions/' + communityId, newobj)
+                .success(function (promisingIdeaobj_) {
+                    createpromisingIdeaobjLink(promisingIdeaobj_);
+                });
+        };
+
+        var createpromisingIdeaobjLink = function(promisingIdeaobj) {
+            var link = {};
+            link.to = $scope.contribution._id;
+            link.from = promisingIdeaobj._id;
+            link.type = 'promisings';
+            link.data = promisingIdeaobj.data;
+            $http.post('/api/links', link).success(function(link) {
+                $scope.promisingIdeaobjLinks[link._id] = link;
+                $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
+                $scope.toConnections.push(link);
+                $scope.status.ispromisingideaTabDisplayed = true;
+            });
+        };
+
+        $scope.promisingIdeaobjUpdated = function(promisingIdeaobjLink) {
+            if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
+                console.error('ERROR! promisingIdeaobj doesn\'t have id on update');
+                return;
+            }
+            var model = $scope.promisingIdeaobjs[promisingIdeaobjLink.from];
+            if (!model) {
+                console.error('ERROR! model couldn\'t find');
+                return;
+            }
+            $community.modifyObject(model);
+        };
+
+        $scope.promisingIdeaobjDeleted = function(promisingIdeaobjLink) {
+            if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
+                console.error('ERROR! promisingIdeaobj doesn\'t have id on delete');
+                return;
+            }
+            $http.delete('/api/links/' + promisingIdeaobjLink._id);
+        };
+
+        $scope.updatepromisingIdeaobjs = function() {
+            if ($scope.contribution.type !== 'Note') {
+                return;
+            }
+            //   window.setTimeout(function() {
+            var promisingIdeaobjLinks = $scope.toConnections.filter(function (each) {
+                return each.type === 'promisings';
+            });
+            promisingIdeaobjLinks.forEach(function(promisingIdeaobjLink) {
+                if (!$ac.isReadable(promisingIdeaobjLink._from)) {
+                    return;
+                }
+                $community.getObject(promisingIdeaobjLink.from, function(promisingIdeaobj) {
+                    $scope.promisingIdeaobjLinks[promisingIdeaobjLink._id] = promisingIdeaobjLink;
+                    $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
+                    $scope.status.ispromisingideaTabDisplayed = true;
+                });
+            });
+            //  }, 1000);
+        };
+
+        $scope.viewSelected = function(view) {
+            $scope.selectedViewIds.push(view._id);
+        };
+
+        $scope.makepromisingnote = function(title, body) {
+            if (title === '') {
+                window.alert('Note title is empty ');
+                return;
+            }
+            if ($scope.selectedViewIds.length === 0) {
+                window.alert('View is not selected');
+                return;
+            }
+            $kfcommon.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
+            $scope.selectedViewIds.length = 0;
+            $scope.setnewnoteIndex(-1);
+        };
+
+
 
         /*********** svg-edit ************/
         $scope.svgInitialized = false;

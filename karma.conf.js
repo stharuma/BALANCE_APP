@@ -32,6 +32,7 @@ module.exports = function(config) {
             //'client/bower_components/jsPlumb/dist/js/jquery.jsPlumb-1.7.3-min.js',
             'client/bower_components/ng-file-upload/angular-file-upload.min.js',
             'client/bower_components/angular-ui-select/dist/select.min.js',
+            'client/bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js',
             'client/bower_components/Chart.js/Chart.js',
             'client/bower_components/angular-chart.js/dist/angular-chart.js',
             'client/bower_components/ng-csv/build/ng-csv.min.js',
