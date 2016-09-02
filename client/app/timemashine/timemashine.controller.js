@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-  .controller('TimemashineCtrl', function ($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
+    .controller('TimemashineCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
@@ -487,7 +487,9 @@ angular.module('kf6App')
         };
 
         $scope.saveRef = function(ref) {
-            $community.saveLink(ref);
+            //$community.saveLink(ref);
+            //for refresh
+            $scope.refreshAllConnections();
         };
 
         $scope.openAttachment = function() {
@@ -913,9 +915,14 @@ angular.module('kf6App')
             if (!confirmation) {
                 return;
             }
+            // selected.forEach(function(each) {
+            //     $http.delete('/api/links/' + each._id);
+            // });
+            var selected = $scope.getSelectedModels();
             selected.forEach(function(each) {
-                $http.delete('/api/links/' + each._id);
+                _.remove($scope.refs, { _id: each._id });
             });
+            $scope.refreshAllConnections();
         };
 
         $scope.createRiseabove = function() {
