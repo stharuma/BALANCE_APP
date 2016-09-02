@@ -1,5 +1,7 @@
 'use strict';
 
+/* global jsPlumb */
+
 angular.module('kf6App')
     .controller('TimemashineCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
         var viewId = $stateParams.viewId;
@@ -33,8 +35,11 @@ angular.module('kf6App')
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
                     $scope.updateViewSetting();
+
+                    $scope.initializeRecords();
+
                 });
-            }, function(msg, status) {
+            }, function(msg) {
                 $scope.status.error = true;
                 $scope.status.errorMessage = msg;
             });
@@ -58,46 +63,127 @@ angular.module('kf6App')
             }
         };
 
-        $scope.updateCanvas = function() {
-            $http.get('/api/links/from/' + viewId).success(function(refs) {
-                //temporary get rid of others from contains
-                var onviewrefs = [];
-                refs.forEach(function(ref) {
-                    if (ref.type === 'contains') {
-                        onviewrefs.push(ref);
-                    }
-                });
-                $scope.refs = onviewrefs;
-                socket.socket.emit('subscribe', 'linkfrom:' + viewId);
-                $scope.$on('$destroy', function() {
-                    socket.unsyncUpdates('link');
-                    socket.socket.emit('unsubscribe', 'linkfrom:' + viewId);
-                });
-                socket.syncUpdates('link', function(item) {
-                    return item.type === 'contains';
-                }, $scope.refs, function(event, item) {
-                    if (event === 'created') {
-                        $scope.updateRef(item);
-                        $scope.refreshConnection(item.to);
-                        $scope.refreshReadStatus(item);
-                    }
-                    if (event === 'updated') {
-                        $scope.updateRef(item);
-                    }
-                });
-                //authors info
-                var refscopy = _.clone($scope.refs);
-                refscopy.forEach(function(ref) {
-                    $scope.updateRef(ref);
-                });
-                $community.refreshMembers();
+        $scope.initializeRecords = function() {
+            $community.refreshMembers();
+            $http.post('api/records/search/' + $scope.view.communityId, { query: { targetId: $scope.view._id } }).success(function(records) {
+                var playlist = [];
 
-                //update links
-                $scope.refreshAllConnections();
+                records.forEach(function(record) {
+                    if (record.type === 'modified' && record.historicalVariableName === 'contains') {
+                        playlist.push(record);
+                    }
+                });
 
-                //read
-                $scope.refreshAllReadStatus();
+                $scope.fillHistoricalObjects(playlist, function() {
+                    $scope.player.reset(playlist);
+                });
             });
+        };
+
+        $scope.fillHistoricalObjects = function(records, handler) {
+            var funcs = [];
+            records.forEach(function(record) {
+                if (record.historicalObjectId) {
+                    funcs.push(function(handler) {
+                        $http.get('api/historicalobjects/' + record.historicalObjectId)
+                            .success(function(historical) {
+                                record.historicalObject = historical;
+                                handler();
+                            });
+                    });
+                }
+            });
+            $community.waitFor(funcs, handler);
+        };
+
+        $scope.player = {};
+
+        $scope.player.reset = function(playlist) {
+            $scope.playlist = playlist;
+            $scope.frame = -1;
+        };
+
+        $scope.player.play = function() {
+            setInterval($scope.player.step, 100);
+        };
+
+        $scope.player.step = function() {
+            var len = $scope.playlist.length;
+            if ($scope.frame + 1 >= len) {
+                return;
+            }
+
+            $scope.frame++;
+            var record = $scope.playlist[$scope.frame];
+
+            var type = record.historicalOperationType;
+            var ref = record.historicalObject.data;
+            if (type === 'created') {
+                $scope.player.upsert($scope.refs, ref);
+                $scope.updateRef(ref);
+                $scope.refreshConnection(ref.to);
+            } else if (type === 'modified') {
+                $scope.player.upsert($scope.refs, ref);
+                $scope.updateRef(ref);
+                $scope.refreshConnection(ref.to);
+            } else if (type === 'deleted') {
+                _.remove($scope.refs, function(obj) {
+                    return obj._id === ref._id;
+                });
+            }
+        };
+
+        $scope.player.upsert = function(array, obj) {
+            var index = _.findIndex(array, function(elem) {
+                return elem._id === obj._id;
+            });
+            if (index === -1) {
+                array.push(obj);
+            } else {
+                array.splice(index, 1, obj);
+            }
+        };
+
+        $scope.updateCanvas = function() {
+            // $http.get('/api/links/from/' + viewId).success(function(refs) {
+            //     //temporary get rid of others from contains
+            //     var onviewrefs = [];
+            //     refs.forEach(function(ref) {
+            //         if (ref.type === 'contains') {
+            //             onviewrefs.push(ref);
+            //         }
+            //     });
+            //     $scope.refs = onviewrefs;
+            //     socket.socket.emit('subscribe', 'linkfrom:' + viewId);
+            //     $scope.$on('$destroy', function() {
+            //         socket.unsyncUpdates('link');
+            //         socket.socket.emit('unsubscribe', 'linkfrom:' + viewId);
+            //     });
+            //     socket.syncUpdates('link', function(item) {
+            //         return item.type === 'contains';
+            //     }, $scope.refs, function(event, item) {
+            //         if (event === 'created') {
+            //             $scope.updateRef(item);
+            //             $scope.refreshConnection(item.to);
+            //             $scope.refreshReadStatus(item);
+            //         }
+            //         if (event === 'updated') {
+            //             $scope.updateRef(item);
+            //         }
+            //     });
+            //     //authors info
+            //     var refscopy = _.clone($scope.refs);
+            //     refscopy.forEach(function(ref) {
+            //         $scope.updateRef(ref);
+            //     });
+            //     $community.refreshMembers();
+
+            //     //update links
+            //     $scope.refreshAllConnections();
+
+            //     //read
+            //     $scope.refreshAllReadStatus();
+            // });
         };
 
         $scope.settingChanged = function() {
@@ -305,7 +391,7 @@ angular.module('kf6App')
             return 'kfconnection' + $scope.connectionIdCounter;
         };
 
-        $scope.repaintConnections = function(ref) {
+        $scope.repaintConnections = function() {
             $scope.repaintRequest = true;
         };
 
@@ -427,48 +513,56 @@ angular.module('kf6App')
         /* ----------- creation --------- */
 
         $scope.createNote = function() {
-            if (!$scope.isEditable()) {
-                window.alert('You have no permission to edit this view.');
-                return;
-            }
-
-            var w = null;
-            if ($scope.isMobile()) {
-                w = window.open('');
-            }
-            var mode = {};
-            mode.permission = $scope.view.permission;
-            mode.group = $scope.view.group;
-            $community.createNote(mode, function(note) {
-                $scope.createContainsLink(note._id, {
-                    x: 100,
-                    y: 100
-                });
-                $scope.openContribution(note._id, null, w);
-            });
+            $scope.player.step();
         };
 
         $scope.createDrawing = function() {
-            if (!$scope.isEditable()) {
-                window.alert('You have no permission to edit this view.');
-                return;
-            }
-
-            var w = null;
-            if ($scope.isMobile()) {
-                w = window.open('');
-            }
-            $community.createDrawing(function(drawing) {
-                $scope.createContainsLink(drawing._id, {
-                    x: 100,
-                    y: 100,
-                    width: 100,
-                    height: 100,
-                    showInPlace: true
-                });
-                $scope.openContribution(drawing._id, null, w);
-            });
+            $scope.player.play();
         };
+
+        // $scope.createNote = function() {
+        //     if (!$scope.isEditable()) {
+        //         window.alert('You have no permission to edit this view.');
+        //         return;
+        //     }
+
+        //     var w = null;
+        //     if ($scope.isMobile()) {
+        //         w = window.open('');
+        //     }
+        //     var mode = {};
+        //     mode.permission = $scope.view.permission;
+        //     mode.group = $scope.view.group;
+        //     $community.createNote(mode, function(note) {
+        //         $scope.createContainsLink(note._id, {
+        //             x: 100,
+        //             y: 100
+        //         });
+        //         $scope.openContribution(note._id, null, w);
+        //     });
+        // };
+
+        // $scope.createDrawing = function() {
+        //     if (!$scope.isEditable()) {
+        //         window.alert('You have no permission to edit this view.');
+        //         return;
+        //     }
+
+        //     var w = null;
+        //     if ($scope.isMobile()) {
+        //         w = window.open('');
+        //     }
+        //     $community.createDrawing(function(drawing) {
+        //         $scope.createContainsLink(drawing._id, {
+        //             x: 100,
+        //             y: 100,
+        //             width: 100,
+        //             height: 100,
+        //             showInPlace: true
+        //         });
+        //         $scope.openContribution(drawing._id, null, w);
+        //     });
+        // };
 
         $scope.createViewlink = function() {
             if (!$scope.isEditable()) {
@@ -486,7 +580,7 @@ angular.module('kf6App')
             $community.createLink(viewId, toId, 'contains', data, handler);
         };
 
-        $scope.saveRef = function(ref) {
+        $scope.saveRef = function() {
             //$community.saveLink(ref);
             //for refresh
             $scope.refreshAllConnections();
@@ -909,7 +1003,7 @@ angular.module('kf6App')
             return ref.data && ref.data.locked;
         };
 
-        $scope.delete = function(ref) {
+        $scope.delete = function() {
             var selected = $scope.getSelectedModels();
             var confirmation = window.confirm('Are you sure to delete the selected ' + selected.length + ' object(s)?');
             if (!confirmation) {
@@ -918,7 +1012,6 @@ angular.module('kf6App')
             // selected.forEach(function(each) {
             //     $http.delete('/api/links/' + each._id);
             // });
-            var selected = $scope.getSelectedModels();
             selected.forEach(function(each) {
                 _.remove($scope.refs, { _id: each._id });
             });

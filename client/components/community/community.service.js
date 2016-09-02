@@ -978,6 +978,9 @@ angular.module('kf6App')
 
             makeDefaultViewSetting: makeDefaultViewSetting,
 
+            /* Utilities */
+            waitFor: waitFor,
+
             /* LA */
             getRecords: getRecords,
             getSocialInteractions: getSocialInteractions
