@@ -75,7 +75,9 @@ angular.module('kf6App')
                 });
 
                 $scope.fillHistoricalObjects(playlist, function() {
-                    $scope.player.reset(playlist);
+                    $scope.checkAndComplement(playlist, function() {
+                        $scope.player.reset(playlist);
+                    });
                 });
             });
         };
@@ -94,6 +96,81 @@ angular.module('kf6App')
                 }
             });
             $community.waitFor(funcs, handler);
+        };
+
+        //To compliment missing ref record for builds-on
+        $scope.checkAndComplement = function(records, handler) {
+            var refs1 = [];
+            records.forEach(function(each) {
+                refs1.push(each.historicalObject.data);
+            });
+            $http.get('/api/links/from/' + viewId).success(function(refs) {
+                //missing pattern 1 (missing builds-on exsiting)
+                var refs2 = [];
+                refs.forEach(function(each) {
+                    if (each.type === 'contains') {
+                        refs2.push(each);
+                    }
+                });
+                refs1.forEach(function(each) {
+                    _.remove(refs2, function(o) {
+                        return o._id === each._id;
+                    });
+                });
+                var missings = refs2;
+
+                //missing pattern 2 (missing builds-on deleted)
+                var created = {};
+                records.forEach(function(r) {
+                    if (r.historicalOperationType === 'created') {
+                        created[r.historicalObject.data._id] = {};
+                    }
+                    if (r.historicalOperationType === 'modified' || r.historicalOperationType === 'deleted') {
+                        if (!created[r.historicalObject.data._id]) {
+                            var missingRef = r.historicalObject.data;
+                            missings.push(missingRef);
+                            created[r.historicalObject.data._id] = {};
+                        }
+                    }
+                });
+
+                //complementation
+                missings.forEach(function(each) {
+                    $scope.complement(records, each);
+                });
+
+                //callback
+                handler();
+            });
+        };
+
+        $scope.complement = function(records, missing) {
+            var record = {
+                authorId: 'null', //todo
+                communityId: $scope.view.communityId,
+                historicalObject: {
+                    communityId: $scope.view.communityId,
+                    data: missing,
+                    dataId: missing._id,
+                    dataType: missing.type,
+                    type: 'Link'
+                },
+                historicalObjectId: missing._id,
+                historicalObjectType: 'Link',
+                historicalOperationType: 'modified',
+                historicalVariableName: missing.type,
+                targetId: $scope.view._id,
+                timestamp: missing.created,
+                type: 'modified'
+            };
+            var i = 0;
+            var len = records.length;
+            for (; i < len; i++) {
+                if (records[i].timestamp > record.timestamp) {
+                    break;
+                }
+            }
+            records.splice(i, 0, record);
         };
 
         $scope.player = {};
@@ -118,6 +195,10 @@ angular.module('kf6App')
 
             var type = record.historicalOperationType;
             var ref = record.historicalObject.data;
+            if (type === 'created' && ref._to.type === 'Note') {
+                $scope.player.step();
+                return;
+            }
             if (type === 'created') {
                 $scope.player.upsert($scope.refs, ref);
                 $scope.updateRef(ref);
