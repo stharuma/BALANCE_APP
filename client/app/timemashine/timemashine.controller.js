@@ -180,13 +180,22 @@ angular.module('kf6App')
             $scope.frame = -1;
         };
 
+
         $scope.player.play = function() {
-            setInterval($scope.player.step, 100);
+            $scope.timer = setInterval($scope.player.step, 100);
+        };
+
+        $scope.player.stop = function() {
+            clearInterval($scope.timer);
+            $scope.timer = null;
         };
 
         $scope.player.step = function() {
             var len = $scope.playlist.length;
             if ($scope.frame + 1 >= len) {
+                if ($scope.timer) {
+                    $scope.player.stop();
+                }
                 return;
             }
 
@@ -200,18 +209,65 @@ angular.module('kf6App')
                 return;
             }
             if (type === 'created') {
-                $scope.player.upsert($scope.refs, ref);
+                var previous = $scope.player.upsert($scope.refs, ref);
                 $scope.updateRef(ref);
                 $scope.refreshConnection(ref.to);
+                record.previous = previous;
             } else if (type === 'modified') {
-                $scope.player.upsert($scope.refs, ref);
+                var previous = $scope.player.upsert($scope.refs, ref);
                 $scope.updateRef(ref);
                 $scope.refreshConnection(ref.to);
+                record.previous = previous;
             } else if (type === 'deleted') {
                 _.remove($scope.refs, function(obj) {
                     return obj._id === ref._id;
                 });
             }
+        };
+
+        $scope.player.backstep = function() {
+            if ($scope.frame < 0) {
+                if ($scope.timer) {
+                    $scope.player.stop();
+                }
+                return;
+            }
+
+            var record = $scope.playlist[$scope.frame];
+
+            var type = record.historicalOperationType;
+            var ref = record.historicalObject.data;
+            if (type === 'created' && ref._to.type === 'Note') {
+                $scope.frame--;
+                $scope.player.backstep();
+                return;
+            }
+            if (type === 'created') {
+                if (record.previous) {
+                    $scope.player.upsert($scope.refs, record.previous);
+                    $scope.updateRef(record.previous);
+                    $scope.refreshConnection(record.previous.to);
+                } else {
+                    _.remove($scope.refs, function(obj) {
+                        return obj._id === ref._id;
+                    });
+                }
+            } else if (type === 'modified') {
+                if (record.previous) {
+                    $scope.player.upsert($scope.refs, record.previous);
+                    $scope.updateRef(record.previous);
+                    $scope.refreshConnection(record.previous.to);
+                } else {
+                    _.remove($scope.refs, function(obj) {
+                        return obj._id === ref._id;
+                    });
+                }
+            } else if (type === 'deleted') {
+                $scope.player.upsert($scope.refs, ref);
+                $scope.updateRef(ref);
+                $scope.refreshConnection(ref.to);
+            }
+            $scope.frame--;
         };
 
         $scope.player.upsert = function(array, obj) {
@@ -220,8 +276,11 @@ angular.module('kf6App')
             });
             if (index === -1) {
                 array.push(obj);
+                return null;
             } else {
+                var previous = array[index];
                 array.splice(index, 1, obj);
+                return previous;
             }
         };
 
@@ -598,59 +657,11 @@ angular.module('kf6App')
         };
 
         $scope.createDrawing = function() {
-            $scope.player.play();
+            $scope.player.backstep();
         };
 
-        // $scope.createNote = function() {
-        //     if (!$scope.isEditable()) {
-        //         window.alert('You have no permission to edit this view.');
-        //         return;
-        //     }
-
-        //     var w = null;
-        //     if ($scope.isMobile()) {
-        //         w = window.open('');
-        //     }
-        //     var mode = {};
-        //     mode.permission = $scope.view.permission;
-        //     mode.group = $scope.view.group;
-        //     $community.createNote(mode, function(note) {
-        //         $scope.createContainsLink(note._id, {
-        //             x: 100,
-        //             y: 100
-        //         });
-        //         $scope.openContribution(note._id, null, w);
-        //     });
-        // };
-
-        // $scope.createDrawing = function() {
-        //     if (!$scope.isEditable()) {
-        //         window.alert('You have no permission to edit this view.');
-        //         return;
-        //     }
-
-        //     var w = null;
-        //     if ($scope.isMobile()) {
-        //         w = window.open('');
-        //     }
-        //     $community.createDrawing(function(drawing) {
-        //         $scope.createContainsLink(drawing._id, {
-        //             x: 100,
-        //             y: 100,
-        //             width: 100,
-        //             height: 100,
-        //             showInPlace: true
-        //         });
-        //         $scope.openContribution(drawing._id, null, w);
-        //     });
-        // };
-
         $scope.createViewlink = function() {
-            if (!$scope.isEditable()) {
-                window.alert('You have no permission to edit this view.');
-                return;
-            }
-            $scope.status.isViewlinkCollapsed = !$scope.status.isViewlinkCollapsed;
+            $scope.player.play();
         };
 
         $scope.createContainsLink = function(toId, data, handler) {
