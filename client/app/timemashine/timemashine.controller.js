@@ -37,7 +37,6 @@ angular.module('kf6App')
                     $scope.updateViewSetting();
 
                     $scope.initializeRecords();
-
                 });
             }, function(msg) {
                 $scope.status.error = true;
@@ -76,10 +75,66 @@ angular.module('kf6App')
 
                 $scope.fillHistoricalObjects(playlist, function() {
                     $scope.checkAndComplement(playlist, function() {
+                        $scope.initializeTimeline(playlist);
                         $scope.player.reset(playlist);
                     });
                 });
             });
+        };
+
+        var timeline;
+        $scope.initializeTimeline = function(playlist) {
+            var container = document.getElementById('timeline');
+
+            // Create a DataSet (allows two way data-binding)
+            var dataset = [];
+            var id = 1;
+            playlist.forEach(function(each) {
+                dataset.push({ id: id, content: each.historicalOperationType, start: each.timestamp, title: $community.getCommunityData().members[each.authorId].name });
+                id++;
+            });
+            var items = new vis.DataSet(dataset);
+
+            // Configuration for the Timeline
+            // var options = {};
+            var options = { height: "100px", stack: false, showCurrentTime: false };
+
+            // Create a Timeline
+            timeline = new vis.Timeline(container, items, options);
+
+            // bar
+            if (playlist.length > 0) {
+                var customDate = playlist[0].timestamp;
+                timeline.addCustomTime(customDate, 'custom');
+                /*
+                timeline.on('timechanged', function(properties) {
+                });
+                */
+            }
+        }
+
+        $scope.scaleFit = function() {
+            timeline.fit();
+        };
+
+        $scope.scaleUp = function() {
+            $scope.scale(0.5);
+        };
+
+        $scope.scaleDown = function() {
+            $scope.scale(2.0);
+        };
+
+        $scope.scale = function(scale) {
+            var r = timeline.getWindow();
+            var startTime = r.start.getTime();
+            var endTime = r.end.getTime();
+            var range = endTime - startTime;
+            var newRange = range * scale;
+            var center = (endTime + startTime) / 2;
+            r.start = new Date(center - newRange / 2);
+            r.end = new Date(center + (newRange / 2));
+            timeline.setWindow(r);
         };
 
         $scope.fillHistoricalObjects = function(records, handler) {
@@ -146,7 +201,7 @@ angular.module('kf6App')
 
         $scope.complement = function(records, missing) {
             var record = {
-                authorId: 'null', //todo
+                authorId: missing._to.authors[0], //temporary, todo
                 communityId: $scope.view.communityId,
                 historicalObject: {
                     communityId: $scope.view.communityId,
@@ -202,6 +257,7 @@ angular.module('kf6App')
             $scope.frame++;
             var record = $scope.playlist[$scope.frame];
 
+            timeline.setCustomTime(record.timestamp, 'custom');
             var type = record.historicalOperationType;
             var ref = record.historicalObject.data;
             if (type === 'created' && ref._to.type === 'Note') {
@@ -222,6 +278,18 @@ angular.module('kf6App')
                 _.remove($scope.refs, function(obj) {
                     return obj._id === ref._id;
                 });
+            }
+        };
+
+        $scope.player.toFirst = function() {
+            while ($scope.frame > 0) {
+                $scope.player.backstep();
+            }
+        };
+
+        $scope.player.toLast = function() {
+            while ($scope.frame + 1 < $scope.playlist.length) {
+                $scope.player.step();
             }
         };
 
