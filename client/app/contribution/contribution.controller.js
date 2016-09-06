@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $kfcommon) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh) {
         var contributionId = $stateParams.contributionId;
         var contextId = $stateParams.contextId;
 
@@ -940,7 +940,7 @@ angular.module('kf6App')
                 window.alert('View is not selected');
                 return;
             }
-            $kfcommon.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
+            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
             $scope.selectedViewIds.length = 0;
             $scope.setnewnoteIndex(-1);
         };

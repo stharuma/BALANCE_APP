@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$suresh', function () {
+    .factory('$suresh', function() {
         var obj = {};
 
-        obj.makeQuery = function (queryString, communityId, communityMembers, $community) {
+         obj.makeQuery = function (queryString, communityId, communityMembers, $community) {
             var query = {
                 communityId: communityId,
                 words: [],
@@ -133,6 +133,45 @@ angular.module('kf6App')
                 return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
         };
+
+        obj.createnewnoteInMutipleView = function (title, viewIds, $community, body, $http) {
+            viewIds.forEach(function (viewId) {
+                obj.createnewnote(title, viewId, $community, body, $http);
+            });
+        };
+
+        obj.createnewnote = function (title, viewId, $community, body, $http) {
+            $community.createNote(null, function (note) {
+                createContainsLink(viewId, note._id, $http, {
+                    x: 100,
+                    y: 100
+                });
+                note.data.body = body; //"<span style =\"bocground-color:"+ $scope.promisingIdeaobjs[conn.from].data.color+"'\'>"+conn.data.idea+"</span>";
+                note.title = title;
+                note.status = 'active';
+                note.text4search = '( ' + note.title + ' ) ' + note.data.body;
+                $community.modifyObject(note, function () {
+                    $community.read(note);
+                }, function () {
+                    if (window.localStorage) {
+                        window.localStorage.setItem('kfdoc', note.data.body);
+                    }
+                });
+            });
+        };
+
+        function createContainsLink(viewid, toId, $http, data, handler) {
+            var link = {};
+            link.from = viewid;
+            link.to = toId;
+            link.type = 'contains';
+            link.data = data;
+            $http.post('/api/links', link).success(function () {
+                if (handler) {
+                    handler();
+                }
+            });
+        }
 
         return obj;
     });

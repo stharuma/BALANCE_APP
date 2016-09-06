@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $kfcommon) {
+    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId, function () {
            $scope.search();
@@ -206,8 +206,8 @@ angular.module('kf6App')
             } else {
                 $scope.status.communityCollapsed = false;
             }
-            $scope.pager.query = $kfcommon.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
-            $kfcommon.count($scope.status, $scope.pager, communityId, $ac, $http, checkedPromisingtLinkInNote);
+            $scope.pager.query = $suresh.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
+            $suresh.count($scope.status, $scope.pager, communityId, $ac, $http, checkedPromisingtLinkInNote);
             $scope.queryString = '';
         };
 
@@ -228,7 +228,7 @@ angular.module('kf6App')
                 window.alert('View is not selected');
                 return;
             }
-            $kfcommon.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
+            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
             $scope.selectedViewIds.length = 0;
             $scope.status.isnewNoteCollapsed = true;
 
