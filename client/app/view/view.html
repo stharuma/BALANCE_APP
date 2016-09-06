@@ -38,6 +38,9 @@
             <label>{{ 'assessment_tools' | translate }} ({{ 'beta_version' | translate }}):</label>
             <ul>
                 <li><a draggable="false" href="" ng-click="openTagCloud()">{{ 'assessment_tools_wordCloud' | translate }}</a></li>
+                <li><a draggable="false" href="" ng-click="openDashboard()">Dashboard(beta)</a></li>
+                <li><a draggable="false" href="" ng-click="openS2viz()">s2viz(beta)</a></li>
+                <li><a draggable="false" href="" ng-click="openTimemashine()">timemashine(beta)</a></li>
             </ul>
              <ul ng-if="context.data.plugins.lexicalanalysis === true">
                 <li><a draggable="false" href="" ng-click="openLexicalAnalysis()"> Lexical Analysis</a></li>

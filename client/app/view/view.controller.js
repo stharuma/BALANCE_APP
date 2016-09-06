@@ -619,6 +619,24 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+        $scope.openDashboard = function() {
+            $scope.openAnalytics();
+            var url = 'dashboard/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openS2viz = function() {
+            $scope.openAnalytics();
+            var url = 's2viz/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openTimemashine = function() {
+            $scope.openAnalytics();
+            var url = 'timemashine/' + $scope.view._id;
+            window.open(url, '_blank');
+        };
+
         $scope.openLexicalAnalysis = function() {
             $scope.openAnalytics();
             var url = 'lexicalanalysis/' + $scope.view.communityId;

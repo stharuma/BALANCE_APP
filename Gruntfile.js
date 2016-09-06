@@ -133,7 +133,8 @@ module.exports = function(grunt) {
             all: [
                 '<%= yeoman.client %>/{app,components}/**/*.js',
                 '!<%= yeoman.client %>/{app,components}/**/*.spec.js',
-                '!<%= yeoman.client %>/{app,components}/**/*.mock.js'
+                '!<%= yeoman.client %>/{app,components}/**/*.mock.js',
+                '!<%= yeoman.client %>/{app,components}/**/chord/**/*.js'
             ],
             test: {
                 src: [
@@ -367,7 +368,7 @@ module.exports = function(grunt) {
                         'node_modules/**/*', //added 6.5.2
                         '!server/components/kfmail/setting.js' //added 6.7.0
                     ]
-                }, {// added 6.7.0
+                }, { // added 6.7.0
                     src: 'gitignore.dest',
                     dest: '<%= yeoman.dist %>/.gitignore'
                 }]

@@ -1,5 +1,7 @@
 'use strict';
 
+/* global d3 */
+
 angular.module('kf6App')
     .factory('$community', function($http, Auth) {
 
@@ -213,8 +215,8 @@ angular.module('kf6App')
                 loadScaffoldLinks(context, function(links) {
                     communityData.scaffolds.length = 0; //clear once
                     links.forEach(function(link) {
-                        communityData.registeredScaffolds.forEach(function(each){
-                            if(link.to === each._id){
+                        communityData.registeredScaffolds.forEach(function(each) {
+                            if (link.to === each._id) {
                                 communityData.scaffolds.push(each);
                             }
                         });
@@ -844,6 +846,73 @@ angular.module('kf6App')
             $http.post('/api/notifications/notify/' + communityId, obj);
         };
 
+        var getRecords = function(handler) {
+            $http.post('api/records/search/' + communityId, {}).success(function(records) {
+                if (handler) {
+                    handler(records);
+                }
+            });
+        };
+
+        var getContributionCatalog = function(handler) {
+            var query = {
+                communityId: communityId,
+                pagesize: 100000
+            };
+            $http.post('/api/contributions/' + communityId + '/search', {
+                query: query
+            }).success(function(contributions) {
+                var catalog = {};
+                contributions.forEach(function(contribution) {
+                    catalog[contribution._id] = contribution;
+                });
+                if (handler) {
+                    handler(catalog);
+                }
+            });
+        };
+
+        var getSocialInteractions = function(handler) {
+            refreshMembers(function() {
+                getRecords(function(records) {
+                    getContributionCatalog(function(catalog) {
+                        var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ").parse;
+                        var interactions = [];
+                        records.forEach(function(record) {
+                            var author = communityData.members[record.authorId];
+                            var object = catalog[record.targetId];
+                            if (!object) {
+                                return;
+                            }
+                            var toAuthor = communityData.members[object.authors[0]];
+                            var d = {
+                                from: author.name,
+                                type: record.type,
+                                title: object.title,
+                                to: toAuthor.name,
+                                when: record.timestamp
+                            };
+                            d.date = parseDate(d.when);
+                            d.year = d3.time.year(d.date);
+                            d.month = d3.time.month(d.date);
+                            d.day = d3.time.day(d.date);
+                            d.week = d3.time.week(d.date);
+
+                            d.value = 1;
+                            d.read = 0;
+                            d.modify = 0;
+                            d.buildson = 0;
+                            d[d.type] = 1;
+                            interactions.push(d);
+                        });
+                        if (handler) {
+                            handler(interactions);
+                        }
+                    });
+                });
+            });
+        };
+
         return {
             getContext: getContext,
 
@@ -907,8 +976,10 @@ angular.module('kf6App')
             createRootContext: createRootContext /*for migration tool*/ ,
             refreshContext: refreshContext,
 
-            makeDefaultViewSetting: makeDefaultViewSetting
+            makeDefaultViewSetting: makeDefaultViewSetting,
 
-
+            /* LA */
+            getRecords: getRecords,
+            getSocialInteractions: getSocialInteractions
         };
     });
