@@ -854,6 +854,15 @@ angular.module('kf6App')
             });
         };
 
+        var searchHistoricalObjects = function(query, handler) {
+            var postquery = { query: query };
+            $http.post('api/historicalobjects/' + communityId + '/search', postquery).success(function(objects) {
+                if (handler) {
+                    handler(objects);
+                }
+            });
+        };
+
         var getContributionCatalog = function(handler) {
             var query = {
                 communityId: communityId,
@@ -979,6 +988,7 @@ angular.module('kf6App')
             makeDefaultViewSetting: makeDefaultViewSetting,
 
             /* LA */
+            searchHistoricalObjects: searchHistoricalObjects,
             getRecords: getRecords,
             getSocialInteractions: getSocialInteractions
         };

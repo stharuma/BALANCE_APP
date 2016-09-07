@@ -54,7 +54,7 @@ exports.searchCount = function(req, res) {
 exports.search = function(req, res) {
     //assure req.body.query
     if (!req.body.query) {
-        console.err('search parameter error: ' + req.body);
+        console.error('search parameter error: ' + req.body);
         return res.send(400);
     }
 
@@ -82,7 +82,7 @@ function makeMongoQuery(req, res, success) {
     //assure communityId
     if (!query.communityId) {
         if (!req.author) {
-            console.err('search query error: ' + query);
+            console.error('search query error: ' + query);
             return res.send(400);
         } else {
             query.communityId = req.author.communityId;

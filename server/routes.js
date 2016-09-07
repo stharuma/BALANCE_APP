@@ -26,7 +26,7 @@ module.exports = function(app) {
     app.use('/api/notifications', require('./api/notification'));
     app.use('/api/contexts', require('./api/KBContext'));
     app.use('/api/groups', require('./api/KGroup'));
-    app.use('/api/historicalobjects/', require('./api/KHistoricalObject'));
+    app.use('/api/historicalobjects', require('./api/KHistoricalObject'));
     app.use('/api/communities', require('./api/KCommunity'));
     app.use('/api/objects', require('./api/KObject'));
     app.use('/api/contributions', require('./api/KContribution'));
