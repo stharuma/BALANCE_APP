@@ -987,6 +987,9 @@ angular.module('kf6App')
 
             makeDefaultViewSetting: makeDefaultViewSetting,
 
+            /* Utilities */
+            waitFor: waitFor,
+
             /* LA */
             searchHistoricalObjects: searchHistoricalObjects,
             getRecords: getRecords,
