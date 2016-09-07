@@ -17,12 +17,6 @@ angular.module('kf6App')
         $scope.refs = [];
 
         $scope.status = {};
-        $scope.status.error = false;
-        $scope.status.isViewlinkCollapsed = true;
-        $scope.status.isViewManagerCollapsed = true;
-        $scope.status.isAttachmentCollapsed = true;
-        $scope.status.isAnalyticsCollapsed = true;
-        $scope.status.isSettingCollapsed = true;
         $scope.setting = $community.makeDefaultViewSetting();
         $scope.dragging = 'none';
 
@@ -36,7 +30,7 @@ angular.module('kf6App')
                     $scope.updateCanvas();
                     $scope.updateViewSetting();
 
-                    $scope.initializeRecords();
+                    $scope.initializeReplaySystem();
                 });
             }, function(msg) {
                 $scope.status.error = true;
@@ -62,337 +56,7 @@ angular.module('kf6App')
             }
         };
 
-        $scope.initializeRecords = function() {
-            $community.refreshMembers();
-            $http.post('api/records/search/' + $scope.view.communityId, { query: { targetId: $scope.view._id } }).success(function(records) {
-                var playlist = [];
-
-                records.forEach(function(record) {
-                    if (record.type === 'modified' && record.historicalVariableName === 'contains') {
-                        playlist.push(record);
-                    }
-                });
-
-                $scope.fillHistoricalObjects(playlist, function() {
-                    $scope.checkAndComplement(playlist, function() {
-                        $scope.initializeTimeline(playlist);
-                        $scope.player.reset(playlist);
-                    });
-                });
-            });
-        };
-
-        var timeline;
-        $scope.initializeTimeline = function(playlist) {
-            var container = document.getElementById('timeline');
-
-            // Create a DataSet (allows two way data-binding)
-            var dataset = [];
-            var id = 1;
-            playlist.forEach(function(each) {
-                dataset.push({ id: id, content: each.historicalOperationType, start: each.timestamp, title: $community.getCommunityData().members[each.authorId].name });
-                id++;
-            });
-            var items = new vis.DataSet(dataset);
-
-            // Configuration for the Timeline
-            // var options = {};
-            var options = { height: "100px", stack: false, showCurrentTime: false };
-
-            // Create a Timeline
-            timeline = new vis.Timeline(container, items, options);
-
-            // bar
-            if (playlist.length > 0) {
-                var customDate = playlist[0].timestamp;
-                timeline.addCustomTime(customDate, 'custom');
-                /*
-                timeline.on('timechanged', function(properties) {
-                });
-                */
-            }
-        }
-
-        $scope.scaleFit = function() {
-            timeline.fit();
-        };
-
-        $scope.scaleUp = function() {
-            $scope.scale(0.5);
-        };
-
-        $scope.scaleDown = function() {
-            $scope.scale(2.0);
-        };
-
-        $scope.scale = function(scale) {
-            var r = timeline.getWindow();
-            var startTime = r.start.getTime();
-            var endTime = r.end.getTime();
-            var range = endTime - startTime;
-            var newRange = range * scale;
-            var center = (endTime + startTime) / 2;
-            r.start = new Date(center - newRange / 2);
-            r.end = new Date(center + (newRange / 2));
-            timeline.setWindow(r);
-        };
-
-        $scope.fillHistoricalObjects = function(records, handler) {
-            var funcs = [];
-            records.forEach(function(record) {
-                if (record.historicalObjectId) {
-                    funcs.push(function(handler) {
-                        $http.get('api/historicalobjects/' + record.historicalObjectId)
-                            .success(function(historical) {
-                                record.historicalObject = historical;
-                                handler();
-                            });
-                    });
-                }
-            });
-            $community.waitFor(funcs, handler);
-        };
-
-        //To compliment missing ref record for builds-on
-        $scope.checkAndComplement = function(records, handler) {
-            var refs1 = [];
-            records.forEach(function(each) {
-                refs1.push(each.historicalObject.data);
-            });
-            $http.get('/api/links/from/' + viewId).success(function(refs) {
-                //missing pattern 1 (missing builds-on exsiting)
-                var refs2 = [];
-                refs.forEach(function(each) {
-                    if (each.type === 'contains') {
-                        refs2.push(each);
-                    }
-                });
-                refs1.forEach(function(each) {
-                    _.remove(refs2, function(o) {
-                        return o._id === each._id;
-                    });
-                });
-                var missings = refs2;
-
-                //missing pattern 2 (missing builds-on deleted)
-                var created = {};
-                records.forEach(function(r) {
-                    if (r.historicalOperationType === 'created') {
-                        created[r.historicalObject.data._id] = {};
-                    }
-                    if (r.historicalOperationType === 'modified' || r.historicalOperationType === 'deleted') {
-                        if (!created[r.historicalObject.data._id]) {
-                            var missingRef = r.historicalObject.data;
-                            missings.push(missingRef);
-                            created[r.historicalObject.data._id] = {};
-                        }
-                    }
-                });
-
-                //complementation
-                missings.forEach(function(each) {
-                    $scope.complement(records, each);
-                });
-
-                //callback
-                handler();
-            });
-        };
-
-        $scope.complement = function(records, missing) {
-            var record = {
-                authorId: missing._to.authors[0], //temporary, todo
-                communityId: $scope.view.communityId,
-                historicalObject: {
-                    communityId: $scope.view.communityId,
-                    data: missing,
-                    dataId: missing._id,
-                    dataType: missing.type,
-                    type: 'Link'
-                },
-                historicalObjectId: missing._id,
-                historicalObjectType: 'Link',
-                historicalOperationType: 'modified',
-                historicalVariableName: missing.type,
-                targetId: $scope.view._id,
-                timestamp: missing.created,
-                type: 'modified'
-            };
-            var i = 0;
-            var len = records.length;
-            for (; i < len; i++) {
-                if (records[i].timestamp > record.timestamp) {
-                    break;
-                }
-            }
-            records.splice(i, 0, record);
-        };
-
-        $scope.player = {};
-
-        $scope.player.reset = function(playlist) {
-            $scope.playlist = playlist;
-            $scope.frame = -1;
-        };
-
-
-        $scope.player.play = function() {
-            $scope.timer = setInterval($scope.player.step, 100);
-        };
-
-        $scope.player.stop = function() {
-            clearInterval($scope.timer);
-            $scope.timer = null;
-        };
-
-        $scope.player.step = function() {
-            var len = $scope.playlist.length;
-            if ($scope.frame + 1 >= len) {
-                if ($scope.timer) {
-                    $scope.player.stop();
-                }
-                return;
-            }
-
-            $scope.frame++;
-            var record = $scope.playlist[$scope.frame];
-
-            timeline.setCustomTime(record.timestamp, 'custom');
-            var type = record.historicalOperationType;
-            var ref = record.historicalObject.data;
-            if (type === 'created' && ref._to.type === 'Note') {
-                $scope.player.step();
-                return;
-            }
-            if (type === 'created') {
-                var previous = $scope.player.upsert($scope.refs, ref);
-                $scope.updateRef(ref);
-                $scope.refreshConnection(ref.to);
-                record.previous = previous;
-            } else if (type === 'modified') {
-                var previous = $scope.player.upsert($scope.refs, ref);
-                $scope.updateRef(ref);
-                $scope.refreshConnection(ref.to);
-                record.previous = previous;
-            } else if (type === 'deleted') {
-                _.remove($scope.refs, function(obj) {
-                    return obj._id === ref._id;
-                });
-            }
-        };
-
-        $scope.player.toFirst = function() {
-            while ($scope.frame > 0) {
-                $scope.player.backstep();
-            }
-        };
-
-        $scope.player.toLast = function() {
-            while ($scope.frame + 1 < $scope.playlist.length) {
-                $scope.player.step();
-            }
-        };
-
-        $scope.player.backstep = function() {
-            if ($scope.frame < 0) {
-                if ($scope.timer) {
-                    $scope.player.stop();
-                }
-                return;
-            }
-
-            var record = $scope.playlist[$scope.frame];
-
-            var type = record.historicalOperationType;
-            var ref = record.historicalObject.data;
-            if (type === 'created' && ref._to.type === 'Note') {
-                $scope.frame--;
-                $scope.player.backstep();
-                return;
-            }
-            if (type === 'created') {
-                if (record.previous) {
-                    $scope.player.upsert($scope.refs, record.previous);
-                    $scope.updateRef(record.previous);
-                    $scope.refreshConnection(record.previous.to);
-                } else {
-                    _.remove($scope.refs, function(obj) {
-                        return obj._id === ref._id;
-                    });
-                }
-            } else if (type === 'modified') {
-                if (record.previous) {
-                    $scope.player.upsert($scope.refs, record.previous);
-                    $scope.updateRef(record.previous);
-                    $scope.refreshConnection(record.previous.to);
-                } else {
-                    _.remove($scope.refs, function(obj) {
-                        return obj._id === ref._id;
-                    });
-                }
-            } else if (type === 'deleted') {
-                $scope.player.upsert($scope.refs, ref);
-                $scope.updateRef(ref);
-                $scope.refreshConnection(ref.to);
-            }
-            $scope.frame--;
-        };
-
-        $scope.player.upsert = function(array, obj) {
-            var index = _.findIndex(array, function(elem) {
-                return elem._id === obj._id;
-            });
-            if (index === -1) {
-                array.push(obj);
-                return null;
-            } else {
-                var previous = array[index];
-                array.splice(index, 1, obj);
-                return previous;
-            }
-        };
-
-        $scope.updateCanvas = function() {
-            // $http.get('/api/links/from/' + viewId).success(function(refs) {
-            //     //temporary get rid of others from contains
-            //     var onviewrefs = [];
-            //     refs.forEach(function(ref) {
-            //         if (ref.type === 'contains') {
-            //             onviewrefs.push(ref);
-            //         }
-            //     });
-            //     $scope.refs = onviewrefs;
-            //     socket.socket.emit('subscribe', 'linkfrom:' + viewId);
-            //     $scope.$on('$destroy', function() {
-            //         socket.unsyncUpdates('link');
-            //         socket.socket.emit('unsubscribe', 'linkfrom:' + viewId);
-            //     });
-            //     socket.syncUpdates('link', function(item) {
-            //         return item.type === 'contains';
-            //     }, $scope.refs, function(event, item) {
-            //         if (event === 'created') {
-            //             $scope.updateRef(item);
-            //             $scope.refreshConnection(item.to);
-            //             $scope.refreshReadStatus(item);
-            //         }
-            //         if (event === 'updated') {
-            //             $scope.updateRef(item);
-            //         }
-            //     });
-            //     //authors info
-            //     var refscopy = _.clone($scope.refs);
-            //     refscopy.forEach(function(ref) {
-            //         $scope.updateRef(ref);
-            //     });
-            //     $community.refreshMembers();
-
-            //     //update links
-            //     $scope.refreshAllConnections();
-
-            //     //read
-            //     $scope.refreshAllReadStatus();
-            // });
-        };
+        $scope.updateCanvas = function() {};
 
         $scope.settingChanged = function() {
             $scope.refreshAllConnections();
@@ -650,7 +314,7 @@ angular.module('kf6App')
             });
             if (conn) {
                 $('#' + fromId).on('$destroy', function() {
-                    if (conn.detached !== true) {
+                    if (conn.detached !== true && conn.endpoints) {
                         try {
                             $scope.jsPlumb.detach(conn);
                         } catch (e) {
@@ -660,7 +324,7 @@ angular.module('kf6App')
                     }
                 });
                 $('#' + toId).on('$destroy', function() {
-                    if (conn.detached !== true) {
+                    if (conn.detached !== true && conn.endpoints) {
                         try {
                             $scope.jsPlumb.detach(conn);
                         } catch (e) {
@@ -719,187 +383,12 @@ angular.module('kf6App')
         });
 
         /* ----------- creation --------- */
-
-        $scope.createNote = function() {
-            $scope.player.step();
-        };
-
-        $scope.createDrawing = function() {
-            $scope.player.backstep();
-        };
-
-        $scope.createViewlink = function() {
-            $scope.player.play();
-        };
-
-        $scope.createContainsLink = function(toId, data, handler) {
-            $scope.createContainsLink0($scope.view._id, toId, data, handler);
-        };
-
-        $scope.createContainsLink0 = function(viewId, toId, data, handler) {
-            $community.createLink(viewId, toId, 'contains', data, handler);
-        };
+        $scope.createContainsLink = function(toId, data, handler) {};
 
         $scope.saveRef = function() {
             //$community.saveLink(ref);
             //for refresh
             $scope.refreshAllConnections();
-        };
-
-        $scope.openAttachment = function() {
-            if (!$scope.isEditable()) {
-                window.alert('You have no permission to edit this view.');
-                return;
-            }
-            $scope.status.isAttachmentCollapsed = !$scope.status.isAttachmentCollapsed;
-        };
-
-        $scope.attachmentUploaded = function(attachment) {
-            $http.post('/api/links', {
-                from: $scope.view._id,
-                to: attachment._id,
-                type: 'contains',
-                data: {
-                    x: 200,
-                    y: 200,
-                    width: 200,
-                    height: 200
-                }
-            }).success(function() {
-                $timeout(function() {
-                    $scope.status.isAttachmentCollapsed = true;
-                    $scope.$digest($scope.status.isAttachmentCollapsed);
-                }, 500);
-            });
-        };
-
-        $scope.openSearch = function() {
-            var url = '/search/' + $scope.view.communityId;
-            window.open(url, '_blank');
-        };
-
-        // $scope.openViewProperty = function() {
-        //     var url = './contribution/' + viewId;
-        //     window.open(url, '_blank');
-        // };
-
-        $scope.openWorkspace = function() {
-            var author = $scope.community.author;
-            if (!author) {
-                window.alert('author has not loaded yet.');
-                return;
-            }
-            if (author.data && author.data.workspaces) {
-                $scope.openWorkspace0(author.data.workspaces[0]);
-            } else {
-                $scope.createWorkspace(author, function(workspace) {
-                    $scope.openWorkspace0(workspace._id);
-                });
-            }
-        };
-
-        $scope.openScaffolds = function() {
-            var url = '/scaffoldmanager/' + $scope.view.communityId;
-            window.open(url, '_scaffoldmanager');
-        };
-
-        $scope.openViewSetting = function() {
-            var url = '/contribution/' + $scope.view._id;
-            window.open(url, '_blank');
-            $scope.status.isSettingCollapsed = true;
-        };
-
-        $scope.openCommunitySetting = function() {
-            $community.getContext(null, function(context) {
-                var url = '/contribution/' + context._id;
-                window.open(url, '_blank');
-                $scope.status.isSettingCollapsed = true;
-            });
-        };
-
-        $scope.openAuthors = function() {
-            var url = '/authormanager/' + $scope.view.communityId;
-            window.open(url, '_blank');
-        };
-
-        $scope.openGroups = function() {
-            var url = '/groupmanager/' + $scope.view.communityId;
-            window.open(url, '_blank');
-        };
-
-        $scope.createWorkspace = function(author, handler) {
-            var title = author.getName() + '\'s workspace';
-            $community.createView(title, function(view) {
-                if (!author.data) {
-                    author.data = {};
-                }
-                if (!author.data.workspaces) {
-                    author.data.workspaces = [];
-                }
-                author.data.workspaces.push(view._id);
-                $community.modifyObject(author, function() {
-                    /* success */
-                    if (handler) {
-                        handler(view);
-                    }
-                }, function(err) {
-                    /* error */
-                    window.alert(JSON.stringify(err));
-                    author.data.workspaces = undefined; /* roll back */
-                });
-            }, true, {
-                permission: 'private'
-            });
-        };
-
-        $scope.openWorkspace0 = function(viewId) {
-            var url = './view/' + viewId;
-            $scope.openInPopup(url);
-        };
-
-        $scope.openAnalytics = function() {
-            $scope.status.isAnalyticsCollapsed = !$scope.status.isAnalyticsCollapsed;
-        };
-
-        $scope.openTagCloud = function() {
-            $scope.openAnalytics();
-            var url = 'wcloud/' + $scope.view._id;
-            $scope.openInPopup(url);
-        };
-
-        $scope.openDashboard = function() {
-            $scope.openAnalytics();
-            var url = 'dashboard/' + $scope.view.communityId;
-            window.open(url, '_blank');
-        };
-
-        $scope.openS2viz = function() {
-            $scope.openAnalytics();
-            var url = 's2viz/' + $scope.view.communityId;
-            window.open(url, '_blank');
-        };
-
-        $scope.openTimemashine = function() {
-            $scope.openAnalytics();
-            var url = 'timemashine/' + $scope.view._id;
-            window.open(url, '_blank');
-        };
-
-        $scope.openLexicalAnalysis = function() {
-            $scope.openAnalytics();
-            var url = 'lexicalanalysis/' + $scope.view.communityId;
-            $scope.openInPopup(url);
-        };
-
-        $scope.openScafoldSupportTracker = function() {
-            $scope.openAnalytics();
-            var url = 'scaffoldsupporttracker/' + $scope.view.communityId;
-            $scope.openInPopup(url);
-        };
-
-        $scope.doExit = function() {
-            var url = '';
-            $scope.gotoURL(url);
         };
 
         /* ----------- open window --------- */
@@ -1053,168 +542,372 @@ angular.module('kf6App')
             return wid;
         };
 
-        /* ----------- context menu --------- */
-
-        $scope.onContextOpen = function(childScope) {
-            $scope.contextTarget = childScope.ref;
-        };
-
-        $scope.showAsIcon = function() {
-            $scope.contextTarget.data.showInPlace = false;
-            $scope.saveRef($scope.contextTarget);
-        };
-
-        $scope.showInPlace = function() {
-            $scope.contextTarget.data.showInPlace = true;
-            $scope.saveRef($scope.contextTarget);
-        };
-
-        $scope.fix = function(ref) {
-            if (!ref) {
-                ref = $scope.contextTarget;
-            }
-            if (!ref) {
-                window.alert('ERROR: no reference on fix/unfix');
-                return;
-            }
-            if (!$scope.isFixable(ref)) {
-                window.alert('You are not able to fix this object.');
-                return;
-            }
-            ref.data.fixed = true;
-            $scope.saveRef(ref);
-            $scope.clearSelection();
-        };
-
-        $scope.fixAndLock = function(ref) {
-            if (!ref) {
-                ref = $scope.contextTarget;
-            }
-            if (!ref) {
-                window.alert('ERROR: no reference on fix/unfix');
-                return;
-            }
-            if (!$scope.isFixable(ref)) {
-                window.alert('You are not able to fix this object.');
-                return;
-            }
-            if (!$scope.isLockable(ref)) {
-                window.alert('You are not able to lock this object.');
-                return;
-            }
-            ref.data.fixed = true;
-            ref.data.locked = true;
-            $scope.saveRef(ref);
-            $scope.clearSelection();
-        };
-
-        $scope.unfix = function(ref) {
-            if (!ref) {
-                ref = $scope.contextTarget;
-            }
-            if (!ref) {
-                window.alert('ERROR: no reference on fix/unfix');
-                return;
-            }
-            if (!$scope.isUnfixable(ref)) {
-                window.alert('You are not able to unfix this object.');
-                return;
-            }
-            ref.data.fixed = false;
-            ref.data.locked = false;
-            $scope.saveRef(ref);
-        };
-
-        $scope.isLockable = function() {
-            return $scope.hasLockControl();
-        };
-
-        $scope.isFixable = function(ref) {
-            if (!ref) {
-                ref = $scope.contextTarget;
-            }
-            if (!ref) {
-                return false;
-            }
-            return !ref.data.fixed && $scope.isEditable();
-        };
-
-        $scope.isUnfixable = function(ref) {
-            if (!ref) {
-                ref = $scope.contextTarget;
-            }
-            if (!ref) {
-                return false;
-            }
-            return !$scope.isLocked(ref) || $scope.hasLockControl();
-        };
-
-        $scope.hasLockControl = function() {
-            return $community.amIAuthor($scope.view);
-        };
-
-        $scope.isLocked = function(ref) {
-            if (!ref) {
-                ref = $scope.contextTarget;
-            }
-            if (!ref) {
-                return false;
-            }
-            return ref.data && ref.data.locked;
-        };
-
-        $scope.delete = function() {
-            var selected = $scope.getSelectedModels();
-            var confirmation = window.confirm('Are you sure to delete the selected ' + selected.length + ' object(s)?');
-            if (!confirmation) {
-                return;
-            }
-            // selected.forEach(function(each) {
-            //     $http.delete('/api/links/' + each._id);
-            // });
-            selected.forEach(function(each) {
-                _.remove($scope.refs, { _id: each._id });
+        /** replay system **/
+        $scope.initializeReplaySystem = function() {
+            $scope.initializeRecords(function(playlist) {
+                $scope.initializeTimeline(playlist);
+                $scope.player.reset(playlist);
             });
-            $scope.refreshAllConnections();
         };
 
-        $scope.createRiseabove = function() {
-            var selected = $scope.getSelectedModels();
-            var confirmation = window.confirm('Are you sure to create riseabove using the selected ' + selected.length + ' object(s)?');
-            if (!confirmation) {
-                return;
-            }
-            var topleft = {
-                x: 10000,
-                y: 10000
-            };
-            selected.forEach(function(ref) {
-                topleft.x = Math.min(topleft.x, ref.data.x);
-                topleft.y = Math.min(topleft.y, ref.data.y);
-            });
-            var mode = {};
-            mode.permission = $scope.view.permission;
-            mode.group = $scope.view.group;
-            $community.createView('riseabove:', function(view) {
-                $community.createNote(mode, function(note) {
-                    note.title = 'Riseabove';
-                    $community.makeRiseabove(note, view._id, function(note) {
-                        $scope.createContainsLink(note._id, {
-                            x: topleft.x + 50,
-                            y: topleft.y + 50
-                        }, function() {
-                            selected.forEach(function(each) {
-                                $scope.createContainsLink0(view._id, each.to, {
-                                    x: each.data.x - topleft.x + 20,
-                                    y: each.data.y - topleft.y + 20
-                                }, function() {
-                                    $http.delete('/api/links/' + each._id);
-                                });
-                            });
-                        });
+        $scope.initializeRecords = function(handler) {
+            $community.refreshMembers();
+            $http.post('api/records/search/' + $scope.view.communityId, { query: { targetId: $scope.view._id } }).success(function(records) {
+                var playlist = [];
+
+                records.forEach(function(record) {
+                    if (record.type === 'modified' && record.historicalVariableName === 'contains') {
+                        playlist.push(record);
+                    }
+                });
+
+                $scope.fillHistoricalObjects(playlist, function() {
+                    $scope.checkAndComplement(playlist, function() {
+                        handler(playlist);
                     });
                 });
-            }, true, mode);
+            });
+        };
+
+        var timeline;
+        $scope.initializeTimeline = function(playlist) {
+            var container = document.getElementById('timeline');
+
+            // Create a DataSet (allows two way data-binding)
+            var dataset = [];
+            var id = 0;
+            playlist.forEach(function(each) {
+                dataset.push({ id: id, content: each.historicalOperationType, start: each.timestamp, title: $community.getCommunityData().members[each.authorId].name });
+                id++;
+            });
+            var items = new vis.DataSet(dataset);
+
+            // Configuration for the Timeline
+            // var options = {};
+            var options = { height: '100px', stack: false, showCurrentTime: false };
+
+            // Create a Timeline
+            timeline = new vis.Timeline(container, items, options);
+
+            // bar
+            if (playlist.length <= 0) {
+                return;
+            }
+
+            timeline.addCustomTime(new Date(), 'currenttime');
+            $scope.player.setCurrentTime(playlist[0].timestamp);
+            timeline.on('select', function(properties) {
+                if (properties.items && properties.items.length > 0) {
+                    var item = properties.items[0]; //id
+                    $scope.player.gotoFrame(item);
+                }
+            });
+        }
+
+        $scope.scaleFit = function() {
+            timeline.fit();
+        };
+
+        $scope.scaleUp = function() {
+            $scope.scale(0.5);
+        };
+
+        $scope.scaleDown = function() {
+            $scope.scale(2.0);
+        };
+
+        $scope.scale = function(scale) {
+            var r = timeline.getWindow();
+            var startTime = r.start.getTime();
+            var endTime = r.end.getTime();
+            var range = endTime - startTime;
+            var newRange = range * scale;
+            var center = (endTime + startTime) / 2;
+            r.start = new Date(center - newRange / 2);
+            r.end = new Date(center + (newRange / 2));
+            timeline.setWindow(r);
+        };
+
+        $scope.fillHistoricalObjects = function(records, handler) {
+            var funcs = [];
+            records.forEach(function(record) {
+                if (record.historicalObjectId) {
+                    funcs.push(function(handler) {
+                        $http.get('api/historicalobjects/' + record.historicalObjectId)
+                            .success(function(historical) {
+                                record.historicalObject = historical;
+                                handler();
+                            });
+                    });
+                }
+            });
+            $community.waitFor(funcs, handler);
+        };
+
+        //To compliment missing ref record for builds-on
+        $scope.checkAndComplement = function(records, handler) {
+            var refs1 = [];
+            records.forEach(function(each) {
+                refs1.push(each.historicalObject.data);
+            });
+            $http.get('/api/links/from/' + viewId).success(function(refs) {
+                //missing pattern 1 (missing builds-on exsiting)
+                var refs2 = [];
+                refs.forEach(function(each) {
+                    if (each.type === 'contains') {
+                        refs2.push(each);
+                    }
+                });
+                refs1.forEach(function(each) {
+                    _.remove(refs2, function(o) {
+                        return o._id === each._id;
+                    });
+                });
+                var missings = refs2;
+
+                //missing pattern 2 (missing builds-on deleted)
+                var created = {};
+                records.forEach(function(r) {
+                    if (r.historicalOperationType === 'created') {
+                        created[r.historicalObject.data._id] = {};
+                    }
+                    if (r.historicalOperationType === 'modified' || r.historicalOperationType === 'deleted') {
+                        if (!created[r.historicalObject.data._id]) {
+                            var missingRef = r.historicalObject.data;
+                            missings.push(missingRef);
+                            created[r.historicalObject.data._id] = {};
+                        }
+                    }
+                });
+
+                //complementation
+                missings.forEach(function(each) {
+                    $scope.complement(records, each);
+                });
+
+                //callback
+                handler();
+            });
+        };
+
+        $scope.complement = function(records, missing) {
+            var record = {
+                authorId: missing._to.authors[0], //temporary, todo
+                communityId: $scope.view.communityId,
+                historicalObject: {
+                    communityId: $scope.view.communityId,
+                    data: missing,
+                    dataId: missing._id,
+                    dataType: missing.type,
+                    type: 'Link'
+                },
+                historicalObjectId: missing._id,
+                historicalObjectType: 'Link',
+                historicalOperationType: 'modified',
+                historicalVariableName: missing.type,
+                targetId: $scope.view._id,
+                timestamp: missing.created,
+                type: 'modified'
+            };
+            var i = 0;
+            var len = records.length;
+            for (; i < len; i++) {
+                if (records[i].timestamp > record.timestamp) {
+                    break;
+                }
+            }
+            records.splice(i, 0, record);
+        };
+
+        $scope.player = {};
+
+        $scope.player.reset = function(playlist) {
+            $scope.playlist = playlist;
+            $scope.frame = -1;
+        };
+
+        $scope.player.togglePlay = function() {
+            if ($scope.timer) {
+                $scope.player.stop();
+            } else {
+                $scope.player.play();
+            }
+        };
+
+        $scope.player.play = function() {
+            $scope.timer = setInterval(function() {
+                var len = $scope.playlist.length;
+                if ($scope.frame + 1 >= len) {
+                    if ($scope.timer) {
+                        $scope.player.stop(true);
+                    }
+                    return;
+                }
+                $scope.player.step();
+            }, 100);
+        };
+
+        $scope.player.stop = function(apply) {
+            if ($scope.timer) {
+                clearInterval($scope.timer);
+                $scope.timer = null;
+                if (apply) {
+                    $scope.$apply();
+                }
+            }
+        };
+
+        $scope.player.step = function() {
+            var ref = $scope.player.step0();
+            if (ref) {
+                $scope.refreshConnection(ref.to);
+            }
+        };
+
+        $scope.player.step0 = function() {
+            var len = $scope.playlist.length;
+            if ($scope.frame + 1 >= len) {
+                return;
+            }
+
+            $scope.frame++;
+            var record = $scope.playlist[$scope.frame];
+
+            $scope.player.setCurrentTime(record.timestamp);
+
+            var type = record.historicalOperationType;
+            var ref = record.historicalObject.data;
+            if (type === 'created' && ref._to.type === 'Note') {
+                return $scope.player.step0();
+            }
+            if (type === 'created') {
+                var previous = $scope.player.upsert($scope.refs, ref);
+                $scope.updateRef(ref);
+                record.previous = previous;
+                return ref;
+            } else if (type === 'modified') {
+                var previous = $scope.player.upsert($scope.refs, ref);
+                $scope.updateRef(ref);
+                record.previous = previous;
+                return ref;
+            } else if (type === 'deleted') {
+                _.remove($scope.refs, function(obj) {
+                    return obj._id === ref._id;
+                });
+            }
+        };
+
+        $scope.player.backstep = function() {
+            var ref = $scope.player.backstep0();
+            if (ref) {
+                $scope.refreshConnection(ref.to);
+            }
+        };
+
+        $scope.player.backstep0 = function() {
+            if ($scope.frame < 0) {
+                return;
+            }
+
+            var record = $scope.playlist[$scope.frame];
+            $scope.player.setCurrentTime(record.timestamp);
+            $scope.frame--;
+
+            var type = record.historicalOperationType;
+            var ref = record.historicalObject.data;
+            if (type === 'created' && ref._to.type === 'Note') {
+                return $scope.player.backstep0();
+            }
+            if (type === 'created') {
+                if (record.previous) {
+                    $scope.player.upsert($scope.refs, record.previous);
+                    $scope.updateRef(record.previous);
+                    return record.previous;
+                } else {
+                    _.remove($scope.refs, function(obj) {
+                        return obj._id === ref._id;
+                    });
+                }
+            } else if (type === 'modified') {
+                if (record.previous) {
+                    $scope.player.upsert($scope.refs, record.previous);
+                    $scope.updateRef(record.previous);
+                    return record.previous;
+                } else {
+                    _.remove($scope.refs, function(obj) {
+                        return obj._id === ref._id;
+                    });
+                }
+            } else if (type === 'deleted') {
+                $scope.player.upsert($scope.refs, ref);
+                $scope.updateRef(ref);
+                return ref;
+            }
+        };
+
+        $scope.player.gotoFrame = function(frameNo) {
+            if ($scope.frame < frameNo) {
+                var targetNo = Math.min(frameNo, $scope.playlist.length - 1);
+                while ($scope.frame + 1 < targetNo) {
+                    $scope.player.step0();
+                }
+                $scope.refreshAllConnections();
+            } else if ($scope.frame > frameNo) {
+                var targetNo = Math.max(frameNo, 0);
+                while ($scope.frame >= targetNo) {
+                    $scope.player.backstep0();
+                }
+                $scope.refreshAllConnections();
+            } else {
+                //do nothing
+            }
+        };
+
+        $scope.player.toFirst = function() {
+            $scope.player.gotoFrame(0);
+        };
+
+        $scope.player.toLast = function() {
+            $scope.player.gotoFrame($scope.playlist.length - 1);
+        };
+
+        $scope.player.upsert = function(array, obj) {
+            var index = _.findIndex(array, function(elem) {
+                return elem._id === obj._id;
+            });
+            if (index === -1) {
+                array.push(obj);
+                return null;
+            } else {
+                var previous = array[index];
+                array.splice(index, 1, obj);
+                return previous;
+            }
+        };
+
+        $scope.player.setCurrentTime = function(time) {
+            timeline.setCustomTime(time, 'currenttime');
+            $scope.player.currenttime = $scope.getTimeString(time);
+        }
+
+        $scope.player.isPlayingOrFirst = function() {
+            return $scope.player.isPlaying() || $scope.frame < 0;
+        };
+
+        $scope.player.isPlayingOrLast = function() {
+            return $scope.player.isPlaying() || ($scope.playlist && $scope.frame + 1 >= $scope.playlist.length);
+        };
+
+        $scope.player.isPlaying = function() {
+            return $scope.timer;
+        };
+
+        $scope.player.playerButtonLabel = function() {
+            if ($scope.player.isPlaying()) {
+                return 'stop';
+            } else {
+                return 'play';
+            }
         };
 
     });

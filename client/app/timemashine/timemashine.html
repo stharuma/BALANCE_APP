@@ -51,11 +51,12 @@
     </div>
     <div class="KFTimelineController" style="height: 30px;">
         <div style="float: left; width: 80%; text-align: center;">
-            <button type="submit" class="btn btn-primary" ng-click="player.toFirst()">|&lt;</button>
-            <button type="submit" class="btn btn-primary" ng-click="player.backstep()">&lt;</button>
-            <button type="submit" class="btn btn-primary" ng-click="player.step()">&gt;</button>
-            <button type="submit" class="btn btn-primary" ng-click="player.toLast()">&gt;|</button>
-            <button type="submit" class="btn btn-primary" ng-click="player.play()">play</button>
+            <span>{{player.currenttime}}</span>
+            <button ng-class="{disabled: player.isPlayingOrFirst()}" type="submit" class="btn btn-primary" ng-click="player.toFirst()">|&lt;</button>
+            <button ng-class="{disabled: player.isPlayingOrFirst()}" type="submit" class="btn btn-primary" ng-click="player.backstep()">&lt;</button>
+            <button ng-class="{disabled: player.isPlayingOrLast()}" type="submit" class="btn btn-primary" ng-click="player.step()">&gt;</button>
+            <button ng-class="{disabled: player.isPlayingOrLast()}" type="submit" class="btn btn-primary" ng-click="player.toLast()">&gt;|</button>
+            <button type="submit" class="btn btn-primary" ng-click="player.togglePlay()">{{player.playerButtonLabel()}}</button>
         </div>
         <div style="float: right; width: 20%; text-align: center;">
             <button type="submit" class="btn btn-primary" ng-click="scaleDown()">-</button>
@@ -65,19 +66,6 @@
     </div>
     <div class="dropdown position-fixed" id="menu-A" style="position: absolute; z-index: 20;">
         <ul class="dropdown-menu" role="menu">
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContribution()">{{ 'open' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInTab()">{{ 'openInTab' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInPopup()">{{ 'openInWindow' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenView()">{{ 'open' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInInternal()">{{ 'openInInternal' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenViewInPopup()">{{ 'openInWindow' | translate }}</li>
-            <li ng-if="contextTarget.data.showInPlace === true && isEditable()" class="menuitem" ng-click="showAsIcon()">{{ 'show_as_icon' | translate }}</li>
-            <li ng-if="contextTarget.data.showInPlace !== true && contextTarget._to.type !== 'Note' && isEditable()" class="menuitem" ng-click="showInPlace()">{{ 'show_in_place' | translate }}</li>
-            <li ng-if="isFixable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
-            <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">{{ 'position_fixAndLock' | translate }}</li>
-            <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
-            <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabove()">{{ 'rise-above_create' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
         </ul>
     </div>
 </div>
