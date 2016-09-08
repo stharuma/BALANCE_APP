@@ -4,19 +4,26 @@ angular.module('kf6App')
     .controller('ViewmanagerCtrl', function($scope, $http, $community, $state, $stateParams, $ac) {
         var communityId = $stateParams.communityId;
         $ac.mixIn($scope);
-        $scope.views = $community.getViews();
+
+        if (!$scope.views) {
+            $scope.views = [];
+        }
         $scope.input = {};
         $scope.input.title = '';
         $scope.input.editMode = false;
         $community.enter(communityId);
-        $community.refreshViews();
+        $community.refreshViews(function() {
+            $scope.views = $community.getViews();
+        });
 
         $scope.addView = function() {
             if ($scope.input.title === '') {
                 return;
             }
             $community.createView($scope.input.title, function() {
-                $community.refreshViews();
+                $community.refreshViews(function() {
+                    $scope.views = $community.getViews();
+                });
                 //$state.reload();
             });
             $scope.input.title = '';
