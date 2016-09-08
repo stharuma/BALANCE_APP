@@ -1,6 +1,7 @@
 'use strict';
 
 /* global jsPlumb */
+/* global vis */
 
 angular.module('kf6App')
     .controller('TimemashineCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
@@ -383,7 +384,8 @@ angular.module('kf6App')
         });
 
         /* ----------- creation --------- */
-        $scope.createContainsLink = function(toId, data, handler) {};
+        //$scope.createContainsLink = function(toId, data, handler) {};
+        $scope.createContainsLink = function() {};
 
         $scope.saveRef = function() {
             //$community.saveLink(ref);
@@ -602,7 +604,7 @@ angular.module('kf6App')
                     $scope.player.gotoFrame(item);
                 }
             });
-        }
+        };
 
         $scope.scaleFit = function() {
             timeline.fit();
@@ -781,14 +783,12 @@ angular.module('kf6App')
                 return $scope.player.step0();
             }
             if (type === 'created') {
-                var previous = $scope.player.upsert($scope.refs, ref);
+                record.previous = $scope.player.upsert($scope.refs, ref);
                 $scope.updateRef(ref);
-                record.previous = previous;
                 return ref;
             } else if (type === 'modified') {
-                var previous = $scope.player.upsert($scope.refs, ref);
+                record.previous = $scope.player.upsert($scope.refs, ref);
                 $scope.updateRef(ref);
-                record.previous = previous;
                 return ref;
             } else if (type === 'deleted') {
                 _.remove($scope.refs, function(obj) {
@@ -847,14 +847,14 @@ angular.module('kf6App')
 
         $scope.player.gotoFrame = function(frameNo) {
             if ($scope.frame < frameNo) {
-                var targetNo = Math.min(frameNo, $scope.playlist.length - 1);
-                while ($scope.frame + 1 < targetNo) {
+                var targetNoA = Math.min(frameNo, $scope.playlist.length - 1);
+                while ($scope.frame + 1 < targetNoA) {
                     $scope.player.step0();
                 }
                 $scope.refreshAllConnections();
             } else if ($scope.frame > frameNo) {
-                var targetNo = Math.max(frameNo, 0);
-                while ($scope.frame >= targetNo) {
+                var targetNoB = Math.max(frameNo, 0);
+                while ($scope.frame >= targetNoB) {
                     $scope.player.backstep0();
                 }
                 $scope.refreshAllConnections();
@@ -888,7 +888,7 @@ angular.module('kf6App')
         $scope.player.setCurrentTime = function(time) {
             timeline.setCustomTime(time, 'currenttime');
             $scope.player.currenttime = $scope.getTimeString(time);
-        }
+        };
 
         $scope.player.isPlayingOrFirst = function() {
             return $scope.player.isPlaying() || $scope.frame < 0;
