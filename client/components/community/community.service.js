@@ -828,6 +828,7 @@ angular.module('kf6App')
                 buildson: true,
                 // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
                 references: false,
+                showGroup: true,
                 showAuthor: true,
                 showTime: true
             };
