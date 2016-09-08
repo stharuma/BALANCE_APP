@@ -620,9 +620,19 @@ angular.module('kf6App')
         $scope.scaleUp = function() {
             $scope.scale(0.5);
         };
+        $scope.scaleUpBig = function() {
+            $scope.scale(0.1);
+        };
 
         $scope.scaleDown = function() {
             $scope.scale(2.0);
+        };
+        $scope.scaleDownBig = function() {
+            $scope.scale(5.0);
+        };
+
+        $scope.focus = function() {
+            timeline.setSelection(timeline.getSelection(), { focus: true });
         };
 
         $scope.scale = function(scale) {

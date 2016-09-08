@@ -61,9 +61,13 @@
             <button type="submit" class="btn btn-primary" ng-click="player.togglePlay()">{{player.playerButtonLabel()}}</button>
         </div>
         <div style="float: right; width: 20%; text-align: center;">
+            <button type="submit" class="btn btn-primary" ng-click="scaleDownBig()">--</button>
             <button type="submit" class="btn btn-primary" ng-click="scaleDown()">-</button>
-            <button type="submit" class="btn btn-primary" ng-click="scaleFit()">*</button>
+            <button type="submit" class="btn btn-primary" ng-click="focus()">*</button>
             <button type="submit" class="btn btn-primary" ng-click="scaleUp()">+</button>
+            <button type="submit" class="btn btn-primary" ng-click="scaleUpBig()">++</button>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <button type="submit" class="btn btn-primary" ng-click="scaleFit()">Fit</button>
         </div>
     </div>
     <div ng-hide="player.initialized()" style="height: 30px;">
