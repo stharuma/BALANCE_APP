@@ -46,12 +46,14 @@
         <div id="dropcanvas" class="kfViewDropCanvas kfViewMarqueeCanvas"></div>
         <div id="windows" class="KFViewWindowsCanvas"></div>
     </div>
+    <div style="height: 15px; padding-left: 20px;">
+        <span>{{player.currentRecordString}}</span>
+    </div>
     <div class="KFTimelineBar" stye="height: 100px;">
         <div id="timeline"></div>
     </div>
-    <div ng-show="player.initialized()" class="KFTimelineController" style="height: 30px;">
+    <div ng-show="player.initialized()" class="KFTimelineController" style="height: 25px;">
         <div style="float: left; width: 80%; text-align: center;">
-            <span>{{player.currenttime}}</span>
             <button ng-class="{disabled: player.isPlayingOrFirst()}" type="submit" class="btn btn-primary" ng-click="player.toFirst()">|&lt;</button>
             <button ng-class="{disabled: player.isPlayingOrFirst()}" type="submit" class="btn btn-primary" ng-click="player.backstep()">&lt;</button>
             <button ng-class="{disabled: player.isPlayingOrLast()}" type="submit" class="btn btn-primary" ng-click="player.step()">&gt;</button>

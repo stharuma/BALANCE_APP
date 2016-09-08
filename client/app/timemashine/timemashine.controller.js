@@ -582,7 +582,12 @@ angular.module('kf6App')
             var dataset = [];
             var id = 0;
             playlist.forEach(function(each) {
-                dataset.push({ id: id, content: each.historicalOperationType, start: each.timestamp, title: $community.getCommunityData().members[each.authorId].name });
+                dataset.push({
+                    id: id,
+                    content: each.historicalOperationType,
+                    start: each.timestamp,
+                    title: ''
+                });
                 id++;
             });
             var items = new vis.DataSet(dataset);
@@ -908,6 +913,7 @@ angular.module('kf6App')
 
         $scope.player.refreshCurrentTime = function() {
             var time;
+
             var record = $scope.playlist[$scope.frame];
             if (record) {
                 time = record.timestamp;
@@ -917,7 +923,22 @@ angular.module('kf6App')
                 time = new Date(firstTime.getTime() - 6000);
             }
             timeline.setCustomTime(time, 'currenttime');
-            $scope.player.currenttime = $scope.getTimeString(time);
+
+            if (record) {
+                var selection = timeline.getSelection();
+                if (selection.length <= 0 || selection[0] !== $scope.frame) {
+                    var ids = [$scope.frame];
+                    timeline.setSelection(ids, { focus: false });
+                }
+                $scope.player.currentRecordString =
+                    record.type +
+                    ' "' + record.historicalObject.data._to.title + '"' +
+                    ' by ' + $community.getCommunityData().members[record.authorId].name +
+                    ' at ' + $scope.getTimeString(time);
+            } else {
+                timeline.setSelection([], { focus: false });
+                $scope.player.currentRecordString = '';
+            }
         };
 
         $scope.player.isPlayingOrFirst = function() {
