@@ -68,7 +68,7 @@ angular.module('kf6App')
             // show only contains
             if (ref.type !== 'contains') {
                 console.warn('item is not \'contains\'');
-                return;
+                return null;
             }
 
             // assure data
@@ -85,7 +85,7 @@ angular.module('kf6App')
                 _.remove($scope.refs, function(obj) {
                     return obj === ref;
                 });
-                return;
+                return null;
             }
 
             // show only readable
@@ -93,7 +93,7 @@ angular.module('kf6App')
                 _.remove($scope.refs, function(obj) {
                     return obj === ref;
                 });
-                return;
+                return null;
             }
 
             // adjust location
@@ -114,6 +114,8 @@ angular.module('kf6App')
             } else {
                 $scope.loadAsIcon(ref);
             }
+
+            return ref;
         };
 
         $scope.loadAsShowInPlace = function(ref) {
@@ -565,6 +567,7 @@ angular.module('kf6App')
 
                 $scope.fillHistoricalObjects(playlist, function() {
                     $scope.checkAndComplement(playlist, function() {
+                        playlist = $scope.prune(playlist);
                         handler(playlist);
                     });
                 });
@@ -597,7 +600,6 @@ angular.module('kf6App')
             }
 
             timeline.addCustomTime(new Date(), 'currenttime');
-            $scope.player.setCurrentTime(playlist[0].timestamp);
             timeline.on('select', function(properties) {
                 if (properties.items && properties.items.length > 0) {
                     var item = properties.items[0]; //id
@@ -631,19 +633,22 @@ angular.module('kf6App')
         };
 
         $scope.fillHistoricalObjects = function(records, handler) {
-            var funcs = [];
+            var ids = [];
             records.forEach(function(record) {
                 if (record.historicalObjectId) {
-                    funcs.push(function(handler) {
-                        $http.get('api/historicalobjects/' + record.historicalObjectId)
-                            .success(function(historical) {
-                                record.historicalObject = historical;
-                                handler();
-                            });
-                    });
+                    ids.push(record.historicalObjectId);
                 }
             });
-            $community.waitFor(funcs, handler);
+            $community.searchHistoricalObjects({ pagesize: 100000, _id: { $in: ids } }, function(objects) {
+                var catalog = {};
+                objects.forEach(function(each) {
+                    catalog[each._id] = each;
+                });
+                records.forEach(function(record) {
+                    record.historicalObject = catalog[record.historicalObjectId];
+                });
+                handler();
+            });
         };
 
         //To compliment missing ref record for builds-on
@@ -721,11 +726,21 @@ angular.module('kf6App')
             records.splice(i, 0, record);
         };
 
+        $scope.prune = function(playlist) {
+            return playlist;
+            // return _.filter(playlist, function(record) {
+            //     var type = record.historicalOperationType
+            //     var ref = record.historicalObject.data;
+            //     return !(type === 'created' && ref._to.type === 'Note');
+            // });
+        };
+
         $scope.player = {};
 
         $scope.player.reset = function(playlist) {
             $scope.playlist = playlist;
             $scope.frame = -1;
+            $scope.player.refreshCurrentTime();
         };
 
         $scope.player.togglePlay = function() {
@@ -760,95 +775,97 @@ angular.module('kf6App')
         };
 
         $scope.player.step = function() {
-            var ref = $scope.player.step0();
-            if (ref) {
-                $scope.refreshConnection(ref.to);
-            }
-        };
-
-        $scope.player.step0 = function() {
-            var len = $scope.playlist.length;
-            if ($scope.frame + 1 >= len) {
+            var updated = $scope.player.step0(true);
+            if (updated === false) {
                 return;
             }
-
-            $scope.frame++;
-            var record = $scope.playlist[$scope.frame];
-
-            $scope.player.setCurrentTime(record.timestamp);
-
-            var type = record.historicalOperationType;
-            var ref = record.historicalObject.data;
-            if (type === 'created' && ref._to.type === 'Note') {
-                return $scope.player.step0();
-            }
-            if (type === 'created') {
-                record.previous = $scope.player.upsert($scope.refs, ref);
-                $scope.updateRef(ref);
-                return ref;
-            } else if (type === 'modified') {
-                record.previous = $scope.player.upsert($scope.refs, ref);
-                $scope.updateRef(ref);
-                return ref;
-            } else if (type === 'deleted') {
-                _.remove($scope.refs, function(obj) {
-                    return obj._id === ref._id;
-                });
+            if (!updated) {
+                $scope.player.step();
             }
         };
 
         $scope.player.backstep = function() {
-            var ref = $scope.player.backstep0();
-            if (ref) {
-                $scope.refreshConnection(ref.to);
+            var ref = $scope.player.backstep0(true);
+            if (ref === false) {
+                return;
+            }
+            if (!ref) {
+                $scope.player.backstep();
             }
         };
 
-        $scope.player.backstep0 = function() {
+        $scope.player.step0 = function(refresh) {
+            var len = $scope.playlist.length;
+            if ($scope.frame + 1 >= len) {
+                return false;
+            }
+
+            $scope.frame++;
+            var record = $scope.playlist[$scope.frame];
+            var type = record.historicalOperationType;
+            var ref = record.historicalObject.data;
+            $scope.player.refreshCurrentTime();
+
+            var updated;
+            if (type === 'created' || type === 'modified') {
+                record.previous = $scope.player.upsert($scope.refs, ref);
+                updated = $scope.updateRef(ref);
+                if (updated && refresh) {
+                    $scope.refreshConnection(updated.to);
+                }
+            } else if (type === 'deleted') {
+                updated = remove($scope.refs, ref);
+            }
+
+            return updated;
+        };
+
+        $scope.player.backstep0 = function(refresh) {
             if ($scope.frame < 0) {
-                return;
+                return false;
             }
 
             var record = $scope.playlist[$scope.frame];
-            $scope.player.setCurrentTime(record.timestamp);
-            $scope.frame--;
-
             var type = record.historicalOperationType;
             var ref = record.historicalObject.data;
-            if (type === 'created' && ref._to.type === 'Note') {
-                return $scope.player.backstep0();
-            }
-            if (type === 'created') {
+            $scope.frame--;
+            $scope.player.refreshCurrentTime();
+
+            var updated;
+            if (type === 'created' || type === 'modified') {
                 if (record.previous) {
                     $scope.player.upsert($scope.refs, record.previous);
-                    $scope.updateRef(record.previous);
-                    return record.previous;
+                    updated = $scope.updateRef(record.previous);
+                    if (updated && refresh) {
+                        $scope.refreshConnection(updated.to);
+                    }
                 } else {
-                    _.remove($scope.refs, function(obj) {
-                        return obj._id === ref._id;
-                    });
-                }
-            } else if (type === 'modified') {
-                if (record.previous) {
-                    $scope.player.upsert($scope.refs, record.previous);
-                    $scope.updateRef(record.previous);
-                    return record.previous;
-                } else {
-                    _.remove($scope.refs, function(obj) {
-                        return obj._id === ref._id;
-                    });
+                    updated = remove($scope.refs, ref);
                 }
             } else if (type === 'deleted') {
                 $scope.player.upsert($scope.refs, ref);
-                $scope.updateRef(ref);
-                return ref;
+                updated = $scope.updateRef(ref);
+                if (updated && refresh) {
+                    $scope.refreshConnection(updated.to);
+                }
             }
+
+            return updated;
+        };
+
+        var remove = function(array, ref) {
+            var lenA = $scope.refs.length;
+            _.remove($scope.refs, function(obj) {
+                return obj._id === ref._id;
+            });
+            var lenB = $scope.refs.length;
+            return lenA - lenB;
         };
 
         $scope.player.gotoFrame = function(frameNo) {
             if ($scope.frame < frameNo) {
                 var targetNoA = Math.min(frameNo, $scope.playlist.length - 1);
-                while ($scope.frame + 1 < targetNoA) {
+                while ($scope.frame < targetNoA) {
                     $scope.player.step0();
                 }
                 $scope.refreshAllConnections();
@@ -889,7 +906,16 @@ angular.module('kf6App')
             return $scope.playlist;
         };
 
-        $scope.player.setCurrentTime = function(time) {
+        $scope.player.refreshCurrentTime = function() {
+            var time;
+            var record = $scope.playlist[$scope.frame];
+            if (record) {
+                time = record.timestamp;
+            } else {
+                var firstRecord = $scope.playlist[0];
+                var firstTime = new Date(firstRecord.timestamp);
+                time = new Date(firstTime.getTime() - 6000);
+            }
             timeline.setCustomTime(time, 'currenttime');
             $scope.player.currenttime = $scope.getTimeString(time);
         };

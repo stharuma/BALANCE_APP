@@ -38,6 +38,9 @@ exports.search = function(req, res) {
     var page = query.page ? query.page : 1;
     var skip = pagesize * (page - 1);
 
+    delete(query.pagesize);
+    delete(query.page);
+
     KHistoricalObject.find(query).skip(skip).
     limit(pagesize).
     exec(function(err, contributions) {
@@ -49,5 +52,6 @@ exports.search = function(req, res) {
 };
 
 function handleError(res, err) {
+    console.error(err);
     return res.send(500, err);
 }
