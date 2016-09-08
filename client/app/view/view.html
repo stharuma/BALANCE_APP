@@ -168,8 +168,8 @@
                         </span>
                         <span ng-if="setting.showAuthor" style="font-size: 10px; color: #777777; white-space: nowrap;">
                             {{ref.getAuthorString()}}
-                            <br/>
                         </span>
+                        <span ng-if="setting.showGroup || setting.showAuthor"><br/></span>
                         <span ng-if="setting.showTime" class="KFTimeLabel">{{getTimeString(ref._to.modified)}}</span>
                     </div>
                     <div ng-if="ref._to.type === 'View'" style="white-space: nowrap;">
