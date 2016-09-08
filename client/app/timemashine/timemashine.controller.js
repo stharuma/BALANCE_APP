@@ -885,6 +885,10 @@ angular.module('kf6App')
             }
         };
 
+        $scope.player.initialized = function() {
+            return $scope.playlist;
+        };
+
         $scope.player.setCurrentTime = function(time) {
             timeline.setCustomTime(time, 'currenttime');
             $scope.player.currenttime = $scope.getTimeString(time);
