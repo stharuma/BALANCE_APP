@@ -191,9 +191,23 @@ function makeMongoQuery0(req, res, success) {
         });
         regexpstr += '.*';
     }
-    mongoQuery.$and.push({
-        text4search: new RegExp(regexpstr, 'i')
-    });
+    if (query.searchMode && query.searchMode === 'title') {
+      console.log('yy');
+        mongoQuery.$and.push({
+            title: new RegExp(regexpstr, 'i')
+        });
+    } else {
+      console.log('zz');
+        mongoQuery.$and.push({
+            text4search: new RegExp(regexpstr, 'i')
+        });
+    }
+
+    if (query.type) {
+        mongoQuery.$and.push({
+            type: query.type
+        });
+    }
 
     req.mongoQuery = mongoQuery;
     success();
