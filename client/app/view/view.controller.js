@@ -228,6 +228,9 @@ angular.module('kf6App')
             };
 
             ref.getAuthorString = function() {
+                if ($scope.setting.showGroup && ref.getGroupString().length > 0) {
+                    return '';
+                }
                 return $community.makeAuthorString(ref.authorObjects);
             };
 
