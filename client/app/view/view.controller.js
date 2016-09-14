@@ -32,6 +32,7 @@ angular.module('kf6App')
                 $scope.view = view;
                 $ac.mixIn($scope, view);
                 $community.enter(view.communityId, function() {
+                    $community.refreshGroups();
                     $scope.community = $community.getCommunityData();
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
@@ -44,6 +45,12 @@ angular.module('kf6App')
         };
 
         $scope.updateViewSetting = function() {
+            //this is temporary code. coherent plan for context management would be expected.(Yoshiaki)
+            $community.getContext(null, function(context) {
+                $scope.context = context;
+            });
+            //temporary code end
+
             if ($scope.view.data && $scope.view.data.viewSetting) {
                 $scope.setting = $scope.view.data.viewSetting;
             } else {
@@ -210,12 +217,27 @@ angular.module('kf6App')
                 return;
             }
 
+            ref.getGroupString = function() {
+                if (ref._to.group && $scope.community.groups[ref._to.group]) {
+                    var group = $scope.community.groups[ref._to.group];
+                    if (group) {
+                        return group.title + ': ';
+                    }
+                }
+                return '';
+            };
+
             ref.getAuthorString = function() {
+                if ($scope.setting.showGroup && ref.getGroupString().length > 0) {
+                    return '';
+                }
                 return $community.makeAuthorString(ref.authorObjects);
             };
+
             ref.amIAuthor = function() {
                 return $community.amIAuthor(ref);
             };
+
             if (ref._to.authors) {
                 ref._to.authors.forEach(function(id) {
                     ref.authorObjects.push($community.getMember(id));
@@ -608,11 +630,40 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+        $scope.openDashboard = function() {
+            $scope.openAnalytics();
+            var url = 'dashboard/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openS2viz = function() {
+            $scope.openAnalytics();
+            var url = 's2viz/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openTimemashine = function() {
+            $scope.openAnalytics();
+            var url = 'timemashine/' + $scope.view._id;
+            window.open(url, '_blank');
+        };
+
+        $scope.openLexicalAnalysis = function() {
+            $scope.openAnalytics();
+            var url = 'lexicalanalysis/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
+        $scope.openScafoldSupportTracker = function() {
+            $scope.openAnalytics();
+            var url = 'scaffoldsupporttracker/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
         $scope.openStats = function() {
             var url = '/stats/' + $scope.view.communityId;
             window.open(url, '_blank');
         };
-
         $scope.openAuthorNetwork = function() {
             $scope.openAnalytics();
             var url = 'authornetwork/' + $scope.view._id;

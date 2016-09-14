@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">Knowledge Forum 6</a><span style="cursor: pointer;" class="navbar-text" ng-click="openDialog()">v6.7 beta</span>
+            <a href="/" class="navbar-brand">Knowledge Forum 6</a><span style="cursor: pointer;" class="navbar-text" ng-click="openDialog()">v6.8 beta</span>
             <script type="text/ng-template" id="VersionModalContent.html">
                 <div class="modal-header">
                     <h1 class="modal-title">Knowledge Forum</h1>
@@ -49,7 +49,7 @@
         <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
             <ul class="nav navbar-nav">
                 <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
-                    <a ng-href="{{item.link}}">{{item.title}}</a>
+                    <a ng-href="{{item.link}}">{{ item.title | translate}}</a>
                 </li>
                 <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin">{{ 'admin' | translate }}</a>
                 </li>

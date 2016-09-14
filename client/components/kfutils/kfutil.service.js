@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$kfutil', function() {
+    .factory('$kfutil', function () {
         var obj = {};
 
-        obj.getTimeString = function(time) {
+        obj.getTimeString = function (time) {
             var d = new Date(time);
             return d.toLocaleString();
         };
@@ -12,7 +12,7 @@ angular.module('kf6App')
         // obj.isSafari = function() {
         //     // var firefox = (e.offsetX === undefined);
         //     // var safari = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') <= -1;
-        //     // //var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;                    
+        //     // //var chrome = navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') > -1;
         //     // var IE = (navigator.userAgent.indexOf('MSIE') !== -1 || document.documentMode <= 11); /*IE11*/
         // }
 
@@ -38,7 +38,7 @@ angular.module('kf6App')
             return M.join(' ');
         }
 
-        obj.browser = (function() {
+        obj.browser = (function () {
             var tokens = detect().split(' ');
             var browser = {};
             browser.name = tokens[0].toLowerCase();
@@ -48,38 +48,38 @@ angular.module('kf6App')
             return browser;
         })();
 
-        obj.isSafari = function() {
+        obj.isSafari = function () {
             return obj.browser.name === 'safari';
         };
 
-        obj.isChrome = function() {
+        obj.isChrome = function () {
             return obj.browser.name === 'chrome';
         };
 
-        obj.isFirefox = function() {
+        obj.isFirefox = function () {
             return obj.browser.name === 'firefox';
         };
 
-        obj.isIE = function() {
+        obj.isIE = function () {
             return obj.browser.name === 'ie' || obj.browser.name === 'msie';
         };
 
-        obj.isiOS = function() {
+        obj.isiOS = function () {
             var iOS = (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false);
             return iOS;
         };
 
-        obj.isAndroid = function() {
+        obj.isAndroid = function () {
             var ua = navigator.userAgent.toLowerCase();
             var isAndroid = ua.indexOf('android') > -1;
             return isAndroid;
         };
 
-        obj.isMobile = function() {
+        obj.isMobile = function () {
             return obj.isiOS() || obj.isAndroid();
         };
 
-        obj.getOffset = function(e) {
+        obj.getOffset = function (e) {
             if (obj.isFirefox()) {
                 if (e.type === 'contextmenu') {
                     return {
@@ -100,7 +100,7 @@ angular.module('kf6App')
             };
         };
 
-        obj.getTouchPos = function(touchEvent) {
+        obj.getTouchPos = function (touchEvent) {
             var changed = touchEvent.changedTouches[0];
             return {
                 x: changed.pageX,
@@ -108,7 +108,7 @@ angular.module('kf6App')
             };
         };
 
-        obj.getTouchOffset = function(touchEvent, jElem) {
+        obj.getTouchOffset = function (touchEvent, jElem) {
             var p = obj.getTouchPos(touchEvent);
             return {
                 x: p.x + -(jElem.offset().left),
@@ -116,7 +116,7 @@ angular.module('kf6App')
             };
         };
 
-        obj.fireContextMenuEvent = function(touchEvent, jElem) {
+        obj.fireContextMenuEvent = function (touchEvent, jElem) {
             var el = jElem[0];
             var evt = el.ownerDocument.createEvent('HTMLEvents');
             evt.initEvent('contextmenu', true, true); // bubbles = true, cancelable = true
@@ -133,13 +133,13 @@ angular.module('kf6App')
             }
         };
 
-        obj.mixIn = function(scope) {
+        obj.mixIn = function (scope) {
             scope.getTimeString = obj.getTimeString;
             scope.isIE = obj.isIE;
             scope.isiOS = obj.isiOS;
             scope.isAndroid = obj.isAndroid;
             scope.isMobile = obj.isMobile;
-            scope.browser = function() {
+            scope.browser = function () {
                 return obj.browser;
             };
         };

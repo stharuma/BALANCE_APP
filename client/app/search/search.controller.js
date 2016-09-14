@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil, $ac) {
+    .controller('SearchCtrl', function($scope, $http, $community, $stateParams, $kfutil, $ac, $kftag) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
@@ -136,6 +136,16 @@ angular.module('kf6App')
                     }
                     return;
                 }
+                if (token.indexOf('-searchMode:') >= 0) {
+                    token = token.replace('-searchMode:', '');
+                    query.searchMode = token;
+                    return;
+                }
+                if (token.indexOf('-type:') >= 0) {
+                    token = token.replace('-type:', '');
+                    query.type = token;
+                    return;
+                }
                 query.words.push(token);
             });
             return query;
@@ -179,6 +189,11 @@ angular.module('kf6App')
             $scope.queryString += ' -private';
         };
 
+        $scope.addSearchView = function() {
+            $scope.queryString += ' -searchMode:title -type:View';
+            $scope.status.detailCollapsed = !$scope.status.detailCollapsed;
+        };
+
         $scope.authorSelected = function(author) {
             $scope.queryString += ' -author:' + author.userName;
         };
@@ -188,11 +203,25 @@ angular.module('kf6App')
         };
 
         $scope.getIcon = function(contribution) {
+            if (contribution.type === 'View') {
+                return 'manual_assets/kf4images/icon-view.gif';
+            }
             if ($community.amIAuthor(contribution)) {
                 return 'manual_assets/kf4images/icon-note-unknown-auth-.gif';
             } else {
                 return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
+        };
+
+        $scope.showScaffold = function() {
+            var query = { $or: [{ type: 'supports' }, { type: 'references' }] };
+            $http.post('/api/links/' + communityId + '/search', { query: query }).success(function(links) {
+                $scope.contributions.forEach(function(contribution) {
+                    var body = contribution.data.body;
+                    var newBody = $kftag.preProcess(body, links, links);
+                    contribution.data.body = newBody;
+                });
+            });
         };
 
     });

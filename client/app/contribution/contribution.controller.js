@@ -594,7 +594,15 @@ angular.module('kf6App')
             init_instance_callback: $scope.mcesetupHandler
         };
 
-        $scope.addSupport = function(supportLink) {
+        $scope.insertText = function(text) {
+            if (!$scope.mceEditor) {
+                window.alert('$scope.mceEditor is not set.');
+                return;
+            }
+            $scope.mceEditor.insertContent(text);
+        };
+
+        $scope.addSupport = function(supportLink, selection, addhyphen, argInitialText, isTemplate) {
             if (!$scope.mceEditor) {
                 window.alert('$scope.mceEditor is not set.');
                 return;
@@ -602,6 +610,9 @@ angular.module('kf6App')
 
             // choose text
             var initialText = '';
+            if (argInitialText) {
+                initialText = argInitialText;
+            }
             var selected = $scope.mceEditor.selection.getContent();
             if (selected.length > 0) {
                 initialText = selected;
@@ -610,18 +621,23 @@ angular.module('kf6App')
             var supportContentId = new Date().getTime().toString();
             var contentTagStr = '<span id="' + supportContentId + '"></span>';
 
-            var text = ' -&nbsp;' + contentTagStr + initialText + '&nbsp;- ';
+            var text = contentTagStr + initialText;
+            if (addhyphen) {
+                text = ' -&nbsp;' + text + '&nbsp;- ';
+            }
 
             // insert
             var id = supportLink.to;
             var title = supportLink._to.title;
-            var tag = $kftag.createNewScaffoldTag(id, title, text);
+            var tag = $kftag.createNewScaffoldTag(id, title, text, isTemplate);
             $scope.mceEditor.insertContent(tag);
 
             // select text after insert
-            var contentTag = $scope.mceEditor.dom.get(supportContentId);
-            if (contentTag) {
-                $scope.mceEditor.selection.setCursorLocation(contentTag);
+            if (selection) {
+                var contentTag = $scope.mceEditor.dom.get(supportContentId);
+                if (contentTag) {
+                    $scope.mceEditor.selection.setCursorLocation(contentTag);
+                }
             }
         };
 

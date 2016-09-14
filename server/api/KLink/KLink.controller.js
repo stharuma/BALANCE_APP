@@ -6,6 +6,29 @@ var KObject = require('../KObject/KObject.model');
 var KRecordController = require('../KRecord/KRecord.controller.js');
 var KHistoricalObject = require('../KHistoricalObject/KHistoricalObject.model.js');
 
+exports.search = function(req, res) {
+    var query = req.body.query;
+    var communityId = req.params.communityId;
+
+    var mongoQuery = {
+        $and: []
+    };
+    mongoQuery.$and.push({
+        communityId: communityId
+    });
+    for (var n in query) {
+        var obj = {};
+        obj[n] = query[n];
+        mongoQuery.$and.push(obj);
+    }
+    KLink.find(mongoQuery, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.status(200).json(links);
+    });
+};
+
 exports.index = function(req, res) {
     //this should not be used
     res.status(200).json([]);
