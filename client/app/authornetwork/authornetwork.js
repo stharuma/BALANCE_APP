@@ -5,7 +5,7 @@ angular.module('kf6App')
     $stateProvider
       .state('AuthorNetwork', {
         url: '/authornetwork/:viewId',
-        templateUrl: 'app/authornetwork/AuthorNetwork.html',
+        templateUrl: 'app/authornetwork/authornetwork.html',
         controller: 'AuthorNetworkCtrl'
       });
   });
