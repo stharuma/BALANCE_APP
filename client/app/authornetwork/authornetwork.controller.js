@@ -2,11 +2,6 @@
 'use strict';
 angular.module('kf6App')
     .controller('AuthorNetworkCtrl', function($stateParams, $scope, $community, $http) {
-
-        // commenter
-        // vérifier window.location.href
-        // vérifier dans la fonction refresh si c'est normal que les fonctions doivent être définies avant d'être appelées
-        // traduire
         
         var viewId = $stateParams.viewId;
         
