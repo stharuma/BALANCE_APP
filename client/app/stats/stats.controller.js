@@ -433,7 +433,6 @@ Highcharts.setOptions({
             else{
                 t = Date.UTC(parseInt($scope.pager.query.to.substr(0, 4), 10), parseInt($scope.pager.query.to.substr(5, 2), 10) - 1, parseInt($scope.pager.query.to.substr(8, 2), 10) + 1) - 86400000;
             }        
-            //return {"from": f, "to": t};
-            return {"from": Date.UTC(2015, 7, 15), "to": Date.UTC(2015, 12, 31)};
+            return {"from": f, "to": t};
         }
     });
