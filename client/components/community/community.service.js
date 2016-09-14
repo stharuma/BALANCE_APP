@@ -1,5 +1,7 @@
 'use strict';
 
+/* global d3 */
+
 angular.module('kf6App')
     .factory('$community', function($http, Auth) {
 
@@ -204,21 +206,23 @@ angular.module('kf6App')
             }
         };
 
+        // registredScaffolds and contextScaffolds
+        // communityData.scaffolds means contextScaffolds
         communityData.registeredScaffolds = [];
 
         var refreshScaffolds0 = function(context, handler) {
-            loadScaffoldLinks(context, function(links) {
-                communityData.scaffolds.length = 0; //clear once
-                var funcs = [];
-                links.forEach(function(link) {
-                    funcs.push(function(handler) {
-                        var scaffold = link._to;
-                        scaffold._id = link.to;
-                        communityData.scaffolds.push(scaffold);
-                        fillSupport(scaffold, handler);
+            refreshRegisteredScaffolds(function() {
+                loadScaffoldLinks(context, function(links) {
+                    communityData.scaffolds.length = 0; //clear once
+                    links.forEach(function(link) {
+                        communityData.registeredScaffolds.forEach(function(each) {
+                            if (link.to === each._id) {
+                                communityData.scaffolds.push(each);
+                            }
+                        });
                     });
+                    handler();
                 });
-                waitFor(funcs, handler);
             });
         };
 
@@ -824,6 +828,7 @@ angular.module('kf6App')
                 buildson: true,
                 // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
                 references: false,
+                showGroup: true,
                 showAuthor: true,
                 showTime: true
             };
@@ -840,6 +845,82 @@ angular.module('kf6App')
             obj.contribution = contribution;
             obj.contextId = contextId;
             $http.post('/api/notifications/notify/' + communityId, obj);
+        };
+
+        var getRecords = function(handler) {
+            $http.post('api/records/search/' + communityId, {}).success(function(records) {
+                if (handler) {
+                    handler(records);
+                }
+            });
+        };
+
+        var searchHistoricalObjects = function(query, handler) {
+            var postquery = { query: query };
+            $http.post('api/historicalobjects/' + communityId + '/search', postquery).success(function(objects) {
+                if (handler) {
+                    handler(objects);
+                }
+            });
+        };
+
+        var getContributionCatalog = function(handler) {
+            var query = {
+                communityId: communityId,
+                pagesize: 100000
+            };
+            $http.post('/api/contributions/' + communityId + '/search', {
+                query: query
+            }).success(function(contributions) {
+                var catalog = {};
+                contributions.forEach(function(contribution) {
+                    catalog[contribution._id] = contribution;
+                });
+                if (handler) {
+                    handler(catalog);
+                }
+            });
+        };
+
+        var getSocialInteractions = function(handler) {
+            refreshMembers(function() {
+                getRecords(function(records) {
+                    getContributionCatalog(function(catalog) {
+                        var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ").parse;
+                        var interactions = [];
+                        records.forEach(function(record) {
+                            var author = communityData.members[record.authorId];
+                            var object = catalog[record.targetId];
+                            if (!object) {
+                                return;
+                            }
+                            var toAuthor = communityData.members[object.authors[0]];
+                            var d = {
+                                from: author.name,
+                                type: record.type,
+                                title: object.title,
+                                to: toAuthor.name,
+                                when: record.timestamp
+                            };
+                            d.date = parseDate(d.when);
+                            d.year = d3.time.year(d.date);
+                            d.month = d3.time.month(d.date);
+                            d.day = d3.time.day(d.date);
+                            d.week = d3.time.week(d.date);
+
+                            d.value = 1;
+                            d.read = 0;
+                            d.modify = 0;
+                            d.buildson = 0;
+                            d[d.type] = 1;
+                            interactions.push(d);
+                        });
+                        if (handler) {
+                            handler(interactions);
+                        }
+                    });
+                });
+            });
         };
 
         return {
@@ -905,8 +986,14 @@ angular.module('kf6App')
             createRootContext: createRootContext /*for migration tool*/ ,
             refreshContext: refreshContext,
 
-            makeDefaultViewSetting: makeDefaultViewSetting
+            makeDefaultViewSetting: makeDefaultViewSetting,
 
+            /* Utilities */
+            waitFor: waitFor,
 
+            /* LA */
+            searchHistoricalObjects: searchHistoricalObjects,
+            getRecords: getRecords,
+            getSocialInteractions: getSocialInteractions
         };
     });

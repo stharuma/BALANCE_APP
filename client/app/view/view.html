@@ -38,6 +38,15 @@
             <label>{{ 'assessment_tools' | translate }} ({{ 'beta_version' | translate }}):</label>
             <ul>
                 <li><a draggable="false" href="" ng-click="openTagCloud()">{{ 'assessment_tools_wordCloud' | translate }}</a></li>
+                <li><a draggable="false" href="" ng-click="openDashboard()">Dashboard(beta)</a></li>
+                <li><a draggable="false" href="" ng-click="openS2viz()">s2viz(beta)</a></li>
+                <li><a draggable="false" href="" ng-click="openTimemashine()">timemashine(beta)</a></li>
+            </ul>
+            <ul ng-if="context.data.plugins.lexicalanalysis === true">
+                <li><a draggable="false" href="" ng-click="openLexicalAnalysis()"> Lexical Analysis</a></li>
+            </ul>
+            <ul ng-if="context.data.plugins.scaffoldgrowth === true">
+                <li><a draggable="false" href="" ng-click="openScafoldSupportTracker()">Scaffold Growth</a></li>
             </ul>
         </div>
     </div>
@@ -53,6 +62,7 @@
                 <input type="checkbox" ng-model="setting.references" ng-change="settingChanged()">reference
                 <br>
                 <label>Label:</label>
+                <input type="checkbox" ng-model="setting.showGroup" ng-change="settingChanged()">group
                 <input type="checkbox" ng-model="setting.showAuthor" ng-change="settingChanged()">author
                 <input type="checkbox" ng-model="setting.showTime" ng-change="settingChanged()">time
             </div>
@@ -153,10 +163,13 @@
                         </span>
                         <a ng-click="openContribution(ref.to, $event)" class='kfIcon'>{{ref._to.title}}</a>
                         <br />
+                        <span ng-if="setting.showGroup" style="font-size: 10px; color: #777777; white-space: nowrap;">
+                            {{ref.getGroupString()}}
+                        </span>
                         <span ng-if="setting.showAuthor" style="font-size: 10px; color: #777777; white-space: nowrap;">
                             {{ref.getAuthorString()}}
-                            <br/>
                         </span>
+                        <span ng-if="setting.showGroup || setting.showAuthor"><br/></span>
                         <span ng-if="setting.showTime" class="KFTimeLabel">{{getTimeString(ref._to.modified)}}</span>
                     </div>
                     <div ng-if="ref._to.type === 'View'" style="white-space: nowrap;">
