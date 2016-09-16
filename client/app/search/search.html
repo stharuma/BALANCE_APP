@@ -13,8 +13,12 @@
     <div collapse="status.detailCollapsed">
         <div class="well well-lg">
             <div style="padding: 15px;">
-                <label>Private Mode:</label>
-                <button type="button" class="btn btn-primary kfbutton" ng-click="addPrivateMode()">Set</button>
+                <label>Search Views:</label>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addSearchView()">On</button>
+            </div>
+            <div style="padding: 15px;">
+                <label>Search My Private Notes:</label>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addPrivateMode()">On</button>
             </div>
             <div style="padding: 15px;">
                 <label>Views:</label>
@@ -73,10 +77,11 @@
                         <th style="width: 15%;">Title</th>
                         <th style="width: 15%;">Author(s)</th>
                         <th>Body
-                            <button type="button" class="btn btn-default" ng-click="showScaffold()">show scaffold</button></th>
+                            <button type="button" class="btn btn-default" ng-click="showScaffold()">show scaffold</button>
+                        </th>
                         <th style="width: 15%;">Created</th>
                     </tr>
-                    <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note'">
+                    <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note' || contribution.type==='View'">
                         <td>
                             <div kfelement draggable="true">
                                 <span><img ng-src="{{getIcon(contribution)}}" draggable="false"></span>
