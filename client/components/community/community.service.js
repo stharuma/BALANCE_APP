@@ -828,6 +828,7 @@ angular.module('kf6App')
                 buildson: true,
                 // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
                 references: false,
+                showGroup: true,
                 showAuthor: true,
                 showTime: true
             };
@@ -850,6 +851,15 @@ angular.module('kf6App')
             $http.post('api/records/search/' + communityId, {}).success(function(records) {
                 if (handler) {
                     handler(records);
+                }
+            });
+        };
+
+        var searchHistoricalObjects = function(query, handler) {
+            var postquery = { query: query };
+            $http.post('api/historicalobjects/' + communityId + '/search', postquery).success(function(objects) {
+                if (handler) {
+                    handler(objects);
                 }
             });
         };
@@ -978,7 +988,11 @@ angular.module('kf6App')
 
             makeDefaultViewSetting: makeDefaultViewSetting,
 
+            /* Utilities */
+            waitFor: waitFor,
+
             /* LA */
+            searchHistoricalObjects: searchHistoricalObjects,
             getRecords: getRecords,
             getSocialInteractions: getSocialInteractions
         };

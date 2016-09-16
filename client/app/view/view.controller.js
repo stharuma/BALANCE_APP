@@ -32,6 +32,7 @@ angular.module('kf6App')
                 $scope.view = view;
                 $ac.mixIn($scope, view);
                 $community.enter(view.communityId, function() {
+                    $community.refreshGroups();
                     $scope.community = $community.getCommunityData();
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
@@ -216,12 +217,27 @@ angular.module('kf6App')
                 return;
             }
 
+            ref.getGroupString = function() {
+                if (ref._to.group && $scope.community.groups[ref._to.group]) {
+                    var group = $scope.community.groups[ref._to.group];
+                    if (group) {
+                        return group.title + ': ';
+                    }
+                }
+                return '';
+            };
+
             ref.getAuthorString = function() {
+                if ($scope.setting.showGroup && ref.getGroupString().length > 0) {
+                    return '';
+                }
                 return $community.makeAuthorString(ref.authorObjects);
             };
+
             ref.amIAuthor = function() {
                 return $community.amIAuthor(ref);
             };
+
             if (ref._to.authors) {
                 ref._to.authors.forEach(function(id) {
                     ref.authorObjects.push($community.getMember(id));
