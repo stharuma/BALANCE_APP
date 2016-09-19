@@ -138,7 +138,9 @@ angular.module('kf6App')
                     $(d3.select(this)[0][0]).attr("style", "fill: #008; stroke: #ccc")
                     $(links).each(function() {
                         if (this.source.name === currentName){
-                            $('circle[name="' + this.target.name + '"]').attr('style', 'fill: #080');
+                            if (this.source.name !== currentName){
+                                $('circle[name="' + this.target.name + '"]').attr('style', 'fill: #080');
+                            }
                             currentClass = $('path[name="' + this.source.name + this.target.name + '"]').attr('class')
                             $('path[name="' + this.source.name + this.target.name + '"]').attr('style', 'stroke: #080')
                             $('path[name="' + this.source.name + this.target.name + '"].marker_only').attr("marker-end", "url("+window.location.href+"#flecheverte)");
@@ -146,7 +148,9 @@ angular.module('kf6App')
                             nbbuildsonothers += this.weight;
                         }
                         else if (this.target.name === currentName){
-                            $('circle[name="' + this.source.name + '"]').attr('style', 'stroke: #800');
+                            //$('circle[name="' + this.source.name + '"]').attr('style', 'stroke: #800');
+                            $('circle[name="' + this.source.name + '"]').attr('style', 'stroke: #000');
+                            $('circle[name="' + this.source.name + '"]').attr('style', 'stroke-width: 3');
                             currentClass = $('path[name="' + this.source.name + this.target.name + '"]').attr('class')
                             $('path[name="' + this.source.name + this.target.name + '"]').attr('style', 'stroke: #800')
                             $('path[name="' + this.source.name + this.target.name + '"].marker_only').attr("marker-end","url("+window.location.href+"#flecherouge)");
