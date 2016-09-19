@@ -12,12 +12,6 @@
     <label style="font-size:  12pt; " ng-if="viewTitlescopy !==''"><b>Ideas in {{viewTitlescopy}} (View/s)</b></label>
     <label style="font-size:  12pt; " ng-if=" !status.communityCollapsed"><b>Ideas in {{currentCommunity.community.title}} (CurrentCommunity)</b></label>
     <br/>
-    <div style="text-align: left; padding-left: 20px; padding-top: 1px;">
-        <label>Colours::</label>
-        <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue;" ng-model="selectedColor" ng-options="s for s in colors " ng-click="selectedPromisingIdeas.length=0" />
-        <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed=false">To New Contribution</button>
-        <button type="button" class="btn btn-primary kfbutton" ng-csv="tableData" csv-header="getHeader()" filename="test.csv">ExportToCSV</button>
-    </div>
     <div class="well" collapse="status.isnewNoteCollapsed" style="padding-left: 50px; position: absolute; top:0px; left: 50px; width: 90%; height: 80%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <label style="font-size:  11pt;float: left"><b>Create New Note</b></label>
@@ -27,8 +21,7 @@
             <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed = true; ">cancel</button>
         </div>
         <div style="height : 250px ;overflow: scroll; width:100%; float: left">
-
-            <input type="text" class="form-control" style="height : 20px; overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle">
+            <input type="text" class="form-control" style="height : 20px; overflow: hidden; width:400px; " placeholder="put your                        title here." ng-model="promisingnoteTitle">
             <label>Views:</label>
             <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
             </br>
@@ -39,7 +32,7 @@
         </div>
         <hr>
     </div>
-    <div style="padding: 5px;">
+    <div style="padding:1px;">
         <div class="KFSearchResult">
             <div ng-if="status.status === 'searching'">
                 searching...
@@ -48,54 +41,106 @@
                 There was no contributions to match.
             </div>
             <div ng-if="status.status === 'searched'">
-                <div style="float: right;">
-                    <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
-                </div>
-                <div style="width: 100%; float: left; text-align: right;">
-                    CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
-                </div>
                 <div ng-if="status.loading === true">
                 </div>
                 <div ng-if="status.loading !== true">
-                    <table border='1' style="width: 100%;" id="table1">
-                        <tr>
-                            <th style="width: 75%;"> PromisingIdeas</th>
-                            <th>In Contribution</th>
-                        </tr>
-                        <tr class="KFSearchResult" ng-repeat="contribution  in   promisngNotes" ng-show="hascolorinPromisingnote(contribution)">
-                            <td>
-                                <div ng-repeat=" data in tableData" ng-if=" contribution.title===data .inContributionTitle">
-                                    <div ng-if="selectedColor===colors[0]">
-                                        <input id="{{data .promisingidea}}" type="checkbox" value="{{data .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(data .promisingidea) > -1" ng-click="toggleSelection(data .promisingidea)" />
-                                        <label for="{{data .promisingidea}}"></label>
-                                        <tt ng-bind-html="data .count"></tt>
-                                        <tt ng-style="{ 'background-color': data.color }" ng-bind-html="data .promisingidea"></tt>
-                                        <br>
-                                        <b> Criteria: -  </b><tt ng-bind-html="data .reason"></tt>
-                                        <hr>
+                    <div style="float: right;width: 100%;">
+                        <button type="submit" class="btn btn-primary kfbutton" style="float:right;" ng-click="createnote()">To New Contribution</button>
+                        <button type="button" class="btn btn-primary kfbutton" style="float:right" ng-csv="tableData" csv-header="getHeader()" filename="test.csv">ExportToCSV</button>
+                        <label style="float:left; padding-left: 5px;">
+                            <input type="radio" ng-model="currentselected.name" value="Sortedcolors" ng-click="progressselection()"> Sort by colors</label>
+                        <label style="float:left; padding-left:15px;">
+                            <input type="radio" ng-model="currentselected.name" value="Sortedhit" ng-click="progressselection()">Sort by hit counts</label>
+                    </div>
+                    <div style="float: right;">
+                        <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
+                    </div>
+                    <div style="width: 100%; float: left; text-align: right;">
+                        CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
+                    </div>
+
+                    <div collapse="status.selectedColorCollapsed ">
+                        <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
+                            <label clear:both>Colours::</label>
+                            <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue;" ng-model="selectedColor" ng-options="s for s in colors " ng-click="selectedPromisingIdeas.length=0" />
+                        </div>
+                        <table border='1' style="width: 100%;" id="table1">
+                            <tr>
+                                <th style="width: 75%;"> PromisingIdeas</th>
+                                <th>In Contribution</th>
+                            </tr>
+                            <tr class="KFSearchResult" ng-repeat="data in tableData" ng-if="selectedColor===colors[0] || selectedColor=== data.color">
+                                <td>
+                                    <div>
+                                        <div>
+                                            <input id="{{data.promisingidea}}" type="checkbox" value="{{data .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(data .promisingidea) > -1" ng-click="toggleSelection(data .promisingidea)" />
+                                            <label for="{{data.promisingidea}}"></label>
+                                            <tt ng-style="{ 'background-color': data.color }" ng-bind-html="data .promisingidea"></tt>
+                                            <br>
+                                            <tt style="float:right">-(Created by {{data.author}}  {{data.date}})</tt>
+                                            <br>
+                                            <b> Criteria: -  </b><tt ng-bind-html="data .reason"></tt>
+                                        </div>
                                     </div>
-                                    <div ng-if="selectedColor=== data.color">
-                                        <input id="{{data .promisingidea}}" type="checkbox" value="{{data .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(data .promisingidea) > -1" ng-click="toggleSelection(data .promisingidea)" />
-                                        <label for="{{data .promisingidea}}"></label>
-                                        <tt ng-bind-html="data .count"></tt>
-                                        <tt ng-style="{ 'background-color': data.color }" ng-bind-html="data .promisingidea"></tt>
-                                        <br>
-                                        <b> Criteria: -  </b><tt ng-bind-html="data .reason"></tt>
-                                        <hr>
+                                </td>
+                                <td>
+                                    <div kfelement draggable="true">
+                                        <span><img ng-src="{{getIcon(data.contribution)}}" draggable="false"></span>
+                                        <a class="KFSearchLink" href="contribution/{{data.contribution.note._id}}" target="_blank" draggable="false">{{data.contribution.title}}</a>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div kfelement draggable="true">
-                                    <span><img ng-src="{{getIcon(contribution)}}" draggable="false"></span>
-                                    <a class="KFSearchLink" href="contribution/{{contribution.note._id}}" target="_blank" draggable="false">{{contribution.title}}</a>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div collapse="status.selectedHitCollapsed ">
+                        <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
+                            <label clear:both>Hit counts::</label>
+                            <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue;" ng-model="selectedHitCount" ng-options="h for h in hitcounts" ng-click="selectedPromisingIdeas.length=0" />
+                        </div>
+                        <table border='1' style="width: 100%;" id="table2">
+                            <tr>
+                                <th style="width: 75%;"> PromisingIdeas</th>
+                                <th>In Contribution</th>
+                            </tr>
+                            <tr class="KFSearchResult" ng-repeat=" hitd in hitdata" ng-if="selectedHitCount===hitcounts[0] || selectedHitCount===hitd.promising.count">
+                                <td>
+                                    <div>
+                                        <input id="{{hitd.promising.promisingidea}}" type="checkbox" value="{{hitd.promising .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(hitd.promising .promisingidea) > -1" ng-click="toggleSelection(hitd.promising.promisingidea)" />
+                                        <label for="{{hitd.promising.promisingidea}}"></label>
+                                        <tt ng-style="{ 'background-color':hitd.promising.color }" style="font-weight:bold;" ng-if="hitd.promising.count==1">< <button type="submit" class="btn btn-primary kfbutton" ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weight></tt>
+                                        <tt ng-style="{ 'background-color':hitd.promising.color }" style="font-weight:bold;" ng-if="hitd.promising.count!==1">< <button type="submit" class="btn btn-primary kfbutton" ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weights></tt>
+                                        <tt ng-bind-html="hitd.promising.promisingidea"></tt>
+                                        <br>
+                                        <tt style="float:right">-(Created by {{hitd.promising.author}}  {{hitd.promising.date}})</tt>
+                                        <div ng-show="selectedpromisingideaIndex==$index  ">
+                                            <br>
+                                            <tt ng-if="hitd.promising.count==1">There are no overlapping of promising ideas </tt>
+                                            <div ng-repeat=" overd  in overlappeddata " ng-if="overd.mainpromising===hitd.promising">
+                                                <tt><li> {{overd.subpromising.promisingidea}} (
+                                                          <span kfelement draggable="true">
+                                                         <span><img ng-src="{{getIcon(hitd.promising.contribution)}}" draggable="false"></span>
+                                                         <a class="KFSearchLink" href="contribution/{{hitd.promising.contribution._id}}" target="_blank" draggable="false">{{hitd.promising.contribution.title}}</a>
+                                                        </span> )
+                                                   </li></tt>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <b> Criteria: -  </b><tt ng-bind-html="hitd.promising.reason"></tt>
+                                    </div>
+                    </div>
+                    </td>
+                    <td>
+                        <div kfelement draggable="true">
+                            <span><img ng-src="{{getIcon(hitd.promising.contribution)}}" draggable="false"></span>
+                            <a class="KFSearchLink" href="contribution/{{hitd.promising.contribution._id}}" target="_blank" draggable="false">{{hitd.promising.contribution.title}}</a>
+                        </div>
+                    </td>
+                    </tr>
                     </table>
-                    <div style="height: 20px;"></div>
                 </div>
+                <div style="height: 20px;"></div>
             </div>
         </div>
     </div>
-    <hr>
+</div>
+<hr>

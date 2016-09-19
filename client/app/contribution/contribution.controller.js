@@ -44,7 +44,7 @@ angular.module('kf6App')
         $scope.selected = {};
 
         $scope.selectedText = '';
-        $scope.targetColor = '#FFFF00';
+        $scope.targetColor = '';
         $scope.textareaText = '';
         $scope.promisingIdeaobjs = {};
         $scope.promisingIdeaobjLinks = {};
@@ -860,7 +860,8 @@ angular.module('kf6App')
                 communityId: communityId,
                 type: 'promisingIdeaobj',
                 title: 'an promisingIdeaobj',
-                authors: [$community.getAuthor()._id],
+                authors:$community.getAuthor()._id,
+                created:new Date(),
                 status: 'active',
                 permission: 'private',
                 data: promisingIdeaobj
