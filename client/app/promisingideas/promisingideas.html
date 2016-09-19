@@ -115,6 +115,7 @@
                                         <div ng-show="selectedpromisingideaIndex==$index  ">
                                             <br>
                                             <tt ng-if="hitd.promising.count==1">There are no overlapping of promising ideas </tt>
+                                             <tt ng-if="hitd.promising.count !=1">There are following overlapping of promising ideas:</tt>
                                             <div ng-repeat=" overd  in overlappeddata " ng-if="overd.mainpromising===hitd.promising">
                                                 <tt><li> {{overd.subpromising.promisingidea}} (
                                                           <span kfelement draggable="true">
