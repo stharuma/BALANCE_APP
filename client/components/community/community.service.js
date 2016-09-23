@@ -440,7 +440,7 @@ angular.module('kf6App')
 
         var deleteLink = function(link, callback) {
             $http.delete('/api/links/' + link._id).success(function() {
-                if (callback) callback();
+                if (callback) { callback(); }
             });
         };
 

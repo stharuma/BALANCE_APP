@@ -11,6 +11,7 @@ angular.module('kf6App')
         $scope.communityMembers = $community.getCommunityData().membersArray;
 
         $kfutil.mixIn($scope);
+        $ac.mixIn($scope);
 
         //Query String
         $scope.queryString = '';
@@ -221,6 +222,25 @@ angular.module('kf6App')
                     contribution.data.body = newBody;
                 });
             });
+        };
+
+        /* for csv */
+
+        $scope.getTable = function() {
+            var table = [];
+            $scope.contributions.forEach(function(each) {
+                table.push({
+                    title: each.title,
+                    authors: $scope.makeAuthorString(each),
+                    body: each.data.body,
+                    created: $scope.getTimeString(each.created)
+                });
+            });
+            return table;
+        };
+
+        $scope.getTableHeader = function() {
+            return ['Title', 'Authors', 'Body', 'Created'];
         };
 
     });
