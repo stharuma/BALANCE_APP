@@ -427,6 +427,16 @@ angular.module('kf6App')
             window.location = attachment.data.url;
         };
 
+        $scope.deleteAttachment = function(link) {
+            if (window.confirm('Are you sure to delete the attachment?')) {
+                if (window.confirm('Are you OK to contribute this change?')) {
+                    $community.deleteLink(link, function() {
+                        $scope.contribute();
+                    });
+                }
+            }
+        };
+
         /*********** title ************/
 
         $scope.updateTitle = function() {
