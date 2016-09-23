@@ -76,6 +76,12 @@ angular.module('kf6App')
                                         $scope.colors.push(promisingIdeaobj.data.color);
                                     }
                                 }
+                                 if (index === notes.length - 1) {
+             $scope.setpromisingoverlappedcounted();
+                if ($scope.promisngNotes.length === 0) {
+                    $scope.status.noPromisingCollapsed = false;
+                }
+            }
                             });
                             if (promisingnotefound === true) {
                                 $scope.promisngNotes.push(note);
@@ -85,25 +91,15 @@ angular.module('kf6App')
                         }
 
                     });
-                    setNopromising(index, notes);
-
-                });
+                               });
 
             });
 
             $scope.selectedColor = $scope.colors[0];
-            $scope.selectedHitCount = $scope.hitcounts[0];
+            // $scope.selectedHitCount = $scope.hitcounts[0];
         };
 
-        function setNopromising(index, notes) {
-            if (index === notes.length - 1) {
-                if ($scope.promisngNotes.length === 0) {
-                    $scope.status.noPromisingCollapsed = false;
-                }
-            }
-        }
-
-        $scope.setpromisingoverlappedcounted = function () {
+             $scope.setpromisingoverlappedcounted = function () {
             $scope.overlappeddata.length = 0;
             $scope.hitdata.length = 0;
             $scope.tableData.forEach(function (promising, index, data) {
@@ -233,8 +229,9 @@ angular.module('kf6App')
             $scope.status.isnewNoteCollapsed = false;
         };
 
-        $scope.progressselection = function () { //$scope.weeksdate.length=0; console.log('test');
-            $scope.setpromisingoverlappedcounted();
+        $scope.progressselection = function () {console.log(' $scope.selectedColor '+$scope.selectedColor);
+           //$scope.selectedColor ='All';
+         //  $scope.selectedColor = $scope.hitcounts[0];
             $scope.status.selectedColorCollapsed = !$scope.status.selectedColorCollapsed;
             $scope.status.selectedHitCollapsed = !$scope.status.selectedHitCollapsed;
             return $scope.currentselected.name;
