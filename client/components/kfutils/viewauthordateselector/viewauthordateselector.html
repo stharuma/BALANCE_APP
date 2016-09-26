@@ -8,21 +8,20 @@
             <label>Authors:</label>
             <div ng-include="'components/kfutils/authorselector/authorselector.html'"></div>
         </div>
-        <div style=" height: 150px; float: left; width:40%">
+        <div style=" height: 100px; float: left; width:50%">
             <label style="padding: 5px;  float: left;">Dates:</label>
             <div class="col-md-6">
                 <div style="float: left" ng-include="'components/kfutils/dateselector/dateselector.html'"></div>
             </div>
         </div>
-        <button ng-class="{true: 'btn-primary', false: 'btn-default'}[selectedItemCollapsed]" style=" float: left; " ng-click="selectedItemCollapsed=!selectedItemCollapsed">Show Selected Items</button>
-        <button ng-show="selectedItems.length!=0 &&!selectedItemCollapsed" style=" float: left; " ng-click="clearSelectedItems()">Clear Selected Items</button>
+        <button ng-show="selectedItems.length!=0" style=" float: left; " ng-click="clearSelectedItems()">Clear Selected Items</button>
     </div>
-    <div collapse="selectedItemCollapsed" style=" float:right; width: 50%;height: 300px;">
+    <div style=" float:right; width: 50%;height: 200px;">
         <div class="panel" style=" float: right; height: 150px; ">
             <div>
                 <span style="color:white;" class="selected-item">Selected  Items:</span>
                 <div ng-repeat="item in selectedItems" class="selected-item">
-                    {{item.viewTitle}} {{item.author}} {{item.toDate}} {{item.fromDate}}
+                    {{item.viewTitle}} {{item.author}} {{item.fromDate}} {{item.toDate}}
                 </div>
             </div>
         </div>

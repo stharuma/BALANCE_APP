@@ -3,19 +3,24 @@
 angular.module('kf6App')
     .controller('ScaffoldsupporttrackerCtrl', function ($scope, $http, $community, $stateParams, $suresh, $ac) {
         var communityId = $stateParams.communityId;
-        if ( communityId) {
-            $community.enter( communityId, function() {}, function() {
-                $community.refreshRegisteredScaffolds();
-           });
-        }
-        $community.refreshMembers();
-        $scope.communityMembers = $community.getCommunityData().membersArray;
-        $scope.scaffolds = $community.getCommunityData().registeredScaffolds;
-        $community.refreshRegisteredScaffolds(function () {
-            $scope.current = $scope.scaffolds[0];
-        });
         $scope.currentCommunity = {};
-        $scope.currentCommunity = $community.getCommunityData();
+        if (communityId) {
+            $community.enter(communityId, function () {}, function () {
+                $community.refreshMembers();
+                $scope.currentCommunity = $community.getCommunityData();
+                $scope.communityMembers = $community.getCommunityData().membersArray;
+                $scope.scaffolds = $community.getCommunityData().registeredScaffolds;
+                $community.refreshRegisteredScaffolds(function () {
+                    $scope.current = $scope.scaffolds[0];
+                    $scope.scaffolds.forEach(function (scaffold) {
+                        (scaffold.supports).forEach(function (support) {
+                            $scope.selectedSupports.push(support);
+                        });
+                    });
+                    $scope.search();
+                });
+            });
+        }
         //Query String
         $scope.queryString = '';
 
@@ -106,9 +111,13 @@ angular.module('kf6App')
             });
         };
 
-        $scope.setSelectedData = function (queryString, selectedItems) {
+        $scope.setSelectedData = function (queryString, selectedItems, views, authors, todate, fromdate) {
             $scope.selectedItems = selectedItems;
             $scope.queryString = queryString;
+            $scope.views = views;
+            $scope.authors = authors;
+            $scope.todate = todate;
+            $scope.fromdate = fromdate;
         };
 
         $scope.barchartControl = function () {
