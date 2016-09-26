@@ -8,7 +8,7 @@
         <div ng-include="'components/kfutils/viewauthordateselector/viewauthordateselector.html'"></div>
         <div style="padding: 5px; clear:both;">
             <label for="text">Lexican</label>:
-            <button ng-click=" search()" ng-model="queryString">Count word Occurrences:</button>
+            <button ng-click=" search()" ng-model="queryString">Word Tracker:</button>
             <br>
             <textarea id="text" cols="70" rows="10" ng-model="textareaText"></textarea>
         </div>
@@ -16,7 +16,10 @@
     </div>
     <div ng-if="textareaText.length !=0 && status.detailCollapsed">
         <div ng-if="queryString === ''">
-            <label style="font-size:  12pt; "><b>Count word Occurrences in {{currentCommunity.community.title}}</b></label>
+            <label style="font-size:  12pt; "><b>Word Reiteration Tracker in {{currentCommunity.community.title}} Community </b></label>
+        </div>
+        <div ng-if="queryString !== ''">
+            <label style="font-size:  12pt; "><b>Word Reiteration Tracker via Selected Criterions ({{views}} / {{authors}} / {{fromdate}} / {{todate}})</b></label>
         </div>
         <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailsCollapsed]" ng-click="detailsControl()">Details:</button>
         <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.barchartCollapsed]" ng-click="barchartControl()">Bar Chart:</button>

@@ -84,16 +84,21 @@ angular.module('kf6App')
             });
         };
 
-        $scope.setSelectedData = function (queryString, selectedItems) {
+        $scope.setSelectedData = function (queryString, selectedItems, views, authors, todate, fromdate) {
             $scope.selectedItems = selectedItems;
             $scope.queryString = queryString;
+            $scope.views = views;
+            $scope.authors = authors;
+            $scope.todate = todate;
+            $scope.fromdate = fromdate;
         };
+
 
         $scope.barchartControl = function () {
             $suresh.barchartControl($scope.status);
         };
         $scope.radarchartControl = function () {
-           $suresh.radarchartControl($scope.status);
+            $suresh.radarchartControl($scope.status);
         };
         $scope.detailsControl = function () {
             $suresh.detailsControl($scope.status);
