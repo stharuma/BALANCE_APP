@@ -379,12 +379,22 @@ Highcharts.setOptions({
         $scope.$watch('from', function() {
             if ($scope.from !== undefined) {
                 $scope.queryString += ' -from:' + $scope.from.toISOString();
+                $('#from').html($scope.from.toISOString().substr(0, 10));
+            }
+            else{
+                $('#from').html("");
             }
         });
         $scope.$watch('to', function() {
             if ($scope.to !== undefined) {
                 $scope.queryString += ' -to:' + $scope.to.toISOString();
+                $('#to').html($scope.to.toISOString().substr(0, 10));
             }
+            else{
+                $('#to').html("");
+            }
+
+
         });
 
         $scope.addViews = function() {

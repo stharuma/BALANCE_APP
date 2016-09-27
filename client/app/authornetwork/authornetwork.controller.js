@@ -34,14 +34,25 @@ angular.module('kf6App')
             var authors = {};
             var buildsonkey = new Array();
             var buildson = new Array();
+            var privateNames = new Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'BB', 'CC', 'DD', 'EE', 'FF', 'GG', 'HH', 'II', 'JJ', 'KK', 'LL', 'MM', 'NN', 'OO', 'PP', 'QQ', 'RR', 'SS', 'TT', 'UU', 'VV', 'WW', 'XX', 'YY', 'ZZ');
 
+            var i = 1;
             notes.forEach(function(note) {
                 note.authors.forEach(function(author){
+                    console.log(author)
                     if (typeof authors[author] !== 'undefined') {
                         authors[author].size++;
                     }
                     else{
-                        authors[author] = {name: $community.getMember(author).getName(), size: 1}
+                        //authors[author] = {name: $community.getMember(author).getName(), size: 1}; // version avec les noms
+                        // version anonymisée sauf l'auteur (le bloc if/else avec le tableau privateNames)
+                        if (author === $community.getAuthor()._id){
+                            authors[author] = {name: $community.getMember(author).getName(), size: 1} ; 
+                        }
+                        else{
+                            authors[author] = {name: privateNames[i], size: 1} ; // version anonymisée
+                            i++;
+                        }
                     }                
                 });
             });
