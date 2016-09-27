@@ -62,13 +62,19 @@
             There was no contributions to match.
         </div>
         <div ng-if="status.status === 'searched'">
+            <!--<div ng-if="isManager()" style="float: right;">-->
             <div style="float: right;">
-                <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
+                <pagination style="margin-top: 2px; margin-bottom: 2px;" total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
             </div>
-            <div style="width: 100%; float: left; text-align: right;">
-                CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
-                <br>
+            <div style="width: 100%; float: left;">
+                <div style="float: left;">
+                    <button type="button" ng-csv="getTable()" csv-header="getTableHeader()" filename="searchresult.csv">Download as CSV</button>
+                </div>
+                <div style="text-align: right;">
+                    CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
+                </div>
             </div>
+            <br>
             <div ng-if="status.loading === true">
             </div>
             <div ng-if="status.loading !== true">

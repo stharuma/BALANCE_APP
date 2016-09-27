@@ -259,6 +259,10 @@
                     <ul>
                         <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
                             <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
+                            &nbsp; &nbsp;
+                            <span ng-show="isEditable()">
+                              <a ng-click="deleteAttachment(conn)">delete</a>
+                            </span>
                         </li>
                     </ul>
                 </div>
