@@ -37,17 +37,19 @@ angular.module('kf6App')
             $scope.lexiconsInfo.length = 0;
             var lexiconCountInnote = 0;
 
-            $scope.lexicons = $scope.textareaText.split(' '); //processedText.split(' ');
+            $scope.lexicons = $scope.textareaText.replace(/\s\s+/g, ' ').toLowerCase().split(' '); //processedText.split(' ');
+            $scope.lexicons = uniqBy($scope.lexicons, JSON.stringify);
+
             notes.forEach(function (note) {
                 var body = note.text4search.toLowerCase().replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '');
                 body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ');
                 body = body.split(' ');
 
-                $scope.lexicons.forEach(function (lexicon) { //if (body.indexOf(word) !== -1){
+                $scope.lexicons.forEach(function (lexicon) {
                     lexiconCountInnote = 0;
                     body.forEach(function (eachword) {
                         if (eachword === lexicon) {
-                            lexiconCountInnote += 1;
+                            lexiconCountInnote++;
                         }
                     });
                     if (lexiconCountInnote !== 0) {
@@ -60,6 +62,14 @@ angular.module('kf6App')
                 });
             });
             $scope.addCoordinateData();
+        };
+
+        function uniqBy(a, key) {
+            var seen = {};
+            return a.filter(function (item) {
+                var k = key(item);
+                return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+            })
         };
 
         $scope.addCoordinateData = function () {
