@@ -37,13 +37,14 @@ angular.module('kf6App')
             $scope.lexiconsInfo.length = 0;
             var lexiconCountInnote = 0;
 
-            $scope.lexicons = $scope.textareaText.replace(/\s\s+/g, ' ').toLowerCase().split(' '); //processedText.split(' ');
+            $scope.lexicons = $scope.textareaText.replace(/\s\s+/g, ' ').replace(/['"]+/g, '').toLowerCase().split(' '); //processedText.split(' ');
             $scope.lexicons = uniqBy($scope.lexicons, JSON.stringify);
 
             notes.forEach(function (note) {
                 var body = note.text4search.toLowerCase().replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '');
-                body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ');
+                body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ').replace(/['"]+/g, '').replace(/\s\s+/g, ' ').replace(/&nbsp;|(<([^>]+)>)/ig,' ');
                 body = body.split(' ');
+                body.splice(1,1);
 
                 $scope.lexicons.forEach(function (lexicon) {
                     lexiconCountInnote = 0;
@@ -69,8 +70,8 @@ angular.module('kf6App')
             return a.filter(function (item) {
                 var k = key(item);
                 return seen.hasOwnProperty(k) ? false : (seen[k] = true);
-            })
-        };
+            });
+        }
 
         $scope.addCoordinateData = function () {
             $scope.count.length = 0;
