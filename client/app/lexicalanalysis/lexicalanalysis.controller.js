@@ -36,7 +36,7 @@ angular.module('kf6App')
         var checkedWordInNote = function (notes) {
             $scope.lexiconsInfo.length = 0;
             var lexiconCountInnote = 0;
-
+            $scope.textareaText=$scope.textareaText.replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '').replace(/[\r\n\t\u00A0\u3000]/g, ' ');
             $scope.lexicons = $scope.textareaText.replace(/\s\s+/g, ' ').replace(/['"]+/g, '').toLowerCase().split(' '); //processedText.split(' ');
             $scope.lexicons = uniqBy($scope.lexicons, JSON.stringify);
 
