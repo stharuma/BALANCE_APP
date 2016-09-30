@@ -90,9 +90,17 @@ angular.module('kf6App')
                     maxcount: maxcount,
                     inContribution: frequencyDetails
                 };
-                $scope.count.push(maxcount);
-                $scope.labels.push(word);
-            });
+
+                if (index === $scope.lexicons.length - 1) {
+                    $scope.lexicons.sort(function (a, b) {
+                        return parseInt(a.maxcount, 10) - parseInt(b.maxcount, 10);
+                    }).reverse();
+                   $scope.lexicons.forEach(function (data) {
+                        $scope.count.push(data.maxcount);
+                        $scope.labels.push(data.word);
+                   });
+                }
+             });
         };
 
         $scope.setSelectedData = function (queryString, selectedItems, views, authors, todate, fromdate) {

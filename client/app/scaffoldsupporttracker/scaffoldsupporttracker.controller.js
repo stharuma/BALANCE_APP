@@ -92,7 +92,7 @@ angular.module('kf6App')
         $scope.addCoordinateData = function () {
             $scope.count.length = 0;
             $scope.labels.length = 0;
-            $scope.selectedSupports.forEach(function (support) {
+            $scope.selectedSupports.forEach(function (support, index) {
                 var maxcount = 0;
                 var frequencyDetails = '  ';
                 $scope.supportsCountInNote.forEach(function (item) {
@@ -106,8 +106,17 @@ angular.module('kf6App')
                     frequency: maxcount,
                     inContribution: frequencyDetails
                 });
-                $scope.count.push(maxcount);
-                $scope.labels.push(support._to.title);
+
+                if (index === $scope.selectedSupports.length - 1) {console.log('here');
+                    $scope.tableData.sort(function (a, b) {
+                        return parseInt(a.frequency, 10) - parseInt(b.frequency, 10);
+                    }).reverse();
+                   $scope.tableData.forEach(function (data) {
+                        $scope.count.push(data.frequency);
+                        $scope.labels.push(data.supportTitle);
+                   });
+                }
+
             });
         };
 
