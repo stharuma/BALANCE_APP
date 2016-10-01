@@ -107,7 +107,7 @@ angular.module('kf6App')
                     inContribution: frequencyDetails
                 });
 
-                if (index === $scope.tableData.length - 1) {
+                if (index === $scope.selectedSupports.length - 1) {
                     $scope.tableData.sort(function (a, b) {
                         return parseInt(a.frequency, 10) - parseInt(b.frequency, 10);
                     }).reverse();
