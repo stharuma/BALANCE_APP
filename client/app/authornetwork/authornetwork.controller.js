@@ -9,13 +9,21 @@ angular.module('kf6App')
             $scope.view = view;
             $community.enter($scope.view.communityId);
 
+            $community.refreshGroups(function(groups) {
+                $scope.groups = groups;
+            });
+
             $scope.communityMembers = $community.getMembersArray();
             $community.refreshMembers(function(){
                 refresh();
-            });       
+            });
         });
 
-        var refresh = function() {
+        $scope.refreshByGroup = function(group) {
+            refresh(group)
+        };
+
+        var refresh = function(group) {
             $http.post('/api/contributions/' + $scope.view.communityId + '/search', {
                 query: {
                     communityId: $scope.view.communityId,
@@ -24,13 +32,13 @@ angular.module('kf6App')
                 }
             }).success(function(contributions) {
                 $http.get('/api/links/buildson/' + $scope.view.communityId).success(function(links) {
-                    var data = processData(contributions, links);
+                    var data = processData(contributions, links, group);
                     refreshView(data);                          
                 });
             });
         };
 
-        var processData = function(notes, links) {
+        var processData = function(notes, links, group) {
             var authors = {};
             var buildsonkey = new Array();
             var buildson = new Array();
@@ -39,19 +47,22 @@ angular.module('kf6App')
             var i = 1;
             notes.forEach(function(note) {
                 note.authors.forEach(function(author){
-                    console.log(author)
                     if (typeof authors[author] !== 'undefined') {
                         authors[author].size++;
                     }
                     else{
-                        //authors[author] = {name: $community.getMember(author).getName(), size: 1}; // version avec les noms
-                        // version anonymisée sauf l'auteur (le bloc if/else avec le tableau privateNames)
-                        if (author === $community.getAuthor()._id){
-                            authors[author] = {name: $community.getMember(author).getName(), size: 1} ; 
-                        }
-                        else{
-                            authors[author] = {name: privateNames[i], size: 1} ; // version anonymisée
-                            i++;
+
+                        if ((typeof group !== 'undefined' && group.members.indexOf(author) >= 0) || typeof group === 'undefined'){
+                            authors[author] = {name: $community.getMember(author).getName(), size: 1}; // version avec les noms
+                            // version anonymisée sauf l'auteur (le bloc if/else avec le tableau privateNames)
+                            /*if (author === $community.getAuthor()._id){
+                                authors[author] = {name: $community.getMember(author).getName(), size: 1} ; 
+                            }
+                            else{
+                                authors[author] = {name: privateNames[i], size: 1} ; // version anonymisée
+                                i++;
+                            }
+                            */                            
                         }
                     }                
                 });
@@ -189,6 +200,7 @@ angular.module('kf6App')
                 $("#infos").html('');
             }
 
+
             var minweight = null;
             var maxweight = null;
             var minsize = null;
@@ -216,9 +228,6 @@ angular.module('kf6App')
                     maxweight = (maxweight === null || link.weight > maxweight ? link.weight : maxweight);
                     cleanlinks.push(link);
                 } 
-                else{
-                    console.log(link)
-                }
             });
             links = cleanlinks;
 
@@ -233,6 +242,9 @@ angular.module('kf6App')
                 .charge(-300)
                 .on("tick", tick)
                 .start();
+
+            d3.select("#network svg").remove();
+            $('#infos').html('');
 
             var svg = d3.select("#network").append("svg:svg")
                 .attr("width", width)

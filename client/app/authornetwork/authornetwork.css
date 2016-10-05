@@ -1,18 +1,25 @@
+#authornetwork {
+  margin-left: 40px;
+}
+
 #network{
   width: 70%;
-  float: left;
+  float: right;
 }
 #infos{
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
   font-size: 12px;
   width: 30%;
-  float: left;
+  float: right;
   margin: 100px 0 0 0;
 }
 ul{
   margin: 0;
 }
 
+h2{
+  font-size: 15px;
+}
 #authornetwork path.link {
   fill: none;
   stroke: #666;
@@ -61,6 +68,27 @@ ul{
   stroke: #fff;
   stroke-width: 3px;
   stroke-opacity: .8;
+}
+
+#groups ul, #legendes ul{
+  list-style-type: none;
+}
+#legendes ul {
+  
+}
+
+#legendes ul li {
+  height: 20px;
+  line-height: 20px;
+  padding-bottom: 12px;
+}
+
+#legendes ul li span{
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px; 
+  margin-right: 8px;
 }
 
 @media screen and (max-width: 920px){

@@ -5,9 +5,20 @@
     <p>{{ 'authornetwork_explanation2' | translate }}</p>
     <p>{{ 'authornetwork_explanation3' | translate }}</p>
     <ul>
-      <li>{{ 'authornetwork_legend1' | translate }}</li>
-      <li>{{ 'authornetwork_legend2' | translate }}</li>
-      <li>{{ 'authornetwork_legend3' | translate }}</li>
+      <li><span style="background: #008;"></span>{{ 'authornetwork_legend1' | translate }}</li>
+      <li><span style="background: #080;"></span>{{ 'authornetwork_legend2' | translate }}</li>
+      <li><span style="background: #800;"></span>{{ 'authornetwork_legend3' | translate }}</li>
+    </ul>
+  </div>
+  <div id="groups">
+    <h2>{{ 'groups' | translate }}</h2>
+    <ul>
+      <li>
+        <input type="radio" name="groups" checked ng-click="refreshByGroup()">&nbsp;Tous les membres de la communauté
+      </li>
+      <li ng-repeat="group in groups">
+        <input type="radio" name="groups" ng-click="refreshByGroup(group)">&nbsp;{{group.title}}
+      </li>
     </ul>
   </div>
 	<div id="authornetwork">
