@@ -111,10 +111,10 @@ angular.module('kf6App')
                     $scope.tableData.sort(function (a, b) {
                         return parseInt(a.frequency, 10) - parseInt(b.frequency, 10);
                     }).reverse();
-                   $scope.tableData.forEach(function (data) {
+                    $scope.tableData.forEach(function (data) {
                         $scope.count.push(data.frequency);
                         $scope.labels.push(data.supportTitle);
-                   });
+                    });
                 }
 
             });
@@ -140,28 +140,12 @@ angular.module('kf6App')
         };
         // $scope.getIcon = function(contribution) {$suresh.getIcon(contribution, $community); };
 
-
-        //Pager Status
-        $scope.pager = {};
-        $scope.pager.getStart = function () {
-            return (($scope.pager.page - 1) * $scope.pager.pagesize) + 1;
-        };
-        $scope.pager.getEnd = function () {
-            var end = $scope.pager.getStart() + $scope.pager.pagesize - 1;
-            if (end > $scope.pager.total) {
-                end = $scope.pager.total;
-            }
-            return end;
-        };
-        $scope.pager.pagesize = 50;
-
         //results
         $scope.search = function () {
             if ($scope.selectedSupports.length === 0) {
                 window.alert('Select Support Items:');
             } else {
-                $scope.pager.query = $suresh.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
-                $suresh.count($scope.status, $scope.pager, communityId, $ac, $http, checkedSupportLinkInNote);
+                $suresh.searchprocess($scope.queryString, communityId, $scope.communityMembers, $community, $scope.status, checkedSupportLinkInNote);
                 $scope.status.detailCollapsed = true;
                 $scope.detailsControl();
             }

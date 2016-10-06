@@ -42,12 +42,8 @@
                 </div>
                 <div ng-if="status.status === 'searched'">
                     <button type="button" ng-csv="lexicons" csv-header="getHeader()" filename="test.csv">ExportToCSV</button>
-                    <div style="float: right;">
-                        <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
-                    </div>
-                    <div style="width: 100%; float: left; text-align: right;">
-                        CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
-                    </div>
+                    <br/>
+                    <br/>
                     <div ng-if="status.loading === true">
                     </div>
                     <div ng-if="status.loading !== true">

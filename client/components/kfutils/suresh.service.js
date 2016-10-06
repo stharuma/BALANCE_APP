@@ -1,10 +1,17 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$suresh', function () {
+    .factory('$suresh', function ($ac, $http) {
         var obj = {};
 
-        obj.makeQuery = function (queryString, communityId, communityMembers, $community) {
+        obj.searchprocess = function (queryString, communityId, communityMembers, $community, status, getContributions) {
+            var pager = {};
+            pager.pagesize = 50000;
+            pager.query = makeQuery(queryString, communityId, communityMembers, $community);
+            count(status, pager, communityId, getContributions);
+        };
+
+        var makeQuery = function (queryString, communityId, communityMembers, $community) {
             var query = {
                 communityId: communityId,
                 words: [],
@@ -66,6 +73,54 @@ angular.module('kf6App')
             return query;
         };
 
+        var count = function (status, pager, communityId, getContributions) {
+            status.status = 'searching';
+            $http.post('/api/contributions/' + communityId + '/search/count', {
+                query: pager.query
+            }).success(function (result) {
+                pager.total = result.count;
+                pager.page = 1;
+                openPage(status, pager, communityId, getContributions);
+            }).error(function () {
+                status.status = 'error';
+            });
+        };
+
+        function openPage(status, pager, communityId, getContributions) {
+            status.status = 'searching';
+            pager.query.pagesize = pager.pagesize;
+            pager.query.page = pager.page;
+            $http.post('/api/contributions/' + communityId + '/search', {
+                query: pager.query
+            }).success(function (contributions) {
+                contributions.forEach(function (c) {
+                    if (!$ac.isReadable(c)) {
+                        c.title = 'forbidden';
+                        c.authors = [];
+                        c.data.body = '(forbidden)';
+                        c.created = null;
+                    }
+                });
+                if (contributions.length > 0) {
+                    status.status = 'searched';
+                } else {
+                    status.status = 'noresult';
+                }
+                getContributions(contributions);
+                console.log('count ' + contributions.length);
+            }).error(function () {
+                status.status = 'error';
+            });
+        }
+
+        obj.getIcon = function (contribution, $community) {
+            if ($community.amIAuthor(contribution)) {
+                return 'manual_assets/kf4images/icon-note-unknown-auth-.gif';
+            } else {
+                return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
+            }
+        };
+
         obj.detailsControl = function (status) {
             status.detailsCollapsed = false;
             if (!status.radarchartCollapsed) {
@@ -93,54 +148,6 @@ angular.module('kf6App')
             }
             if (!status.detailsCollapsed) {
                 status.detailsCollapsed = true;
-            }
-        };
-
-        obj.count = function (status, pager, communityId, $ac, $http, getContributions) {
-            status.status = 'searching';
-            $http.post('/api/contributions/' + communityId + '/search/count', {
-                query: pager.query
-            }).success(function (result) {
-                pager.total = result.count;
-                pager.page = 1;
-                openPage(status, pager, communityId, $ac, $http, getContributions);
-                //  alert(notes.length);
-            }).error(function () {
-                status.status = 'error';
-            });
-        };
-
-        function openPage(status, pager, communityId, $ac, $http, getContributions) {
-            status.status = 'searching';
-            pager.query.pagesize = pager.pagesize;
-            pager.query.page = pager.page;
-            $http.post('/api/contributions/' + communityId + '/search', {
-                query: pager.query
-            }).success(function (contributions) {
-                contributions.forEach(function (c) {
-                    if (!$ac.isReadable(c)) {
-                        c.title = 'forbidden';
-                        c.authors = [];
-                        c.data.body = '(forbidden)';
-                        c.created = null;
-                    }
-                });
-                if (contributions.length > 0) {
-                    status.status = 'searched';
-                } else {
-                    status.status = 'noresult';
-                }
-                getContributions(contributions);
-            }).error(function () {
-                status.status = 'error';
-            });
-        }
-
-        obj.getIcon = function (contribution, $community) {
-            if ($community.amIAuthor(contribution)) {
-                return 'manual_assets/kf4images/icon-note-unknown-auth-.gif';
-            } else {
-                return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
         };
 
