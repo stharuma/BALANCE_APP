@@ -14,7 +14,7 @@
     <h2>{{ 'groups' | translate }}</h2>
     <ul>
       <li>
-        <input type="radio" name="groups" checked ng-click="refreshByGroup()">&nbsp;Tous les membres de la communauté
+        <input type="radio" name="groups" checked ng-click="refreshByGroup()">&nbsp;{{ 'all_users' | translate }}
       </li>
       <li ng-repeat="group in groups">
         <input type="radio" name="groups" ng-click="refreshByGroup(group)">&nbsp;{{group.title}}
