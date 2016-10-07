@@ -359,8 +359,9 @@
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1)">cancel</button>
                             </div>
                             <label style="font-size:  9pt"> <b> Color :</b></label>
-                            <input colorpicker type="text" ng-model="promisingIdeaobjs[conn.from].data.color" style="width:60px;" />
-                            </br>
+                            <ngjs-color-picker selected="promisingIdeaobjs[conn.from].data.color"></ngjs-color-picker>
+                            <input type="text" ng-model="promisingIdeaobjs[conn.from].data.color">
+                            <br>
                             <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             </br>
                             <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
@@ -382,12 +383,13 @@
         <label style="font-size:  11pt;float: left"><b>Add Promising Idea For {{contribution.title}}</b></label>
         <div style="height:200px; overflow: scroll; width:100%; float: left">
             <label style="font-size:  9pt"> <b> Color :</b></label>
-            <input colorpicker type="text" ng-model="targetColor" style="width:60px;" />
-            </br>
+            <ngjs-color-picker selected="targetColor"></ngjs-color-picker>
+            <input type="text" ng-model="targetColor">
+            <br>
             <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': targetColor }" ng-bind-html="trustAsHtml(selectedText)"></tt>
-            </br>
+            <br>
             <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
-            </br>
+            <br>
             <textarea id="text" cols="80" rows="5" ng-model="textareaText"></textarea>
         </div>
         <hr>

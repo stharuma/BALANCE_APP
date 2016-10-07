@@ -36,6 +36,7 @@ module.exports = function(config) {
             'client/bower_components/Chart.js/Chart.js',
             'client/bower_components/angular-chart.js/dist/angular-chart.js',
             'client/bower_components/ng-csv/build/ng-csv.min.js',
+            'client/bower_components/ngjs-color-picker/js/ngjs-color-picker.js',
             'client/app/app.js',
             //'client/app/app.coffee',
             'client/app/**/*.js',
