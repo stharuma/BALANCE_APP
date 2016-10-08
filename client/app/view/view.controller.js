@@ -630,9 +630,15 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
-        $scope.openDashboard = function() {
+        $scope.openActivityDashboard = function() {
             $scope.openAnalytics();
             var url = 'dashboard/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openNoteDashboard = function() {
+            $scope.openAnalytics();
+            var url = 'dashboard2/' + $scope.view.communityId;
             window.open(url, '_blank');
         };
 
