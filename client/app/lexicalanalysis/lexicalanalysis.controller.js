@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('LexicalAnalysisCtrl', function ($scope, $http, $community, $stateParams, $suresh, $ac) {
+    .controller('LexicalAnalysisCtrl', function ($scope, $http, $community, $stateParams, $suresh) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();

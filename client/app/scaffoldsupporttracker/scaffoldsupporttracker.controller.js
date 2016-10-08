@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ScaffoldsupporttrackerCtrl', function ($scope, $http, $community, $stateParams, $suresh, $ac) {
+    .controller('ScaffoldsupporttrackerCtrl', function ($scope, $http, $community, $stateParams, $suresh) {
         var communityId = $stateParams.communityId;
         $scope.currentCommunity = {};
         if (communityId) {
