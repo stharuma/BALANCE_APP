@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('LoginCtrl', function($scope, Auth, $location, $window) {
+    .controller('LoginCtrl', function($scope, Auth, $location, $window, $kfutil) {
         $scope.user = {};
         $scope.errors = {};
 
@@ -26,4 +26,9 @@ angular.module('kf6App')
         $scope.loginOauth = function(provider) {
             $window.location.href = '/auth/' + provider;
         };
+
+        if ($kfutil.isIE()) {
+            $scope.IEwarning = true;
+            window.alert("Internet Explorer is not recommended for use of KF6.");
+        }
     });
