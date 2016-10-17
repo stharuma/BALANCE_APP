@@ -459,10 +459,7 @@ angular.module('kf6App')
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
             $community.createNote(mode, function(note) {
-                $scope.createContainsLink(note._id, {
-                    x: 100,
-                    y: 100
-                });
+                $scope.createContainsLink(note._id, $scope.getNewElementPosition());
                 $scope.openContribution(note._id, null, w);
             });
         };
@@ -487,6 +484,44 @@ angular.module('kf6App')
                 });
                 $scope.openContribution(drawing._id, null, w);
             });
+        };
+
+        $scope.createRiseabove = function() {
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
+            $community.createView('riseabove:', function(view) {
+                $community.createNote(mode, function(note) {
+                    note.title = 'Riseabove';
+                    $community.makeRiseabove(note, view._id, function(note) {
+                        $scope.createContainsLink(note._id, $scope.getNewElementPosition(), function() {});
+                    });
+                });
+            }, true, mode);
+        };
+
+        $scope.getNewElementPosition = function() {
+            var canvas = $('#maincanvas');
+            var pos = {
+                x: canvas.scrollLeft() + 100,
+                y: canvas.scrollTop() + 100
+            };
+            while ($scope.findElement(pos)) {
+                pos.x = pos.x + 10;
+                pos.y = pos.y + 10;
+            }
+            return pos;
+        };
+
+        $scope.findElement = function(pos) {
+            var len = $scope.refs.length;
+            for (var i = 0; i < len; i++) {
+                var each = $scope.refs[i];
+                if (each.data.x === pos.x && each.data.y === pos.y) {
+                    return each;
+                }
+            }
+            return null;
         };
 
         $scope.createViewlink = function() {
@@ -943,7 +978,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.createRiseabove = function() {
+        $scope.createRiseaboveFromContextMenu = function() {
             var selected = $scope.getSelectedModels();
             var confirmation = window.confirm('Are you sure to create riseabove using the selected ' + selected.length + ' object(s)?');
             if (!confirmation) {
