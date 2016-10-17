@@ -108,9 +108,22 @@
                 <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img class="KFToolBarImage" src="manual_assets/kf6images/04-toolbar-viewmanagement.png" title="{{ 'view_management' | translate }}"></button>
             </span>
         </span>
+        <script type="text/ng-template" id="RiseaboveCreationModal.html">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">New RiseAbove</h3>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <label>Name:</label>
+                <input type="text" class="form-control" ng-model="name"></input>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                <button class="btn btn-primary" type="button" ng-click="ok()">Create</button>
+            </div>
+        </script>
         <span class="input-group">
             <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="createRiseabove();"><img class="KFToolBarImage" src="manual_assets/kf6images/04X-toolbar-newriseabove.png" title="New RiseAbove"></button>
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openModal()"><img class="KFToolBarImage" src="manual_assets/kf6images/04X-toolbar-newriseabove.png" title="New RiseAbove"></button>
             </span>
         </span>
         <span class="input-group">

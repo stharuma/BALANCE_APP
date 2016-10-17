@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac, $modal) {
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
@@ -486,13 +486,13 @@ angular.module('kf6App')
             });
         };
 
-        $scope.createRiseabove = function() {
+        $scope.createRiseabove = function(title) {
             var mode = {};
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
             $community.createView('riseabove:', function(view) {
                 $community.createNote(mode, function(note) {
-                    note.title = 'Riseabove';
+                    note.title = title;
                     $community.makeRiseabove(note, view._id, function(note) {
                         $scope.createContainsLink(note._id, $scope.getNewElementPosition(), function() {});
                     });
@@ -522,6 +522,22 @@ angular.module('kf6App')
                 }
             }
             return null;
+        };
+
+        $scope.openModal = function() {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'RiseaboveCreationModal.html',
+                controller: 'RiseaboveCreationCtrl',
+                size: 'lg',
+                appendTo: document
+            });
+
+            modalInstance.result.then(function(name) {
+                $scope.createRiseabove(name);
+            }, function() {
+                //dismiss
+            });
         };
 
         $scope.createViewlink = function() {
@@ -1022,3 +1038,18 @@ angular.module('kf6App')
 function closeDialog(wid) {
     $('#' + wid).dialog('close');
 }
+
+angular.module('kf6App')
+    .controller('RiseaboveCreationCtrl', function($scope, $modalInstance) {
+        $scope.name = '';
+        $scope.ok = function() {
+            if (!$scope.name || $scope.name.length === 0) {
+                window.alert('Please input a name.');
+                return;
+            }
+            $modalInstance.close($scope.name);
+        };
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
+    });
