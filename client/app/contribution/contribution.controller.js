@@ -447,6 +447,16 @@ angular.module('kf6App')
             }
         };
 
+        /*********** tab changed handler ************/
+
+        $scope.readSelected = function() {
+            $scope.status.hidebuildson = false;
+        };
+
+        $scope.readDeselected = function() {
+            $scope.status.hidebuildson = true;
+        };
+
         /*********** title ************/
 
         $scope.updateTitle = function() {
