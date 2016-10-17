@@ -486,6 +486,11 @@ angular.module('kf6App')
             });
         };
 
+        $scope.viewAdded = function(view) {
+            $scope.createContainsLink(view._id, $scope.getNewElementPosition());
+            $scope.status.isViewManagerCollapsed = true;
+        };
+
         $scope.createRiseabove = function(title) {
             var mode = {};
             mode.permission = $scope.view.permission;
