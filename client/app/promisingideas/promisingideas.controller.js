@@ -255,12 +255,11 @@ angular.module('kf6App')
         };
 
         $scope.hastextinpromisingidea = function (searchtext, idea, criteria) {
-            var hasit = false;
-            if (searchtext !== '' && (idea.replace(/\s/g, '').indexOf(searchtext.replace(/\s/g, '')) !== -1 ||
-                    criteria.replace(/\s/g, '').indexOf(searchtext.replace(/\s/g, '')) !== -1)) {
+            var hasit = false; console.log('searchtext '+ searchtext);
+            if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
+                    criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
                 hasit = true;
-            }
-            return hasit;
+            }  return hasit;
         };
 
         $scope.progressselection = function () {
@@ -307,13 +306,6 @@ angular.module('kf6App')
                 $scope.selectedpromisingideaIndex = index;
             }
         };
-
-
-        $scope.filterBySearch = function (item) {
-            return item.promisingidea.toLowerCase().indexOf($scope.searchkeyword.toLowerCase()) != -1 ||
-                item.reason.toLowerCase().indexOf($scope.searchkeyword.toLowerCase()) != -1
-        };
-
     })
 
 .filter('highlighted', function ($sce) {
