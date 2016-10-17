@@ -103,7 +103,7 @@
                                         <tt class="box" ng-style="{ 'background-color': data.color }"></tt>
                                         <tt style="float:left; margin: 3px" ng-bind-html="data .promisingidea | highlighted:searchkeyword:f"></tt>
                                         <br>
-                                        <tt style="float:right">-(Created by {{data.author}}  {{data.date}})</tt>
+                                        <tt style="float:right">-(By {{data.author}}  {{data.date}})</tt>
                                         <br>
                                         <b> Criteria: -  </b><tt ng-bind-html="data .reason | highlighted:searchkeyword"></tt>
                                     </div>
@@ -135,7 +135,7 @@
                                     <tt class="box" ng-style="{ 'background-color': hitd.promising.color}"></tt>
                                     <tt style="float: left;margin: 3px " ng-bind-html="hitd.promising.promisingidea| highlighted:searchkeyword"></tt>
                                     <br>
-                                    <tt style="float:right">-(Created by {{hitd.promising.author}}  {{hitd.promising.date}})</tt>
+                                    <tt style="float:right">-(By {{hitd.promising.author}}  {{hitd.promising.date}})</tt>
                                     <div ng-show="selectedpromisingideaIndex===$index  " style="clear:both">
                                         <tt ng-if="hitd.promising.count==1">There is no overlapping of promising ideas present here!</tt>
                                         <tt ng-if="hitd.promising.count !=1">The following are the overlapping of promising ideas:</tt>
@@ -148,7 +148,7 @@
                                                    </span> )
                                                    </tt>
                                             <br>
-                                            <tt style="float:right">-(Created by {{overd.subpromising.author}}  {{overd.subpromising.date}})</tt>
+                                            <tt style="float:right">-(By {{overd.subpromising.author}}  {{overd.subpromising.date}})</tt>
                                             <br>
                                         </div>
                                     </div>
