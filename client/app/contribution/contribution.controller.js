@@ -119,7 +119,7 @@ angular.module('kf6App')
                 if ($scope.contribution.status === 'active') {
                     window.setTimeout(function() {
                         $community.read($scope.contribution);
-                    }, 3000);
+                    }, 1200);
                 }
             });
         }, function(msg, status) {
