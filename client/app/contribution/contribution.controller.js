@@ -403,6 +403,16 @@ angular.module('kf6App')
             }
         };
 
+        $scope.openRiseaboveView = function() {
+            if (!$scope.contribution.isRiseabove()) {
+                window.alert('this contribution is not riseabove');
+            }
+
+            console.log('xx');
+            var url = 'view/' + $scope.contribution.data.riseabove.viewId;
+            window.open(url, '_blank');
+        };
+
         $scope.attachmentUploaded = function(attachment) {
             $http.post('/api/links', {
                 from: $scope.contribution._id,
