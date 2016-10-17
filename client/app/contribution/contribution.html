@@ -325,13 +325,13 @@
                     </div>
                 </div>
             </tab>
-            <tab class="KFTab" heading="Promisingiedas" ng-show="status.ispromisingideaTabDisplayed">
+            <tab class="KFTab" heading="Promising Ideas" ng-show="status.ispromisingideaTabDisplayed">
                 <label>Promising Ideas:</label>
                 <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
                     <div ng-hide="deletedIndex==$index">
                         <div ng-hide="selectedIndex==$index ||newnoteIndex==$index ">
                             <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index)">To New Contribution</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index)">Export Ideas</button>
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex($index)">edit</button>
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index">delete</button>
                             </div>
@@ -339,7 +339,7 @@
                             </br>
                             <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             </br>
-                            <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
+                            <label style="font-size:  9pt"> <b> Justification for Selection of Promising Idea:</b></label>
                             </br>{{promisingIdeaobjs[conn.from].data.reason}}
                         </div>
                         <div style="padding: 1px ;" ng-show="newnoteIndex==$index">
@@ -364,7 +364,7 @@
                             <br>
                             <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             </br>
-                            <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
+                            <label style="font-size:  9pt"> <b> Justification for Selection of Promising Idea:</b></label>
                             </br>
                             <textarea id="text" cols="70" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
                         </div>
@@ -388,7 +388,7 @@
             <br>
             <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': targetColor }" ng-bind-html="trustAsHtml(selectedText)"></tt>
             <br>
-            <label style="font-size:  9pt"> <b> Reason For Promising :</b></label>
+            <label style="font-size:  9pt"> <b>Justification for Selection of Promising Idea:</b></label>
             <br>
             <textarea id="text" cols="70" rows="2" ng-model="textareaText"></textarea>
         </div>
