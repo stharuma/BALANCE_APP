@@ -1,6 +1,6 @@
 {
   "name": "kf6",
-  "version": "6.8.13",
+  "version": "6.8.14",
   "build": "2016.10.17",
   "main": "server/app.js",
   "dependencies": {
