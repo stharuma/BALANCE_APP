@@ -438,6 +438,12 @@ angular.module('kf6App')
             $http.put('/api/links/' + ref._id, ref);
         };
 
+        var deleteLink = function(link, callback) {
+            $http.delete('/api/links/' + link._id).success(function() {
+                if (callback) { callback(); }
+            });
+        };
+
         var orderComparator = function(n) {
             if (n.data && n.data.order) {
                 return n.data.order;
@@ -963,6 +969,7 @@ angular.module('kf6App')
             getLinksFromTo: getLinksFromTo,
             createLink: createLink,
             saveLink: saveLink,
+            deleteLink: deleteLink,
             notify: notify,
             getViews: function() {
                 return communityData.views;

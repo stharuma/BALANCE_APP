@@ -36,18 +36,21 @@ angular.module('kf6App')
         var checkedWordInNote = function (notes) {
             $scope.lexiconsInfo.length = 0;
             var lexiconCountInnote = 0;
+            $scope.textareaText=$scope.textareaText.replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '').replace(/[\r\n\t\u00A0\u3000]/g, ' ');
+            $scope.lexicons = $scope.textareaText.replace(/\s\s+/g, ' ').replace(/['"]+/g, '').toLowerCase().split(' '); //processedText.split(' ');
+            $scope.lexicons = uniqBy($scope.lexicons, JSON.stringify);
 
-            $scope.lexicons = $scope.textareaText.split(' '); //processedText.split(' ');
             notes.forEach(function (note) {
                 var body = note.text4search.toLowerCase().replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '');
-                body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ');
+                body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ').replace(/['"]+/g, '').replace(/\s\s+/g, ' ').replace(/&nbsp;|(<([^>]+)>)/ig,' ');
                 body = body.split(' ');
+                body.splice(1,1);
 
-                $scope.lexicons.forEach(function (lexicon) { //if (body.indexOf(word) !== -1){
+                $scope.lexicons.forEach(function (lexicon) {
                     lexiconCountInnote = 0;
                     body.forEach(function (eachword) {
                         if (eachword === lexicon) {
-                            lexiconCountInnote += 1;
+                            lexiconCountInnote++;
                         }
                     });
                     if (lexiconCountInnote !== 0) {
@@ -61,6 +64,14 @@ angular.module('kf6App')
             });
             $scope.addCoordinateData();
         };
+
+        function uniqBy(a, key) {
+            var seen = {};
+            return a.filter(function (item) {
+                var k = key(item);
+                return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+            });
+        }
 
         $scope.addCoordinateData = function () {
             $scope.count.length = 0;
@@ -79,21 +90,34 @@ angular.module('kf6App')
                     maxcount: maxcount,
                     inContribution: frequencyDetails
                 };
-                $scope.count.push(maxcount);
-                $scope.labels.push(word);
-            });
+
+                if (index === $scope.lexicons.length - 1) {
+                    $scope.lexicons.sort(function (a, b) {
+                        return parseInt(a.maxcount, 10) - parseInt(b.maxcount, 10);
+                    }).reverse();
+                   $scope.lexicons.forEach(function (data) {
+                        $scope.count.push(data.maxcount);
+                        $scope.labels.push(data.word);
+                   });
+                }
+             });
         };
 
-        $scope.setSelectedData = function (queryString, selectedItems) {
+        $scope.setSelectedData = function (queryString, selectedItems, views, authors, todate, fromdate) {
             $scope.selectedItems = selectedItems;
             $scope.queryString = queryString;
+            $scope.views = views;
+            $scope.authors = authors;
+            $scope.todate = todate;
+            $scope.fromdate = fromdate;
         };
+
 
         $scope.barchartControl = function () {
             $suresh.barchartControl($scope.status);
         };
         $scope.radarchartControl = function () {
-           $suresh.radarchartControl($scope.status);
+            $suresh.radarchartControl($scope.status);
         };
         $scope.detailsControl = function () {
             $suresh.detailsControl($scope.status);

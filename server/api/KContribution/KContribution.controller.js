@@ -26,7 +26,7 @@ exports.create = function(req, res) {
             type: 'created'
         });
         if (req.body.buildson) {
-            exports.createBuildsOn(res, contribution, req.body.buildson, function(err) {
+            exports.createBuildsOn(req, res, contribution, req.body.buildson, function(err) {
                 if (err) {
                     return handleError(res, err);
                 }
@@ -243,14 +243,14 @@ function makeMongoQuery0(req, res, success) {
 // };
 
 // this method is painful
-exports.createBuildsOn = function(res, note, buildsonId, handler) {
+exports.createBuildsOn = function(req, res, note, buildsonId, handler) {
     var seed = {
         communityId: note.communityId,
         from: note._id,
         to: buildsonId,
         type: 'buildson'
     };
-    KLinkController.checkAndCreate(seed, function(err, link) {
+    KLinkController.checkAndCreate(req, seed, function(err, link) {
         if (err) {
             if (handler) {
                 handler(err);
@@ -276,7 +276,7 @@ exports.createBuildsOn = function(res, note, buildsonId, handler) {
                             y: ref.data.y + 50
                         }
                     };
-                    KLinkController.checkAndCreate(newref, function(err, newref) {
+                    KLinkController.checkAndCreate(req, newref, function(err, newref) {
                         if (err) {
                             console.error(err);
                             return;

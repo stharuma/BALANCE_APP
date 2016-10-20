@@ -19,7 +19,7 @@ function createReadmark(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            KLinkController.checkAndCreate(seed, function(err, link) {
+            KLinkController.checkAndCreate(req, seed, function(err, link) {
                 if (err) {
                     return handleError(res, err);
                 }

@@ -33,11 +33,11 @@
     <!-- tab and contents part -->
     <div class="KFTabSet">
         <tabset>
-            <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()">
-                <div style="float: left; padding-top: 0px; padding-left 0px; position:absolute; z-index:100">
-                    <button type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea"></button>
-                </div>
-                <div ng-mouseup="showpromisingIdeaWindow()" style="padding: 10px; height: 100%;">
+            <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
+                    <div style="float: left; padding-top: 0px; padding-left 0px; position:absolute; z-index:100">
+                        <button type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea"></button>
+                    </div>
+                    <div ng-mouseup="showpromisingIdeaWindow()" style="padding: 10px; height: 100%;">
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
@@ -47,6 +47,7 @@
                             <div class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
                             <div style="height: 100%; overflow: hidden;">
                                 <label>Riseabove View:</label>
+                                 <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
                                 <div id="riseabovediv" style="height: 100%; height: calc(100% - 20px);)border: 1px solid black;"></div>
                             </div>
                         </div>
@@ -262,6 +263,10 @@
                     <ul>
                         <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
                             <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
+                            &nbsp; &nbsp;
+                            <span ng-show="isEditable()">
+                              <a ng-click="deleteAttachment(conn)">delete</a>
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -399,7 +404,7 @@
             <button ng-disabled="!status.dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">{{ 'contribute' | translate }}</button>
         </div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
-            <button type="submit" class="btn btn-primary" ng-click="buildson()">{{ 'build-on' | translate }}</button>
+            <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="buildson()">{{ 'build-on' | translate }}</button>
         </div>
     </div>
 </div>
