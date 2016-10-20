@@ -23,8 +23,6 @@ angular.module('kf6App')
         $scope.hitcounts = [];
         $scope.overlappeddata = [];
         $scope.overlappedpromising = [];
-        // $scope.toConnections = [];
-        // $scope.fromConnections = [];
         $scope.colors = [];
         $scope.criteria = [];
         $scope.status = {};
