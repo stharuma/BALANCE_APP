@@ -98,7 +98,7 @@
                             <td>
                                 <div>
                                     <div>
-                                        <tt style="float:left"><input id="{{data.promisingidea}}"  type="checkbox" value="{{data .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(data .promisingidea) > -1" ng-click="toggleSelection(data .promisingidea)" /></tt>
+                                        <tt style="float:left"><input id="{{data.promisingidea}}"  type="checkbox" value="{{data .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(data .promisingidea) > -1" ng-click="toggleSelection(data)" /></tt>
                                         <label for="{{data.promisingidea}}"></label>
                                         <tt class="box" ng-style="{ 'background-color': data.color }"></tt>
                                         <tt style="float:left; margin: 3px" ng-bind-html="data .promisingidea | highlighted:searchkeyword:f"></tt>
@@ -128,7 +128,7 @@
                         (selectedHitCount===hitd.promising.count &&!status.selectedHitCollapsed)&&hastextinpromisingidea(searchkeyword, hitd.promising .promisingidea, hitd.promising.reason))&&!hasitoverlappedpromising(hitd.promising) ">
                             <td>
                                 <div>
-                                    <tt style="float:left"><input id="{{hitd.promising.promisingidea}}" type="checkbox" value="{{hitd.promising .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(hitd.promising .promisingidea) > -1" ng-click="toggleSelection(hitd.promising.promisingidea)" /></tt>
+                                    <tt style="float:left"><input id="{{hitd.promising.promisingidea}}" type="checkbox" value="{{hitd.promising .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(hitd.promising .promisingidea) > -1" ng-click="toggleSelection(hitd.promising)" /></tt>
                                     <label for="{{hitd.promising.promisingidea}}"></label>
                                     <tt style="font-weight:bold; float: left;margin: 3px" ng-if="hitd.promising.count==1">( <button type="submit" ng-class="{false: 'btn-primary', true: 'btn-default'}[selectedpromisingideaIndex===$index ]"  ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weight)</tt>
                                     <tt style="font-weight:bold; float: left;margin: 3px" ng-if="hitd.promising.count!==1">( <button type="submit" ng-class="{false: 'btn-primary', true: 'btn-default'}[selectedpromisingideaIndex===$index ]"  ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weights)</tt>

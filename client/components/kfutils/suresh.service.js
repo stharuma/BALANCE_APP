@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$suresh', function() {
+    .factory('$suresh', function ($http, $kftag) {
         var obj = {};
+        var toConnections = [];
+        var fromConnections = [];
 
-         obj.makeQuery = function (queryString, communityId, communityMembers, $community) {
+        obj.makeQuery = function (queryString, communityId, communityMembers, $community) {
             var query = {
                 communityId: communityId,
                 words: [],
@@ -134,43 +136,66 @@ angular.module('kf6App')
             }
         };
 
-        obj.createnewnoteInMutipleView = function (title, viewIds, $community, body, $http) {
+        obj.createnewnoteInMutipleView = function (title, viewIds, $community, body) {
             viewIds.forEach(function (viewId) {
-                obj.createnewnote(title, viewId, $community, body, $http);
+                obj.createnewnote(title, viewId, $community, body);
             });
         };
 
-        obj.createnewnote = function (title, viewId, $community, body, $http) {
+        obj.createnewnote = function (title, viewId, $community, body) {
             $community.createNote(null, function (note) {
-                createContainsLink(viewId, note._id, $http, {
+                createContainsLink(viewId, note._id, $community, {
                     x: 100,
                     y: 100
                 });
-                note.data.body = body; //"<span style =\"bocground-color:"+ $scope.promisingIdeaobjs[conn.from].data.color+"'\'>"+conn.data.idea+"</span>";
-                note.title = title;
-                note.status = 'active';
-                note.text4search = '( ' + note.title + ' ) ' + note.data.body;
-                $community.modifyObject(note, function () {
-                    $community.read(note);
-                }, function () {
-                    if (window.localStorage) {
-                        window.localStorage.setItem('kfdoc', note.data.body);
-                    }
+                postProcess(note._id, body, function (jq) {
+                    note.data.body = jq.html();;
+                    note.title = title;
+                    note.status = 'active';
+                    note.text4search = '( ' + note.title + ' ) ' + jq.text();
+                    $community.modifyObject(note, function () {
+                        $community.read(note);
+                    }, function () {
+                        if (window.localStorage) {
+                            window.localStorage.setItem('kfdoc', note.data.body);
+                        }
+                    });
+
+                });
+
+            });
+        };
+
+        var postProcess = function (contributionId, text, handler) {
+            updateToConnections(contributionId, function () {
+                updateFromConnections(contributionId, function () {
+                    $kftag.postProcess(text, contributionId, toConnections, fromConnections,
+                        function (jq) {
+                            handler(jq);
+                        });
                 });
             });
         };
 
-        function createContainsLink(viewid, toId, $http, data, handler) {
-            var link = {};
-            link.from = viewid;
-            link.to = toId;
-            link.type = 'contains';
-            link.data = data;
-            $http.post('/api/links', link).success(function () {
-                if (handler) {
-                    handler();
+        var updateToConnections = function (contributionId, next) {
+            $http.get('/api/links/to/' + contributionId).success(function (links) {
+                toConnections = links;
+                if (next) {
+                    next();
                 }
             });
+        };
+        var updateFromConnections = function (contributionId, next) {
+            $http.get('/api/links/from/' + contributionId).success(function (links) {
+                fromConnections = links;
+                if (next) {
+                    next(links);
+                }
+            });
+        };
+
+        function createContainsLink(viewId, toId, $community, data, handler) {
+            $community.createLink(viewId, toId, 'contains', data, handler);
         }
 
         return obj;

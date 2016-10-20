@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh) {
+    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh, $kftag) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId, function () {
             $community.refreshMembers();
             $scope.communityMembers = $community.getCommunityData().membersArray;
             $scope.currentCommunity = {};
             $scope.currentCommunity = $community.getCommunityData();
+
             $scope.search();
         });
 
@@ -22,6 +23,8 @@ angular.module('kf6App')
         $scope.hitcounts = [];
         $scope.overlappeddata = [];
         $scope.overlappedpromising = [];
+        // $scope.toConnections = [];
+        // $scope.fromConnections = [];
         $scope.colors = [];
         $scope.criteria = [];
         $scope.status = {};
@@ -158,16 +161,19 @@ angular.module('kf6App')
             return hasit;
         };
 
+        $scope.toggleSelection = function toggleSelection(promisingobj) {
+            var original = promisingobj.promisingidea;
+            var contrib = promisingobj.contribution;
+            var html = $kftag.createNewReferenceTag(contrib._id, contrib.title, contrib.authors, original);
 
-        $scope.toggleSelection = function toggleSelection(promising) {
-            var idx = $scope.selectedPromisingIdeas.indexOf(promising + '<br />');
+            var idx = $scope.selectedPromisingIdeas.indexOf(html + '<br />');
             // is currently selected
             if (idx > -1) {
                 $scope.selectedPromisingIdeas.splice(idx, 1);
             }
             // is newly selected
             else {
-                $scope.selectedPromisingIdeas.push(promising + '<br />');
+                $scope.selectedPromisingIdeas.push(html + '<br />');
             }
         };
 
@@ -255,11 +261,13 @@ angular.module('kf6App')
         };
 
         $scope.hastextinpromisingidea = function (searchtext, idea, criteria) {
-            var hasit = false; console.log('searchtext '+ searchtext);
+            var hasit = false;
+            console.log('searchtext ' + searchtext);
             if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
                     criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
                 hasit = true;
-            }  return hasit;
+            }
+            return hasit;
         };
 
         $scope.progressselection = function () {
@@ -293,8 +301,7 @@ angular.module('kf6App')
                 window.alert('View is not selected');
                 return;
             }
-
-            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, $http);
+            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body);
             $scope.selectedViewIds.length = 0;
             $scope.status.isnewNoteCollapsed = true;
         };
@@ -306,6 +313,7 @@ angular.module('kf6App')
                 $scope.selectedpromisingideaIndex = index;
             }
         };
+
     })
 
 .filter('highlighted', function ($sce) {
