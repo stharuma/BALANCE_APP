@@ -20,9 +20,12 @@ angular.module('kf6App')
             if ($scope.input.title === '') {
                 return;
             }
-            $community.createView($scope.input.title, function() {
+            $community.createView($scope.input.title, function(view) {
                 $community.refreshViews(function() {
                     $scope.views = $community.getViews();
+                    if ($scope.viewAdded) {
+                        $scope.viewAdded(view);
+                    }
                 });
                 //$state.reload();
             });

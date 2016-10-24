@@ -8,6 +8,9 @@
             <p>Admin account is <code>admin@admin.com</code> / <code>admin</code>
             </p> -->
         </div>
+        <div ng-if="IEwarning" class="col-sm-12" style="color: red;">
+          Internet Explorer is not recommended for use of KF6. Recommended browsers are Chrome, Firefox, or Safari.
+        </div>
         <div class="col-sm-12">
             <form class="form" name="form" ng-submit="login(form)" novalidate>
                 <div class="form-group">

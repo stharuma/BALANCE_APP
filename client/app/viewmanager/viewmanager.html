@@ -1,6 +1,16 @@
 <!-- <div ng-include="'components/navbar/navbar.html'"></div> -->
-
 <div class="col-md-12">
+    <div>
+        <br>
+        <label>{{ 'view_add' | translate }}</label>
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="{{ 'title_placeholder' | translate }}" ng-model="input.title">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary" ng-click="addView()">{{ 'add' | translate }}</button>
+            </span>
+        </p>
+    </div>
+    <br>
     <div>
         <label>{{ 'view_management' | translate }}</label>
         <ul>
@@ -12,18 +22,5 @@
         <div ng-show="isManager()" style='float: right;'>
             <button type="submit" class="btn btn-primary" ng-click="input.editMode = !input.editMode;">{{ 'edit' | translate }}</button>
         </div>
-    </div>
-
-    <br>
-
-    <div>
-        <br>
-        <label>{{ 'view_add' | translate }}</label>
-        <p class="input-group">
-            <input type="text" class="form-control" placeholder="{{ 'title_placeholder' | translate }}" ng-model="input.title">
-            <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary" ng-click="addView()">{{ 'add' | translate }}</button>
-            </span>
-        </p>
     </div>
 </div>
