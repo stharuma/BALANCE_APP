@@ -207,20 +207,6 @@ angular.module('kf6App')
                 $scope.selectedViewIds.push(view._id);
             }
         };
-
-        //Pager Status
-        $scope.pager.getStart = function () {
-            return (($scope.pager.page - 1) * $scope.pager.pagesize) + 1;
-        };
-        $scope.pager.getEnd = function () {
-            var end = $scope.pager.getStart() + $scope.pager.pagesize - 1;
-            if (end > $scope.pager.total) {
-                end = $scope.pager.total;
-            }
-            return end;
-        };
-        $scope.pager.pagesize = 50;
-
         //results
         $scope.search = function () {
             $scope.viewTitlescopy = '';
@@ -238,8 +224,7 @@ angular.module('kf6App')
             } else {
                 $scope.status.communityCollapsed = false;
             }
-            $scope.pager.query = $suresh.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
-            $suresh.count($scope.status, $scope.pager, communityId, $ac, $http, checkedPromisingtLinkInNote);
+            $suresh.searchprocess($scope.queryString, communityId, $scope.communityMembers, $community, $scope.status, checkedPromisingtLinkInNote);
             $scope.queryString = '';
         };
 
