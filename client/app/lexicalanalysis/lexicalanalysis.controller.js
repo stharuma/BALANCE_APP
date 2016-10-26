@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('LexicalAnalysisCtrl', function ($scope, $http, $community, $stateParams, $suresh, $ac) {
+    .controller('LexicalAnalysisCtrl', function ($scope, $http, $community, $stateParams, $suresh) {
         var communityId = $stateParams.communityId;
         $community.enter(communityId);
         $community.refreshMembers();
@@ -36,16 +36,14 @@ angular.module('kf6App')
         var checkedWordInNote = function (notes) {
             $scope.lexiconsInfo.length = 0;
             var lexiconCountInnote = 0;
-            $scope.textareaText=$scope.textareaText.replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '').replace(/[\r\n\t\u00A0\u3000]/g, ' ');
+            $scope.textareaText = $scope.textareaText.replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '').replace(/[\r\n\t\u00A0\u3000]/g, ' ');
             $scope.lexicons = $scope.textareaText.replace(/\s\s+/g, ' ').replace(/['"]+/g, '').toLowerCase().split(' '); //processedText.split(' ');
             $scope.lexicons = uniqBy($scope.lexicons, JSON.stringify);
 
             notes.forEach(function (note) {
-                var body = note.text4search.toLowerCase().replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '');
-                body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ').replace(/['"]+/g, '').replace(/\s\s+/g, ' ').replace(/&nbsp;|(<([^>]+)>)/ig,' ');
-                body = body.split(' ');
-                body.splice(1,1);
-
+                var body = strip(note.data.body.replace(/&nbsp;|(<([^>]+)>)/ig, ' ')).replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '');
+                body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ').replace(/['"]+/g, '').replace(/\s\s+/g, ' ').replace(/&nbsp;|(<([^>]+)>)/ig, ' ');
+                body = body.toLowerCase().split(' ');
                 $scope.lexicons.forEach(function (lexicon) {
                     lexiconCountInnote = 0;
                     body.forEach(function (eachword) {
@@ -73,6 +71,12 @@ angular.module('kf6App')
             });
         }
 
+        function strip(html) {
+            var tmp = document.createElement("DIV");
+            tmp.innerHTML = html;
+            return (tmp.textContent || tmp.innerText || "");
+        }
+
         $scope.addCoordinateData = function () {
             $scope.count.length = 0;
             $scope.labels.length = 0;
@@ -95,12 +99,12 @@ angular.module('kf6App')
                     $scope.lexicons.sort(function (a, b) {
                         return parseInt(a.maxcount, 10) - parseInt(b.maxcount, 10);
                     }).reverse();
-                   $scope.lexicons.forEach(function (data) {
+                    $scope.lexicons.forEach(function (data) {
                         $scope.count.push(data.maxcount);
                         $scope.labels.push(data.word);
-                   });
+                    });
                 }
-             });
+            });
         };
 
         $scope.setSelectedData = function (queryString, selectedItems, views, authors, todate, fromdate) {
@@ -124,27 +128,12 @@ angular.module('kf6App')
         };
         //  $scope.getIcon = function(contribution) {$suresh.getIcon(contribution, $community); };
 
-        //Pager Status
-        $scope.pager = {};
-        $scope.pager.getStart = function () {
-            return (($scope.pager.page - 1) * $scope.pager.pagesize) + 1;
-        };
-        $scope.pager.getEnd = function () {
-            var end = $scope.pager.getStart() + $scope.pager.pagesize - 1;
-            if (end > $scope.pager.total) {
-                end = $scope.pager.total;
-            }
-            return end;
-        };
-        $scope.pager.pagesize = 50;
-
         //results
         $scope.search = function () {
             if ($scope.textareaText.length === 0) {
                 window.alert('Lexicon is  empty:');
             } else {
-                $scope.pager.query = $suresh.makeQuery($scope.queryString, communityId, $scope.communityMembers, $community);
-                $suresh.count($scope.status, $scope.pager, communityId, $ac, $http, checkedWordInNote);
+                $suresh.searchprocess($scope.queryString, communityId, $scope.communityMembers, $community, $scope.status, checkedWordInNote);
                 $scope.status.detailCollapsed = true;
                 $scope.detailsControl();
             }

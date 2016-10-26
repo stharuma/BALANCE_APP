@@ -1,12 +1,19 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$suresh', function ($http, $kftag) {
+    .factory('$suresh', function ($ac, $http, $kftag) {
         var obj = {};
         var toConnections = [];
         var fromConnections = [];
 
-        obj.makeQuery = function (queryString, communityId, communityMembers, $community) {
+        obj.searchprocess = function (queryString, communityId, communityMembers, $community, status, getContributions) {
+            var pager = {};
+            pager.pagesize = 50000;
+            pager.query = makeQuery(queryString, communityId, communityMembers, $community);
+            count(status, pager, communityId, getContributions);
+        };
+
+        var makeQuery = function (queryString, communityId, communityMembers, $community) {
             var query = {
                 communityId: communityId,
                 words: [],
@@ -68,51 +75,20 @@ angular.module('kf6App')
             return query;
         };
 
-        obj.detailsControl = function (status) {
-            status.detailsCollapsed = false;
-            if (!status.radarchartCollapsed) {
-                status.radarchartCollapsed = true;
-            }
-            if (!status.barchartCollapsed) {
-                status.barchartCollapsed = true;
-            }
-        };
-
-        obj.radarchartControl = function (status) {
-            status.radarchartCollapsed = !status.radarchartCollapsed;
-            if (!status.detailsCollapsed) {
-                status.detailsCollapsed = true;
-            }
-            if (!status.barchartCollapsed) {
-                status.barchartCollapsed = true;
-            }
-        };
-
-        obj.barchartControl = function (status) {
-            status.barchartCollapsed = !status.barchartCollapsed;
-            if (!status.radarchartCollapsed) {
-                status.radarchartCollapsed = true;
-            }
-            if (!status.detailsCollapsed) {
-                status.detailsCollapsed = true;
-            }
-        };
-
-        obj.count = function (status, pager, communityId, $ac, $http, getContributions) {
+        var count = function (status, pager, communityId, getContributions) {
             status.status = 'searching';
             $http.post('/api/contributions/' + communityId + '/search/count', {
                 query: pager.query
             }).success(function (result) {
                 pager.total = result.count;
                 pager.page = 1;
-                openPage(status, pager, communityId, $ac, $http, getContributions);
-                //  alert(notes.length);
+                openPage(status, pager, communityId, getContributions);
             }).error(function () {
                 status.status = 'error';
             });
         };
 
-        function openPage(status, pager, communityId, $ac, $http, getContributions) {
+        function openPage(status, pager, communityId, getContributions) {
             status.status = 'searching';
             pager.query.pagesize = pager.pagesize;
             pager.query.page = pager.page;
@@ -133,6 +109,7 @@ angular.module('kf6App')
                     status.status = 'noresult';
                 }
                 getContributions(contributions);
+                console.log('count ' + contributions.length);
             }).error(function () {
                 status.status = 'error';
             });
@@ -195,6 +172,7 @@ angular.module('kf6App')
                 }
             });
         };
+
         var updateFromConnections = function (contributionId, next) {
             $http.get('/api/links/from/' + contributionId).success(function (links) {
                 fromConnections = links;
@@ -208,5 +186,34 @@ angular.module('kf6App')
             $community.createLink(viewId, toId, 'contains', data, handler);
         }
 
+        obj.detailsControl = function (status) {
+            status.detailsCollapsed = false;
+            if (!status.radarchartCollapsed) {
+                status.radarchartCollapsed = true;
+            }
+            if (!status.barchartCollapsed) {
+                status.barchartCollapsed = true;
+            }
+        };
+
+        obj.radarchartControl = function (status) {
+            status.radarchartCollapsed = !status.radarchartCollapsed;
+            if (!status.detailsCollapsed) {
+                status.detailsCollapsed = true;
+            }
+            if (!status.barchartCollapsed) {
+                status.barchartCollapsed = true;
+            }
+        };
+
+        obj.barchartControl = function (status) {
+            status.barchartCollapsed = !status.barchartCollapsed;
+            if (!status.radarchartCollapsed) {
+                status.radarchartCollapsed = true;
+            }
+            if (!status.detailsCollapsed) {
+                status.detailsCollapsed = true;
+            }
+        };
         return obj;
     });
