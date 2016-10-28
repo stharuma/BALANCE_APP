@@ -271,7 +271,7 @@ angular.module('kf6App')
             }
         };
 
-        $scope.$watch('currentselected.name', function (value) {
+        $scope.$watch('currentselected.name', function () {
             $scope.setpromisingoverlappedcounted();
         });
 
@@ -302,8 +302,10 @@ angular.module('kf6App')
 .filter('highlighted', function ($sce) {
     return function (text, phrase) {
         if (phrase) {
-            text = unescape(escape(text).replace(new RegExp(escape(phrase), 'gi'), '<span class="highlighted">$&</span>'))
+           text = text.replace(new RegExp('('+phrase+')', 'gi'), '<span class="highlighted">$1</span>');
+
+           // text = unescape(escape(text).replace(new RegExp(escape(phrase), 'gi'), '<span class="highlighted">$&</span>'));
         }
         return $sce.trustAsHtml(text);
-    }
-})
+    };
+});

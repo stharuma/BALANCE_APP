@@ -136,7 +136,7 @@ angular.module('kf6App')
                     y: 100
                 });
                 postProcess(note._id, body, function (jq) {
-                    note.data.body = jq.html();;
+                    note.data.body = jq.html();
                     note.title = title;
                     note.status = 'active';
                     note.text4search = '( ' + note.title + ' ) ' + jq.text();
