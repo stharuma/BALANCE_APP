@@ -54,7 +54,17 @@ angular.module('kf6App')
         $scope.preContributeHooks = [];
         $scope.initializingHooks = [];
         $scope.initializingHookInvoked = false;
-
+        $scope.colors = [
+        '',
+        'yellow',
+        'pink',
+        'green',
+        'blue',
+        'purple',
+        'orange',
+        'red',
+        'violet'
+      ];
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
                 var item = window.localStorage.getItem('kfdoc');

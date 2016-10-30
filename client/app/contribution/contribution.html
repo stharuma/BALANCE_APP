@@ -365,7 +365,7 @@
                             </div>
                             <label style="font-size:  9pt"> <b> Color :</b></label>
                              <input type="text" ng-model="promisingIdeaobjs[conn.from].data.color"/>
-                            <ngjs-color-picker selected="promisingIdeaobjs[conn.from].data.color"></ngjs-color-picker>
+                            <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
                             <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <br>
                             <label style="font-size:  9pt"> <b> Justification for Selection of Promising Idea:</b></label>
@@ -388,8 +388,8 @@
         <div style="height:200px; overflow: scroll; width:100%; float: left">
             <label style="font-size:  9pt"> <b> Color :</b></label>
             <input type="text" ng-model="targetColor"/>
-            <ngjs-color-picker selected="targetColor"></ngjs-color-picker>
-             <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': targetColor }" ng-bind-html="trustAsHtml(selectedText)"></tt>
+            <ngjs-color-picker selected-color="targetColor" custom-colors="colors"></ngjs-color-picker>
+           <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': targetColor }" ng-bind-html="trustAsHtml(selectedText)"></tt>
             <br>
             <label style="font-size:  9pt"> <b>Justification for Selection of Promising Idea:</b></label>
             <br>
