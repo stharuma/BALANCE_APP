@@ -34,10 +34,10 @@
     <div class="KFTabSet">
         <tabset>
             <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
-                    <div style="float: left; padding-top: 0px; padding-left 0px; position:absolute; z-index:100">
-                        <button type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea"></button>
-                    </div>
-                    <div ng-mouseup="showpromisingIdeaWindow()" style="padding: 10px; height: 100%;">
+                <div style="float: left; padding-top: 0px; padding-left 0px; position:absolute; z-index:100">
+                    <button type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea"></button>
+                </div>
+                <div ng-mouseup="showpromisingIdeaWindow()" style="padding: 10px; height: 100%;">
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
@@ -47,7 +47,7 @@
                             <div class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
                             <div style="height: 100%; overflow: hidden;">
                                 <label>Riseabove View:</label>
-                                 <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
+                                <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
                                 <div id="riseabovediv" style="height: 100%; height: calc(100% - 20px);)border: 1px solid black;"></div>
                             </div>
                         </div>
@@ -262,8 +262,7 @@
                     <label>{{ 'attachments' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
-                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
-                            &nbsp; &nbsp;
+                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a> &nbsp; &nbsp;
                             <span ng-show="isEditable()">
                               <a ng-click="deleteAttachment(conn)">delete</a>
                             </span>
@@ -342,21 +341,26 @@
                             </div>
                             <label style="font-size:  9pt"> <b> Color :</b></label>{{promisingIdeaobjs[conn.from].data.color}}
                             <br>
-                            <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            <label style="float: left; font-size:  9pt">Idea : </label>
+                            <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color}"></tt>
+                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <br>
-                            <label style="font-size:  9pt"> <b> Justification for Selection of Promising Idea:</b></label>
-                            <br>{{promisingIdeaobjs[conn.from].data.reason}}
+                            <br>
+                            <label style="float: left; font-size:  9pt"> <b> Justification for Selection of Promising Idea:   </b></label>
+                               &nbsp;&nbsp; {{promisingIdeaobjs[conn.from].data.reason}}
                         </div>
                         <div style="padding: 1px ;" ng-show="newnoteIndex==$index">
                             <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,conn.data.idea);">create</button>
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">cancel</button>
                             </div>
-                            <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle"/>
+                            <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle" />
                             <label>Views:</label>
                             <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
                             <br>
-                            <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            <label style="float: left;font-size:  9pt">Idea : </label>
+                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            <br>
                         </div>
                         <div ng-show="selectedIndex==$index ">
                             <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
@@ -364,11 +368,14 @@
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1)">cancel</button>
                             </div>
                             <label style="font-size:  9pt"> <b> Color :</b></label>
-                             <input type="text" ng-model="promisingIdeaobjs[conn.from].data.color"/>
+                            <input type="text" ng-model="promisingIdeaobjs[conn.from].data.color" />
                             <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
-                            <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            <label style="float: left;font-size:  9pt">Idea : </label>
+                            <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }"></tt>
+                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <br>
-                            <label style="font-size:  9pt"> <b> Justification for Selection of Promising Idea:</b></label>
+                            <br>
+                            <label style="float: left; font-size:  9pt"> <b> Justification for Selection of Promising Idea:</b></label>
                             <br>
                             <textarea id="text" cols="70" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
                         </div>
@@ -387,11 +394,14 @@
         <label style="font-size:  11pt;float: left"><b>Add Promising Idea In {{contribution.title}}</b></label>
         <div style="height:200px; overflow: scroll; width:100%; float: left">
             <label style="font-size:  9pt"> <b> Color :</b></label>
-            <input type="text" ng-model="targetColor"/>
+            <input type="text" ng-model="targetColor" />
             <ngjs-color-picker selected-color="targetColor" custom-colors="colors"></ngjs-color-picker>
-           <label style="font-size:  9pt">Idea : </label> <tt ng-style="{ 'background-color': targetColor }" ng-bind-html="trustAsHtml(selectedText)"></tt>
+            <label style="float: left;font-size:  9pt">Idea : </label>
+            <tt class="box" ng-style="{ 'background-color': targetColor}"></tt>
+            <tt style="float: left" ng-bind-html="trustAsHtml(selectedText)"></tt>
             <br>
-            <label style="font-size:  9pt"> <b>Justification for Selection of Promising Idea:</b></label>
+            <br>
+            <label style="float: left; font-size:  9pt"> <b>Justification for Selection of Promising Idea:</b></label>
             <br>
             <textarea id="text" cols="70" rows="2" ng-model="textareaText"></textarea>
         </div>
