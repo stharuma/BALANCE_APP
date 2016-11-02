@@ -123,24 +123,31 @@ angular.module('kf6App')
             }
         };
 
-        obj.createnewnoteInMutipleView = function (title, viewIds, $community, body) {
+        obj.createnewnoteInMutipleView = function (title, viewIds, $community, body, hasPromisingIdeas) {
             viewIds.forEach(function (viewId) {
-                obj.createnewnote(title, viewId, $community, body);
+                obj.createnewnote(title, viewId, $community, body, hasPromisingIdeas);
             });
         };
 
-        obj.createnewnote = function (title, viewId, $community, body) {
+        obj.createnewnote = function (title, viewId, $community, body, hasPromisingIdeas) {
             $community.createNote(null, function (note) {
                 createContainsLink(viewId, note._id, $community, {
                     x: 100,
                     y: 100
                 });
                 postProcess(note._id, body, function (jq) {
+                    if (!note.data) {
+                        note.data = {};
+                    }
+                    if (hasPromisingIdeas) {
+                        var promisingContains = {};
+                        note.data.promisingContains = promisingContains;
+                    }
                     note.data.body = jq.html();
                     note.title = title;
                     note.status = 'active';
                     note.text4search = '( ' + note.title + ' ) ' + jq.text();
-                    $community.modifyObject(note, function () {
+                    $community.modifyObject(note, function (note) {
                         $community.read(note);
                     }, function () {
                         if (window.localStorage) {

@@ -983,7 +983,7 @@ angular.module('kf6App')
             }
 
             body = $kftag.createNewReferenceTag($scope.contribution._id, $scope.contribution.title, $scope.contribution.authors, body);
-            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body);
+            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body,true);
             $scope.selectedViewIds.length = 0;
             $scope.setnewnoteIndex(-1);
         };

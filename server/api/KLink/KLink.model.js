@@ -114,6 +114,11 @@ KLink.createCashObj = function(obj) {
         cache.data = {};
         cache.data.riseabove = 'riseabove'; /* dummy object */
     }
+
+     if (obj.data && obj.data.promisingContains) {
+        cache.data = {};
+        cache.data.promisingContains = 'promisingContains'; /* dummy object */
+    }
     return cache;
 }
 

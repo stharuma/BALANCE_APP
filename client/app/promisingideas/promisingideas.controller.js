@@ -284,7 +284,7 @@ angular.module('kf6App')
                 window.alert('View is not selected');
                 return;
             }
-            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body);
+            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body,true);
             $scope.selectedViewIds.length = 0;
             $scope.status.isnewNoteCollapsed = true;
         };
