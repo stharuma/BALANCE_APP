@@ -1,12 +1,13 @@
 /* global d3 */
 'use strict';
 angular.module('kf6App')
-    .controller('AuthorNetworkCtrl', function($stateParams, $scope, $community, $http) {
+    .controller('AuthorNetworkCtrl', function($stateParams, $scope, $community, $http, Auth) {
         
         var viewId = $stateParams.viewId;
         
         $community.getObject(viewId, function(view) {
             $scope.view = view;
+            $scope.isAdmin = Auth.isAdmin;
             $community.enter($scope.view.communityId);
 
             $community.refreshGroups(function(groups) {
@@ -18,6 +19,7 @@ angular.module('kf6App')
                 refresh();
             });
         });
+
 
         $scope.refreshByGroup = function(group) {
             refresh(group);
@@ -42,26 +44,29 @@ angular.module('kf6App')
             var authors = {};
             var buildsonkey = [];
             var buildson = [];
-            //var privateNames = new Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'BB', 'CC', 'DD', 'EE', 'FF', 'GG', 'HH', 'II', 'JJ', 'KK', 'LL', 'MM', 'NN', 'OO', 'PP', 'QQ', 'RR', 'SS', 'TT', 'UU', 'VV', 'WW', 'XX', 'YY', 'ZZ');
-
+            var privateNames = new Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'BB', 'CC', 'DD', 'EE', 'FF', 'GG', 'HH', 'II', 'JJ', 'KK', 'LL', 'MM', 'NN', 'OO', 'PP', 'QQ', 'RR', 'SS', 'TT', 'UU', 'VV', 'WW', 'XX', 'YY', 'ZZ');
+                        
+            var i = 0;
             notes.forEach(function(note) {
                 note.authors.forEach(function(author){
                     if (typeof authors[author] !== 'undefined') {
                         authors[author].size++;
                     }
                     else{
-
                         if ((typeof group !== 'undefined' && group.members.indexOf(author) >= 0) || typeof group === 'undefined'){
-                            authors[author] = {name: $community.getMember(author).getName(), size: 1}; // version avec les noms
-                            // version anonymisée sauf l'auteur (le bloc if/else avec le tableau privateNames)
-                            /*if (author === $community.getAuthor()._id){
-                                authors[author] = {name: $community.getMember(author).getName(), size: 1} ; 
+                            if ($scope.isAdmin()){
+                                authors[author] = {name: $community.getMember(author).getName(), size: 1}; // version avec les noms
                             }
-                            else{
-                                authors[author] = {name: privateNames[i], size: 1} ; // version anonymisée
-                                i++;
-                            }
-                            */                            
+                            else{ // anonyme
+                                // version anonymisée sauf l'auteur (le bloc if/else avec le tableau privateNames)
+                                if (author === $community.getAuthor()._id){
+                                    authors[author] = {name: $community.getMember(author).getName(), size: 1} ; 
+                                }
+                                else{
+                                    authors[author] = {name: privateNames[i], size: 1} ; // version anonymisée
+                                    i++;
+                                }                            
+                            }                                                        
                         }
                     }                
                 });
