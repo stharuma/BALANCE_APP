@@ -38,7 +38,8 @@
             <label>{{ 'assessment_tools' | translate }} ({{ 'beta_version' | translate }}):</label>
             <ul>
                 <li><a draggable="false" href="" ng-click="openTagCloud()">{{ 'assessment_tools_wordCloud' | translate }}</a></li>
-                <li><a draggable="false" href="" ng-click="openDashboard()">Dashboard(beta)</a></li>
+                <li><a draggable="false" href="" ng-click="openActivityDashboard()">Activity Dashboard(beta)</a></li>
+                <li><a draggable="false" href="" ng-click="openNoteDashboard()">Note Dashboard(beta)</a></li>
                 <li><a draggable="false" href="" ng-click="openS2viz()">s2viz(beta)</a></li>
                 <li><a draggable="false" href="" ng-click="openTimemashine()">timemashine(beta)</a></li>
                 <li><a draggable="false" href="" ng-click="openStats()">{{ 'assessment_tools_stats' | translate }}</a></li>
@@ -107,6 +108,24 @@
         <span class="input-group">
             <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="status.isViewManagerCollapsed = !status.isViewManagerCollapsed;"><img class="KFToolBarImage" src="manual_assets/kf6images/04-toolbar-viewmanagement.png" title="{{ 'view_management' | translate }}"></button>
+            </span>
+        </span>
+        <script type="text/ng-template" id="RiseaboveCreationModal.html">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">New RiseAbove</h3>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <label>Name:</label>
+                <input type="text" class="form-control" ng-model="name"></input>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                <button class="btn btn-primary" type="button" ng-click="ok()">Create</button>
+            </div>
+        </script>
+        <span class="input-group">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openModal()"><img class="KFToolBarImage" src="manual_assets/kf6images/04X-toolbar-newriseabove.png" title="New RiseAbove"></button>
             </span>
         </span>
         <span class="input-group">
@@ -212,7 +231,7 @@
             <li ng-if="isFixable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
             <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">{{ 'position_fixAndLock' | translate }}</li>
             <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
-            <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabove()">{{ 'rise-above_create' | translate }}</li>
+            <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabovecreateRiseaboveFromContextMenu()">{{ 'rise-above_create' | translate }}</li>
             <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
         </ul>
     </div>

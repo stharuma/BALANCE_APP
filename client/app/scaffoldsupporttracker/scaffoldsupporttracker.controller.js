@@ -3,19 +3,24 @@
 angular.module('kf6App')
     .controller('ScaffoldsupporttrackerCtrl', function ($scope, $http, $community, $stateParams, $suresh, $ac) {
         var communityId = $stateParams.communityId;
-        if ( communityId) {
-            $community.enter( communityId, function() {}, function() {
-                $community.refreshRegisteredScaffolds();
-           });
-        }
-        $community.refreshMembers();
-        $scope.communityMembers = $community.getCommunityData().membersArray;
-        $scope.scaffolds = $community.getCommunityData().registeredScaffolds;
-        $community.refreshRegisteredScaffolds(function () {
-            $scope.current = $scope.scaffolds[0];
-        });
         $scope.currentCommunity = {};
-        $scope.currentCommunity = $community.getCommunityData();
+        if (communityId) {
+            $community.enter(communityId, function () {}, function () {
+                $community.refreshMembers();
+                $scope.currentCommunity = $community.getCommunityData();
+                $scope.communityMembers = $community.getCommunityData().membersArray;
+                $scope.scaffolds = $community.getCommunityData().registeredScaffolds;
+                $community.refreshRegisteredScaffolds(function () {
+                    $scope.current = $scope.scaffolds[0];
+                    $scope.scaffolds.forEach(function (scaffold) {
+                        (scaffold.supports).forEach(function (support) {
+                            $scope.selectedSupports.push(support);
+                        });
+                    });
+                    $scope.search();
+                });
+            });
+        }
         //Query String
         $scope.queryString = '';
 
@@ -87,7 +92,7 @@ angular.module('kf6App')
         $scope.addCoordinateData = function () {
             $scope.count.length = 0;
             $scope.labels.length = 0;
-            $scope.selectedSupports.forEach(function (support) {
+            $scope.selectedSupports.forEach(function (support, index) {
                 var maxcount = 0;
                 var frequencyDetails = '  ';
                 $scope.supportsCountInNote.forEach(function (item) {
@@ -101,14 +106,27 @@ angular.module('kf6App')
                     frequency: maxcount,
                     inContribution: frequencyDetails
                 });
-                $scope.count.push(maxcount);
-                $scope.labels.push(support._to.title);
+
+                if (index === $scope.selectedSupports.length - 1) {
+                    $scope.tableData.sort(function (a, b) {
+                        return parseInt(a.frequency, 10) - parseInt(b.frequency, 10);
+                    }).reverse();
+                   $scope.tableData.forEach(function (data) {
+                        $scope.count.push(data.frequency);
+                        $scope.labels.push(data.supportTitle);
+                   });
+                }
+
             });
         };
 
-        $scope.setSelectedData = function (queryString, selectedItems) {
+        $scope.setSelectedData = function (queryString, selectedItems, views, authors, todate, fromdate) {
             $scope.selectedItems = selectedItems;
             $scope.queryString = queryString;
+            $scope.views = views;
+            $scope.authors = authors;
+            $scope.todate = todate;
+            $scope.fromdate = fromdate;
         };
 
         $scope.barchartControl = function () {

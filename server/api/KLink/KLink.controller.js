@@ -146,16 +146,15 @@ exports.show = function(req, res) {
 
 exports.create = function(req, res) {
     var seed = req.body;
-    exports.checkAndCreate(seed, function(err, link) {
+    exports.checkAndCreate(req, seed, function(err, link) {
         if (err) {
             return handleError(res, err);
         }
-        record(req, link, 'created');
         return res.status(201).json(link);
     });
 };
 
-exports.checkAndCreate = function(seed, handler) {
+exports.checkAndCreate = function(req, seed, handler) {
     checkAndPrepareSeed(seed, function(err) {
         if (err) {
             if (handler) {
@@ -164,6 +163,7 @@ exports.checkAndCreate = function(seed, handler) {
             return;
         }
         KLink.create(seed, function(err, link) {
+            record(req, link, 'created');
             if (handler) {
                 handler(err, link);
             }

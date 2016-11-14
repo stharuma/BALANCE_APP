@@ -51,6 +51,16 @@ angular.module('kf6App')
                     }
                     return;
                 }
+                if (token.indexOf('-searchMode:') >= 0) {
+                    token = token.replace('-searchMode:', '');
+                    query.searchMode = token;
+                    return;
+                }
+                if (token.indexOf('-type:') >= 0) {
+                    token = token.replace('-type:', '');
+                    query.type = token;
+                    return;
+                }
                 query.words.push(token);
             });
             return query;

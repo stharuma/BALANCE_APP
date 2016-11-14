@@ -33,7 +33,7 @@
     <!-- tab and contents part -->
     <div class="KFTabSet">
         <tabset>
-            <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()">
+            <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
                 <div style="padding: 10px; height: 100%;">
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
@@ -44,6 +44,7 @@
                             <div class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
                             <div style="height: 100%; overflow: hidden;">
                                 <label>Riseabove View:</label>
+                                 <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
                                 <div id="riseabovediv" style="height: 100%; height: calc(100% - 20px);)border: 1px solid black;"></div>
                             </div>
                         </div>
@@ -333,7 +334,7 @@
             <button ng-disabled="!status.dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">{{ 'contribute' | translate }}</button>
         </div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
-            <button type="submit" class="btn btn-primary" ng-click="buildson()">{{ 'build-on' | translate }}</button>
+            <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="buildson()">{{ 'build-on' | translate }}</button>
         </div>
     </div>
 </div>

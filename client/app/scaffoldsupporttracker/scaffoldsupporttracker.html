@@ -1,5 +1,4 @@
 <!-- <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css"> -->
-
 <br/>
 <label style="font-size:  15pt; "><b>KF Scaffold Growth</b></label>
 <br/>
@@ -11,13 +10,13 @@
         <div ng-include="'components/kfutils/viewauthordateselector/viewauthordateselector.html'"></div>
         <div style="padding: 15px;">
             <label>Scaffolds::</label>
-            <select class="KFSupport" style="width: 300px;height:25px;border: 2px  light blue;" ng-model="current" ng-options="s.title for s in scaffolds" />
-            <button ng-click=" search()" ng-model="queryString">Scaffold Count:</button>
+            <select class="KFSupport" style="width: 300px;height:25px;border: 2px  light blue;" ng-model="current" ng-options="s.title for s in scaffolds"></select>
+            <button ng-click=" search()" ng-model="queryString">Scaffold Tracker:</button>
             <div class="panel">
                 <div class="check-box-panel">
                     <div ng-repeat="s in current.supports">
                         <div class="action-checkbox">
-                            <input id="{{s._to.title}}" type="checkbox"   value="{{s._to.title}}" ng-checked="selectedSupports.indexOf(s) > -1" ng-click="toggleSelection(s)" />
+                            <input id="{{s._to.title}}" type="checkbox" value="{{s._to.title}}" ng-checked="selectedSupports.indexOf(s) > -1" ng-click="toggleSelection(s)" />
                             <label for="{{s._to.title}}"></label>
                             {{s._to.title}}
                         </div>
@@ -36,7 +35,10 @@
     </br>
     <div ng-if="selectedSupports.length != 0 &&  status.detailCollapsed ">
         <div ng-if="queryString === ''">
-            <label style="font-size:  12pt; "><b>Scaffold Support Frequency in {{currentCommunity.community.title}}</b></label>
+            <label style="font-size:  12pt; "><b>Scaffold Support Frequency Tracker in {{currentCommunity.community.title}} Community </b></label>
+        </div>
+        <div ng-if="queryString !== ''">
+            <label style="font-size:  12pt; "><b>Scaffold Support Frequency Tracker via Selected Criterions ({{views}} / {{authors}} / {{fromdate}} / {{todate}})</b></label>
         </div>
         <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailsCollapsed]" ng-click="detailsControl()">Details:</button>
         <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.barchartCollapsed]" ng-click="barchartControl()">Bar Chart:</button>
@@ -88,7 +90,6 @@
                                 </td>
                             </tr>
                         </table>
-                        <div style="height: 20px;"></div>
                     </div>
                 </div>
             </div>

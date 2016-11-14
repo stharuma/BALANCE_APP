@@ -119,7 +119,7 @@ angular.module('kf6App')
                 if ($scope.contribution.status === 'active') {
                     window.setTimeout(function() {
                         $community.read($scope.contribution);
-                    }, 3000);
+                    }, 1200);
                 }
             });
         }, function(msg, status) {
@@ -403,6 +403,16 @@ angular.module('kf6App')
             }
         };
 
+        $scope.openRiseaboveView = function() {
+            if (!$scope.contribution.isRiseabove()) {
+                window.alert('this contribution is not riseabove');
+            }
+
+            console.log('xx');
+            var url = 'view/' + $scope.contribution.data.riseabove.viewId;
+            window.open(url, '_blank');
+        };
+
         $scope.attachmentUploaded = function(attachment) {
             $http.post('/api/links', {
                 from: $scope.contribution._id,
@@ -435,6 +445,16 @@ angular.module('kf6App')
                     });
                 }
             }
+        };
+
+        /*********** tab changed handler ************/
+
+        $scope.readSelected = function() {
+            $scope.status.hidebuildson = false;
+        };
+
+        $scope.readDeselected = function() {
+            $scope.status.hidebuildson = true;
         };
 
         /*********** title ************/
