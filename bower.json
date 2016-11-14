@@ -29,10 +29,12 @@
     "angular-translate": "~2.8.1",
     "angular-translate-loader-static-files": "~2.8.1",
     "angular-translate-storage-cookie": "~2.8.1",
+    "angular-bootstrap-colorpicker": "^3.0.24",
     "dcjs": "^1.7.5",
     "ng-csv": "^0.3.6",
     "angular-chart.js": "^0.9.0",
-    "vis": "^4.16.1"
+    "vis": "^4.16.1",
+    "ngjs-color-picker": "^1.0.5"
   },
   "overrides": {
     "bootstrap": {

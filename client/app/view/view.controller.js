@@ -167,7 +167,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.loadAsIcon = function(ref) {
+        $scope.loadAsIcon = function(ref) {console.log(JSON.stringify(ref));
             ref.authorObjects = [];
 
             ref.getIcon = function() {
@@ -177,6 +177,10 @@ angular.module('kf6App')
 
             ref.isRiseabove = function() {
                 return ref._to.data && ref._to.data.riseabove;
+            };
+
+            ref.isPromisingContains = function() {
+                return ref._to.data && ref._to.data.promisingContains;
             };
 
             ref.getIconFile = function() {
@@ -207,6 +211,9 @@ angular.module('kf6App')
                     }
                     if (ref.isRiseabove()) {
                         name += 'rise';
+                    }
+                     if (ref.isPromisingContains()) {
+                       name += 'promising';
                     }
                     name += '.gif';
                     return name;
@@ -678,6 +685,11 @@ angular.module('kf6App')
 
         $scope.openAnalytics = function() {
             $scope.status.isAnalyticsCollapsed = !$scope.status.isAnalyticsCollapsed;
+        };
+
+          $scope.openPromisingIdeas = function() {
+            var url = 'promisingideas/' + $scope.view.communityId;
+            $scope.openInPopup(url);
         };
 
         $scope.openTagCloud = function() {
