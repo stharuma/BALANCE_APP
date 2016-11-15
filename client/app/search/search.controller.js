@@ -129,7 +129,6 @@ angular.module('kf6App')
                     var author = _.findWhere($scope.communityMembers, {
                         userName: token
                     });
-                    console.log(author)
                     if (author) {
                         query.authors.push(author._id);
                     } else {

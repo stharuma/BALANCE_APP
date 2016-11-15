@@ -61,13 +61,13 @@ angular.module('kf6App')
             var dates = getDates();
             
             $scope.status.status = 'searching'; 
-            var byDateAll = new Array();
-            var byDateAuthor = new Array();
-            var byWeekAll = new Array();
-            var byWeekAuthor = new Array();
-            var byAuthors = new Array();
-            var byAuthorsDisplay = new Array();
-            var byScaffoldAuthor = new Array();
+            var byDateAll = [];
+            var byDateAuthor = [];
+            var byWeekAll = [];
+            var byWeekAuthor = [];
+            var byAuthors = [];
+            var byAuthorsDisplay = [];
+            var byScaffoldAuthor = [];
             var ccreated, ccreatedUTC = null;
             var pendingrqt = 0;
             
@@ -77,7 +77,7 @@ angular.module('kf6App')
                 byDateAll.push(new Array(i, 0));
                 byDateAuthor.push(new Array(i, 0));
             }
-            for (var i = 0; i <= 6; i++){
+            for (i = 0; i <= 6; i++){
                 byWeekAll[i] = 0;
                 byWeekAuthor[i] = 0;
             }
@@ -125,17 +125,17 @@ angular.module('kf6App')
                         pendingrqt++;
                         $http.get('/api/links/to/' + c._id).success(function(links) {
                             links.forEach(function(link){
-                                if (link.type == "supports"){
+                                if (link.type === "supports"){
                                     if (typeof byScaffoldAuthor[link._from.title] !== 'undefined') {
                                         byScaffoldAuthor[link._from.title]++;
                                     }
                                     else{
-                                        byScaffoldAuthor[link._from.title] = 1
+                                        byScaffoldAuthor[link._from.title] = 1;
                                     }
                                 }
                             });
                             pendingrqt--;
-                            if (pendingrqt == 0){
+                            if (pendingrqt === 0){
                                 refreshViewScaffolds(byScaffoldAuthor);
                             }
                         });
@@ -146,6 +146,7 @@ angular.module('kf6App')
                 });
 
 // à gérer avec la traduction...
+
 Highcharts.setOptions({
         lang: {
                 loading: 'Chargement...',
@@ -169,22 +170,22 @@ Highcharts.setOptions({
 });
 
                 $translate(['student', 
-                            'chart_title_contributions', 
-                            'chart_title_distribution', 
-                            'chart_ux_zoom', 
-                            'chart_ux_zoom_mobile', 
-                            'chart_legend_by', 
-                            'chart_legend_theCommunity', 
-                            'chart_percentage', 
+                            'chartTitleContributions', 
+                            'chartTitleDistribution', 
+                            'chartUxZoom', 
+                            'chartUxZoomMobile', 
+                            'chartLegendBy', 
+                            'chartLegendTheCommunity', 
+                            'chartPercentage', 
                             'by', 
                             'author']).then(function (translations) {
                     
 
                     $scope.communityMembers.forEach(function(author){
                         byAuthorsDisplay.push(
-                            {name: ($community.getAuthor()._id == author._id ? author.getName() : translations.student), 
+                            {name: ($community.getAuthor()._id === author._id ? author.getName() : translations.student), 
                             y : (typeof byAuthors[author._id] !== 'undefined' ? byAuthors[author._id] : 0),
-                            color: ($community.getAuthor()._id == author._id ? "#7cb5ec" : "#aaa")
+                            color: ($community.getAuthor()._id === author._id ? "#7cb5ec" : "#aaa")
                         });
                     });
 
@@ -192,40 +193,40 @@ Highcharts.setOptions({
                     $('#notesyear').highcharts({
                         chart: {zoomType: 'x'},
                         credits: {enabled: false},
-                        title: {text: translations.chart_title_contributions}, 
-                        subtitle: { text: document.ontouchstart === undefined ? translations.chart_ux_zoom : translations.chart_ux_zooom_mobile}, 
+                        title: {text: translations.chartTitleContributions}, 
+                        subtitle: { text: document.ontouchstart === undefined ? translations.chartUxZoom : translations.chartUxZoomMobile}, 
                         xAxis: {type: 'datetime'},
-                        yAxis: {title: {text: translations.chart_title_contributions}}, 
+                        yAxis: {title: {text: translations.chartTitleContributions}}, 
                         legend: {enabled: true},
                         rangeSelector : {
                             selected : 4           
                         },series: [{
                             type: 'line',
-                            name: translations.chart_title_contributions + ' ' + translations.by + ' ' + translations.chart_legend_theCommunity, 
+                            name: translations.chartTitleContributions + ' ' + translations.by + ' ' + translations.chartLegendTheCommunity, 
                             color: "#aaa",
                             data: byDateAll
                         },{
                             type: 'line',
-                            name: translations.chart_title_contributions + ' ' + translations.by + ' ' + $community.getAuthor().getName(), 
+                            name: translations.chartTitleContributions + ' ' + translations.by + ' ' + $community.getAuthor().getName(), 
                             color: "#7cb5ec",
                             data: byDateAuthor
                         }]
                     });
 
                     $('#notesweek').highcharts({
-                        title: {text: translations.chart_title_distribution}, 
+                        title: {text: translations.chartTitleDistribution}, 
                         credits: {enabled: false},
                         xAxis: {categories: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']}, // traduire
-                        yAxis: {title: {text: translations.chart_percentage}},
+                        yAxis: {title: {text: translations.chartPercentage}},
                         legend: {enabled: true},
                         series: [{
                             type: 'column',
-                            name: translations.chart_percentage + ' ' + translations.by + ' ' + translations.chart_legend_theCommunity, 
+                            name: translations.chartPercentage + ' ' + translations.by + ' ' + translations.chartLegendTheCommunity, 
                             color: "#aaa",
                             data: byWeekAll
                         },{
                             type: 'column',
-                            name: translations.chart_percentage + ' ' + translations.by + ' ' + $community.getAuthor().getName(), 
+                            name: translations.chartPercentage + ' ' + translations.by + ' ' + $community.getAuthor().getName(), 
                             color: "#7cb5ec",
                             data: byWeekAuthor
                         }]
@@ -241,7 +242,7 @@ Highcharts.setOptions({
                         },
                         credits: {enabled: false},
                         title: {
-                            text: translations.chart_title_contributions + ' ' + translations.by + ' ' + translations.author 
+                            text: translations.chartTitleContributions + ' ' + translations.by + ' ' + translations.author 
                         },
                         plotOptions: {
                             pie: {
@@ -255,7 +256,7 @@ Highcharts.setOptions({
                             }
                         },
                         series: [{
-                            name: translations.chart_title_contributions,
+                            name: translations.chartTitleContributions,
                             colorByPoint: true,
                             data: byAuthorsDisplay
                         }]
@@ -271,8 +272,8 @@ Highcharts.setOptions({
 
 
         var refreshViewScaffolds = function(data) {       
-            $translate(['chart_title_scaffold']).then(function (translations) { 
-                var supportUsed = new Array();
+            $translate(['chartTitleScaffold']).then(function (translations) { 
+                var supportUsed = [];
                 $scope.scaffolds.forEach(function(scaffold){
                     scaffold.supports.forEach(function(support){
                         supportUsed.push({name: support._to.title, y : (typeof data[support._to.title] !== 'undefined' ? data[support._to.title] : 0)});
@@ -287,7 +288,7 @@ Highcharts.setOptions({
                         },
                         credits: {enabled: false},
                         title: {
-                            text: translations.chart_title_scaffold + " « " + scaffold.title + " »" // traduire
+                            text: translations.chartTitleScaffold + " « " + scaffold.title + " »" // traduire
                         },
                         plotOptions: {
                             pie: {

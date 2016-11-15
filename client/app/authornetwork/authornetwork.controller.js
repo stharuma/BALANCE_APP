@@ -1,21 +1,31 @@
 /* global d3 */
 'use strict';
 angular.module('kf6App')
-    .controller('AuthorNetworkCtrl', function($stateParams, $scope, $community, $http) {
+    .controller('AuthorNetworkCtrl', function($stateParams, $scope, $community, $http, Auth) {
         
         var viewId = $stateParams.viewId;
         
         $community.getObject(viewId, function(view) {
             $scope.view = view;
+            $scope.isAdmin = Auth.isAdmin;
             $community.enter($scope.view.communityId);
+
+            $community.refreshGroups(function(groups) {
+                $scope.groups = groups;
+            });
 
             $scope.communityMembers = $community.getMembersArray();
             $community.refreshMembers(function(){
                 refresh();
-            });       
+            });
         });
 
-        var refresh = function() {
+
+        $scope.refreshByGroup = function(group) {
+            refresh(group);
+        };
+
+        var refresh = function(group) {
             $http.post('/api/contributions/' + $scope.view.communityId + '/search', {
                 query: {
                     communityId: $scope.view.communityId,
@@ -24,34 +34,39 @@ angular.module('kf6App')
                 }
             }).success(function(contributions) {
                 $http.get('/api/links/buildson/' + $scope.view.communityId).success(function(links) {
-                    var data = processData(contributions, links);
+                    var data = processData(contributions, links, group);
                     refreshView(data);                          
                 });
             });
         };
 
-        var processData = function(notes, links) {
+        var processData = function(notes, links, group) {
             var authors = {};
-            var buildsonkey = new Array();
-            var buildson = new Array();
+            var buildsonkey = [];
+            var buildson = [];
             var privateNames = new Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'BB', 'CC', 'DD', 'EE', 'FF', 'GG', 'HH', 'II', 'JJ', 'KK', 'LL', 'MM', 'NN', 'OO', 'PP', 'QQ', 'RR', 'SS', 'TT', 'UU', 'VV', 'WW', 'XX', 'YY', 'ZZ');
-
-            var i = 1;
+                        
+            var i = 0;
             notes.forEach(function(note) {
                 note.authors.forEach(function(author){
-                    console.log(author)
                     if (typeof authors[author] !== 'undefined') {
                         authors[author].size++;
                     }
                     else{
-                        //authors[author] = {name: $community.getMember(author).getName(), size: 1}; // version avec les noms
-                        // version anonymisée sauf l'auteur (le bloc if/else avec le tableau privateNames)
-                        if (author === $community.getAuthor()._id){
-                            authors[author] = {name: $community.getMember(author).getName(), size: 1} ; 
-                        }
-                        else{
-                            authors[author] = {name: privateNames[i], size: 1} ; // version anonymisée
-                            i++;
+                        if ((typeof group !== 'undefined' && group.members.indexOf(author) >= 0) || typeof group === 'undefined'){
+                            if ($scope.isAdmin()){
+                                authors[author] = {name: $community.getMember(author).getName(), size: 1}; // version avec les noms
+                            }
+                            else{ // anonyme
+                                // version anonymisée sauf l'auteur (le bloc if/else avec le tableau privateNames)
+                                if (author === $community.getAuthor()._id){
+                                    authors[author] = {name: $community.getMember(author).getName(), size: 1} ; 
+                                }
+                                else{
+                                    authors[author] = {name: privateNames[i], size: 1} ; // version anonymisée
+                                    i++;
+                                }                            
+                            }                                                        
                         }
                     }                
                 });
@@ -65,7 +80,7 @@ angular.module('kf6App')
                                 buildsonkey[source+target].weight++;
                             }
                             else{
-                                buildsonkey[source+target] = {source: source, target: target, type: "buildson", weight: 1}
+                                buildsonkey[source+target] = {source: source, target: target, type: "buildson", weight: 1};
                             }
                         });
                     });
@@ -77,13 +92,13 @@ angular.module('kf6App')
                buildson.push(buildsonkey[key]);
             }
 
-            return [authors, buildson]
+            return [authors, buildson];
         };
 
         var refreshView = function(data) {
             var tick = function () {
                 path.attr("d", function(d) {
-                    if (d.source.name != d.target.name){
+                    if (d.source.name !== d.target.name){
                         var dx = d.target.x - d.source.x,
                             dy = d.target.y - d.source.y,
                             dr = Math.sqrt(dx * dx + dy * dy);
@@ -95,7 +110,7 @@ angular.module('kf6App')
                 });
                     
                 markerPath.attr("d", function(d) {
-                    if (d.source.name != d.target.name){
+                    if (d.source.name !== d.target.name){
                         var dx = d.target.x - d.source.x,
                             dy = d.target.y - d.source.y,
                             dr = Math.sqrt(dx * dx + dy * dy);
@@ -117,15 +132,15 @@ angular.module('kf6App')
                 text.attr("transform", function(d) {
                     return "translate(" + d.x + "," + d.y + ")";
                 });
-            }
+            };
 
             var normalizeNodeSize = function(s){ 
                 return ((s - minsize) / maxsize * 20) + 8;
-            }
+            };
 
             var normalizeLinkWidth = function(w){ 
                 return ((w - minweight) / maxweight * 5) + 2;
-            }
+            };
 
             var showInfos = function() {
                 var currentName = $(d3.select(this)[0][0]).attr("name");
@@ -143,17 +158,17 @@ angular.module('kf6App')
                 else{
                     lastshown = currentName;
               
-                    $("path").attr('style', 'stroke: #eee')
-                    $("path.marker_only").attr("marker-end", "url("+window.location.href+"#flecheinactif)");;
+                    $("path").attr('style', 'stroke: #eee');
+                    $("path.marker_only").attr("marker-end", "url("+window.location.href+"#flecheinactif)");
                     $("circle").attr('style', "fill: #f0f0f0; stroke: #ccc");
-                    $(d3.select(this)[0][0]).attr("style", "fill: #008; stroke: #ccc")
+                    $(d3.select(this)[0][0]).attr("style", "fill: #008; stroke: #ccc");
                     $(links).each(function() {
                         if (this.source.name === currentName){
                             if (this.source.name !== currentName){
                                 $('circle[name="' + this.target.name + '"]').attr('style', 'fill: #080');
                             }
-                            currentClass = $('path[name="' + this.source.name + this.target.name + '"]').attr('class')
-                            $('path[name="' + this.source.name + this.target.name + '"]').attr('style', 'stroke: #080')
+                            currentClass = $('path[name="' + this.source.name + this.target.name + '"]').attr('class');
+                            $('path[name="' + this.source.name + this.target.name + '"]').attr('style', 'stroke: #080');
                             $('path[name="' + this.source.name + this.target.name + '"].marker_only').attr("marker-end", "url("+window.location.href+"#flecheverte)");
                             buildsonothers += "<li>" + this.weight + ' par ' + this.target.name + "</li>"; // traduire
                             nbbuildsonothers += this.weight;
@@ -162,8 +177,8 @@ angular.module('kf6App')
                             //$('circle[name="' + this.source.name + '"]').attr('style', 'stroke: #800');
                             $('circle[name="' + this.source.name + '"]').attr('style', 'stroke: #000');
                             $('circle[name="' + this.source.name + '"]').attr('style', 'stroke-width: 3');
-                            currentClass = $('path[name="' + this.source.name + this.target.name + '"]').attr('class')
-                            $('path[name="' + this.source.name + this.target.name + '"]').attr('style', 'stroke: #800')
+                            currentClass = $('path[name="' + this.source.name + this.target.name + '"]').attr('class');
+                            $('path[name="' + this.source.name + this.target.name + '"]').attr('style', 'stroke: #800');
                             $('path[name="' + this.source.name + this.target.name + '"].marker_only').attr("marker-end","url("+window.location.href+"#flecherouge)");
                             othersbuildson += "<li>" + this.weight + ' par ' + this.source.name + "</li>"; // traduire
                             nbothersbuildson += this.weight;
@@ -177,17 +192,18 @@ angular.module('kf6App')
                     if (nbothersbuildson > 0){
                         txt += nbothersbuildson + " note" + (nbothersbuildson > 1 ? 's ont été élaborées' : ' a été élaborée') + "  à partir des notes de " + currentName + "&nbsp;: <ul>" + othersbuildson + "</ul>" ; // traduire
                     }  
-                    $('#infos').html(txt)
+                    $('#infos').html(txt);
                 }
-            }
+            };
 
             var hideInfos = function() {
-                $("path").attr('style', 'stroke: #666')
+                $("path").attr('style', 'stroke: #666');
                 $("path.marker_only").attr("marker-end", "url("+window.location.href+"#flechenoire)");
                 $("marker").attr('style', "fill-opacity: 1;");
                 $("circle").attr('style', "fill: #ccc").attr('style', "stroke: #000");
                 $("#infos").html('');
-            }
+            };
+
 
             var minweight = null;
             var maxweight = null;
@@ -198,11 +214,11 @@ angular.module('kf6App')
 
             var nodes = data[0];
             var links = data[1];
-            var cleanlinks = new Array();
+            var cleanlinks = [];
 
             // for normalize node size
             for (var key in nodes) {
-                var s = nodes[key].size
+                var s = nodes[key].size;
                 minsize = (minsize === null || s < minsize ? s : minsize); 
                 maxsize = (maxsize === null || s > maxsize ? s : maxsize); 
             }
@@ -216,9 +232,6 @@ angular.module('kf6App')
                     maxweight = (maxweight === null || link.weight > maxweight ? link.weight : maxweight);
                     cleanlinks.push(link);
                 } 
-                else{
-                    console.log(link)
-                }
             });
             links = cleanlinks;
 
@@ -233,6 +246,9 @@ angular.module('kf6App')
                 .charge(-300)
                 .on("tick", tick)
                 .start();
+
+            d3.select("#network svg").remove();
+            $('#infos').html('');
 
             var svg = d3.select("#network").append("svg:svg")
                 .attr("width", width)
@@ -262,7 +278,7 @@ angular.module('kf6App')
                 .enter().append("svg:path")
                 .attr("class", function(d) { return "marker_only " + d.type; })
                 .attr("name", function(d) { return d.source.name + d.target.name;})
-                .attr("marker-end", function(d) { return "url("+window.location.href+"#flechenoire)"; });
+                .attr("marker-end", function() { return "url("+window.location.href+"#flechenoire)"; });
 
             var circle = svg.append("svg:g").selectAll("circle")
                 .data(force.nodes())
