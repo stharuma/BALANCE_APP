@@ -38,6 +38,7 @@ angular.module('kf6App')
             tag = tag + '</span>';
             if (isTemplate) {
                 tag = tag + '<p class="kfTemplateContent">';
+                tag = tag + '<br><br><br><br>';
             }
             tag = tag + text;
             if (isTemplate) {
