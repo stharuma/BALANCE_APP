@@ -35,6 +35,7 @@ module.exports = function(app) {
     app.use('/api/links', require('./api/KLink'));
     app.use('/api/records', require('./api/KRecord'));
     app.use('/api/upload', require('./api/upload'));
+    app.use('/api/help', require('./api/Feedback'));
     app.use('/api/users', require('./api/user'));
 
     app.use('/api', require('./api'));

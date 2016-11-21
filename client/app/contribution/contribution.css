@@ -34,6 +34,10 @@
 .KFContainer > p {
     margin-bottom: 0px;
 }
+
+.KFContainer .selected{
+    border: 1px solid red;
+}
 /* tab related */
 
 .KFTabSet {

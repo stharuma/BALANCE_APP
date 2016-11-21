@@ -5,9 +5,9 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh) {
-        var contributionId = $stateParams.contributionId;
-        var contextId = $stateParams.contextId;
+    .controller('ContributionCtrl', function($scope, $rootScope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh) {
+        var contributionId = $rootScope.contributionId;
+        var contextId = $rootScope.contextId;
 
         $scope.relatedwordID = contributionId; //added by Xing Liu
 
@@ -17,21 +17,25 @@ angular.module('kf6App')
         $scope.status = {};
         $scope.status.error = false;
         $scope.status.isScaffoldCollapsed = false;
-        $scope.status.isAttachmentCollapsed = true;
+        $scope.status.isAttachmentsCollapsed = true;
         $scope.status.isContributionCollapsed = true;
         $scope.status.ispromisingideaCollapsed = true;
         $scope.status.ispromisingideaTabDisplayed = false;
         $scope.showpromisingideaCollapsed = false;
+        $scope.status.isInsertImgCollapsed = false;
         $scope.status.edittabActive = false;
         $scope.status.dirty = true;
         $scope.status.contribution = '';
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
+
         $scope.promisingmsg = 'ShowPromisingIdea';
 
         $scope.selectedIndex = -1;
         $scope.newnoteIndex = -1;
         $scope.deletedIndex = -1;
+
+        $scope.status.insertable = false;
 
         $scope.community = {};
         $scope.contribution = {};
@@ -105,24 +109,25 @@ angular.module('kf6App')
                 $scope.contribution.authors.forEach(function(authorId) {
                     $scope.authors.push($community.getMember(authorId));
                 });
-                $scope.contribution.getGroupName = function() {
-                    var groupId = $scope.contribution.group;
-                    if (!groupId) {
-                        return '(none)';
-                    }
-                    var group = $scope.community.groups[groupId];
-                    if (!group) {
-                        return groupId + ' (loading)';
-                    }
-                    return group.title;
-                };
-                $scope.selected.group = $community.getGroup($scope.contribution.group);
-                $scope.$watch('selected.group', function() {
-                    if ($scope.selected.group) {
-                        $scope.contribution.group = $scope.selected.group._id;
-                    }
-                });
-                $community.refreshGroups();
+
+                // $scope.contribution.getGroupName = function() {
+                //     var groupId = $scope.contribution.group;
+                //     if (!groupId) {
+                //         return '(none)';
+                //     }
+                //     var group = $scope.community.groups[groupId];
+                //     if (!group) {
+                //         return groupId + ' (loading)';
+                //     }
+                //     return group.title;
+                // };
+                // $scope.selected.group = $community.getGroup($scope.contribution.group);
+                // $scope.$watch('selected.group', function() {
+                //     if ($scope.selected.group) {
+                //         $scope.contribution.group = $scope.selected.group._id;
+                //     }
+                // });
+                // $community.refreshGroups();
                 $community.refreshPromisingcolorobjs(function(){
                    $scope.promisingIdeacolorobjsarr=$community.getPromisingcolorobjsArray();
                     $scope.setPromisingColorData();
@@ -130,6 +135,7 @@ angular.module('kf6App')
                 if($scope.promisingIdeacolorobjsarr.length===0){
                    $scope.setPromisingColorData();
                 }
+
                 $scope.updateToConnections(function() {
                     $scope.updateAnnotations();
                     $scope.updatepromisingIdeaobjs();
@@ -138,9 +144,10 @@ angular.module('kf6App')
                         $scope.updateAttachments(links);
                     });
                 });
-                $scope.updateRecords();
-                $scope.communityMembers = $community.getMembersArray();
-                $community.refreshMembers();
+
+                // $scope.updateRecords();
+                // $scope.communityMembers = $community.getMembersArray();
+                // $community.refreshMembers();
                 // Open a contribution in "edit" mode only it is new (status "unsaved") and obviously if the author has the right to edit it.
                 if ($scope.contribution.status === "unsaved" && $scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
@@ -191,6 +198,7 @@ angular.module('kf6App')
                 }
             });
         };
+
         $scope.updateFromConnections = function(next) {
             $http.get('/api/links/from/' + contributionId).success(function(links) {
                 $scope.fromConnections = links;
@@ -339,12 +347,26 @@ angular.module('kf6App')
             }
         };
 
-        $scope.closeRequest = function() {
-            if (window.wid) {
-                window.parent.closeDialog(window.wid);
-            } else {
-                window.close();
+        $scope.insertImg = function(){
+            var parentDOM = document.getElementsByClassName("KFContainer")[0];
+            var selectedImgs = parentDOM.getElementsByClassName("selected");
+            if(selectedImgs.length == 0){
+                return;
             }
+            var html = "";
+            for(var i = 0 ; i< selectedImgs.length; i++){
+                html += "<img src=\""+selectedImgs[i].src+"\" alt=\"\" width=\"50px\" height=\"50px\" data-mce-src=\""+selectedImgs[i].src+"\">";
+            }
+            $scope.insertText(html);
+        };
+
+        $scope.closeRequest = function() {
+            // if (window.wid) {
+            //     window.parent.closeDialog(window.wid);
+            // } else {
+            //     window.close();
+            // }
+            window.closeDialog('ctrb_window_'+contributionId);
         };
 
         $scope.preProcess = function() {
@@ -480,7 +502,6 @@ angular.module('kf6App')
                 window.alert('this contribution is not riseabove');
             }
 
-            console.log('xx');
             var url = 'view/' + $scope.contribution.data.riseabove.viewId;
             window.open(url, '_blank');
         };
@@ -521,9 +542,9 @@ angular.module('kf6App')
 
         /*********** tab changed handler ************/
 
-        $scope.readSelected = function() {
-            $scope.status.hidebuildson = false;
-        };
+        // $scope.readSelected = function() {
+        //     $scope.status.hidebuildson = false;
+        // };
 
         $scope.readDeselected = function() {
             $scope.status.hidebuildson = true;
@@ -619,12 +640,12 @@ angular.module('kf6App')
 
         $scope.mceResize = function() {
             if ($scope.mceEditor) {
-                var height = ($(window).height() - 140);
+                var height = ($('#ctrb_window_'+contributionId).height() - 140);
                 $scope.mceEditor.theme.resizeTo('100%', height);
             }
         };
 
-        window.onresize = $scope.mceResize;
+        $('#ctrb_window_'+contributionId).onresize = $scope.mceResize;
 
         var currentLang = $translate.proposedLanguage() || $translate.use();
         var languageURL = "";
@@ -761,6 +782,26 @@ angular.module('kf6App')
                 original += '; ';
             }
             $scope.copy.keywords = original + selectedText;
+        };
+
+        $scope.selectedImg = function(){
+            if($scope.images.length == 0){
+                return;
+            }
+            event = event || window.event;
+            var selectedImg = event.target || event.srcElement;
+            if(selectedImg.className == ""){
+                selectedImg.className = "selected";
+                $scope.status.insertable = true;
+            }
+            else{
+                selectedImg.className = "";
+                var parentDOM = document.getElementsByClassName("KFContainer")[0];
+                var selectedImgs = parentDOM.getElementsByClassName("selected");
+                if(selectedImgs.length == 0){
+                    $scope.status.insertable = false;
+                }
+            }
         };
 
         /*********** annotator ***********/
@@ -1016,6 +1057,7 @@ angular.module('kf6App')
             $scope.selectedViewIds.push(view._id);
         };
 
+
         $scope.makepromisingnote = function(title, body) {
             if (title === '') {
                 window.alert('Note title is empty ');
@@ -1030,6 +1072,51 @@ angular.module('kf6App')
             $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body,true);
             $scope.selectedViewIds.length = 0;
             $scope.setnewnoteIndex(-1);
+        };
+
+        $scope.tabSelected = function(idx) {
+            if(idx ==='edit'){
+                if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
+                    var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                    $('#svgeditdiv').html(xhtml);
+                    $scope.svgInitialized = true;
+                }
+            }
+            else if(idx ==='authors'){
+                $scope.contribution.getGroupName = function() {
+                    var groupId = $scope.contribution.group;
+                    if (!groupId) {
+                        return '(none)';
+                    }
+                    var group = $scope.community.groups[groupId];
+                    if (!group) {
+                        return groupId + ' (loading)';
+                    }
+                    return group.title;
+                };
+                $scope.selected.group = $community.getGroup($scope.contribution.group);
+                $scope.$watch('selected.group', function() {
+                    if ($scope.selected.group) {
+                        $scope.contribution.group = $scope.selected.group._id;
+                    }
+                });
+                $community.refreshGroups();
+                $community.refreshMembers();
+                $scope.communityMembers = $community.getMembersArray();
+            }
+            else if(idx ==='connections'){
+
+            }
+            else if(idx ==='history'){
+                $scope.updateRecords();
+            }
+            else if(idx ==='attachments'){
+
+            }
+            else if(idx ==='read'){
+                $scope.status.hidebuildson = false;
+            }
+            
         };
 
          $scope.showPromisingInReadMode = function () {
