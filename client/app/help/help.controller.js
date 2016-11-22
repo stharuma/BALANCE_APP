@@ -11,16 +11,16 @@ angular.module('kf6App')
                 $scope.email = me.email;
         });
         
-        $scope.msg_show = false;
+        $scope.msgShow = false;
         $scope.emails.push({"id":"anonymous", "name":"Anonymous"});
         $scope.sendFeedback = function(){
-            if($scope.title==undefined || $scope.title=="") {
-                $scope.msg_show = true;
+            if($scope.title === undefined || $scope.title === "") {
+                $scope.msgShow = true;
                 $scope.msg = "Title feild can not be empty.";
                 return;
             }
-            if($scope.content==undefined || $scope.content==""){
-                $scope.msg_show = true;
+            if($scope.content === undefined || $scope.content === ""){
+                $scope.msgShow = true;
                 $scope.msg = "Description feild can not be empty.";
                 return;
             }
@@ -32,10 +32,10 @@ angular.module('kf6App')
                 // $scope.msg_show = true;
                 // $scope.msg = "Your feedback has been sent to the administrator.";
                 // document.getElementById("msg_div").style.color = "green";
-                alert("Your feedback has been sent to the administrator.");
+                window.alert("Your feedback("+result.id+") has been sent to the administrator. ");
                 $window.close();
             }).error(function() {
-                $scope.msg_show = true;
+                $scope.msgShow = true;
                 $scope.msg = "Failed to send your feedback.";
                 document.getElementById("msg_div").style.color = "red";
             });
@@ -43,6 +43,6 @@ angular.module('kf6App')
 
         $scope.cancel = function(){
             $window.close();
-        }
+        };
 
     });
