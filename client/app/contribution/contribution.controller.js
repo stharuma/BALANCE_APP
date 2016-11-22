@@ -316,7 +316,7 @@ angular.module('kf6App')
         $scope.insertImg = function(){
             var parentDOM = document.getElementsByClassName("KFContainer")[0];
             var selectedImgs = parentDOM.getElementsByClassName("selected");
-            if(selectedImgs.length == 0){
+            if(selectedImgs.length === 0){
                 return;
             }
             var html = "";
@@ -751,12 +751,12 @@ angular.module('kf6App')
         };
 
         $scope.selectedImg = function(){
-            if($scope.images.length == 0){
+            if($scope.images.length === 0){
                 return;
             }
-            event = event || window.event;
+            //event = event || window.event;
             var selectedImg = event.target || event.srcElement;
-            if(selectedImg.className == ""){
+            if(selectedImg.className === ""){
                 selectedImg.className = "selected";
                 $scope.status.insertable = true;
             }
@@ -764,7 +764,7 @@ angular.module('kf6App')
                 selectedImg.className = "";
                 var parentDOM = document.getElementsByClassName("KFContainer")[0];
                 var selectedImgs = parentDOM.getElementsByClassName("selected");
-                if(selectedImgs.length == 0){
+                if(selectedImgs.length === 0){
                     $scope.status.insertable = false;
                 }
             }
