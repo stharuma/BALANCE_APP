@@ -9,6 +9,13 @@ angular.module('kf6App')
         var contributionId = $rootScope.contributionId;
         var contextId = $rootScope.contextId;
 
+        if(contributionId === undefined){
+            contributionId = $stateParams.contributionId;
+        }
+        if(contextId === undefined){
+            contextId = $stateParams.contextId;
+        }
+
         $scope.relatedwordID = contributionId; //added by Xing Liu
 
         $ac.mixIn($scope, null);
@@ -332,7 +339,13 @@ angular.module('kf6App')
             // } else {
             //     window.close();
             // }
-            window.closeDialog('ctrb_window_'+contributionId);
+            if(document.getElementById('ctrb_window_'+contributionId) === null){
+                window.close();
+            }
+            else{
+                window.closeDialog('ctrb_window_'+contributionId);
+            }
+            
         };
 
         $scope.preProcess = function() {
