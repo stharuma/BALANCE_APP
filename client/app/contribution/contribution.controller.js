@@ -903,7 +903,7 @@ angular.module('kf6App')
                 authors:$community.getAuthor()._id,
                 created:new Date(),
                 status: 'active',
-                permission: 'private',
+                permission: 'protected',
                 data: promisingIdeaobj
             };
             $http.post('/api/contributions/' + communityId, newobj)
