@@ -24,6 +24,7 @@ angular.module('kf6App')
         $scope.status.isAttachmentCollapsed = true;
         $scope.status.isAnalyticsCollapsed = true;
         $scope.status.isSettingCollapsed = true;
+        $scope.status.isHelpCollapsed = true;
         $scope.setting = $community.makeDefaultViewSetting();
         $scope.dragging = 'none';
 

@@ -1,13 +1,9 @@
 .feedback_form{
-	width:50%;
-	margin-left:25%;
-	margin-right:25%;
 	text-align:center;
 }
 
 .feedback_tb{
 	width:100%;
-	border:1px solid gray;
 }
 
 .feedback_tb select{
