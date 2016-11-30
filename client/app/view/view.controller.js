@@ -167,7 +167,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.loadAsIcon = function(ref) {console.log(JSON.stringify(ref));
+        $scope.loadAsIcon = function(ref) {
             ref.authorObjects = [];
 
             ref.getIcon = function() {
