@@ -1,5 +1,5 @@
 <label style="font-size:  12pt; "><b>Promisingness Ideas</b></label>
-<button type="submit" class="btn btn-primary KFToolBarButton" style="float:right;" ng-click=" queryString='';search();" ng-model="queryString"><img class="KFToolBarImage" src="manual_assets/kf6images/community.png" title="Promisingness Ideas In Community"></button>
+<button type="submit" class="btn btn-primary KFToolBarButton" style="float:right;" ng-click=" status.noPromisingCollapsed=true; queryString='';search();" ng-model="queryString"><img class="KFToolBarImage" src="manual_assets/kf6images/community.png" title="Promisingness Ideas In Community"></button>
 <div collapse="status.detailCollapsed" style="float:right;">
     <button type="submit" class="KFBarButton" style="float:right; " ng-click="createnote()"><img src="manual_assets/kf6images/01-toolbar-newwriting.png" title="Export Ideas To View"></button>
     <button type="button" class="KFBarButton" style="float:right" ng-csv="tableData" csv-header="getHeader()" filename="test.csv"><img src="manual_assets/kf6images/download.png" title="Export Ideas To CSV"></button>
@@ -104,7 +104,7 @@
                                         <tt style="float:left; margin: 3px" ng-bind-html="data .promisingidea | highlighted:searchkeyword:f"></tt>
                                         <br>
                                         <tt style="float:right">-(By {{data.author}}  {{data.date}})</tt>
-                                        <br>
+                                        <br style="clear:both">
                                         <b> Criteria: -  </b><tt ng-bind-html="data .reason | highlighted:searchkeyword"></tt>
                                     </div>
                                 </div>
@@ -152,8 +152,7 @@
                                             <br>
                                         </div>
                                     </div>
-                                    <br>
-                                    <br>
+                                    <br style="clear:both">
                                     <b> Criteria: -  </b><tt ng-bind-html="hitd.promising.reason| highlighted:searchkeyword"></tt>
                                 </div>
                 </td>
