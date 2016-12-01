@@ -10,24 +10,24 @@ angular.module('kf6App')
                 $scope.emails.push(myself);
                 $scope.email = me.email;
         });
-        $scope.input = {fb_Title:'',fb_Content:''};
+        $scope.input = {fbTitle:'',fbContent:''};
         $scope.msgShow = false;
         $scope.emails.push({"id":"anonymous", "name":"Anonymous"});
         $scope.sendFeedback = function(){
-            if($scope.input.fb_Title === undefined || $scope.input.fb_Title === "") {
+            if($scope.input.fbTitle === undefined || $scope.input.fbTitle === "") {
                 $scope.msgShow = true;
                 $scope.msg = "Title feild can not be empty.";
                 return;
             }
-            if($scope.input.fb_Content === undefined || $scope.input.fb_Content === ""){
+            if($scope.input.fbContent === undefined || $scope.input.fbContent === ""){
                 $scope.msgShow = true;
                 $scope.msg = "Description feild can not be empty.";
                 return;
             }
             $http.post('/api/help/send', {
                 email:$scope.email,
-                subject:$scope.input.fb_Title,
-                content:$scope.input.fb_Content
+                subject:$scope.input.fbTitle,
+                content:$scope.input.fbContent
             }).success(function(result) {
                 // $scope.msg_show = true;
                 // $scope.msg = "Your feedback has been sent to the administrator.";
