@@ -23,7 +23,8 @@ exports.saveAndSend = function(req, res){
         }
         //send to Trello
         //!!! please change to a valid trello email address
-		var to = "weiyu8+4vme7zhlmts6ug7mp6yl@boards.trello.com";
+		//var to = "weiyu8+4vme7zhlmts6ug7mp6yl@boards.trello.com";
+        var to = "ikit5+j24ckkdtzbgc8wwf6gg1@boards.trello.com";
 		var subject = newFeedback.title;
 		var body = "From: " + newFeedback.email +"\n" + newFeedback.content;
 		Email.send(to, subject, body);
