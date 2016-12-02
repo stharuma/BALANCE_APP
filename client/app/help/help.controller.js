@@ -32,7 +32,7 @@ angular.module('kf6App')
                 // $scope.msg_show = true;
                 // $scope.msg = "Your feedback has been sent to the administrator.";
                 // document.getElementById("msg_div").style.color = "green";
-                window.alert("Your feedback("+result.id+") has been sent to the administrator. ");
+                window.alert("Your feedback has been sent to the administrator. ");
                 $scope.msgShow = false;
                 //$window.close();
             }).error(function() {
