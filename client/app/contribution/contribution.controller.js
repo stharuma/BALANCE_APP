@@ -21,16 +21,17 @@ angular.module('kf6App')
         $scope.status.isContributionCollapsed = true;
         $scope.status.ispromisingideaCollapsed = true;
         $scope.status.ispromisingideaTabDisplayed = false;
+        $scope.showpromisingideaCollapsed = false;
         $scope.status.edittabActive = false;
         $scope.status.dirty = true;
         $scope.status.contribution = '';
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
+        $scope.promisingmsg = 'ShowPromisingIdea';
 
         $scope.selectedIndex = -1;
         $scope.newnoteIndex = -1;
         $scope.deletedIndex = -1;
-
 
         $scope.community = {};
         $scope.contribution = {};
@@ -844,9 +845,6 @@ angular.module('kf6App')
         };
 
         $scope.promisingIdeaobjProcess = function() {
-            // var content ='<span style="background-color: '+$scope.targetColor+"\" >"+$scope.selectedText+ '</span>';
-            // var re = new RegExp($scope.selectedText, 'gi');
-            // $scope.copy.body =$scope.copy.body.replace(re,content);
             $scope.promisingIdeaobj = {
                 idea: $scope.selectedText,
                 reason: $scope.textareaText,
@@ -988,7 +986,105 @@ angular.module('kf6App')
             $scope.setnewnoteIndex(-1);
         };
 
+         $scope.showPromisingInReadMode = function () {
+             $scope.promisingmsg = 'ShowPromisingIdea';
+             $scope.showpromisingideaCollapsed = !$scope.showpromisingideaCollapsed;
+             if ($scope.showpromisingideaCollapsed) {
+                 $scope.promisingmsg = 'HidePromisingIdea';
+                 $scope.pbody = $scope.copy.body;
+                 $scope.toConnections.forEach(function (conn) {
+                     if (conn.type === 'promisings') {
+                         var idea = conn.data.idea;
+                         var bodytext = strip($scope.pbody).replace(/^\s+|\s+$/g, '').replace(/\s\s/g, '');
+                         var color = $scope.promisingIdeaobjs[conn.from].data.color;
+                         var bwords = getwords($scope.pbody);
+                         var pwords = getwords(idea).filter(function (str) { //removed space array
+                             return /\S/.test(str);
+                         });
+                         setpromisingidea_read(bodytext, bwords, pwords, idea, color);
+                     }
+                 });
+             }
+         };
 
+         function strip(html) {
+             var tmp = document.createElement("DIV");
+             tmp.innerHTML = html;
+             return (tmp.textContent || tmp.innerText || "");
+         }
+
+         function getwords(textContent) {
+             return textContent.split(" ");
+         }
+
+         function setpromisingidea_read(bodytext, bwords, pwords, idea, color) {
+             var str ='';
+             var promisingindex = bodytext.replace(/\s/g, '').indexOf(idea.replace(/\s/g, ''));
+             var textbeforepromising = bodytext.replace(/\s/g, '').substring(0, promisingindex - 1);
+             var textafterpromising = bodytext.replace(/\s/g, '').substring(promisingindex + idea.replace(/\s/g, '').length, bodytext.replace(/\s/g, '').length);
+             var firstinx = getfirstpromingindex(bwords, textbeforepromising, pwords, bodytext);
+             var lastinx = getlastpromingindex(bwords, textafterpromising, pwords);
+             var style = "style=\"font-weight: bold; color:black; background-color:" + color + "; \"";
+             for (var i = firstinx; i < lastinx; i++) {
+                 if (bwords[i].indexOf('<body>') !== -1) {
+                     str = "<span " + style + " >" + pwords[0] + " " + "</span>";
+                     bwords[i] = bwords[i].replace(pwords[0], str);
+                 } else if (bwords[i].indexOf('</body>') !== -1) {
+                     str = "<span " + style + " >" + pwords[pwords.length - 1] + " " + "</span>";
+                     bwords[i] = bwords[i].replace(pwords[pwords.length - 1], str);
+                 } else {
+                     bwords[i] = setcolortochangedword(bwords[i], idea.replace(/\s/g, ''), style);
+                 }
+             }
+             $scope.pbody = bwords.join(' ').toString();
+         }
+
+         function getfirstpromingindex(cwords, text, prewords) { //check again
+             var fbody = '',
+                 index = 0;
+             if (text.replace(/\s/g, '').length !== 0) {
+                 for (var k = 0; k < cwords.length; k++) {
+                     fbody += cwords[k] + ' ';
+                     if (strip(fbody).replace(/\s/g, '').indexOf(text) !== -1) {
+                         index = k;
+                         break;
+                     }
+                 }
+             }
+             return index;
+         }
+
+         function getlastpromingindex(cwords, text, prewords) {
+             var fbody = '',
+                 index = cwords.length;
+             if (text.replace(/\s/g, '').length !== 0) {
+                 for (var k = cwords.length - 1; k >= 0; k--) {
+                     fbody = cwords[k] + ' ' + fbody;
+                     if (strip(fbody).replace(/\s/g, '').indexOf(text) !== -1) {
+                         index = k;
+                         break;
+                     }
+                 }
+             }
+             return index;
+         }
+
+         function setcolortochangedword(changedwords, text, style) {
+             var onlytxt = strip(changedwords.replace(/(&nbsp;|<([^>]+)>)/ig, '')).replace('class=\"kfSupportStartLabel\">', '');
+             onlytxt = onlytxt.replace(/\/?[a-z][a-z0-9]*[^>]*>/ig, '');
+             onlytxt = onlytxt.replace('<span', '').replace(/<\/?span[^>]*>/g, '');
+             if (changedwords.indexOf('<br>') !== -1) {
+                 onlytxt = changedwords.replace('<span', '').replace(/<\/?span[^>]*>/g, '');
+             }
+             onlytxt = strip(onlytxt.replace(/&nbsp;|(<([^>]+)>)|\/>|>/ig, ''));
+             onlytxt = onlytxt.replace('—', '&mdash;').replace('–', '&ndash;');
+             if (text.replace(/\s/g, '').replace('—', '&mdash;').indexOf(onlytxt.replace(/\s/g, '')) !== -1 && onlytxt !== '') {
+                 console.log('onlytxt ' + onlytxt);
+                 var str = "<span " + style + " >" + onlytxt + " " + "</span>";
+                 changedwords = changedwords.replace(/\s\s|\s/g, '').replace(onlytxt, str);
+             }
+             return changedwords;
+         }
 
         /*********** svg-edit ************/
         $scope.svgInitialized = false;
