@@ -123,6 +123,8 @@ exports.update = function(req, res) {
         updated.markModified('views');
         updated.scaffolds = req.body.scaffolds;
         updated.markModified('scaffolds');
+        updated.promisingcolorobjs = req.body.promisingcolorobjs;
+        updated.markModified('promisingcolorobjs');
         updated.save(function(err) {
             if (err) {
                 return handleError(res, err);
