@@ -973,7 +973,7 @@ angular.module('kf6App')
                          if (handler&& index===promisingcolorobjIds.length-1) {
                              handler();
                          }
-                     })
+                     });
                  });
              });
          };

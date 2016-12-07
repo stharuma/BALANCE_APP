@@ -1083,7 +1083,6 @@ angular.module('kf6App')
                  console.log('onlytxt ' + onlytxt+"changedwords "+changedwords);
                  var str = "<span " + style + " >" + onlytxt + " " + "</span>";
                  changedwords = changedwords.replace(/\s\s|\s/g, '').replace(onlytxt, str);
-                ;
              }
              return changedwords;
          }
@@ -1152,7 +1151,7 @@ angular.module('kf6App')
                  promingcolorobj.data = {
                      color: promingcolorobj.data.color,
                      data: pcolordata
-                 }
+                 };
                  $community.modifyObject(promingcolorobj, function () {
                      $community.refreshPromisingcolorobjs(function () {
                          $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
