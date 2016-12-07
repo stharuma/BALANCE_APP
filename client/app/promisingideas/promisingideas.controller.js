@@ -3,12 +3,15 @@
 angular.module('kf6App')
     .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh, $kftag) {
         var communityId = $stateParams.communityId;
+        $scope.promisingIdeacolorobjsarr = [];
         $community.enter(communityId, function () {
             $community.refreshMembers();
             $scope.communityMembers = $community.getCommunityData().membersArray;
             $scope.currentCommunity = {};
             $scope.currentCommunity = $community.getCommunityData();
-
+            $community.refreshPromisingcolorobjs(function () {
+                $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
+         });
             $scope.search();
         });
 
@@ -64,14 +67,17 @@ angular.module('kf6App')
                     links.forEach(function (link) {
                         if (link.type === 'promisings') {
                             $community.getObject(link.from, function (promisingIdeaobj) {
+                                var pcolordetail = $scope.setPromisingIdeacolorobj(promisingIdeaobj.data.color);
+
                                 if (promisingIdeaobj.data.color === '') {
-                                    promisingIdeaobj.data.color = 'None';
+                                    pcolordetail = 'None' + pcolordetail;
                                 }
                                 if (promisingIdeaobj.data.reason === '') {
                                     promisingIdeaobj.data.reason = 'None';
                                 }
                                 $scope.tableData.push({
                                     color: promisingIdeaobj.data.color,
+                                    colordetail: pcolordetail,
                                     promisingidea: promisingIdeaobj.data.idea.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     reason: promisingIdeaobj.data.reason.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     inContributionTitle: note.title,
@@ -79,8 +85,8 @@ angular.module('kf6App')
                                     date: new Date(promisingIdeaobj.created).toLocaleString(),
                                     contribution: note
                                 });
-                                if (!contains($scope.colors, promisingIdeaobj.data.color)) {
-                                    $scope.colors.push(promisingIdeaobj.data.color);
+                                if (!contains($scope.colors, pcolordetail)) {
+                                    $scope.colors.push(pcolordetail);
                                 }
                                 if (!contains($scope.criteria, promisingIdeaobj.data.reason)) {
                                     $scope.criteria.push(promisingIdeaobj.data.reason);
@@ -245,8 +251,7 @@ angular.module('kf6App')
 
         $scope.hastextinpromisingidea = function (searchtext, idea, criteria) {
             var hasit = false;
-            console.log('searchtext ' + searchtext);
-            if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
+           if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
                     criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
                 hasit = true;
             }
@@ -284,9 +289,20 @@ angular.module('kf6App')
                 window.alert('View is not selected');
                 return;
             }
-            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body,true);
+            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, true);
             $scope.selectedViewIds.length = 0;
             $scope.status.isnewNoteCollapsed = true;
+        };
+
+        $scope.setPromisingIdeacolorobj = function (promisingcolor) {
+           var msg = promisingcolor + ' (Unassign)';
+           $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+             if (pcolorobj.data.color === promisingcolor) {
+                    msg=promisingcolor + ' (' + pcolorobj.data.data + ')';
+                    return  msg;
+                }
+            });
+            return msg;
         };
 
         $scope.setselectedpromisingideaIndex = function (index) {
@@ -302,9 +318,9 @@ angular.module('kf6App')
 .filter('highlighted', function ($sce) {
     return function (text, phrase) {
         if (phrase) {
-           text = text.replace(new RegExp('('+phrase+')', 'gi'), '<span class="highlighted">$1</span>');
+            text = text.replace(new RegExp('(' + phrase + ')', 'gi'), '<span class="highlighted">$1</span>');
 
-           // text = unescape(escape(text).replace(new RegExp(escape(phrase), 'gi'), '<span class="highlighted">$&</span>'));
+            // text = unescape(escape(text).replace(new RegExp(escape(phrase), 'gi'), '<span class="highlighted">$&</span>'));
         }
         return $sce.trustAsHtml(text);
     };

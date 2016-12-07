@@ -58,23 +58,23 @@
                     <div collapse="status.selectedColorCollapsed " style=" float:left;">
                         <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
                             <label clear:both>Colours::</label>
-                            <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue;" ng-model="selectedColor" ng-options="s for s in colors " ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
+                            <select class="KFSupport" style="width: 300px;height:25px;border: 2px  light blue;" ng-model="selectedColor" ng-options="s for s in colors " ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
                         </div>
                     </div>
                     <div collapse="status.selectedHitCollapsed " style=" float:left;">
                         <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
                             <label clear:both>Weight counts::</label>
-                            <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue;" ng-model="selectedHitCount" ng-options="h for h in hitcounts" ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
+                            <select class="KFSupport" style="width: 300px;height:25px;border: 2px  light blue;" ng-model="selectedHitCount" ng-options="h for h in hitcounts" ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
                         </div>
                     </div>
                     <div collapse="status.selectedCriteriaCollapsed " style=" float:left;">
                         <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
                             <label clear:both>Criteria::</label>
-                            <select class="KFSupport" style="width:150px;height:25px;border: 2px  light blue;" ng-model="selectedCriteria" ng-options="c for c in criteria" ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
+                            <select class="KFSupport" style="width:300px;height:25px;border: 2px  light blue;" ng-model="selectedCriteria" ng-options="c for c in criteria" ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
                         </div>
                     </div>
                     <div class="action-searchbox">
-                        <input type="text" ng-model="searchkeyword" placeholder="Search Keyword..."/>
+                        <input type="text" ng-model="searchkeyword" placeholder="Search Keyword..." />
                     </div>
                     <br/>
                     <hr style="clear:both; height: 2px;background-color: #33BBFF; " />
@@ -88,11 +88,11 @@
                             <th>In Contribution</th>
                         </tr>
                         <tr class="KFSearchResult" ng-repeat="data in tableData | filter : searchkeyword:false " ng-if=" (selectedColor===colors[0] &&!status.selectedColorCollapsed)&&searchkeyword===''||
-                        (selectedColor=== data.color&&!status.selectedColorCollapsed)&&searchkeyword===''||
+                        (selectedColor=== data.colordetail&&!status.selectedColorCollapsed)&&searchkeyword===''||
                         (selectedCriteria ===criteria[0]&&!status.selectedCriteriaCollapsed)&& searchkeyword==='' ||
                         (selectedCriteria===data.reason&&!status.selectedCriteriaCollapsed)&& searchkeyword===''||
                         (selectedColor===colors[0]&&!status.selectedColorCollapsed) &&hastextinpromisingidea(searchkeyword, data .promisingidea, data .reason) ||
-                        (selectedColor=== data.color&&!status.selectedColorCollapsed)&& hastextinpromisingidea(searchkeyword,data .promisingidea, data .reason) ||
+                        (selectedColor=== data.colordetail&&!status.selectedColorCollapsed)&& hastextinpromisingidea(searchkeyword,data .promisingidea, data .reason) ||
                         (selectedCriteria ===criteria[0]&&!status.selectedCriteriaCollapsed)&& hastextinpromisingidea(searchkeyword,data .promisingidea, data .reason) ||
                         (selectedCriteria===data.reason&&!status.selectedCriteriaCollapsed)&& hastextinpromisingidea(searchkeyword,data .promisingidea, data .reason) ">
                             <td>
@@ -155,18 +155,18 @@
                                     <br style="clear:both">
                                     <b> Criteria: -  </b><tt ng-bind-html="hitd.promising.reason| highlighted:searchkeyword"></tt>
                                 </div>
-                </td>
-                <td>
-                    <div kfelement draggable="true ">
-                        <span><img ng-src="{{getIcon(hitd.promising.contribution)}} " draggable="false "></span>
-                        <a class="KFSearchLink " href="contribution/{{hitd.promising.contribution._id}} " target="_blank " draggable="false ">{{hitd.promising.contribution.title}}</a>
-                    </div>
-                </td>
-                </tr>
-                </table>
-                <div style="height: 20px; "></div>
+                            </td>
+                            <td>
+                                <div kfelement draggable="true ">
+                                    <span><img ng-src="{{getIcon(hitd.promising.contribution)}} " draggable="false "></span>
+                                    <a class="KFSearchLink " href="contribution/{{hitd.promising.contribution._id}} " target="_blank " draggable="false ">{{hitd.promising.contribution.title}}</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="height: 20px; "></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<hr style="clear: both;height: 2px;background-color: #33BBFF; " />
+    <hr style="clear: both;height: 2px;background-color: #33BBFF; " />
