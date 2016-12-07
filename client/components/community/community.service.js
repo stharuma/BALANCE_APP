@@ -967,10 +967,10 @@ angular.module('kf6App')
                  if (!promisingcolorobjIds) {
                      promisingcolorobjIds = [];
                  }
-                 promisingcolorobjIds.forEach(function (promisingcolorobjId) {
+                 promisingcolorobjIds.forEach(function (promisingcolorobjId, index) {
                      getObject(promisingcolorobjId, function (promisingcolorobj) {
                          communityData.promisingcolorobjs.push(promisingcolorobj);
-                         if (handler) {
+                         if (handler&& index===promisingcolorobjIds.length-1) {
                              handler();
                          }
                      })
