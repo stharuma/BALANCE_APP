@@ -28,7 +28,7 @@ angular.module('kf6App')
                 email:$scope.email,
                 subject:$scope.input.fbTitle,
                 content:$scope.input.fbContent
-            }).success(function(result) {
+            }).success(function() {
                 // $scope.msg_show = true;
                 // $scope.msg = "Your feedback has been sent to the administrator.";
                 // document.getElementById("msg_div").style.color = "green";
