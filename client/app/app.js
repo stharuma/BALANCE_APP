@@ -17,7 +17,8 @@ angular.module('kf6App', [
         'ngCookies',
         'chart.js',
         'ngCsv',
-        'ngjsColorPicker'
+        'ngjsColorPicker',
+        'xeditable'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');
@@ -78,7 +79,7 @@ angular.module('kf6App', [
     };
 })
 
-.run(function($rootScope, $location, Auth) {
+.run(function($rootScope, $location, Auth, editableOptions) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
         Auth.isLoggedInAsync(function(loggedIn) {
@@ -87,4 +88,5 @@ angular.module('kf6App', [
             }
         });
     });
+    editableOptions.theme = 'bs3';
 });

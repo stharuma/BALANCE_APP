@@ -109,8 +109,7 @@ angular.module('kf6App')
                     status.status = 'noresult';
                 }
                 getContributions(contributions);
-                console.log('count ' + contributions.length);
-            }).error(function () {
+           }).error(function () {
                 status.status = 'error';
             });
         }
@@ -222,5 +221,21 @@ angular.module('kf6App')
                 status.detailsCollapsed = true;
             }
         };
+
+        obj.promisingcolors = function () {
+            var colors = [
+        '',
+        'yellow',
+        'pink',
+        'green',
+        'violet',
+        'purple',
+        'orange',
+        'red',
+         'blue'
+      ];
+            return colors;
+        };
+
         return obj;
     });

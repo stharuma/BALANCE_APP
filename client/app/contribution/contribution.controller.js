@@ -55,17 +55,10 @@ angular.module('kf6App')
         $scope.preContributeHooks = [];
         $scope.initializingHooks = [];
         $scope.initializingHookInvoked = false;
-        $scope.colors = [
-        '',
-        'yellow',
-        'pink',
-        'green',
-        'blue',
-        'purple',
-        'orange',
-        'red',
-        'violet'
-      ];
+        $scope.colors =$suresh.promisingcolors();
+        $scope.promisingColorData=[];
+        $scope.promisingIdeacolorobjsarr=[];
+
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
                 var item = window.localStorage.getItem('kfdoc');
@@ -79,6 +72,7 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
+                var communityId = $community.getCommunityData().community._id;
                 $community.refreshContext(contextId, function(context) {
                     $community.getContext(null, function(context) {
                         $scope.context = context;
@@ -129,9 +123,16 @@ angular.module('kf6App')
                     }
                 });
                 $community.refreshGroups();
+                $community.refreshPromisingcolorobjs(function(){
+                   $scope.promisingIdeacolorobjsarr=$community.getPromisingcolorobjsArray();
+                    $scope.setPromisingColorData();
+                });
+                if($scope.promisingIdeacolorobjsarr.length===0){
+                   $scope.setPromisingColorData();
+                }
                 $scope.updateToConnections(function() {
                     $scope.updateAnnotations();
-                     $scope.updatepromisingIdeaobjs();
+                    $scope.updatepromisingIdeaobjs();
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();
                         $scope.updateAttachments(links);
@@ -859,7 +860,7 @@ angular.module('kf6App')
             return $sce.trustAsHtml(html);
         };
 
-        $scope.showpromisingIdeaWindow = function() {
+        $scope.setSelectedText = function() {
             $scope.selectedText = $scope.getSelectionText();
         };
 
@@ -1079,24 +1080,97 @@ angular.module('kf6App')
              onlytxt = strip(onlytxt.replace(/&nbsp;|(<([^>]+)>)|\/>|>/ig, ''));
              onlytxt = onlytxt.replace('—', '&mdash;').replace('–', '&ndash;');
              if (text.replace(/\s/g, '').replace('—', '&mdash;').indexOf(onlytxt.replace(/\s/g, '')) !== -1 && onlytxt !== '') {
-                 console.log('onlytxt ' + onlytxt);
+                 console.log('onlytxt ' + onlytxt+"changedwords "+changedwords);
                  var str = "<span " + style + " >" + onlytxt + " " + "</span>";
                  changedwords = changedwords.replace(/\s\s|\s/g, '').replace(onlytxt, str);
              }
              return changedwords;
          }
 
-        /*********** svg-edit ************/
-        $scope.svgInitialized = false;
+         $scope.setPromisingColorData = function () {
+             var colordata = '',
+                 cid = '',
+                 cobj = {};
+             $scope.promisingColorData.length = 0;
+             $scope.colors.forEach(function (promisingcolor, index) {
+                 cid = 'none';
+                 colordata = "";
+                 $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+                     if (pcolorobj.data.color === promisingcolor) {
+                         colordata = pcolorobj.data.data;
+                         cid = pcolorobj._id;
+                         cobj = pcolorobj;
+                     }
+                 });
+                 $scope.promisingColorData.push({
+                     color: promisingcolor,
+                     data: colordata,
+                     id: cid,
+                     obj: cobj
+                 });
+             });
+         };
 
-        $scope.editSelected = function() {
-            if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
-                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
-                $('#svgeditdiv').html(xhtml);
-                $scope.svgInitialized = true;
-            }
-        };
-    });
+         $scope.clearColor = function () {
+             $scope.targetColor = '';
+             return $scope.targetColor;
+         };
+
+         $scope.getPromisingIdeacolorobjupdatemsg = function (promisingcolor) {
+             $scope.updatemsg = getPromisingIdeacolorobjmsg(promisingcolor);
+             return $scope.updatemsg;
+         };
+
+         var setPromisingIdeacolorobjcreatemsg = function (promisingcolor) {
+             $scope.createmsg = getPromisingIdeacolorobjmsg(promisingcolor);
+         };
+
+         var getPromisingIdeacolorobjmsg = function (promisingcolor) {
+             var msg = ' (Unassign)';
+             $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+                 if (pcolorobj.data.color === promisingcolor) {
+                     msg = ' (' + pcolorobj.data.data + ')';
+                     return msg;
+                 }
+             });
+             return msg;
+         };
+
+         $scope.$watch('targetColor', function () {
+             setPromisingIdeacolorobjcreatemsg($scope.targetColor);
+         });
+
+         $scope.savePromisingIdeacolorobj = function (pcolordata, pcolor, id, promingcolorobj) {
+             if (id === 'none') {
+                 $scope.promisingIdeacolorobj = {
+                     color: pcolor,
+                     data: pcolordata
+                 };
+                 $community.createPromisingcolorobj($scope.promisingIdeacolorobj, function () {});
+             } else {
+                 promingcolorobj.data = {
+                     color: promingcolorobj.data.color,
+                     data: pcolordata
+                 };
+                 $community.modifyObject(promingcolorobj, function () {
+                     $community.refreshPromisingcolorobjs(function () {
+                         $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
+                     });
+                 });
+             }
+         };
+
+         /*********** svg-edit ************/
+         $scope.svgInitialized = false;
+
+         $scope.editSelected = function () {
+         if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
+             var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+             $('#svgeditdiv').html(xhtml);
+             $scope.svgInitialized = true;
+         }
+         };
+         });
 
 function onSvgInitialized() {
     var wnd = document.getElementById('svgedit').contentWindow;

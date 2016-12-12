@@ -22,6 +22,7 @@ var KCommunitySchema = new Schema({
     },
     scaffolds: [Schema.ObjectId],
     views: [Schema.ObjectId],
+    promisingcolorobjs: [Schema.ObjectId],
     rootContextId: {
         type: Schema.ObjectId
     }
