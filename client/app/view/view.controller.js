@@ -716,9 +716,9 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
-        $scope.openTimemashine = function() {
+        $scope.openTimemachine = function() {
             $scope.openAnalytics();
-            var url = 'timemashine/' + $scope.view._id;
+            var url = 'timemachine/' + $scope.view._id;
             window.open(url, '_blank');
         };
 
@@ -743,7 +743,7 @@ angular.module('kf6App')
             var url = 'authornetwork/' + $scope.view._id;
             window.open(url, '_blank');
         };
-        
+
         $scope.doExit = function() {
             var url = '';
             $scope.gotoURL(url);
