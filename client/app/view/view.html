@@ -236,7 +236,7 @@
             <li ng-if="isFixable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
             <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">{{ 'position_fixAndLock' | translate }}</li>
             <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
-            <li ng-if="isEditable()" class="menuitem" ng-click="createRiseabovecreateRiseaboveFromContextMenu()">{{ 'rise-above_create' | translate }}</li>
+            <li ng-if="isEditable()" class="menuitem" ng-click="createRiseaboveFromContextMenu()">{{ 'rise-above_create' | translate }}</li>
             <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
         </ul>
     </div>
