@@ -41,10 +41,12 @@
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
-                            <div class="kfDragSource" ng-bind-html="trustAsHtml(copy.body)"></div>
+                            <div  collapse="showpromisingideaCollapsed" class="kfDragSource" ng-bind-html="trustAsHtml(copy.body)"></div>
+                           <div  collapse="!showpromisingideaCollapsed" class="kfDragSource" ng-bind-html="trustAsHtml(pbody)"></div>
                         </div>
                         <div style="height: 100%; width: 100%;" ng-hide="!contribution.isRiseabove()">
-                            <div class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
+                            <div  collapse="showpromisingideaCollapsed" class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
+                               <div  collapse="!showpromisingideaCollapsed" class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="trustAsHtml(pbody)"></div>
                             <div style="height: 100%; overflow: hidden;">
                                 <label>Riseabove View:</label>
                                 <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
@@ -413,6 +415,9 @@
         </div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="buildson()">{{ 'build-on' | translate }}</button>
+        </div>
+        <div style="float: left; padding-top: 0px; padding-right: 5px;">
+            <button ng-show="status.ispromisingideaTabDisplayed&&!status.hidebuildson" type="submit" class="btn btn-primary" ng-click="showPromisingInReadMode()">{{promisingmsg}}</button>
         </div>
     </div>
 </div>
