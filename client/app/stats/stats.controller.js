@@ -1,5 +1,7 @@
 'use strict';
 
+/* global Highcharts */
+
 angular.module('kf6App')
     .controller('StatsCtrl', function($scope, $http, $community, $stateParams, Auth, $kfutil, $ac, $translate) {
         var communityId = $stateParams.communityId;
@@ -29,7 +31,7 @@ angular.module('kf6App')
         $scope.pager = {};
 
 
-        // vérifier si c'est possible de ne pas utiliser le pager, sinon ajuster 50000        
+        // vérifier si c'est possible de ne pas utiliser le pager, sinon ajuster 50000
         $scope.pager.getStart = function() {
             return (($scope.pager.page - 1) * $scope.pager.pagesize) + 1;
         };
@@ -57,10 +59,10 @@ angular.module('kf6App')
         };
 
         function showCharts() {
-            
+
             var dates = getDates();
-            
-            $scope.status.status = 'searching'; 
+
+            $scope.status.status = 'searching';
             var byDateAll = [];
             var byDateAuthor = [];
             var byWeekAll = [];
@@ -70,7 +72,7 @@ angular.module('kf6App')
             var byScaffoldAuthor = [];
             var ccreated, ccreatedUTC = null;
             var pendingrqt = 0;
-            
+
             // initialize array (missing values)
             var day = 86400000;
             for (var i = dates.from; i <= dates.to; i+=day){
@@ -99,7 +101,7 @@ angular.module('kf6App')
                         c.created = null;
                     }
                     $scope.status.status = 'searched';
-                    
+
                     ccreatedUTC = Date.UTC(parseInt(c.created.substr(0, 4), 10), parseInt(c.created.substr(5, 2), 10) - 1, parseInt(c.created.substr(8, 2), 10) + 1);
                     ccreated = new Date(ccreatedUTC);
 
@@ -114,12 +116,12 @@ angular.module('kf6App')
                             byAuthors[author]++;
                         });
                     }
-                    
-                    
+
+
                     if ($.inArray($community.getAuthor()._id, c.authors) >= 0){
                         if (byDateAuthor[parseInt((ccreatedUTC-(dates.from))/day, 10)] !== undefined){
                             byDateAuthor[parseInt((ccreatedUTC-(dates.from))/day, 10)][1]++;
-                            byWeekAuthor[ccreated.getDay()]++;  
+                            byWeekAuthor[ccreated.getDay()]++;
                         }
 
                         pendingrqt++;
@@ -140,7 +142,7 @@ angular.module('kf6App')
                             }
                         });
 
-                                          
+
                     }
 
                 });
@@ -169,21 +171,21 @@ Highcharts.setOptions({
         }
 });
 
-                $translate(['student', 
-                            'chartTitleContributions', 
-                            'chartTitleDistribution', 
-                            'chartUxZoom', 
-                            'chartUxZoomMobile', 
-                            'chartLegendBy', 
-                            'chartLegendTheCommunity', 
-                            'chartPercentage', 
-                            'by', 
+                $translate(['student',
+                            'chartTitleContributions',
+                            'chartTitleDistribution',
+                            'chartUxZoom',
+                            'chartUxZoomMobile',
+                            'chartLegendBy',
+                            'chartLegendTheCommunity',
+                            'chartPercentage',
+                            'by',
                             'author']).then(function (translations) {
-                    
+
 
                     $scope.communityMembers.forEach(function(author){
                         byAuthorsDisplay.push(
-                            {name: ($community.getAuthor()._id === author._id ? author.getName() : translations.student), 
+                            {name: ($community.getAuthor()._id === author._id ? author.getName() : translations.student),
                             y : (typeof byAuthors[author._id] !== 'undefined' ? byAuthors[author._id] : 0),
                             color: ($community.getAuthor()._id === author._id ? "#7cb5ec" : "#aaa")
                         });
@@ -193,40 +195,40 @@ Highcharts.setOptions({
                     $('#notesyear').highcharts({
                         chart: {zoomType: 'x'},
                         credits: {enabled: false},
-                        title: {text: translations.chartTitleContributions}, 
-                        subtitle: { text: document.ontouchstart === undefined ? translations.chartUxZoom : translations.chartUxZoomMobile}, 
+                        title: {text: translations.chartTitleContributions},
+                        subtitle: { text: document.ontouchstart === undefined ? translations.chartUxZoom : translations.chartUxZoomMobile},
                         xAxis: {type: 'datetime'},
-                        yAxis: {title: {text: translations.chartTitleContributions}}, 
+                        yAxis: {title: {text: translations.chartTitleContributions}},
                         legend: {enabled: true},
                         rangeSelector : {
-                            selected : 4           
+                            selected : 4
                         },series: [{
                             type: 'line',
-                            name: translations.chartTitleContributions + ' ' + translations.by + ' ' + translations.chartLegendTheCommunity, 
+                            name: translations.chartTitleContributions + ' ' + translations.by + ' ' + translations.chartLegendTheCommunity,
                             color: "#aaa",
                             data: byDateAll
                         },{
                             type: 'line',
-                            name: translations.chartTitleContributions + ' ' + translations.by + ' ' + $community.getAuthor().getName(), 
+                            name: translations.chartTitleContributions + ' ' + translations.by + ' ' + $community.getAuthor().getName(),
                             color: "#7cb5ec",
                             data: byDateAuthor
                         }]
                     });
 
                     $('#notesweek').highcharts({
-                        title: {text: translations.chartTitleDistribution}, 
+                        title: {text: translations.chartTitleDistribution},
                         credits: {enabled: false},
                         xAxis: {categories: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']}, // traduire
                         yAxis: {title: {text: translations.chartPercentage}},
                         legend: {enabled: true},
                         series: [{
                             type: 'column',
-                            name: translations.chartPercentage + ' ' + translations.by + ' ' + translations.chartLegendTheCommunity, 
+                            name: translations.chartPercentage + ' ' + translations.by + ' ' + translations.chartLegendTheCommunity,
                             color: "#aaa",
                             data: byWeekAll
                         },{
                             type: 'column',
-                            name: translations.chartPercentage + ' ' + translations.by + ' ' + $community.getAuthor().getName(), 
+                            name: translations.chartPercentage + ' ' + translations.by + ' ' + $community.getAuthor().getName(),
                             color: "#7cb5ec",
                             data: byWeekAuthor
                         }]
@@ -242,7 +244,7 @@ Highcharts.setOptions({
                         },
                         credits: {enabled: false},
                         title: {
-                            text: translations.chartTitleContributions + ' ' + translations.by + ' ' + translations.author 
+                            text: translations.chartTitleContributions + ' ' + translations.by + ' ' + translations.author
                         },
                         plotOptions: {
                             pie: {
@@ -264,15 +266,15 @@ Highcharts.setOptions({
 
 
                 });
-                    
+
             }).error(function() {
                 $scope.status.status = 'error';
             });
         }
 
 
-        var refreshViewScaffolds = function(data) {       
-            $translate(['chartTitleScaffold']).then(function (translations) { 
+        var refreshViewScaffolds = function(data) {
+            $translate(['chartTitleScaffold']).then(function (translations) {
                 var supportUsed = [];
                 $scope.scaffolds.forEach(function(scaffold){
                     scaffold.supports.forEach(function(support){
@@ -443,7 +445,7 @@ Highcharts.setOptions({
             }
             else{
                 t = Date.UTC(parseInt($scope.pager.query.to.substr(0, 4), 10), parseInt($scope.pager.query.to.substr(5, 2), 10) - 1, parseInt($scope.pager.query.to.substr(8, 2), 10) + 1) - 86400000;
-            }        
+            }
             return {"from": f, "to": t};
         }
     });
