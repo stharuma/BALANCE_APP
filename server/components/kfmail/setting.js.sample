@@ -1,6 +1,5 @@
 'use strict';
 
-exports.user = 'xxxx';
-exports.pass = 'yyyy';
+exports.transporter = 'smtps://user%40gmail.com:pass@smtp.gmail.com';
 exports.from ='zzzz@gmail.com';
 exports.baseURL = 'http://localhost:9000/';
