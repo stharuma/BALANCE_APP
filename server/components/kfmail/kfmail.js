@@ -18,7 +18,7 @@ exports.send = function(to, subject, body) {
     if (!enabled) {
         return;
     }
-    var transporter = nodemailer.createTransport(setting.transporter);
+    var transporter = nodemailer.createTransport(setting.transportOptions);
     var options = {
         from: setting.from,
         to: to,
