@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$suresh', function ($ac, $http, $kftag) {
+    .factory('$suresh', function ($community, $ac, $http, $kftag) {
         var obj = {};
         var toConnections = [];
         var fromConnections = [];
+        //  var communityId = $community.getCommunityData().community._id;
 
         obj.searchprocess = function (queryString, communityId, communityMembers, $community, status, getContributions) {
             var pager = {};
@@ -109,7 +110,7 @@ angular.module('kf6App')
                     status.status = 'noresult';
                 }
                 getContributions(contributions);
-           }).error(function () {
+            }).error(function () {
                 status.status = 'error';
             });
         }
@@ -236,6 +237,57 @@ angular.module('kf6App')
       ];
             return colors;
         };
+
+        obj.createPromisngIdeaobj = function ($community, promisingIdeaobj, id, handler) {
+            var communityId = $community.getCommunityData().community._id;
+            var newobj = {
+                communityId: communityId,
+                type: 'promisingIdeaobj',
+                title: 'an promisingIdeaobj',
+                authors: $community.getAuthor()._id,
+                created: new Date(),
+                status: 'active',
+                permission: 'protected',
+                data: promisingIdeaobj
+            };
+            $http.post('/api/contributions/' + communityId, newobj)
+                .success(function (promisingIdeaobj_) {
+                    createpromisingIdeaobjLink(promisingIdeaobj_, id, handler);
+                });
+        };
+
+        var createpromisingIdeaobjLink = function (promisingIdeaobj, id, handler) {
+            var link = {};
+            link.to = id;
+            link.from = promisingIdeaobj._id;
+            link.type = 'promisings';
+            link.data = promisingIdeaobj.data;
+            $http.post('/api/links', link).success(function (link) {
+                handler(link, promisingIdeaobj);
+            });
+        };
+
+        obj.promisingIdeaobjUpdated = function (promisingIdeaobjLink, $community, promisingIdeaobjs) {
+            if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
+                console.error('ERROR! promisingIdeaobj doesn\'t have id on update');
+                return;
+            }
+            var model = promisingIdeaobjs[promisingIdeaobjLink.from];
+            if (!model) {
+                console.error('ERROR! model couldn\'t find');
+                return;
+            }
+            $community.modifyObject(model);
+        };
+
+        obj.promisingIdeaobjDeleted = function (promisingIdeaobjLink) {
+            if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
+                console.error('ERROR! promisingIdeaobj doesn\'t have id on delete');
+                return;
+            }
+            $http.delete('/api/links/' + promisingIdeaobjLink._id);
+        };
+
 
         return obj;
     });
