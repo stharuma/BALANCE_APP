@@ -48,7 +48,5 @@
     "angular-scenario": ">=1.2.*"
   },
   "resolutions": {
-    "tinymce-dist": "4.1.7",
-    "angular": "1.4.0"
   }
 }
