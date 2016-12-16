@@ -331,8 +331,8 @@
                     </div>
                 </div>
             </tab>
-            <tab class="KFTab" heading="Promising Ideas" ng-show="status.ispromisingideaTabDisplayed">
-                <label>Promising Ideas:</label>
+            <tab class="KFTab" heading="Promisingness Ideas" ng-show="status.ispromisingideaTabDisplayed">
+                <label>Promisingness Ideas:</label>
                 <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
                     <div ng-hide="deletedIndex==$index">
                         <div ng-hide="selectedIndex==$index ||newnoteIndex==$index ">
@@ -341,7 +341,7 @@
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex($index)" title="Edit Justification & Highlight">Edit</button>
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index" title="Delete the idea from database">Delete</button>
                             </div>
-                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Color-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
+                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
                              <br>
                             <label style="float: left; font-size:  9pt">Idea : </label>
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color}"></tt>
@@ -353,8 +353,8 @@
                         </div>
                         <div style="padding: 1px ;" ng-show="newnoteIndex==$index">
                             <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,conn.data.idea);">create</button>
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">cancel</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,conn.data.idea);">Create</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">Cancel</button>
                             </div>
                             <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle" />
                             <label>Views:</label>
@@ -366,10 +366,10 @@
                         </div>
                         <div ng-show="selectedIndex==$index ">
                             <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">save</button>
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1)">cancel</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">Save</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1)">Cancel</button>
                             </div>
-                           <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Color-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
+                           <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
                            <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''"ng-click="promisingIdeaobjs[conn.from].data.color=''">clear color</button>
                            <br>
                            <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
@@ -391,12 +391,12 @@
 
     <div class="well" collapse="status.ispromisingideaCollapsed" style="padding-left: 50px; position: absolute; top:0px; left: 50px; width: 90%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true">save</button>
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; selectedText=''">close</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true">Save</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; selectedText=''">Close</button>
         </div>
-        <label style="font-size:  11pt;float: left"><b>Add Promising Idea</b></label>
+        <label style="font-size:  11pt;float: left"><b>Add Promisingness Idea</b></label>
         <div style="height:200px; overflow: scroll; width:100%; float: left">
-          <label style="font-size:  9pt"> <b> Color-Group Attribution : {{targetColor}}{{createmsg}}</b></label>
+          <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{targetColor}}{{createmsg}}</b></label>
           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="targetColor!==''"ng-click="clearColor();">clear color</button>
            <br>
            <ngjs-color-picker selected-color="targetColor" custom-colors="colors"></ngjs-color-picker>

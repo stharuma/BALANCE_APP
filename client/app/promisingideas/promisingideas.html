@@ -19,8 +19,8 @@
             <label style="font-size:  11pt;float: left"><b>Create New Note</b></label>
         </div>
         <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,selectedPromisingIdeas.toString());">create</button>
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed = true; ">cancel</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,selectedPromisingIdeas.toString());">Create</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed = true; ">Cancel</button>
         </div>
         <div style="height : 250px ;overflow: scroll; width:100%; float: left">
             <input type="text" class="form-control" style="height : 20px; overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle">
@@ -48,11 +48,11 @@
                 <div ng-if="status.loading !== true">
                     <div style="float: right;width: 100%;">
                         <label style="float:left; padding-left: 5px;">
-                            <input type="radio" ng-model="currentselected.name" value="Sortedcolors" ng-click="progressselection(value)"> Sort by colors</label>
+                            <input type="radio" ng-model="currentselected.name" value="Sortedcolors" ng-click="progressselection(value)"> Sort by colours</label>
                         <label style="float:left; padding-left:15px;">
                             <input type="radio" ng-model="currentselected.name" value="Sortedhits" ng-click="progressselection(value)">Sort by weight counts</label>
                         <label style="float:left; padding-left:15px;">
-                            <input type="radio" ng-model="currentselected.name" value="Sortedcriteria" ng-click="progressselection(value)">Sort by criteria</label>
+                            <input type="radio" ng-model="currentselected.name" value="Sortedcriteria" ng-click="progressselection(value)">Sort by justification</label>
                     </div>
                     <br/>
                     <div collapse="status.selectedColorCollapsed " style=" float:left;">
@@ -69,7 +69,7 @@
                     </div>
                     <div collapse="status.selectedCriteriaCollapsed " style=" float:left;">
                         <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
-                            <label clear:both>Criteria::</label>
+                            <label clear:both>Justification ::</label>
                             <select class="KFSupport" style="width:300px;height:25px;border: 2px  light blue;" ng-model="selectedCriteria" ng-options="c for c in criteria" ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
                         </div>
                     </div>
@@ -79,12 +79,12 @@
                     <br/>
                     <hr style="clear:both; height: 2px;background-color: #33BBFF; " />
                     <div style="clear:both">
-                        <label style="font-size: 12pt " ng-if="viewTitlescopy !==''"><b>PromisingnessIdeas in {{viewTitlescopy}} View(s)</b></label>
+                        <label style="font-size: 12pt " ng-if="viewTitlescopy !==''"><b>Promisingness Ideas in {{viewTitlescopy}} View(s)</b></label>
                         <label style=" font-size: 12pt;" ng-if=" !status.communityCollapsed"><b>Promisingness Ideas in {{currentCommunity.community.title}} Community</b></label>
                     </div>
                     <table border='1' style="width: 100%;clear: both;" id="table1" ng-show="!status.selectedColorCollapsed||!status.selectedCriteriaCollapsed">
                         <tr>
-                            <th style="width: 75%;"> PromisingIdeas</th>
+                            <th style="width: 75%;"> Promisingness Ideas</th>
                             <th>In Contribution</th>
                         </tr>
                         <tr class="KFSearchResult" ng-repeat="data in tableData | filter : searchkeyword:false " ng-if=" (selectedColor===colors[0] &&!status.selectedColorCollapsed)&&searchkeyword===''||
@@ -105,7 +105,7 @@
                                         <br>
                                         <tt style="float:right">-(By {{data.author}}  {{data.date}})</tt>
                                         <br style="clear:both">
-                                        <b> Criteria: -  </b><tt ng-bind-html="data .reason | highlighted:searchkeyword"></tt>
+                                        <b> Justification : -  </b><tt ng-bind-html="data .reason | highlighted:searchkeyword"></tt>
                                     </div>
                                 </div>
                             </td>
@@ -119,7 +119,7 @@
                     </table>
                     <table border='1' style="width: 100%;" id="table2" ng-show="!status.selectedHitCollapsed">
                         <tr>
-                            <th style="width: 75%;"> PromisingIdeas</th>
+                            <th style="width: 75%;"> Promisingness Ideas</th>
                             <th>In Contribution</th>
                         </tr>
                         <tr class="KFSearchResult" ng-repeat=" hitd in hitdata| filter:searchkeyword " ng-if="((selectedHitCount===hitcounts[0]&&!status.selectedHitCollapsed )&&searchkeyword===''||
@@ -137,8 +137,8 @@
                                     <br>
                                     <tt style="float:right">-(By {{hitd.promising.author}}  {{hitd.promising.date}})</tt>
                                     <div ng-show="selectedpromisingideaIndex===$index  " style="clear:both">
-                                        <tt ng-if="hitd.promising.count==1">There is no overlapping of promising ideas present here!</tt>
-                                        <tt ng-if="hitd.promising.count !=1">The following are the overlapping of promising ideas:</tt>
+                                        <tt ng-if="hitd.promising.count==1">There is no overlapping of promisingness ideas present here!</tt>
+                                        <tt ng-if="hitd.promising.count !=1">The following are the overlapping of promisingness ideas:</tt>
                                         <div style="clear:both" ng-repeat=" overd  in overlappeddata " ng-if="overd.mainpromising===hitd.promising">
                                             <tt class="box" ng-style="{ 'background-color': overd.subpromising.color }"></tt>
                                             <tt style="float:left">{{overd.subpromising.promisingidea}} (
@@ -153,7 +153,7 @@
                                         </div>
                                     </div>
                                     <br style="clear:both">
-                                    <b> Criteria: -  </b><tt ng-bind-html="hitd.promising.reason| highlighted:searchkeyword"></tt>
+                                    <b> Justification: -  </b><tt ng-bind-html="hitd.promising.reason| highlighted:searchkeyword"></tt>
                                 </div>
                             </td>
                             <td>
