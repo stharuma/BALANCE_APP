@@ -24,7 +24,7 @@
     "ng-file-upload": "~2.0.5",
     "angular-ui-select": "^0.9.9",
     "d3": "^3.5.17",
-    "d3-cloud": "~1.1.2",
+    "d3-cloud": "^1.2.2",
     "annotator": "~1.2.9",
     "angular-translate": "^2.13.1",
     "angular-translate-loader-static-files": "^2.13.1",
