@@ -13,7 +13,11 @@ angular.module('kf6App', [
         'ng-context-menu',
         'ui.select',
         'pascalprecht.translate',
-        'ngCookies'
+        'colorpicker.module',
+        'ngCookies',
+        'chart.js',
+        'ngCsv',
+        'xeditable'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');
@@ -33,7 +37,7 @@ angular.module('kf6App', [
             prefix: '../assets/translations/',
             suffix: '.json'
           })
-          .registerAvailableLanguageKeys(['en', 'fr'])
+          .registerAvailableLanguageKeys(['en', 'es', 'fr'])
           .determinePreferredLanguage() // position before fallbackLanguage() seems crucial
           //.preferredLanguage('fr')
           .fallbackLanguage('en')
@@ -74,7 +78,7 @@ angular.module('kf6App', [
     };
 })
 
-.run(function($rootScope, $location, Auth) {
+.run(function($rootScope, $location, Auth, editableOptions) {
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
         Auth.isLoggedInAsync(function(loggedIn) {
@@ -83,4 +87,5 @@ angular.module('kf6App', [
             }
         });
     });
+    editableOptions.theme = 'bs3';
 });

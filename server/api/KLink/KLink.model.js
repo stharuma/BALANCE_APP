@@ -92,6 +92,7 @@ KLink.createCashObj = function(obj) {
     cache.created = obj.created;
     cache.modified = obj.modified;
     cache.authors = obj.authors;
+    cache.group = obj.group;
     cache.permission = obj.permission;
 
     /* for author */
@@ -112,6 +113,11 @@ KLink.createCashObj = function(obj) {
     if (obj.data && obj.data.riseabove) {
         cache.data = {};
         cache.data.riseabove = 'riseabove'; /* dummy object */
+    }
+
+     if (obj.data && obj.data.promisingContains) {
+        cache.data = {};
+        cache.data.promisingContains = 'promisingContains'; /* dummy object */
     }
     return cache;
 }

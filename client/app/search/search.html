@@ -1,4 +1,5 @@
 <div class="col-md-12">
+    <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
     <label>{{ 'search' | translate }}</label>
     <p class="input-group">
         <input type="text" class="form-control" placeholder="{{ 'search_placeholder' | translate }}" ng-model="queryString">
@@ -12,8 +13,12 @@
     <div collapse="status.detailCollapsed">
         <div class="well well-lg">
             <div style="padding: 15px;">
-                <label>Private Mode:</label>
-                <button type="button" class="btn btn-primary kfbutton" ng-click="addPrivateMode()">Set</button>
+                <label>Search Views:</label>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addSearchView()">On</button>
+            </div>
+            <div style="padding: 15px;">
+                <label>Search My Private Notes:</label>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addPrivateMode()">On</button>
             </div>
             <div style="padding: 15px;">
                 <label>Views:</label>
@@ -39,6 +44,13 @@
                     <button type="button" class="btn btn-primary kfbutton" ng-click="openTo($event)">{{ 'to' | translate }}</button>
                 </div>
             </div>
+            <div style="height: 100px;">
+                <div class="col-md-6">
+                    <label>Pagesize:</label>
+                    <br>
+                    <input type="text" class="form-control" ng-model="pager.pagesize">
+                </div>
+            </div>
         </div>
     </div>
     <hr>
@@ -50,12 +62,19 @@
             There was no contributions to match.
         </div>
         <div ng-if="status.status === 'searched'">
+            <!--<div ng-if="isManager()" style="float: right;">-->
             <div style="float: right;">
-                <pagination total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
+                <pagination style="margin-top: 2px; margin-bottom: 2px;" total-items="pager.total" ng-model="pager.page" max-size="maxSize" items-per-page="pager.pagesize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></pagination>
             </div>
-            <div style="width: 100%; float: left; text-align: right;">
-                CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
+            <div style="width: 100%; float: left;">
+                <div style="float: left;">
+                    <button type="button" ng-csv="getTable()" csv-header="getTableHeader()" filename="searchresult.csv">Download as CSV</button>
+                </div>
+                <div style="text-align: right;">
+                    CurrentPage: {{pager.page}} ({{pager.getStart()}} - {{pager.getEnd()}}) / Total: {{pager.total}} contributions were found.
+                </div>
             </div>
+            <br>
             <div ng-if="status.loading === true">
             </div>
             <div ng-if="status.loading !== true">
@@ -63,10 +82,12 @@
                     <tr>
                         <th style="width: 15%;">Title</th>
                         <th style="width: 15%;">Author(s)</th>
-                        <th>Body</th>
+                        <th>Body
+                            <button type="button" class="btn btn-default" ng-click="showScaffold()">show scaffold</button>
+                        </th>
                         <th style="width: 15%;">Created</th>
                     </tr>
-                    <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note'">
+                    <tr class="KFSearchResult" ng-repeat="contribution in contributions" ng-if="contribution.type==='Note' || contribution.type==='View'">
                         <td>
                             <div kfelement draggable="true">
                                 <span><img ng-src="{{getIcon(contribution)}}" draggable="false"></span>

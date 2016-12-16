@@ -5,10 +5,27 @@
     <!-- scaffold setting -->
     <div style="height: 10px;"></div>
     <div ng-include="'components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.html'"></div>
+    <div style="height: 10px;"></div>
+    <label>Proming Idea's color Setting in this Context</label>
+    <div>
+        <table style="width: 100%; border-collapse: collapse;" ng-repeat="colordata in promisingColorData">
+            <tr>
+                <th style="width: 5%;" ng-if="colordata.color===''"> no color</th>
+                <th style="width: 5%;" ng-if="colordata.color!==''"> {{colordata.color}}</th>
+                <th style="width: 95%;"> <a href="#" editable-text="colordata.data" onaftersave="savePromisingIdeacolorobj(colordata.data,colordata.color, colordata.id, colordata.obj)">{{ colordata.data || 'empty' }}</a></th>
+            </tr>
+        </table>
+        <br>
+    </div>
     <!-- plugin setting -->
     <div style="height: 10px;"></div>
     <label>Plugin Setting in this Context</label>
     <div>
-        <input type="checkbox" ng-model="contribution.data.plugins.relatedword" ng-change=""> RelatedWord</input>
+        <input type="checkbox" ng-model="contribution.data.plugins.relatedword" ng-change=""> RelatedWord </input>
+        <br>
+        <input type="checkbox" ng-model="contribution.data.plugins.lexicalanalysis" ng-change=""> Lexical Analysis </input>
+        <br>
+        <input type="checkbox" ng-model="contribution.data.plugins.scaffoldgrowth" ng-change=""> Scaffold Growth </input>
+        <br>
     </div>
 </div>

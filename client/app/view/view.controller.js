@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
+    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac, $modal) {
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
@@ -32,6 +32,7 @@ angular.module('kf6App')
                 $scope.view = view;
                 $ac.mixIn($scope, view);
                 $community.enter(view.communityId, function() {
+                    $community.refreshGroups();
                     $scope.community = $community.getCommunityData();
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
@@ -44,6 +45,12 @@ angular.module('kf6App')
         };
 
         $scope.updateViewSetting = function() {
+            //this is temporary code. coherent plan for context management would be expected.(Yoshiaki)
+            $community.getContext(null, function(context) {
+                $scope.context = context;
+            });
+            //temporary code end
+
             if ($scope.view.data && $scope.view.data.viewSetting) {
                 $scope.setting = $scope.view.data.viewSetting;
             } else {
@@ -172,6 +179,10 @@ angular.module('kf6App')
                 return ref._to.data && ref._to.data.riseabove;
             };
 
+            ref.isPromisingContains = function() {
+                return ref._to.data && ref._to.data.promisingContains;
+            };
+
             ref.getIconFile = function() {
                 if (ref._to.type === 'View') {
                     return 'icon-view.gif';
@@ -201,6 +212,9 @@ angular.module('kf6App')
                     if (ref.isRiseabove()) {
                         name += 'rise';
                     }
+                     if (ref.isPromisingContains()) {
+                       name += 'promising';
+                    }
                     name += '.gif';
                     return name;
                 }
@@ -210,12 +224,27 @@ angular.module('kf6App')
                 return;
             }
 
+            ref.getGroupString = function() {
+                if (ref._to.group && $scope.community.groups[ref._to.group]) {
+                    var group = $scope.community.groups[ref._to.group];
+                    if (group) {
+                        return group.title + ': ';
+                    }
+                }
+                return '';
+            };
+
             ref.getAuthorString = function() {
+                if ($scope.setting.showGroup && ref.getGroupString().length > 0) {
+                    return '';
+                }
                 return $community.makeAuthorString(ref.authorObjects);
             };
+
             ref.amIAuthor = function() {
                 return $community.amIAuthor(ref);
             };
+
             if (ref._to.authors) {
                 ref._to.authors.forEach(function(id) {
                     ref.authorObjects.push($community.getMember(id));
@@ -437,10 +466,7 @@ angular.module('kf6App')
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
             $community.createNote(mode, function(note) {
-                $scope.createContainsLink(note._id, {
-                    x: 100,
-                    y: 100
-                });
+                $scope.createContainsLink(note._id, $scope.getNewElementPosition());
                 $scope.openContribution(note._id, null, w);
             });
         };
@@ -464,6 +490,65 @@ angular.module('kf6App')
                     showInPlace: true
                 });
                 $scope.openContribution(drawing._id, null, w);
+            });
+        };
+
+        $scope.viewAdded = function(view) {
+            $scope.createContainsLink(view._id, $scope.getNewElementPosition());
+            $scope.status.isViewManagerCollapsed = true;
+        };
+
+        $scope.createRiseabove = function(title) {
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
+            $community.createView('riseabove:', function(view) {
+                $community.createNote(mode, function(note) {
+                    note.title = title;
+                    $community.makeRiseabove(note, view._id, function(note) {
+                        $scope.createContainsLink(note._id, $scope.getNewElementPosition(), function() {});
+                    });
+                });
+            }, true, mode);
+        };
+
+        $scope.getNewElementPosition = function() {
+            var canvas = $('#maincanvas');
+            var pos = {
+                x: canvas.scrollLeft() + 100,
+                y: canvas.scrollTop() + 100
+            };
+            while ($scope.findElement(pos)) {
+                pos.x = pos.x + 10;
+                pos.y = pos.y + 10;
+            }
+            return pos;
+        };
+
+        $scope.findElement = function(pos) {
+            var len = $scope.refs.length;
+            for (var i = 0; i < len; i++) {
+                var each = $scope.refs[i];
+                if (each.data.x === pos.x && each.data.y === pos.y) {
+                    return each;
+                }
+            }
+            return null;
+        };
+
+        $scope.openModal = function() {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'RiseaboveCreationModal.html',
+                controller: 'RiseaboveCreationCtrl',
+                size: 'lg',
+                appendTo: document
+            });
+
+            modalInstance.result.then(function(name) {
+                $scope.createRiseabove(name);
+            }, function() {
+                //dismiss
             });
         };
 
@@ -602,12 +687,62 @@ angular.module('kf6App')
             $scope.status.isAnalyticsCollapsed = !$scope.status.isAnalyticsCollapsed;
         };
 
+          $scope.openPromisingIdeas = function() {
+            var url = 'promisingideas/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
         $scope.openTagCloud = function() {
             $scope.openAnalytics();
             var url = 'wcloud/' + $scope.view._id;
             $scope.openInPopup(url);
         };
 
+        $scope.openActivityDashboard = function() {
+            $scope.openAnalytics();
+            var url = 'dashboard/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openNoteDashboard = function() {
+            $scope.openAnalytics();
+            var url = 'dashboard2/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openS2viz = function() {
+            $scope.openAnalytics();
+            var url = 's2viz/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+
+        $scope.openTimemachine = function() {
+            $scope.openAnalytics();
+            var url = 'timemachine/' + $scope.view._id;
+            window.open(url, '_blank');
+        };
+
+        $scope.openLexicalAnalysis = function() {
+            $scope.openAnalytics();
+            var url = 'lexicalanalysis/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
+        $scope.openScafoldSupportTracker = function() {
+            $scope.openAnalytics();
+            var url = 'scaffoldsupporttracker/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
+        $scope.openStats = function() {
+            var url = '/stats/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+        $scope.openAuthorNetwork = function() {
+            $scope.openAnalytics();
+            var url = 'authornetwork/' + $scope.view._id;
+            window.open(url, '_blank');
+        };
 
         $scope.doExit = function() {
             var url = '';
@@ -886,7 +1021,7 @@ angular.module('kf6App')
             });
         };
 
-        $scope.createRiseabove = function() {
+        $scope.createRiseaboveFromContextMenu = function() {
             var selected = $scope.getSelectedModels();
             var confirmation = window.confirm('Are you sure to create riseabove using the selected ' + selected.length + ' object(s)?');
             if (!confirmation) {
@@ -930,3 +1065,18 @@ angular.module('kf6App')
 function closeDialog(wid) {
     $('#' + wid).dialog('close');
 }
+
+angular.module('kf6App')
+    .controller('RiseaboveCreationCtrl', function($scope, $modalInstance) {
+        $scope.name = '';
+        $scope.ok = function() {
+            if (!$scope.name || $scope.name.length === 0) {
+                window.alert('Please input a name.');
+                return;
+            }
+            $modalInstance.close($scope.name);
+        };
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
+    });

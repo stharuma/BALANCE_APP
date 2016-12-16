@@ -6,7 +6,7 @@ try {
 } catch (e) {
     var enabled = false;
     if (e instanceof Error && e.code === 'MODULE_NOT_FOUND') {
-        console.log('The file kfmail/setting.js doesnt exist. disabled');
+        console.warn('The file kfmail/setting.js doesnt exist. disabled');
     } else {
         throw e;
     }
@@ -18,26 +18,19 @@ exports.send = function(to, subject, body) {
     if (!enabled) {
         return;
     }
-    var smtp = nodemailer.createTransport('SMTP', {
-        service: 'Gmail',
-        auth: {
-            user: setting.user,
-            pass: setting.pass
-        }
-    });
+    var transporter = nodemailer.createTransport(setting.transportOptions);
     var options = {
         from: setting.from,
         to: to,
         subject: subject,
         text: body
     };
-    smtp.sendMail(options, function(err, res) {
+    transporter.sendMail(options, function(err, res) {
         if (err) {
-            console.log(err);
+            console.error(err);
         } else {
-            console.log('Message sent: ' + res.message);
+            console.info('Message sent: ' + res.message);
         }
-        smtp.close();
     });
 }
 

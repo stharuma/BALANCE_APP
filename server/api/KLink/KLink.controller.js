@@ -6,6 +6,29 @@ var KObject = require('../KObject/KObject.model');
 var KRecordController = require('../KRecord/KRecord.controller.js');
 var KHistoricalObject = require('../KHistoricalObject/KHistoricalObject.model.js');
 
+exports.search = function(req, res) {
+    var query = req.body.query;
+    var communityId = req.params.communityId;
+
+    var mongoQuery = {
+        $and: []
+    };
+    mongoQuery.$and.push({
+        communityId: communityId
+    });
+    for (var n in query) {
+        var obj = {};
+        obj[n] = query[n];
+        mongoQuery.$and.push(obj);
+    }
+    KLink.find(mongoQuery, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.status(200).json(links);
+    });
+};
+
 exports.index = function(req, res) {
     //this should not be used
     res.status(200).json([]);
@@ -92,6 +115,22 @@ exports.viewIndex = function(req, res) {
     });
 };
 
+// ajout michelle janvier 2016
+// Get "buildson" links in commununity (every views)
+exports.buildsonIndex = function(req, res) {
+    KLink.find({
+        communityId: req.params.id,
+        type: 'buildson',
+        '_from.status': 'active', 
+        '_to.status': 'active'
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.status(200).json(links);
+    });
+};
+
 // Get a single link
 exports.show = function(req, res) {
     KLink.findById(req.params.id, function(err, link) {
@@ -107,16 +146,15 @@ exports.show = function(req, res) {
 
 exports.create = function(req, res) {
     var seed = req.body;
-    exports.checkAndCreate(seed, function(err, link) {
+    exports.checkAndCreate(req, seed, function(err, link) {
         if (err) {
             return handleError(res, err);
         }
-        record(req, link, 'created');
         return res.status(201).json(link);
     });
 };
 
-exports.checkAndCreate = function(seed, handler) {
+exports.checkAndCreate = function(req, seed, handler) {
     checkAndPrepareSeed(seed, function(err) {
         if (err) {
             if (handler) {
@@ -125,6 +163,7 @@ exports.checkAndCreate = function(seed, handler) {
             return;
         }
         KLink.create(seed, function(err, link) {
+            record(req, link, 'created');
             if (handler) {
                 handler(err, link);
             }

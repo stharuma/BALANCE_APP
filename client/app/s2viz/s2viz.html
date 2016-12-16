@@ -1,0 +1,48 @@
+<h1>Social Netowrk Visualizer</h1>
+<div class="col-md-12">
+    <div style="width: 80%; display: inline-block;" id="chart-line-hitsperday">
+    </div>
+    <!--<div style="display: inline-block;">
+        <span>Mode: {{mode}}</span>
+        <br>
+        <button type="button" class="btn btn-primary kfbutton" ng-click="changeMode()">Change</button>
+    </div>-->
+    <br>
+    <div style="width: 100%; clear: left;">
+        <button class="btn btn-default" ng-click="status.graphCollapsed = !status.graphCollapsed">Graph</button>
+    </div>
+    <div collapse="status.graphCollapsed">
+        <div id="socialnetwork" style="width: 50%; height: 300px; display: inline-block;"></div>
+        <div style="width: 40%; display: inline-block;">
+            <table>
+                <tr>
+                    <td>
+                        <input ng-model="status.nodesize" type="text"></input>
+                        <button ng-click="graphSettingChanged()">node size</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input ng-model="status.edgewidth" type="text"></input>
+                        <button ng-click="graphSettingChanged()">edge width</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" ng-model="status.directional" ng-change="graphSettingChanged()">directional</input>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="width: 100%; clear: left;"></div>
+    <hr>
+    <div style="width: 45%; display: inline-block;">
+        <div id="reading-chord"></div>
+        <h6 class="text-center">Reading Network</h6>
+    </div>
+    <div style="width: 45%; display: inline-block;">
+        <div id="beingread-chord"></div>
+        <h6 class="text-center">Being Read Network</h6>
+    </div>
+</div>

@@ -1,5 +1,7 @@
 'use strict';
 
+/* global d3 */
+
 angular.module('kf6App')
     .factory('$community', function($http, Auth) {
 
@@ -40,6 +42,7 @@ angular.module('kf6App')
                 communityData.groups = {};
                 communityData.groupsArray = [];
                 communityData.scaffolds = [];
+                communityData.promisingcolorobjs=[];
 
                 refreshCommunity(function() {
                     if (communityHandler) {
@@ -189,7 +192,7 @@ angular.module('kf6App')
                     return;
                 });
             } else {
-                window.alert('RootContextId database migration from 6.5.x to 6.6.x is needed.');
+                window.alert('RootContextId database migration from 6.5.x to 6.6.x is needed.'); 
                 return;
             }
         };
@@ -204,21 +207,23 @@ angular.module('kf6App')
             }
         };
 
+        // registredScaffolds and contextScaffolds
+        // communityData.scaffolds means contextScaffolds
         communityData.registeredScaffolds = [];
 
         var refreshScaffolds0 = function(context, handler) {
-            loadScaffoldLinks(context, function(links) {
-                communityData.scaffolds.length = 0; //clear once
-                var funcs = [];
-                links.forEach(function(link) {
-                    funcs.push(function(handler) {
-                        var scaffold = link._to;
-                        scaffold._id = link.to;
-                        communityData.scaffolds.push(scaffold);
-                        fillSupport(scaffold, handler);
+            refreshRegisteredScaffolds(function() {
+                loadScaffoldLinks(context, function(links) {
+                    communityData.scaffolds.length = 0; //clear once
+                    links.forEach(function(link) {
+                        communityData.registeredScaffolds.forEach(function(each) {
+                            if (link.to === each._id) {
+                                communityData.scaffolds.push(each);
+                            }
+                        });
                     });
+                    handler();
                 });
-                waitFor(funcs, handler);
             });
         };
 
@@ -432,6 +437,12 @@ angular.module('kf6App')
 
         var saveLink = function(ref) {
             $http.put('/api/links/' + ref._id, ref);
+        };
+
+        var deleteLink = function(link, callback) {
+            $http.delete('/api/links/' + link._id).success(function() {
+                if (callback) { callback(); }
+            });
         };
 
         var orderComparator = function(n) {
@@ -824,6 +835,7 @@ angular.module('kf6App')
                 buildson: true,
                 // TODO: negotiate if and how reference links should be display by default, because views can become quickly loaded.
                 references: false,
+                showGroup: true,
                 showAuthor: true,
                 showTime: true
             };
@@ -842,6 +854,130 @@ angular.module('kf6App')
             $http.post('/api/notifications/notify/' + communityId, obj);
         };
 
+        var getRecords = function(handler) {
+            $http.post('api/records/search/' + communityId, {}).success(function(records) {
+                if (handler) {
+                    handler(records);
+                }
+            });
+        };
+
+        var searchHistoricalObjects = function(query, handler) {
+            var postquery = { query: query };
+            $http.post('api/historicalobjects/' + communityId + '/search', postquery).success(function(objects) {
+                if (handler) {
+                    handler(objects);
+                }
+            });
+        };
+
+        var getContributionCatalog = function(handler) {
+            var query = {
+                communityId: communityId,
+                pagesize: 100000
+            };
+            $http.post('/api/contributions/' + communityId + '/search', {
+                query: query
+            }).success(function(contributions) {
+                var catalog = {};
+                contributions.forEach(function(contribution) {
+                    catalog[contribution._id] = contribution;
+                });
+                if (handler) {
+                    handler(catalog);
+                }
+            });
+        };
+
+        var getSocialInteractions = function(handler) {
+            refreshMembers(function() {
+                getRecords(function(records) {
+                    getContributionCatalog(function(catalog) {
+                        var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S.%LZ").parse;
+                        var interactions = [];
+                        records.forEach(function(record) {
+                            var author = communityData.members[record.authorId];
+                            var object = catalog[record.targetId];
+                            if (!object) {
+                                return;
+                            }
+                            var toAuthor = communityData.members[object.authors[0]];
+                            var d = {
+                                from: author.name,
+                                type: record.type,
+                                title: object.title,
+                                to: toAuthor.name,
+                                when: record.timestamp
+                            };
+                            d.date = parseDate(d.when);
+                            d.year = d3.time.year(d.date);
+                            d.month = d3.time.month(d.date);
+                            d.day = d3.time.day(d.date);
+                            d.week = d3.time.week(d.date);
+
+                            d.value = 1;
+                            d.read = 0;
+                            d.modify = 0;
+                            d.buildson = 0;
+                            d[d.type] = 1;
+                            interactions.push(d);
+                        });
+                        if (handler) {
+                            handler(interactions);
+                        }
+                    });
+                });
+            });
+        };
+
+         var createPromisingcolorobj = function (promisingIdeacolorobj, success) {
+             var newobj = {
+                 communityId: communityId,
+                 type: 'promisingIdeacolorobj',
+                 title: 'an promisingIdeacolorobj',
+                 authors: getAuthor()._id,
+                 status: 'active',
+                 permission: 'protected',
+                 data: promisingIdeacolorobj
+             };
+             $http.post('/api/contributions/' + communityId, newobj).success(function (pcolorobj) {
+                 registerPromisingcolorobj(pcolorobj, success);
+             });
+         };
+
+         var registerPromisingcolorobj = function (promisingcolorobj, success) {
+             var url = 'api/communities/' + communityId;
+             $http.get(url).success(function (community) {
+                 if (!community.promisingcolorobjs) {
+                     community.promisingcolorobjs = [];
+                 }
+                 community.promisingcolorobjs.push(promisingcolorobj._id);
+                 $http.put(url, community).success(function () {
+                     if (success) {
+                         success(promisingcolorobj);
+                     }
+                 });
+             });
+         };
+
+         var refreshPromisingcolorobjs = function (handler) {
+             $http.get('/api/communities/' + communityId).success(function (community) {
+                 communityData.promisingcolorobjs.length = 0; //clear once
+                 var promisingcolorobjIds = community.promisingcolorobjs;
+                 if (!promisingcolorobjIds) {
+                     promisingcolorobjIds = [];
+                 }
+                 promisingcolorobjIds.forEach(function (promisingcolorobjId, index) {
+                     getObject(promisingcolorobjId, function (promisingcolorobj) {
+                         communityData.promisingcolorobjs.push(promisingcolorobj);
+                         if (handler&& index===promisingcolorobjIds.length-1) {
+                             handler();
+                         }
+                     });
+                 });
+             });
+         };
+
         return {
             getContext: getContext,
 
@@ -859,6 +995,7 @@ angular.module('kf6App')
             createScaffold: createScaffold,
             createSupport: createSupport,
             createGroup: createGroup,
+            createPromisingcolorobj: createPromisingcolorobj,
 
             createCommunity: createCommunity,
             //createDefaultScaffold: createDefaultScaffold,
@@ -877,11 +1014,13 @@ angular.module('kf6App')
             refreshAuthor: refreshAuthor,
             loadScaffoldLinks: loadScaffoldLinks,
             refreshRegisteredScaffolds: refreshRegisteredScaffolds,
+            refreshPromisingcolorobjs: refreshPromisingcolorobjs,
             getLinksTo: getLinksTo,
             getLinksFrom: getLinksFrom,
             getLinksFromTo: getLinksFromTo,
             createLink: createLink,
             saveLink: saveLink,
+            deleteLink: deleteLink,
             notify: notify,
             getViews: function() {
                 return communityData.views;
@@ -898,6 +1037,9 @@ angular.module('kf6App')
             getCommunityData: function() {
                 return communityData;
             },
+            getPromisingcolorobjsArray: function() {
+                return communityData.promisingcolorobjs;
+            },
             makeAuthorString: makeAuthorString,
             makeAuthorStringByIds: makeAuthorStringByIds,
 
@@ -905,8 +1047,14 @@ angular.module('kf6App')
             createRootContext: createRootContext /*for migration tool*/ ,
             refreshContext: refreshContext,
 
-            makeDefaultViewSetting: makeDefaultViewSetting
+            makeDefaultViewSetting: makeDefaultViewSetting,
 
+            /* Utilities */
+            waitFor: waitFor,
 
+            /* LA */
+            searchHistoricalObjects: searchHistoricalObjects,
+            getRecords: getRecords,
+            getSocialInteractions: getSocialInteractions
         };
     });

@@ -12,6 +12,8 @@ router.get('/to/:id', controller.toIndex);
 router.get('/either/:id', controller.eitherIndex);
 router.get('/from/:fromId/to/:toId', controller.fromtoIndex);
 router.get('/view/:id', controller.viewIndex);
+router.post('/:communityId/search', commauth.isAuthenticated(), controller.search);
+router.get('/buildson/:id', controller.buildsonIndex); // ajout michelle janvier 2016
 
 router.get('/updatecache/:linkId', controller.updateCash);
 router.get('/updateallcache/:communityId', controller.updateAllCash);
