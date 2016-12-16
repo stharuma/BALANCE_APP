@@ -8,7 +8,7 @@
     "jquery": "^1.11.0",
     "bootstrap": "^3.3.7",
     "angular-resource": "~1.4.14",
-    "angular-cookies": "^1.2.0",
+    "angular-cookies": "~1.4.14",
     "angular-sanitize": "~1.4.14",
     "angular-bootstrap": "^0.13.0",
     "font-awesome": "^4.7.0",
@@ -46,5 +46,10 @@
   "devDependencies": {
     "angular-mocks": "^1.2.0",
     "angular-scenario": "^1.2.0"
+  },
+  "resolutions": {
+    "tinymce-dist": "4.1.7",
+    "angular": "1.4.14",
+    "angular-cookies": "~1.4.14"
   }
 }
