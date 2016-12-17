@@ -61,7 +61,7 @@ function signToken(id) {
     return jwt.sign({
         _id: id
     }, config.secrets.session, {
-        expiresInMinutes: 60 * 5
+      expiresIn: "5h"
     });
 }
 
