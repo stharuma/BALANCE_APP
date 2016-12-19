@@ -1010,6 +1010,14 @@ angular.module('kf6App')
               }
           };
 
+          $scope.getPromisingIdeaCreator = function (author) {
+                return $community.getMember(author).getName();
+          };
+
+          $scope.getPromisingIdeaCreated = function (created) {
+                return new Date(created).toLocaleString();
+          };
+
           /*********** svg-edit ************/
           $scope.svgInitialized = false;
 
