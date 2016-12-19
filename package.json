@@ -38,7 +38,7 @@
     "grunt-autoprefixer": "^3.0.4",
     "grunt-build-control": "^0.7.1",
     "grunt-chmod": "^1.1.1",
-    "grunt-concurrent": "~0.5.0",
+    "grunt-concurrent": "^2.3.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
