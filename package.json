@@ -81,7 +81,7 @@
     "karma-script-launcher": "~1.0.0",
     "open": "^0.0.5",
     "requirejs": "^2.3.2",
-    "should": "~3.3.1",
+    "should": "^6.0.3",
     "supertest": "^2.0.1",
     "time-grunt": "^1.4.0",
     "mocha": "^1.20.0"
