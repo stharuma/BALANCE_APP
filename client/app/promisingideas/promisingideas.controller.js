@@ -2,8 +2,12 @@
 
 angular.module('kf6App')
     .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh, $kftag) {
-        var communityId = $stateParams.communityId;
+        var ids = ($stateParams.ids+'').split('§§§');
+        var communityId = ids[0];
+        var viewId = ids[1];
+        var viewTitle = ids[2];
         $scope.promisingIdeacolorobjsarr = [];
+        $scope.queryString = '';
         $community.enter(communityId, function () {
             $community.refreshMembers();
             $scope.communityMembers = $community.getCommunityData().membersArray;
@@ -12,10 +16,10 @@ angular.module('kf6App')
             $community.refreshPromisingcolorobjs(function () {
                 $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
          });
+            $scope.queryString += ' -view:' +viewId;
+            $scope.viewTitles.push(viewTitle);
             $scope.search();
         });
-
-        $scope.queryString = '';
         $scope.searchkeyword = '';
         $scope.viewTitlescopy = '';
 
@@ -56,7 +60,7 @@ angular.module('kf6App')
         $scope.pager = {};
 
         $scope.getHeader = function () {
-            return ['Color', 'PromisingIIdeas', 'Reason', 'In ContributionTitle', 'Authour', 'Created date', 'Contribution', 'Weight(s)'];
+            return ['Promisingness Ideas', 'Reason', 'In Contribution Title', 'Authour', 'Created Date', 'Contribution', 'Colour', 'Colour Detail',];
         };
 
         var checkedPromisingtLinkInNote = function (notes) {
@@ -76,14 +80,14 @@ angular.module('kf6App')
                                     promisingIdeaobj.data.reason = 'None';
                                 }
                                 $scope.tableData.push({
-                                    color: promisingIdeaobj.data.color,
-                                    colordetail: pcolordetail,
                                     promisingidea: promisingIdeaobj.data.idea.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     reason: promisingIdeaobj.data.reason.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     inContributionTitle: note.title,
                                     author: $community.getMember(promisingIdeaobj.authors).getName(),
                                     date: new Date(promisingIdeaobj.created).toLocaleString(),
-                                    contribution: note
+                                    contribution: note,
+                                    color: promisingIdeaobj.data.color,
+                                    colordetail: pcolordetail
                                 });
                                 if (!contains($scope.colors, pcolordetail)) {
                                     $scope.colors.push(pcolordetail);

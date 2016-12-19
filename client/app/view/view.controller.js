@@ -688,7 +688,7 @@ angular.module('kf6App')
         };
 
           $scope.openPromisingIdeas = function() {
-            var url = 'promisingideas/' + $scope.view.communityId;
+            var url = 'promisingideas/' + $scope.view.communityId+'§§§'+viewId+'§§§ ' +$scope.view.title;
             $scope.openInPopup(url);
         };
 
