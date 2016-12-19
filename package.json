@@ -36,7 +36,7 @@
     "grunt-angular-templates": "^1.1.0",
     "grunt-asset-injector": "^0.1.0",
     "grunt-autoprefixer": "^3.0.4",
-    "grunt-build-control": "DaftMonk/grunt-build-control",
+    "grunt-build-control": "^0.7.1",
     "grunt-chmod": "^1.1.1",
     "grunt-concurrent": "~0.5.0",
     "grunt-contrib-clean": "^1.0.0",
