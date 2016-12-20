@@ -1019,7 +1019,7 @@ angular.module('kf6App')
           };
 
           $scope.isPromisingIdeaCreator = function (authorId) {
-                 return $community.getAuthor()._id==authorId;
+                 return $community.getAuthor()._id===authorId+'';
           };
 
           /*********** svg-edit ************/

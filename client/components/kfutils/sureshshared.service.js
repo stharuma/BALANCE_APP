@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$sureshshared', function ($community, $http) {
+    .factory('$sureshshared', function () {
         var obj = {};
 
         obj.strip = function (html) {
@@ -29,8 +29,8 @@ angular.module('kf6App')
             var startIndexOfsubContentText = bodyContentText.replace(/\s/g, '').indexOf(subContentText.replace(/\s/g, ''));
             var beforeWordOfsubContentText = bodyContentText.replace(/\s/g, '').substring(0, startIndexOfsubContentText - 1);
             var afterWordOfsubContentText = bodyContentText.replace(/\s/g, '').substring(startIndexOfsubContentText + subContentText.replace(/\s/g, '').length, bodyContentText.replace(/\s/g, '').length);
-            var firstWordIndexOfsubContentText = getfirstWordIndexOfsubContentText(bodyContentWordsArray, beforeWordOfsubContentText, subContentWordsArray, bodyContentText);
-            var lastWordIndexOfsubContentText = getlastWordIndexOfsubContentText(bodyContentWordsArray, afterWordOfsubContentText, subContentWordsArray);
+            var firstWordIndexOfsubContentText = getfirstWordIndexOfsubContentText(bodyContentWordsArray, beforeWordOfsubContentText);
+            var lastWordIndexOfsubContentText = getlastWordIndexOfsubContentText(bodyContentWordsArray, afterWordOfsubContentText);
             var style = "style=\"font-weight: bold; color:black; background-color:" + color + "; \"";
             for (var i = firstWordIndexOfsubContentText; i < lastWordIndexOfsubContentText; i++) {
                 if (bodyContentWordsArray[i].indexOf('<body>') !== -1) {
@@ -46,7 +46,7 @@ angular.module('kf6App')
             return bodyContentWordsArray.join(' ').toString();
         };
 
-        function getfirstWordIndexOfsubContentText(bodyContentWordsArray, subContentText, subContentWordsArray) { //check again
+        function getfirstWordIndexOfsubContentText(bodyContentWordsArray, subContentText) { //check again
             var startWordInBodyContent = '',
                 index = 0;
             if (subContentText.replace(/\s/g, '').length !== 0) {
@@ -61,7 +61,7 @@ angular.module('kf6App')
             return index;
         }
 
-        function getlastWordIndexOfsubContentText(bodyContentWordsArray, subContentText, subContentWordsArray) {
+        function getlastWordIndexOfsubContentText(bodyContentWordsArray, subContentText) {
             var startWordInBodyContent = '',
                 index = bodyContentWordsArray.length;
             if (subContentText.replace(/\s/g, '').length !== 0) {
