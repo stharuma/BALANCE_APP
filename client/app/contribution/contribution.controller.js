@@ -485,6 +485,14 @@ angular.module('kf6App')
             $scope.status.hidebuildson = true;
         };
 
+        $scope.promisingIdeaSelected = function() {
+            $scope.status.hidecontributeButtonBar = true;
+        };
+
+        $scope.promisingIdeaDeselected = function() {
+            $scope.status.hidecontributeButtonBar = false;
+        };
+
         /*********** title ************/
 
         $scope.updateTitle = function() {

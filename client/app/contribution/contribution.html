@@ -331,7 +331,7 @@
                     </div>
                 </div>
             </tab>
-            <tab class="KFTab" heading="Promisingness Ideas" ng-show="status.ispromisingideaTabDisplayed">
+            <tab class="KFTab" heading="Promisingness Ideas"  select="promisingIdeaSelected()" deselect="promisingIdeaDeselected()"  ng-show="status.ispromisingideaTabDisplayed">
                 <label>Promisingness Ideas:</label>
                 <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
                     <div ng-hide="deletedIndex==$index">
@@ -384,7 +384,7 @@
                             <br>
                             <textarea id="text" cols="70" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
                         </div>
-                        <hr>
+                        <hr style="clear:both; height: 2px;background-color: #33BBFF; " />
                     </div>
                 </div>
             </tab>
@@ -413,7 +413,7 @@
         </div>
         <hr>
     </div>
-    <div>
+    <div ng-show="!status.hidecontributeButtonBar">
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button ng-disabled="!status.dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">{{ 'contribute' | translate }}</button>
         </div>
