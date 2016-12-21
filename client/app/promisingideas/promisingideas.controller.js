@@ -57,7 +57,6 @@ angular.module('kf6App')
         $scope.selectedPromisingIdeas = [];
         $scope.promisingnoteTitle = '';
         $scope.selectedViewIds = [];
-        $scope.pager = {};
 
         $scope.getHeader = function () {
             return ['Promisingness Ideas', 'Reason', 'In Contribution Title', 'Authour', 'Created Date', 'Contribution', 'Colour', 'Colour Detail',];
@@ -127,11 +126,18 @@ angular.module('kf6App')
             $scope.hitcounts.length = 0;
             $scope.hitcounts.push('All');
             $scope.tableData.forEach(function (promising, index, data) {
+              if (!contains( $scope.overlappedpromising, promising)) {
                 counted(promising, index, data);
+              }
                 if (index === $scope.tableData.length - 1) {
                     $scope.hitdata.sort(function (a, b) {
                         return parseInt(a.hitcount, 10) - parseInt(b.hitcount, 10);
                     }).reverse();
+                    $scope.hitdata.forEach(function (hdata){
+                      if(!$scope.hasitoverlappedpromising(hdata.promising)&&!contains($scope.hitcounts, hdata.hitcount)){
+                        $scope.hitcounts.push(hdata.hitcount);
+                      }
+                    });
                     $scope.hitcounts.sort().reverse();
                 }
             });
@@ -155,9 +161,6 @@ angular.module('kf6App')
                 promising: promising,
                 hitcount: hit
             });
-            if (!contains($scope.hitcounts, hit)) {
-                $scope.hitcounts.push(hit);
-            }
             data[idx].count = hit;
         }
 
