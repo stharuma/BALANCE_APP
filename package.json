@@ -17,7 +17,7 @@
     "express-session": "^1.14.2",
     "jsonwebtoken": "^0.3.0",
     "lodash": "^2.4.1",
-    "log4js": "^0.6.29",
+    "log4js": "^1.1.0",
     "method-override": "^1.0.2",
     "mongoose": "^4.7.3",
     "morgan": "^1.7.0",
