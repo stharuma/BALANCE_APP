@@ -46,7 +46,7 @@ module.exports = function(app) {
         resave: true,
         saveUninitialized: true,
         store: new MongoStore({
-            mongoose_connection: mongoose.connection
+            mongooseConnection: mongoose.connection
         })
     }));
 
