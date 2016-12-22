@@ -392,12 +392,8 @@
     </div>
 
     <div class="well" collapse="status.ispromisingideaCollapsed" style="padding-left: 50px; position: absolute; top:0px; left: 50px; width: 90%; background-color: white; z-index: 100;">
-        <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false;">Save</button>
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false; selectedText=''">Close</button>
-        </div>
         <label style="font-size:  11pt;float: left"><b>Add Promisingness Idea</b></label>
-        <div style="height:200px; overflow: scroll; width:100%; float: left">
+        <div style="height:250px; overflow: scroll; width:100%; float: left">
           <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{targetColor}}{{createmsg}}</b></label>
           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="targetColor!==''"ng-click="clearColor();">clear color</button>
            <br>
@@ -411,6 +407,10 @@
             <br>
             <textarea id="text" cols="70" rows="2" ng-model="textareaText"></textarea>
         </div>
+         <div style="clear:both; text-align: right; padding-right: 10px; padding-top: 5px;">
+           <button type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false; selectedText=''">Cancel</button>
+           <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false;">Save</button>
+         </div>
         <hr>
     </div>
     <div ng-show="!status.hidecontributeButtonBar">
