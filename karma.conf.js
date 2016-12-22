@@ -22,7 +22,7 @@ module.exports = function(config) {
             'client/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js',
             //'client/bower_components/angular-route/angular-route.js',
             'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-            'client/bower_components/lodash/dist/lodash.compat.js',
+            'client/bower_components/lodash/dist/lodash.js',
             'client/bower_components/angular-socket-io/socket.js',
             'client/bower_components/angular-ui-router/release/angular-ui-router.js',
             //'client/bower_components/tinymce/tinymce.min.js',
