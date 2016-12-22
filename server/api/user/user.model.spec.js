@@ -6,7 +6,7 @@ var User = require('./user.model');
 
 var user = new User({
     provider: 'local',
-    name: 'Fake User',
+    userName: 'fakeUser',
     email: 'test@test.com',
     password: 'password'
 });
@@ -33,14 +33,15 @@ describe('User Model', function() {
     });
 
     it('should fail when saving a duplicate user', function(done) {
-        user.save(function() {
+        user.save(function(user) {
             var userDup = new User(user);
             userDup.save(function(err) {
-                should.exist(err);
-                done();
+              should.exist(err);
+              done();
             });
         });
     });
+
 
     it('should fail when saving without an userName', function(done) {
         user.userName = '';

@@ -13,7 +13,11 @@ var UserSchema = new Schema({
         type: String,
         lowercase: true
     },
-    userName: String,
+    userName: {
+      type: String,
+      required: true,
+      unique: true
+    },
     role: {
         type: String,
         default: 'user'
@@ -87,6 +91,7 @@ UserSchema
     }, 'Password cannot be blank');
 
 // Validate userName is not taken
+
 UserSchema
     .path('userName')
     .validate(function(value, respond) {
@@ -102,6 +107,7 @@ UserSchema
             respond(true);
         });
     }, 'The specified userName is already in use.');
+// TODO i18n: translate the messages because their appear in the user registration and possible somewhere else
 
 var validatePresenceOf = function(value) {
     return value && value.length;
