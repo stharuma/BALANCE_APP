@@ -267,7 +267,7 @@ angular.module('kf6App')
                 each();
             });
 
-            cont.authors = _.pluck($scope.authors, '_id');
+            cont.authors = _.map($scope.authors, '_id');
 
             if ($scope.copy.keywords) {
                 $scope.contribution.keywords = [];

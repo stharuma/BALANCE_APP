@@ -19,7 +19,7 @@ angular.module('kf6App')
         });
 
         $scope.preContributeHooks.push(function() {
-            $scope.contribution.members = _.pluck($scope.group._members, '_id');
+            $scope.contribution.members = _.map($scope.group._members, '_id');
         });
 
         $scope.authorSelected = function(author) {
