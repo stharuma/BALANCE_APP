@@ -10,7 +10,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!KHistoricalObject) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(KHistoricalObject);
     });
@@ -19,7 +19,7 @@ exports.show = function(req, res) {
 exports.search = function(req, res) {
     if (!req.body.query) {
         console.error('search parameter error: ' + req.body);
-        return res.send(400);
+        return res.sendStatus(400);
     }
 
     var query = req.body.query;
@@ -28,7 +28,7 @@ exports.search = function(req, res) {
     if (!query.communityId) {
         if (!req.author) {
             console.error('search query error: ' + query);
-            return res.send(400);
+            return res.sendStatus(400);
         } else {
             query.communityId = req.author.communityId;
         }

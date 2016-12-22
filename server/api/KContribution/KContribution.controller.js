@@ -14,7 +14,7 @@ exports.create = function(req, res) {
         console.error(req.body.authors)
         console.error(req.author._id);
         console.error('author must be included in authors.');
-        return res.send(403);
+        return res.sendStatus(403);
     }
     KContribution.create(req.body, function(err, contribution) {
         if (err) {
@@ -55,7 +55,7 @@ exports.search = function(req, res) {
     //assure req.body.query
     if (!req.body.query) {
         console.error('search parameter error: ' + req.body);
-        return res.send(400);
+        return res.sendStatus(400);
     }
 
     var query = req.body.query;
@@ -83,7 +83,7 @@ function makeMongoQuery(req, res, success) {
     if (!query.communityId) {
         if (!req.author) {
             console.error('search query error: ' + query);
-            return res.send(400);
+            return res.sendStatus(400);
         } else {
             query.communityId = req.author.communityId;
         }
