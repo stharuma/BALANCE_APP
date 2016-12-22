@@ -225,7 +225,7 @@ angular.module('kf6App')
         };
 
         $scope.authorSelected = function(author) {
-            if (_.contains($scope.authors, author)) {
+            if (_.includes($scope.authors, author)) {
                 window.alert('already included');
                 return;
             }

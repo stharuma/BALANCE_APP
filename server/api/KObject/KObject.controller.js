@@ -27,7 +27,7 @@ exports.show = function(req, res) {
 
 // Creates a new KObject in the DB.
 exports.create = function(req, res) {
-    if (!_.contains(req.body.authors, req.author._id.toString())) {
+    if (!_.includes(req.body.authors, req.author._id.toString())) {
         console.error('author must be included in authors.');
         return res.send(403);
     }

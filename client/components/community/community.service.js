@@ -192,7 +192,7 @@ angular.module('kf6App')
                     return;
                 });
             } else {
-                window.alert('RootContextId database migration from 6.5.x to 6.6.x is needed.'); 
+                window.alert('RootContextId database migration from 6.5.x to 6.6.x is needed.');
                 return;
             }
         };
@@ -736,7 +736,7 @@ angular.module('kf6App')
         };
 
         var amIAuthor0 = function(authorIds) {
-            return _.contains(authorIds, communityData.author._id);
+            return _.includes(authorIds, communityData.author._id);
         };
 
         var modifyObjects = function(objects, success, error) {

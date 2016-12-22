@@ -27,7 +27,7 @@ angular.module('kf6App')
         };
 
         $scope.addMember = function(author) {
-            if (_.contains($scope.group._members, author)) {
+            if (_.includes($scope.group._members, author)) {
                 window.alert('already included');
                 return;
             }
