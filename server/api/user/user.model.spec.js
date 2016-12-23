@@ -32,15 +32,15 @@ describe('User Model', function() {
         });
     });
 
-    it('should fail when saving a duplicate user', function(done) {
-        user.save(function(user) {
-            var userDup = new User(user);
-            userDup.save(function(err) {
-              should.exist(err);
-              done();
-            });
-        });
+  it('should fail when saving a duplicate user', function(done) {
+    var userDuplicate = new User(user);
+    user.save(function() {
+      userDuplicate.save(function(err) {
+        should.exist(err);
+        done();
+      });
     });
+  });
 
 
     it('should fail when saving without an userName', function(done) {
