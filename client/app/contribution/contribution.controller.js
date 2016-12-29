@@ -377,6 +377,49 @@ angular.module('kf6App')
             });
         };
 
+        $scope.makeFromTemplate = function() {
+            var templateBody = $scope.copy.body;
+            templateBody = $kftag.processTemplate(templateBody, $scope.toConnections);
+
+            /* here is a copy of making builds on (merge later) */
+            var w;
+            if ($scope.isMobile()) {
+                w = window.open('');
+            }
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
+            $community.createNote(mode, function(newContribution) {
+                var url = './contribution/' + newContribution._id;
+                if (w) {
+                    w.location.href = url;
+                } else if (window.openContribution) {
+                    window.openContribution(newContribution._id);
+                } else {
+                    window.open(url, '_blank');
+                }
+                /* get context does not work -- need refactoring */
+                if (contextId) {
+                    $community.getObject(contextId, function(view) {
+                        if (view.type === 'View') {
+                            $community.getLinksFromTo(view._id, $scope.contribution._id, 'contains', function(links) {
+                                if (!links || links.length === 0) {
+                                    return;
+                                }
+                                var link = links[0];
+                                console.log(link);
+                                var data = { x: link.data.x + 100, y: link.data.y + 100 };
+                                $community.createLink(view._id, newContribution._id, 'contains', data, function() {
+                                    $community.createLink(newContribution._id, $scope.contribution._id, 'buildson', {}, function() {});
+                                });
+                            });
+                        }
+                    });
+                }
+            }, templateBody);
+            /* copy end */
+        };
+
         $scope.makeRiseabove = function() {
             var mode = {};
             mode.permission = $scope.contribution.permission;
@@ -632,6 +675,7 @@ angular.module('kf6App')
             $scope.mceEditor.insertContent(text);
         };
 
+        /* supportLink means a contains link from Scaffold to Support */
         $scope.addSupport = function(supportLink, selection, addhyphen, argInitialText, isTemplate) {
             if (!$scope.mceEditor) {
                 window.alert('$scope.mceEditor is not set.');

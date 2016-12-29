@@ -460,7 +460,11 @@ angular.module('kf6App')
             });
         };
 
-        var createNoteCommon = function(contextmode, fromId, success) {
+        var createNoteCommon = function(contextmode, fromId, success, content) {
+            if (!content) {
+                content = '';
+            }
+
             if (contextmode && !contextmode.permission) {
                 window.alert('invalid mode object');
                 return;
@@ -485,7 +489,7 @@ angular.module('kf6App')
                 permission: mode.permission,
                 group: mode.group,
                 data: {
-                    body: ''
+                    body: content
                 },
                 buildson: fromId
             };
@@ -495,8 +499,8 @@ angular.module('kf6App')
                 });
         };
 
-        var createNote = function(mode, success) {
-            createNoteCommon(mode, null, success);
+        var createNote = function(mode, success, content) {
+            createNoteCommon(mode, null, success, content);
         };
 
         var createNoteOn = function(mode, fromId, success) {
