@@ -28,7 +28,7 @@ exports.notify = function(req, res) {
             }
         });
     });
-    res.send(200);
+    res.sendStatus(200);
 }
 
 function push(email, notification) {
@@ -59,7 +59,7 @@ exports.tick = function(req, res) {
                 sendForOneAuthor(each._id);
             });
         });
-    res.send(200);
+    res.sendStatus(200);
 }
 
 function sendForOneAuthor(email) {

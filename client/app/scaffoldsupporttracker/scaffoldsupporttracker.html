@@ -4,7 +4,8 @@
 <br/>
 <br/>
 <p style="text-align: left;">
-    <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailCollapsed]" ng-click="status.detailCollapsed = !status.detailCollapsed">Selector</button </p>
+  <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailCollapsed]" ng-click="status.detailCollapsed = !status.detailCollapsed">Selector</button>
+</p>
 
     <div collapse="status.detailCollapsed">
         <div ng-include="'components/kfutils/viewauthordateselector/viewauthordateselector.html'"></div>
@@ -91,3 +92,4 @@
             </div>
         </div>
         <hr>
+    </div>

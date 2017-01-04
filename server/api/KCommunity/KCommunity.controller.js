@@ -25,7 +25,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(community);
     });
@@ -38,7 +38,7 @@ exports.showviews = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         var ids = community.views;
         KContribution.find({
@@ -114,7 +114,7 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         delete req.body.__v; /* this allows consective updating */
         var titleChanged = community.title !== req.body.title;
@@ -154,13 +154,13 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!community) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         community.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
-            return res.send(204);
+            return res.sendStatus(204);
         });
     });
 };

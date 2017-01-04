@@ -13,28 +13,36 @@ var validateJwt = expressJwt({
 
 /**
  * Attaches the user object to the request if authenticated
- * Otherwise returns 403
+ * Otherwise returns 401
  */
 function isAuthenticated() {
-    return compose()
-        // Validate jwt
-        .use(function(req, res, next) {
-            // allow access_token to be passed through query parameter as well
-            if (req.query && req.query.hasOwnProperty('access_token')) {
-                req.headers.authorization = 'Bearer ' + req.query.access_token;
-            }
-            validateJwt(req, res, next);
-        })
-        // Attach user to request
-        .use(function(req, res, next) {
-            User.findById(req.user._id, function(err, user) {
-                if (err) return next(err);
-                if (!user) return res.send(401);
+  return compose()
+  // Validate jwt
+    .use(function(req, res, next) {
+      // allow access_token to be passed through query parameter as well
+      if (req.query && req.query.hasOwnProperty('access_token')) {
+        req.headers.authorization = 'Bearer ' + req.query.access_token;
+      }
+      validateJwt(req, res, next);
+    })
+    // Attach user to request
+    .use(function(err, req, res, next) {
+      if (err) {
+        if (err.name === 'UnauthorizedError') {
+          return res.status(401).send('invalid token...');
+        } else {
+          return res.sendStatus(401);
+        }
+      }
+      User.findById(req.user._id, function(err, user) {
+        if (err) return next(err);
+        if (!user) return res.sendStatus(401);
 
-                req.user = user;
-                next();
-            });
-        });
+        req.user = user;
+        next();
+      });
+
+    });
 }
 
 /**
@@ -49,7 +57,7 @@ function hasRole(roleRequired) {
             if (config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
                 next();
             } else {
-                res.send(403);
+                res.sendStatus(403);
             }
         });
 }
@@ -61,7 +69,7 @@ function signToken(id) {
     return jwt.sign({
         _id: id
     }, config.secrets.session, {
-        expiresInMinutes: 60 * 5
+      expiresIn: "5h"
     });
 }
 

@@ -225,7 +225,7 @@ angular.module('kf6App')
         };
 
         $scope.authorSelected = function(author) {
-            if (_.contains($scope.authors, author)) {
+            if (_.includes($scope.authors, author)) {
                 window.alert('already included');
                 return;
             }
@@ -267,7 +267,7 @@ angular.module('kf6App')
                 each();
             });
 
-            cont.authors = _.pluck($scope.authors, '_id');
+            cont.authors = _.map($scope.authors, '_id');
 
             if ($scope.copy.keywords) {
                 $scope.contribution.keywords = [];

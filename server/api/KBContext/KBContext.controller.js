@@ -10,7 +10,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!KBContext) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(KBContext);
     });

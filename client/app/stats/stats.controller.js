@@ -350,7 +350,7 @@ Highcharts.setOptions({
                 }
                 if (token.indexOf('-author:') >= 0) {
                     token = token.replace('-author:', '');
-                    var author = _.findWhere($scope.communityMembers, {
+                    var author = _.find($scope.communityMembers, {
                         userName: token
                     });
                     if (author) {
