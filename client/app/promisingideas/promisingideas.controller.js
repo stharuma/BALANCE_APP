@@ -32,6 +32,7 @@ angular.module('kf6App')
         $scope.overlappedpromising = [];
         $scope.colors = [];
         $scope.criteria = [];
+        $scope.users = [];
         $scope.status = {};
         $scope.status.detailCollapsed = true;
         $scope.status.noPromisingCollapsed = true;
@@ -41,12 +42,14 @@ angular.module('kf6App')
         $scope.status.selectedColorCollapsed = false;
         $scope.status.selectedHitCollapsed = true;
         $scope.status.selectedCriteriaCollapsed = true;
+        $scope.status.selectedUserCollapsed = true;
         $scope.status.status = 'init';
         $scope.labels = [];
         $scope.promisngNotes = [];
         $scope.selectedColor = '';
         $scope.selectedHitCount = '';
         $scope.selectedCriteria = '';
+        $scope.selectedUser = '';
         $scope.selectedtime = '';
         $scope.selectedpromisingideaIndex = -1;
         $scope.currentselected = {
@@ -71,7 +74,7 @@ angular.module('kf6App')
                         if (link.type === 'promisings') {
                             $community.getObject(link.from, function (promisingIdeaobj) {
                                 var pcolordetail = $scope.setPromisingIdeacolorobj(promisingIdeaobj.data.color);
-
+                                var user =$community.getMember(promisingIdeaobj.authors).getName();
                                 if (promisingIdeaobj.data.color === '') {
                                     pcolordetail = 'None' + pcolordetail;
                                 }
@@ -82,7 +85,7 @@ angular.module('kf6App')
                                     promisingidea: promisingIdeaobj.data.idea.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     reason: promisingIdeaobj.data.reason.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     inContributionTitle: note.title,
-                                    author: $community.getMember(promisingIdeaobj.authors).getName(),
+                                    author: user,
                                     date: new Date(promisingIdeaobj.created).toLocaleString(),
                                     contribution: note,
                                     color: promisingIdeaobj.data.color,
@@ -93,6 +96,9 @@ angular.module('kf6App')
                                 }
                                 if (!contains($scope.criteria, promisingIdeaobj.data.reason)) {
                                     $scope.criteria.push(promisingIdeaobj.data.reason);
+                                }
+                                 if (!contains($scope.users, user)) {
+                                    $scope.users.push(user);
                                 }
                             });
                             if (promisingnotefound === true) {
@@ -109,6 +115,7 @@ angular.module('kf6App')
             $scope.selectedColor = $scope.colors[0];
             $scope.selectedHitCount = $scope.hitcounts[0];
             $scope.selectedCriteria = $scope.criteria[0];
+            $scope.selectedUser = $scope.users[0];
         };
 
         function setNopromising(index, notes) {
@@ -204,8 +211,10 @@ angular.module('kf6App')
             $scope.promisngNotes.length = 0;
             $scope.colors.length = 0;
             $scope.criteria.length = 0;
+            $scope.users.length = 0;
             $scope.criteria.push('All');
             $scope.colors.push('All');
+            $scope.users.push('All');
         }
 
         $scope.viewSelected = function (view) {
@@ -256,10 +265,11 @@ angular.module('kf6App')
             $scope.status.isnewNoteCollapsed = false;
         };
 
-        $scope.hastextinpromisingidea = function (searchtext, idea, criteria) {
+        $scope.hastextinpromisingidea = function (searchtext, idea, criteria, author) {
             var hasit = false;
            if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
-                    criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
+                    criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1||
+                    author.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
                 hasit = true;
             }
             return hasit;
@@ -270,16 +280,25 @@ angular.module('kf6App')
                 $scope.status.selectedColorCollapsed = false;
                 $scope.status.selectedHitCollapsed = true;
                 $scope.status.selectedCriteriaCollapsed = true;
+                $scope.status.selectedUserCollapsed = true;
             }
             if ($scope.currentselected.name === 'Sortedhits') {
                 $scope.status.selectedColorCollapsed = true;
                 $scope.status.selectedHitCollapsed = false;
                 $scope.status.selectedCriteriaCollapsed = true;
+                $scope.status.selectedUserCollapsed = true;
             }
             if ($scope.currentselected.name === 'Sortedcriteria') {
                 $scope.status.selectedColorCollapsed = true;
                 $scope.status.selectedHitCollapsed = true;
                 $scope.status.selectedCriteriaCollapsed = false;
+                $scope.status.selectedUserCollapsed = true;
+            }
+            if ($scope.currentselected.name === 'Sorteduser') {
+                $scope.status.selectedColorCollapsed = true;
+                $scope.status.selectedHitCollapsed = true;
+                $scope.status.selectedCriteriaCollapsed = true;
+                $scope.status.selectedUserCollapsed = false;
             }
         };
 
