@@ -2,22 +2,22 @@
   margin-left: 40px;
 }
 
-#network{
+#authornetwork #network{
   width: 70%;
   float: right;
 }
-#infos{
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+#authornetwork #infos{
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 12px;
   width: 30%;
   float: right;
   margin: 100px 0 0 0;
 }
-ul{
+#authornetwork ul{
   margin: 0;
 }
 
-h2{
+#authornetwork h2{
   font-size: 15px;
 }
 #authornetwork path.link {
@@ -74,7 +74,7 @@ h2{
   list-style-type: none;
 }
 #legendes ul {
-  
+
 }
 
 #legendes ul li {
@@ -87,7 +87,7 @@ h2{
   display: inline-block;
   width: 16px;
   height: 16px;
-  border-radius: 8px; 
+  border-radius: 8px;
   margin-right: 8px;
 }
 
