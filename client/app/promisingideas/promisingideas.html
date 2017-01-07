@@ -136,8 +136,8 @@
                         </tr>
                         <tr class="KFSearchResult" ng-repeat=" hitd in hitdata| filter:searchkeyword " ng-if="((selectedHitCount===hitcounts[0]&&!status.selectedHitCollapsed )&&searchkeyword===''||
                         (selectedHitCount===hitd.promising.count &&!status.selectedHitCollapsed)&&searchkeyword===''||
-                        (selectedHitCount===hitcounts[0]&&!status.selectedHitCollapsed )&&hastextinpromisingidea(searchkeyword, hitd.promising.promisingidea, hitd.promising.reason) ||
-                        (selectedHitCount===hitd.promising.count &&!status.selectedHitCollapsed)&&hastextinpromisingidea(searchkeyword, hitd.promising .promisingidea, hitd.promising.reason))&&!hasitoverlappedpromising(hitd.promising)">
+                        (selectedHitCount===hitcounts[0]&&!status.selectedHitCollapsed )&&hastextinpromisingidea(searchkeyword, hitd.promising.promisingidea, hitd.promising.reason, hitd.promising.author) ||
+                        (selectedHitCount===hitd.promising.count &&!status.selectedHitCollapsed)&&hastextinpromisingidea(searchkeyword, hitd.promising .promisingidea, hitd.promising.reason, hitd.promising.author))&&!hasitoverlappedpromising(hitd.promising)">
                             <td>
                                 <div>
                                     <tt style="float:left"><input id="{{hitd.promising._id}}" type="checkbox" value="{{hitd.promising .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(hitd.promising .promisingidea) > -1" ng-click="toggleSelection(hitd.promising)" /></tt>
@@ -147,7 +147,7 @@
                                     <tt class="box" ng-style="{ 'background-color': hitd.promising.color}"></tt>
                                     <tt style="float: left;margin: 3px " ng-bind-html="hitd.promising.promisingidea| highlighted:searchkeyword"></tt>
                                     <br>
-                                    <tt style="float:right">-(By {{hitd.promising.author}}  {{hitd.promising.date}})</tt>
+                                    <tt style="float:right">-(By <tt ng-bind-html="hitd.promising.author| highlighted:searchkeyword"></tt>  {{hitd.promising.date}})</tt>
                                     <div ng-show="selectedpromisingideaIndex===$index  " style="clear:both">
                                         <tt ng-if="hitd.promising.count==1">There is no overlapping of promisingness ideas present here!</tt>
                                         <tt ng-if="hitd.promising.count !=1">The following are the overlapping of promisingness ideas:</tt>
