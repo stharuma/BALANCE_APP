@@ -26,14 +26,7 @@ function isAuthenticated() {
       validateJwt(req, res, next);
     })
     // Attach user to request
-    .use(function(err, req, res, next) {
-      if (err) {
-        if (err.name === 'UnauthorizedError') {
-          return res.status(401).send('invalid token...');
-        } else {
-          return res.sendStatus(401);
-        }
-      }
+    .use(function(req, res, next) {
       User.findById(req.user._id, function(err, user) {
         if (err) return next(err);
         if (!user) return res.sendStatus(401);
@@ -41,7 +34,12 @@ function isAuthenticated() {
         req.user = user;
         next();
       });
-
+    })
+    // Handle Express-JWT error: UnauthorizedError
+    .use(function (err, req, res, next) {
+      if (err.name === 'UnauthorizedError') {
+        res.status(401).send('invalid token...');
+      }
     });
 }
 
