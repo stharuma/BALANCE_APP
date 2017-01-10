@@ -27,7 +27,7 @@ angular.module('kf6App')
         $scope.status.contribution = '';
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
-        $scope.promisingmsg = 'ShowPromisingIdea';
+        $scope.promisingmsg = 'Show Highlighted Text';
 
         $scope.selectedIndex = -1;
         $scope.newnoteIndex = -1;
@@ -948,10 +948,10 @@ angular.module('kf6App')
           };
 
           $scope.showPromisingIdeasInReadMode = function () {
-              $scope.promisingmsg = 'ShowPromisingIdea';
+              $scope.promisingmsg = 'Show Highlighted Text';
               $scope.showpromisingideaCollapsed = !$scope.showpromisingideaCollapsed;
               if ($scope.showpromisingideaCollapsed) {
-                  $scope.promisingmsg = 'HidePromisingIdea';
+                  $scope.promisingmsg = 'Hide Highlighted Text';
                   $scope.promisingIdeasInBody = $scope.copy.body;
                   $scope.toConnections.forEach(function (conn) {
                       if (conn.type === 'promisings') {
@@ -966,6 +966,11 @@ angular.module('kf6App')
                       }
                   });
               }
+              $scope.selectedText ='';
+              $(document).ready(function () {
+                    var $element = $('div.annotator-adder');
+                    $element.hide();
+               });
           };
 
           $scope.setPromisingColorData = function () {

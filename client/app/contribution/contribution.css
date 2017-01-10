@@ -60,7 +60,7 @@
 .promisingbtn:hover
 {
 background-image:none !important;
-background-color:#ff00ff !important;
+/*background-color:#ff00ff !important;*/
 }
 
 .tooltip1 {

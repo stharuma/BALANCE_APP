@@ -35,7 +35,7 @@
         <tabset>
             <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
                 <div >
-                    <button ng-mouseup="clearSelection();" class="promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
+                    <button ng-mouseup="clearSelection();" class="btn btn-primary KFToolBarButton promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
                       <span class="tooltiptext">Promisingness Idea</span></button>
                 </div>
                 <div ng-mouseup="setSelectedText($event)" style="padding: 10px; height: 100%;">
@@ -43,8 +43,8 @@
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
                             <div  collapse="showpromisingideaCollapsed" class="kfDragSource" ng-bind-html="trustAsHtml(copy.body)"></div>
-                            <div  collapse="!showpromisingideaCollapsed" class="kfDragSource" ng-bind-html="trustAsHtml(promisingIdeasInBody)"></div>
                         </div>
+                        <div  collapse="!showpromisingideaCollapsed" class="kfDragSource" ng-bind-html="trustAsHtml(promisingIdeasInBody)"></div>
                         <div style="height: 100%; width: 100%;" ng-hide="!contribution.isRiseabove()">
                              <div  collapse="showpromisingideaCollapsed" class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
                                <div  collapse="!showpromisingideaCollapsed" class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="trustAsHtml(promisingIdeasInBody)"></div>
