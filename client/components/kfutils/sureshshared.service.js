@@ -24,6 +24,14 @@ angular.module('kf6App')
             return text;
         };
 
+          obj.clearSelection=function() {
+                 if(window.getSelection) {
+                      window.getSelection().removeAllRanges();
+                 } else if (document.selection){
+                      document.selection.empty();
+                 }
+           };
+
         obj.getChangedBodyContent = function (bodyContentText, bodyContentWordsArray, subContentWordsArray, subContentText, color) {
             var str = '';
             var startIndexOfsubContentText = bodyContentText.replace(/\s/g, '').indexOf(subContentText.replace(/\s/g, ''));

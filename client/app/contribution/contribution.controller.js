@@ -873,10 +873,31 @@ angular.module('kf6App')
               return $sce.trustAsHtml(html);
           };
 
-          $scope.setSelectedText = function () {
+          $scope.setSelectedText = function (event) {
               $scope.selectedText = $sureshshared.getSelectionText();
+              $scope.promisingobj = {
+                  "left": event.offsetX + 40 + "px",
+                  "top": event.offsetY + 10 + "px",
+                  "position": "fixed",
+                  "z-index": "100"
+              }
           };
 
+          $scope.$watch('selectedText', function () {
+              if ($scope.selectedText !== '') {
+                  $(document).ready(function () {
+                      var $element = $('div.annotator-adder');
+                      $element.attr('title', 'Annotation');
+                      $element.addClass('tooltip1');
+                      $element.append('<span class=\"tooltiptext\">Annotation</span>');
+                      $('button.promisingbtn').show();
+                      $element.click(function () {
+                          $('button.promisingbtn').hide();
+                      });
+                  });
+
+              }
+          });
           $scope.promisingIdeaobjUpdated = function (promisingIdeaobjLink) {
               $suresh.promisingIdeaobjUpdated(promisingIdeaobjLink, $community, $scope.promisingIdeaobjs);
           };
@@ -1029,6 +1050,10 @@ angular.module('kf6App')
           $scope.isPromisingIdeaCreator = function (authorId) {
                  return $community.getAuthor()._id===authorId+'';
           };
+
+          $scope.clearSelection=function() {
+                $sureshshared.clearSelection();
+           };
 
           /*********** svg-edit ************/
           $scope.svgInitialized = false;

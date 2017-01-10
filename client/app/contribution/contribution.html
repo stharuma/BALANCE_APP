@@ -34,10 +34,11 @@
     <div class="KFTabSet">
         <tabset>
             <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
-                <div style="float: left; padding-top: 0px; padding-left 0px; position:absolute; z-index:100">
-                    <button type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea"></button>
+                <div >
+                    <button ng-mouseup="clearSelection();" class="promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
+                      <span class="tooltiptext">Promisingness Idea</span></button>
                 </div>
-                <div ng-mouseup="setSelectedText()" style="padding: 10px; height: 100%;">
+                <div ng-mouseup="setSelectedText($event)" style="padding: 10px; height: 100%;">
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
@@ -371,7 +372,7 @@
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1)">Cancel</button>
                             </div>
                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
-                           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''"ng-click="promisingIdeaobjs[conn.from].data.color=''">clear color</button>
+                           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''"ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear colour</button>
                            <br>
                            <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
                            <label style="float: left;font-size:  9pt">Idea : </label>
@@ -395,7 +396,7 @@
         <label style="font-size:  11pt; text-align: center; text-decoration: underline; padding-left: 10px;"><b>Add Promisingness Idea</b></label>
         <div style="padding-left: 20px; height:250px; overflow: scroll; width:100%; float: left">
           <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{targetColor}}{{createmsg}}</b></label>
-          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="targetColor!==''"ng-click="clearColor();">clear color</button>
+          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="targetColor!==''"ng-click="clearColor();">Clear colour</button>
            <br>
            <ngjs-color-picker selected-color="targetColor" custom-colors="colors"></ngjs-color-picker>
            <label style="float: left;font-size:  9pt">Idea : </label>
@@ -408,7 +409,7 @@
             <textarea id="text" cols="70" rows="2" ng-model="textareaText"></textarea>
         </div>
          <div style="clear:both; text-align: right; padding-right: 10px; padding-top: 5px;">
-           <button type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false; selectedText=''">Cancel</button>
+           <button  type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false; selectedText=''; ">Cancel</button>
            <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false;">Save</button>
          </div>
         <hr>
