@@ -369,7 +369,7 @@
                         <div ng-show="selectedIndex==$index ">
                             <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">Save</button>
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1)">Cancel</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1); updatepromisingIdeaobjs()">Cancel</button>
                             </div>
                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
                            <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''"ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear colour</button>
