@@ -342,7 +342,7 @@
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index)" title="Edit Justification & Highlight">Edit</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index" title="Delete the idea from database">Delete</button>
                             </div>
-                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
+                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
                              <br>
                             <label style="float: left; font-size:  9pt">Idea : </label>
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color}"></tt>
@@ -371,7 +371,7 @@
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">Save</button>
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1); updatepromisingIdeaobjs()">Cancel</button>
                             </div>
-                           <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{promisingIdeaobjs[conn.from].data.color}}{{updatemsg}}</b></label>
+                           <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
                            <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''"ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear colour</button>
                            <br>
                            <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
@@ -395,7 +395,7 @@
     <div class="well" collapse="status.ispromisingideaCollapsed" style="padding-left: 0px; position: absolute; top:0px; left: 0px; width: 100%; min-height: 100% !important; height: 100%;background-color: white; z-index: 100;">
         <label style="font-size:  11pt; text-align: center; text-decoration: underline; padding-left: 10px;"><b>Add Promisingness Idea</b></label>
         <div style="padding-left: 20px; height: 90%; overflow: scroll; width:100%; float: left">
-          <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{targetColor}}{{createmsg}}</b></label>
+          <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{createmsg}}</b></label>
           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="targetColor!==''"ng-click="clearColor();">Clear colour</button>
            <br>
            <ngjs-color-picker selected-color="targetColor" custom-colors="colors"></ngjs-color-picker>
