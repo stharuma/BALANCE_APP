@@ -141,7 +141,8 @@ angular.module('kf6App')
                 $scope.updateRecords();
                 $scope.communityMembers = $community.getMembersArray();
                 $community.refreshMembers();
-                if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
+                // Open a contribution in "edit" mode only it is new (status "unsaved") and obviously if the author has the right to edit it.
+                if ($scope.contribution.status === "unsaved" && $scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }
                 if ($scope.contribution.status === 'active') {
