@@ -880,7 +880,7 @@ angular.module('kf6App')
                   "top": event.offsetY + 10 + "px",
                   "position": "fixed",
                   "z-index": "100"
-              }
+              };
           };
 
           $scope.$watch('selectedText', function () {
