@@ -29,7 +29,12 @@ function makeQuery(req) {
     var regexpstr = '(?=.*' + queryStr + ').*';
     var regexp = new RegExp(regexpstr, 'i');
     return {
-        email: regexp
+        $or: [
+            { firstName: regexp },
+            { lastName: regexp },
+            { userName: regexp },
+            { email: regexp }
+        ]
     };
 }
 
