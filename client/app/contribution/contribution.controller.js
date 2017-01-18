@@ -877,8 +877,8 @@ angular.module('kf6App')
               $scope.selectedText = $sureshshared.getSelectionText();
               $scope.promisingobj = {
                   "left": event.offsetX + 40 + "px",
-                  "top": event.offsetY + 10 + "px",
-                  "position": "fixed",
+                  "top": event.offsetY - 35+ "px",
+                  "position": "absolute",
                   "z-index": "100"
               };
           };

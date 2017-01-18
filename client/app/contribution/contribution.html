@@ -34,8 +34,8 @@
     <div class="KFTabSet">
         <tabset>
             <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
-                <div >
-                    <button ng-mouseup="clearSelection();" class="btn btn-primary KFToolBarButton promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng--show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
+                <div  style="position: relative; ">
+                    <button ng-mouseup="clearSelection();" class="btn btn-primary KFToolBarButton promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng-show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
                       <span class="tooltiptext">Promisingness Idea</span></button>
                 </div>
                 <div ng-mouseup="setSelectedText($event)" style="padding: 10px; height: 100%;">
@@ -414,7 +414,7 @@
          </div>
         <hr>
     </div>
-    <div ng-show="!status.hidecontributeButtonBar">
+    <div ng-show="!status.hidecontributeButtonBar" >
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button ng-disabled="!status.dirty" ng-show="isEditable()" type="submit" class="btn btn-primary" ng-click="contribute()">{{ 'contribute' | translate }}</button>
         </div>
