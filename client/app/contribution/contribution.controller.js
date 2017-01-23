@@ -875,16 +875,24 @@ angular.module('kf6App')
 
           $scope.setSelectedText = function (event) {
               $scope.selectedText = $sureshshared.getSelectionText();
+              setPromisingIconPos(event)
+          };
+
+        function setPromisingIconPos(event) {
               var rect = event.currentTarget.getBoundingClientRect(),
               offsetX = event.clientX - rect.left,
               offsetY = event.clientY - rect.top;
+              if( offsetY<60){
+                  offsetX+=40;
+                  offsetY=75;
+              }
               $scope.promisingobj = {
                   "left": offsetX +20 + "px",
-                  "top": offsetY - 46+ "px",
+                  "top": offsetY - 48+ "px",
                   "position": "absolute",
                   "z-index": "100"
               };
-          };
+        }
 
           $scope.$watch('selectedText', function () {
               if ($scope.selectedText !== '') {
