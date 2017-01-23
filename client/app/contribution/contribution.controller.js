@@ -1021,10 +1021,14 @@ angular.module('kf6App')
           };
 
           var getPromisingIdeacolorobjmsg = function (promisingcolor) {
-              var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) +' (Unassign)';
+              var msg = ' (Unassign)';
               $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+                  var promisngcolorgroup = pcolorobj.data.data;
+                    if(promisngcolorgroup===''){
+                      promisngcolorgroup = 'Unassign';
+                    }
                   if (pcolorobj.data.color === promisingcolor) {
-                      msg =promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (' + pcolorobj.data.data + ')';
+                      msg =promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (' + promisngcolorgroup + ')';
                       return msg;
                   }
               });
