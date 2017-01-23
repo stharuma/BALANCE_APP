@@ -875,9 +875,12 @@ angular.module('kf6App')
 
           $scope.setSelectedText = function (event) {
               $scope.selectedText = $sureshshared.getSelectionText();
+              var rect = event.currentTarget.getBoundingClientRect(),
+              offsetX = event.clientX - rect.left,
+              offsetY = event.clientY - rect.top;
               $scope.promisingobj = {
-                  "left": event.offsetX + 40 + "px",
-                  "top": event.offsetY - 35+ "px",
+                  "left": offsetX +20 + "px",
+                  "top": offsetY - 46+ "px",
                   "position": "absolute",
                   "z-index": "100"
               };
