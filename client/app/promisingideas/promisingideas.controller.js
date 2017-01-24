@@ -70,7 +70,7 @@ angular.module('kf6App')
             notes.forEach(function (note, index) {
                 var promisingnotefound = true;
                 $http.get('/api/links/to/' + note._id).success(function (links) {
-                    links.forEach(function (link) {
+                    links.forEach(function (link, inx) {
                         if (link.type === 'promisings') {
                             $community.getObject(link.from, function (promisingIdeaobj) {
                                 var pcolordetail = $scope.setPromisingIdeacolorobj(promisingIdeaobj.data.color);
@@ -99,6 +99,9 @@ angular.module('kf6App')
                                 }
                                  if (!contains($scope.users, user)) {
                                     $scope.users.push(user);
+                                }
+                                if (inx === links.length - 1) {
+                                    sortByTime();
                                 }
                             });
                             if (promisingnotefound === true) {
@@ -217,6 +220,12 @@ angular.module('kf6App')
             $scope.users.push('All');
         }
 
+        function sortByTime( ) {
+             $scope.tableData.sort(function(a,b) {
+                 return new Date(a.date) - new Date(b.date);
+            }).reverse();
+        }
+
         $scope.viewSelected = function (view) {
             if ($scope.status.isnewNoteCollapsed) {
                 $scope.viewTitlescopy = '';
@@ -306,7 +315,7 @@ angular.module('kf6App')
             $scope.setpromisingoverlappedcounted();
         });
 
-        $scope.makepromisingnote = function (title, body) {
+       $scope.makepromisingnote = function (title, body) {
             if (title === '') {
                 window.alert('Note title is empty ');
                 return;
