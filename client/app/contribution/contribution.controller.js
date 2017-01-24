@@ -875,7 +875,7 @@ angular.module('kf6App')
 
           $scope.setSelectedText = function (event) {
               $scope.selectedText = $sureshshared.getSelectionText();
-              setPromisingIconPos(event)
+              setPromisingIconPos(event);
           };
 
         function setPromisingIconPos(event) {
