@@ -1,6 +1,15 @@
 'use strict';
 
-exports.user = 'xxxx';
-exports.pass = 'yyyy';
+// Reference: https://github.com/nodemailer/nodemailer#set-up-smtp
+
+exports.transportOptions = {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+        user: 'user@gmail.com',
+        pass: 'pass'
+    }
+};
 exports.from ='zzzz@gmail.com';
-exports.baseURL = 'http://localhost:9000/';
+exports.baseURL = 'https://kf.example.net/';

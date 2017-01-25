@@ -16,7 +16,7 @@ var path = require('path');
 var config = require('./environment');
 var passport = require('passport');
 var session = require('express-session');
-var mongoStore = require('connect-mongo')(session);
+var MongoStore = require('connect-mongo')(session);
 var mongoose = require('mongoose');
 var log4js = require('log4js');
 var fs = require('fs');
@@ -33,7 +33,7 @@ module.exports = function(app) {
         extended: false
     }));
     app.use(bodyParser.json({
-        limit: '4mb' // 100kb default is too small        
+        limit: '4mb' // 100kb default is too small
     }));
     app.use(methodOverride());
     app.use(cookieParser());
@@ -45,8 +45,8 @@ module.exports = function(app) {
         secret: config.secrets.session,
         resave: true,
         saveUninitialized: true,
-        store: new mongoStore({
-            mongoose_connection: mongoose.connection
+        store: new MongoStore({
+            mongooseConnection: mongoose.connection
         })
     }));
 
@@ -99,7 +99,7 @@ module.exports = function(app) {
         app.set('appPath', 'client');
         app.use(morgan('dev'));
         //app.use(morgan('default'));
-        //app.use(morgan('kf-format'));        
+        //app.use(morgan('kf-format'));
         app.use(errorHandler()); // Error handler - has to be last
     }
 

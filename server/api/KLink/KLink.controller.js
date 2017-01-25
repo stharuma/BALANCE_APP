@@ -115,6 +115,22 @@ exports.viewIndex = function(req, res) {
     });
 };
 
+// ajout michelle janvier 2016
+// Get "buildson" links in commununity (every views)
+exports.buildsonIndex = function(req, res) {
+    KLink.find({
+        communityId: req.params.id,
+        type: 'buildson',
+        '_from.status': 'active',
+        '_to.status': 'active'
+    }, function(err, links) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.status(200).json(links);
+    });
+};
+
 // Get a single link
 exports.show = function(req, res) {
     KLink.findById(req.params.id, function(err, link) {
@@ -122,7 +138,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(link);
     });
@@ -202,7 +218,7 @@ exports.update = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
 
         var updated = _.merge(link, req.body);
@@ -227,14 +243,14 @@ exports.destroy = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         link.remove(function(err) {
             if (err) {
                 return handleError(res, err);
             }
             record(req, link, 'deleted');
-            return res.send(204);
+            return res.sendStatus(204);
         });
     });
 };
@@ -270,7 +286,7 @@ exports.updateCash = function(req, res) {
             return handleError(res, err);
         }
         if (!link) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         updateCash0(link, function(err, link) {
             if (err) {
@@ -314,7 +330,7 @@ exports.updateAllCashRec = function(req, res) {
         console.info(len + ' links to update!');
         if (len <= 0) {
             console.info('no links to update!');
-            return res.send(200);
+            return res.sendStatus(200);
         }
         var numFinished = 0;
         links.forEach(function(link) {

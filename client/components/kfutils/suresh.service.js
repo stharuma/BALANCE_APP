@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('kf6App')
-    .factory('$suresh', function ($ac, $http) {
+    .factory('$suresh', function ($ac, $http, $kftag) {
         var obj = {};
+        var toConnections = [];
+        var fromConnections = [];
 
         obj.searchprocess = function (queryString, communityId, communityMembers, $community, status, getContributions) {
             var pager = {};
@@ -48,7 +50,7 @@ angular.module('kf6App')
                 }
                 if (token.indexOf('-author:') >= 0) {
                     token = token.replace('-author:', '');
-                    var author = _.findWhere(communityMembers, {
+                    var author = _.find(communityMembers, {
                         userName: token
                     });
                     if (author) {
@@ -107,8 +109,7 @@ angular.module('kf6App')
                     status.status = 'noresult';
                 }
                 getContributions(contributions);
-                console.log('count ' + contributions.length);
-            }).error(function () {
+           }).error(function () {
                 status.status = 'error';
             });
         }
@@ -120,6 +121,76 @@ angular.module('kf6App')
                 return 'manual_assets/kf4images/icon-note-unknown-othr-.gif';
             }
         };
+
+        obj.createnewnoteInMutipleView = function (title, viewIds, $community, body, hasPromisingIdeas) {
+            viewIds.forEach(function (viewId) {
+                obj.createnewnote(title, viewId, $community, body, hasPromisingIdeas);
+            });
+        };
+
+        obj.createnewnote = function (title, viewId, $community, body, hasPromisingIdeas) {
+            $community.createNote(null, function (note) {
+                createContainsLink(viewId, note._id, $community, {
+                    x: 100,
+                    y: 100
+                });
+                postProcess(note._id, body, function (jq) {
+                    if (!note.data) {
+                        note.data = {};
+                    }
+                    if (hasPromisingIdeas) {
+                        var promisingContains = {};
+                        note.data.promisingContains = promisingContains;
+                    }
+                    note.data.body = jq.html();
+                    note.title = title;
+                    note.status = 'active';
+                    note.text4search = '( ' + note.title + ' ) ' + jq.text();
+                    $community.modifyObject(note, function (note) {
+                        $community.read(note);
+                    }, function () {
+                        if (window.localStorage) {
+                            window.localStorage.setItem('kfdoc', note.data.body);
+                        }
+                    });
+
+                });
+
+            });
+        };
+
+        var postProcess = function (contributionId, text, handler) {
+            updateToConnections(contributionId, function () {
+                updateFromConnections(contributionId, function () {
+                    $kftag.postProcess(text, contributionId, toConnections, fromConnections,
+                        function (jq) {
+                            handler(jq);
+                        });
+                });
+            });
+        };
+
+        var updateToConnections = function (contributionId, next) {
+            $http.get('/api/links/to/' + contributionId).success(function (links) {
+                toConnections = links;
+                if (next) {
+                    next();
+                }
+            });
+        };
+
+        var updateFromConnections = function (contributionId, next) {
+            $http.get('/api/links/from/' + contributionId).success(function (links) {
+                fromConnections = links;
+                if (next) {
+                    next(links);
+                }
+            });
+        };
+
+        function createContainsLink(viewId, toId, $community, data, handler) {
+            $community.createLink(viewId, toId, 'contains', data, handler);
+        }
 
         obj.detailsControl = function (status) {
             status.detailsCollapsed = false;
@@ -149,6 +220,21 @@ angular.module('kf6App')
             if (!status.detailsCollapsed) {
                 status.detailsCollapsed = true;
             }
+        };
+
+        obj.promisingcolors = function () {
+            var colors = [
+        '',
+        'yellow',
+        'pink',
+        'green',
+        'violet',
+        'purple',
+        'orange',
+        'red',
+         'blue'
+      ];
+            return colors;
         };
 
         return obj;

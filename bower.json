@@ -2,37 +2,41 @@
   "name": "kf6",
   "version": "0.0.0",
   "dependencies": {
-    "angular": ">=1.2.*",
-    "json3": "~3.3.1",
-    "es5-shim": "~3.0.1",
-    "jquery": "~1.11.0",
-    "bootstrap": "~3.1.1",
-    "angular-resource": "~1.5.*",
-    "angular-cookies": ">=1.2.*",
-    "angular-sanitize": "1.4.8",
-    "angular-bootstrap": "~0.13.0",
-    "font-awesome": ">=4.1.0",
-    "lodash": "~2.4.1",
-    "angular-socket-io": "~0.6.0",
-    "angular-ui-router": "~0.2.10",
+    "jquery": "^1.11.0",
+    "angular": "~1.4.14",
+    "json3": "^3.3.1",
+    "es5-shim": "^3.0.1",
+    "bootstrap": "^3.3.7",
+    "angular-resource": "~1.4.14",
+    "angular-cookies": "~1.4.14",
+    "angular-sanitize": "~1.4.14",
+    "angular-bootstrap": "^0.13.0",
+    "font-awesome": "^4.7.0",
+    "lodash": "^4.17.2",
+    "angular-socket-io": "^0.7.0",
+    "socket.io-client": "^1.7.2",
+    "angular-ui-router": "^0.2.10",
     "jquery-ui": "~1.11.2",
     "tinymce-dist": "4.1.7",
     "angular-ui-tinymce": "0.0.12",
-    "angular-ui-sortable": "~0.13.1",
-    "ng-context-menu": "~1.0.1",
-    "jsPlumb": "~1.7.2",
-    "ng-file-upload": "~2.0.4",
-    "angular-ui-select": "~0.9.6",
-    "d3": "~3.5.6",
-    "d3-cloud": "~1.1.2",
-    "annotator": "~1.2.9",
-    "angular-translate": "~2.8.1",
-    "angular-translate-loader-static-files": "~2.8.1",
-    "angular-translate-storage-cookie": "~2.8.1",
+    "angular-ui-sortable": "^0.13.1",
+    "ng-context-menu": "^1.0.3",
+    "jsPlumb": "^2.2.10",
+    "ng-file-upload": "~2.0.5",
+    "angular-ui-select": "^0.9.9",
+    "d3": "^3.5.17",
+    "d3-cloud": "^1.2.2",
+    "annotator": "^1.2.9",
+    "angular-translate": "^2.13.1",
+    "angular-translate-loader-static-files": "^2.13.1",
+    "angular-translate-storage-cookie": "^2.13.1",
+    "angular-bootstrap-colorpicker": "^3.0.24",
     "dcjs": "^1.7.5",
     "ng-csv": "^0.3.6",
-    "angular-chart.js": "^0.9.0",
-    "vis": "^4.16.1"
+    "angular-chart.js": "^1.1.0",
+    "vis": "^4.16.1",
+    "angular-xeditable": "^0.5.0",
+    "highcharts": "^5.0.6"
   },
   "overrides": {
     "bootstrap": {
@@ -41,11 +45,12 @@
     }
   },
   "devDependencies": {
-    "angular-mocks": ">=1.2.*",
-    "angular-scenario": ">=1.2.*"
+    "angular-mocks": "^1.2.0",
+    "angular-scenario": "^1.2.0"
   },
   "resolutions": {
     "tinymce-dist": "4.1.7",
-    "angular": "1.4.0"
+    "angular": "1.4.14",
+    "angular-cookies": "~1.4.14"
   }
 }

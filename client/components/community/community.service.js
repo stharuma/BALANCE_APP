@@ -42,6 +42,7 @@ angular.module('kf6App')
                 communityData.groups = {};
                 communityData.groupsArray = [];
                 communityData.scaffolds = [];
+                communityData.promisingcolorobjs=[];
 
                 refreshCommunity(function() {
                     if (communityHandler) {
@@ -739,7 +740,7 @@ angular.module('kf6App')
         };
 
         var amIAuthor0 = function(authorIds) {
-            return _.contains(authorIds, communityData.author._id);
+            return _.includes(authorIds, communityData.author._id);
         };
 
         var modifyObjects = function(objects, success, error) {
@@ -933,6 +934,54 @@ angular.module('kf6App')
             });
         };
 
+         var createPromisingcolorobj = function (promisingIdeacolorobj, success) {
+             var newobj = {
+                 communityId: communityId,
+                 type: 'promisingIdeacolorobj',
+                 title: 'an promisingIdeacolorobj',
+                 authors: getAuthor()._id,
+                 status: 'active',
+                 permission: 'protected',
+                 data: promisingIdeacolorobj
+             };
+             $http.post('/api/contributions/' + communityId, newobj).success(function (pcolorobj) {
+                 registerPromisingcolorobj(pcolorobj, success);
+             });
+         };
+
+         var registerPromisingcolorobj = function (promisingcolorobj, success) {
+             var url = 'api/communities/' + communityId;
+             $http.get(url).success(function (community) {
+                 if (!community.promisingcolorobjs) {
+                     community.promisingcolorobjs = [];
+                 }
+                 community.promisingcolorobjs.push(promisingcolorobj._id);
+                 $http.put(url, community).success(function () {
+                     if (success) {
+                         success(promisingcolorobj);
+                     }
+                 });
+             });
+         };
+
+         var refreshPromisingcolorobjs = function (handler) {
+             $http.get('/api/communities/' + communityId).success(function (community) {
+                 communityData.promisingcolorobjs.length = 0; //clear once
+                 var promisingcolorobjIds = community.promisingcolorobjs;
+                 if (!promisingcolorobjIds) {
+                     promisingcolorobjIds = [];
+                 }
+                 promisingcolorobjIds.forEach(function (promisingcolorobjId, index) {
+                     getObject(promisingcolorobjId, function (promisingcolorobj) {
+                         communityData.promisingcolorobjs.push(promisingcolorobj);
+                         if (handler&& index===promisingcolorobjIds.length-1) {
+                             handler();
+                         }
+                     });
+                 });
+             });
+         };
+
         return {
             getContext: getContext,
 
@@ -950,6 +999,7 @@ angular.module('kf6App')
             createScaffold: createScaffold,
             createSupport: createSupport,
             createGroup: createGroup,
+            createPromisingcolorobj: createPromisingcolorobj,
 
             createCommunity: createCommunity,
             //createDefaultScaffold: createDefaultScaffold,
@@ -968,6 +1018,7 @@ angular.module('kf6App')
             refreshAuthor: refreshAuthor,
             loadScaffoldLinks: loadScaffoldLinks,
             refreshRegisteredScaffolds: refreshRegisteredScaffolds,
+            refreshPromisingcolorobjs: refreshPromisingcolorobjs,
             getLinksTo: getLinksTo,
             getLinksFrom: getLinksFrom,
             getLinksFromTo: getLinksFromTo,
@@ -989,6 +1040,9 @@ angular.module('kf6App')
             },
             getCommunityData: function() {
                 return communityData;
+            },
+            getPromisingcolorobjsArray: function() {
+                return communityData.promisingcolorobjs;
             },
             makeAuthorString: makeAuthorString,
             makeAuthorStringByIds: makeAuthorStringByIds,

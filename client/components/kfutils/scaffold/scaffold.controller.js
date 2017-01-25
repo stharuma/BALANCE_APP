@@ -2,6 +2,7 @@
 
 angular.module('kf6App')
     .controller('ScaffoldCtrl', function($scope, $community) {
+        
         $scope.scaffolds = $community.getScaffolds();
 
         if (!$scope.initializingHooks) {

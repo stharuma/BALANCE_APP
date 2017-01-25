@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate) {
+    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh) {
         var contributionId = $stateParams.contributionId;
         var contextId = $stateParams.contextId;
 
@@ -19,11 +19,19 @@ angular.module('kf6App')
         $scope.status.isScaffoldCollapsed = false;
         $scope.status.isAttachmentCollapsed = true;
         $scope.status.isContributionCollapsed = true;
+        $scope.status.ispromisingideaCollapsed = true;
+        $scope.status.ispromisingideaTabDisplayed = false;
+        $scope.showpromisingideaCollapsed = false;
         $scope.status.edittabActive = false;
         $scope.status.dirty = true;
         $scope.status.contribution = '';
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
+        $scope.promisingmsg = 'ShowPromisingIdea';
+
+        $scope.selectedIndex = -1;
+        $scope.newnoteIndex = -1;
+        $scope.deletedIndex = -1;
 
         $scope.community = {};
         $scope.contribution = {};
@@ -36,9 +44,20 @@ angular.module('kf6App')
         $scope.images = [];
         $scope.selected = {};
 
+        $scope.selectedText = '';
+        $scope.targetColor = '';
+        $scope.textareaText = '';
+        $scope.promisingIdeaobjs = {};
+        $scope.promisingIdeaobjLinks = {};
+        $scope.selectedViewIds = [];
+        $scope.promisingnoteTitle = '';
+
         $scope.preContributeHooks = [];
         $scope.initializingHooks = [];
         $scope.initializingHookInvoked = false;
+        $scope.colors =$suresh.promisingcolors();
+        $scope.promisingColorData=[];
+        $scope.promisingIdeacolorobjsarr=[];
 
         $community.getObject(contributionId, function(contribution) {
             if (window.localStorage) {
@@ -53,6 +72,7 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
+                var communityId = $community.getCommunityData().community._id;
                 $community.refreshContext(contextId, function(context) {
                     $community.getContext(null, function(context) {
                         $scope.context = context;
@@ -103,8 +123,16 @@ angular.module('kf6App')
                     }
                 });
                 $community.refreshGroups();
+                $community.refreshPromisingcolorobjs(function(){
+                   $scope.promisingIdeacolorobjsarr=$community.getPromisingcolorobjsArray();
+                    $scope.setPromisingColorData();
+                });
+                if($scope.promisingIdeacolorobjsarr.length===0){
+                   $scope.setPromisingColorData();
+                }
                 $scope.updateToConnections(function() {
                     $scope.updateAnnotations();
+                    $scope.updatepromisingIdeaobjs();
                     $scope.updateFromConnections(function(links) {
                         $scope.preProcess();
                         $scope.updateAttachments(links);
@@ -113,7 +141,8 @@ angular.module('kf6App')
                 $scope.updateRecords();
                 $scope.communityMembers = $community.getMembersArray();
                 $community.refreshMembers();
-                if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
+                // Open a contribution in "edit" mode only it is new (status "unsaved") and obviously if the author has the right to edit it.
+                if ($scope.contribution.status === "unsaved" && $scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }
                 if ($scope.contribution.status === 'active') {
@@ -197,7 +226,7 @@ angular.module('kf6App')
         };
 
         $scope.authorSelected = function(author) {
-            if (_.contains($scope.authors, author)) {
+            if (_.includes($scope.authors, author)) {
                 window.alert('already included');
                 return;
             }
@@ -239,7 +268,7 @@ angular.module('kf6App')
                 each();
             });
 
-            cont.authors = _.pluck($scope.authors, '_id');
+            cont.authors = _.map($scope.authors, '_id');
 
             if ($scope.copy.keywords) {
                 $scope.contribution.keywords = [];
@@ -851,17 +880,342 @@ angular.module('kf6App')
             });
         };
 
-        /*********** svg-edit ************/
-        $scope.svgInitialized = false;
-
-        $scope.editSelected = function() {
-            if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
-                var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
-                $('#svgeditdiv').html(xhtml);
-                $scope.svgInitialized = true;
-            }
+       /***********promising Ideas ************/
+          $scope.setIndex = function(index) {
+            $scope.selectedIndex = index;
         };
-    });
+
+        $scope.setnewnoteIndex = function(index) {
+            $community.refreshViews();
+            $scope.newnoteIndex = index;
+        };
+
+        $scope.promisingIdeaobjProcess = function() {
+            $scope.promisingIdeaobj = {
+                idea: $scope.selectedText,
+                reason: $scope.textareaText,
+                color: $scope.targetColor
+            };
+            $scope.createPromisngIdeaobj($scope.promisingIdeaobj);
+            $scope.textareaText = '';
+            $scope.selectedText = '';
+        };
+
+        $scope.trustAsHtml = function(html) {
+            return $sce.trustAsHtml(html);
+        };
+
+        $scope.setSelectedText = function() {
+            $scope.selectedText = $scope.getSelectionText();
+        };
+
+        $scope.getSelectionText = function() {
+            var text = '';
+            if (window.getSelection) {
+                text = window.getSelection().toString();
+            } else if (document.selection && document.selection.type !== 'Control') {
+                text = document.selection.createRange().text;
+            }
+            return text;
+        };
+
+        $scope.getSelectionHtml = function() {
+            var html = '';
+            if (typeof window.getSelection !== 'undefined') {
+                var sel = window.getSelection();
+                if (sel.rangeCount) {
+                    var container = document.createElement('div');
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        container.appendChild(sel.getRangeAt(i).cloneContents());
+                    }
+                    html = container.innerHTML;
+                }
+            } else if (typeof document.selection !== 'undefined') {
+                if (document.selection.type === 'Text') {
+                    html = document.selection.createRange().htmlText;
+                }
+            }
+            return html;
+        };
+
+        $scope.createPromisngIdeaobj = function(promisingIdeaobj) {
+            var communityId = $community.getCommunityData().community._id;
+            var newobj = {
+                communityId: communityId,
+                type: 'promisingIdeaobj',
+                title: 'an promisingIdeaobj',
+                authors:$community.getAuthor()._id,
+                created:new Date(),
+                status: 'active',
+                permission: 'protected',
+                data: promisingIdeaobj
+            };
+            $http.post('/api/contributions/' + communityId, newobj)
+                .success(function (promisingIdeaobj_) {
+                    createpromisingIdeaobjLink(promisingIdeaobj_);
+                });
+        };
+
+        var createpromisingIdeaobjLink = function(promisingIdeaobj) {
+            var link = {};
+            link.to = $scope.contribution._id;
+            link.from = promisingIdeaobj._id;
+            link.type = 'promisings';
+            link.data = promisingIdeaobj.data;
+            $http.post('/api/links', link).success(function(link) {
+                $scope.promisingIdeaobjLinks[link._id] = link;
+                $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
+                $scope.toConnections.push(link);
+                $scope.status.ispromisingideaTabDisplayed = true;
+            });
+        };
+
+        $scope.promisingIdeaobjUpdated = function(promisingIdeaobjLink) {
+            if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
+                console.error('ERROR! promisingIdeaobj doesn\'t have id on update');
+                return;
+            }
+            var model = $scope.promisingIdeaobjs[promisingIdeaobjLink.from];
+            if (!model) {
+                console.error('ERROR! model couldn\'t find');
+                return;
+            }
+            $community.modifyObject(model);
+        };
+
+        $scope.promisingIdeaobjDeleted = function(promisingIdeaobjLink) {
+            if (!promisingIdeaobjLink.to || !promisingIdeaobjLink.from) {
+                console.error('ERROR! promisingIdeaobj doesn\'t have id on delete');
+                return;
+            }
+            $http.delete('/api/links/' + promisingIdeaobjLink._id);
+        };
+
+        $scope.updatepromisingIdeaobjs = function() {
+            if ($scope.contribution.type !== 'Note') {
+                return;
+            }
+            //   window.setTimeout(function() {
+            var promisingIdeaobjLinks = $scope.toConnections.filter(function (each) {
+                return each.type === 'promisings';
+            });
+            promisingIdeaobjLinks.forEach(function(promisingIdeaobjLink) {
+                if (!$ac.isReadable(promisingIdeaobjLink._from)) {
+                    return;
+                }
+                $community.getObject(promisingIdeaobjLink.from, function(promisingIdeaobj) {
+                    $scope.promisingIdeaobjLinks[promisingIdeaobjLink._id] = promisingIdeaobjLink;
+                    $scope.promisingIdeaobjs[promisingIdeaobj._id] = promisingIdeaobj;
+                    $scope.status.ispromisingideaTabDisplayed = true;
+                });
+            });
+            //  }, 1000);
+        };
+
+        $scope.viewSelected = function(view) {
+            $scope.selectedViewIds.push(view._id);
+        };
+
+        $scope.makepromisingnote = function(title, body) {
+            if (title === '') {
+                window.alert('Note title is empty ');
+                return;
+            }
+            if ($scope.selectedViewIds.length === 0) {
+                window.alert('View is not selected');
+                return;
+            }
+
+            body = $kftag.createNewReferenceTag($scope.contribution._id, $scope.contribution.title, $scope.contribution.authors, body);
+            $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body,true);
+            $scope.selectedViewIds.length = 0;
+            $scope.setnewnoteIndex(-1);
+        };
+
+         $scope.showPromisingInReadMode = function () {
+             $scope.promisingmsg = 'ShowPromisingIdea';
+             $scope.showpromisingideaCollapsed = !$scope.showpromisingideaCollapsed;
+             if ($scope.showpromisingideaCollapsed) {
+                 $scope.promisingmsg = 'HidePromisingIdea';
+                 $scope.pbody = $scope.copy.body;
+                 $scope.toConnections.forEach(function (conn) {
+                     if (conn.type === 'promisings') {
+                         var idea = conn.data.idea;
+                         var bodytext = strip($scope.pbody).replace(/^\s+|\s+$/g, '').replace(/\s\s/g, '');
+                         var color = $scope.promisingIdeaobjs[conn.from].data.color;
+                         var bwords = getwords($scope.pbody);
+                         var pwords = getwords(idea).filter(function (str) { //removed space array
+                             return /\S/.test(str);
+                         });
+                         setpromisingidea_read(bodytext, bwords, pwords, idea, color);
+                     }
+                 });
+             }
+         };
+
+         function strip(html) {
+             var tmp = document.createElement("DIV");
+             tmp.innerHTML = html;
+             return (tmp.textContent || tmp.innerText || "");
+         }
+
+         function getwords(textContent) {
+             return textContent.split(" ");
+         }
+
+         function setpromisingidea_read(bodytext, bwords, pwords, idea, color) {
+             var str ='';
+             var promisingindex = bodytext.replace(/\s/g, '').indexOf(idea.replace(/\s/g, ''));
+             var textbeforepromising = bodytext.replace(/\s/g, '').substring(0, promisingindex - 1);
+             var textafterpromising = bodytext.replace(/\s/g, '').substring(promisingindex + idea.replace(/\s/g, '').length, bodytext.replace(/\s/g, '').length);
+             var firstinx = getfirstpromingindex(bwords, textbeforepromising, pwords, bodytext);
+             var lastinx = getlastpromingindex(bwords, textafterpromising, pwords);
+             var style = "style=\"font-weight: bold; color:black; background-color:" + color + "; \"";
+             for (var i = firstinx; i < lastinx; i++) {
+                 if (bwords[i].indexOf('<body>') !== -1) {
+                     str = "<span " + style + " >" + pwords[0] + " " + "</span>";
+                     bwords[i] = bwords[i].replace(pwords[0], str);
+                 } else if (bwords[i].indexOf('</body>') !== -1) {
+                     str = "<span " + style + " >" + pwords[pwords.length - 1] + " " + "</span>";
+                     bwords[i] = bwords[i].replace(pwords[pwords.length - 1], str);
+                 } else {
+                     bwords[i] = setcolortochangedword(bwords[i], idea.replace(/\s/g, ''), style);
+                 }
+             }
+             $scope.pbody = bwords.join(' ').toString();
+         }
+
+         function getfirstpromingindex(cwords, text, prewords) { //check again
+             var fbody = '',
+                 index = 0;
+             if (text.replace(/\s/g, '').length !== 0) {
+                 for (var k = 0; k < cwords.length; k++) {
+                     fbody += cwords[k] + ' ';
+                     if (strip(fbody).replace(/\s/g, '').indexOf(text) !== -1) {
+                         index = k;
+                         break;
+                     }
+                 }
+             }
+             return index;
+         }
+
+         function getlastpromingindex(cwords, text, prewords) {
+             var fbody = '',
+                 index = cwords.length;
+             if (text.replace(/\s/g, '').length !== 0) {
+                 for (var k = cwords.length - 1; k >= 0; k--) {
+                     fbody = cwords[k] + ' ' + fbody;
+                     if (strip(fbody).replace(/\s/g, '').indexOf(text) !== -1) {
+                         index = k;
+                         break;
+                     }
+                 }
+             }
+             return index;
+         }
+
+         function setcolortochangedword(changedwords, text, style) {
+             var onlytxt = strip(changedwords.replace(/(&nbsp;|<([^>]+)>)/ig, '')).replace('class=\"kfSupportStartLabel\">', '');
+             onlytxt = onlytxt.replace(/\/?[a-z][a-z0-9]*[^>]*>/ig, '');
+             onlytxt = onlytxt.replace('<span', '').replace(/<\/?span[^>]*>/g, '');
+             if (changedwords.indexOf('<br>') !== -1) {
+                 onlytxt = changedwords.replace('<span', '').replace(/<\/?span[^>]*>/g, '');
+             }
+             onlytxt = strip(onlytxt.replace(/&nbsp;|(<([^>]+)>)|\/>|>/ig, ''));
+             onlytxt = onlytxt.replace('—', '&mdash;').replace('–', '&ndash;');
+             if (text.replace(/\s/g, '').replace('—', '&mdash;').indexOf(onlytxt.replace(/\s/g, '')) !== -1 && onlytxt !== '') {
+                 console.log('onlytxt ' + onlytxt+"changedwords "+changedwords);
+                 var str = "<span " + style + " >" + onlytxt + " " + "</span>";
+                 changedwords = changedwords.replace(/\s\s|\s/g, '').replace(onlytxt, str);
+             }
+             return changedwords;
+         }
+
+         $scope.setPromisingColorData = function () {
+             var colordata = '',
+                 cid = '',
+                 cobj = {};
+             $scope.promisingColorData.length = 0;
+             $scope.colors.forEach(function (promisingcolor, index) {
+                 cid = 'none';
+                 colordata = "";
+                 $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+                     if (pcolorobj.data.color === promisingcolor) {
+                         colordata = pcolorobj.data.data;
+                         cid = pcolorobj._id;
+                         cobj = pcolorobj;
+                     }
+                 });
+                 $scope.promisingColorData.push({
+                     color: promisingcolor,
+                     data: colordata,
+                     id: cid,
+                     obj: cobj
+                 });
+             });
+         };
+
+         $scope.clearColor = function () {
+             $scope.targetColor = '';
+             return $scope.targetColor;
+         };
+
+         $scope.getPromisingIdeacolorobjupdatemsg = function (promisingcolor) {
+             $scope.updatemsg = getPromisingIdeacolorobjmsg(promisingcolor);
+             return $scope.updatemsg;
+         };
+
+         var setPromisingIdeacolorobjcreatemsg = function (promisingcolor) {
+             $scope.createmsg = getPromisingIdeacolorobjmsg(promisingcolor);
+         };
+
+         var getPromisingIdeacolorobjmsg = function (promisingcolor) {
+             var msg = ' (Unassign)';
+             $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+                 if (pcolorobj.data.color === promisingcolor) {
+                     msg = ' (' + pcolorobj.data.data + ')';
+                     return msg;
+                 }
+             });
+             return msg;
+         };
+
+         $scope.$watch('targetColor', function () {
+             setPromisingIdeacolorobjcreatemsg($scope.targetColor);
+         });
+
+         $scope.savePromisingIdeacolorobj = function (pcolordata, pcolor, id, promingcolorobj) {
+             if (id === 'none') {
+                 $scope.promisingIdeacolorobj = {
+                     color: pcolor,
+                     data: pcolordata
+                 };
+                 $community.createPromisingcolorobj($scope.promisingIdeacolorobj, function () {});
+             } else {
+                 promingcolorobj.data = {
+                     color: promingcolorobj.data.color,
+                     data: pcolordata
+                 };
+                 $community.modifyObject(promingcolorobj, function () {
+                     $community.refreshPromisingcolorobjs(function () {
+                         $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
+                     });
+                 });
+             }
+         };
+
+         /*********** svg-edit ************/
+         $scope.svgInitialized = false;
+
+         $scope.editSelected = function () {
+         if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
+             var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+             $('#svgeditdiv').html(xhtml);
+             $scope.svgInitialized = true;
+         }
+         };
+         });
 
 function onSvgInitialized() {
     var wnd = document.getElementById('svgedit').contentWindow;

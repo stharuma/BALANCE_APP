@@ -30,7 +30,7 @@ angular.module('kf6App')
             }
             $community.createScaffold($scope.input.scaffoldTitle, function() {
                 $community.refreshRegisteredScaffolds();
-                //$state.reload();                
+                //$state.reload();
             });
             $scope.input.scaffoldTitle = '';
         };
@@ -72,7 +72,7 @@ angular.module('kf6App')
 
         $scope.save = function() {
             var community = {};
-            community.scaffolds = _.pluck($scope.scaffolds, '_id');
+            community.scaffolds = _.map($scope.scaffolds, '_id');
             $community.updateCommunity(community, function() {
                 $community.refreshScaffolds(function() {});
                 $scope.showSaved();

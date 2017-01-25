@@ -9,4 +9,5 @@ attachments/
 *.bak
 *.log
 /server/components/kfmail/setting.js
-
+# Ignore Mac DS_Store files
+.DS_Store

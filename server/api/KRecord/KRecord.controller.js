@@ -104,7 +104,7 @@ exports.index = function(req, res) {
             return handleError(res, err);
         }
         if (!records) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(records);
     });
@@ -117,7 +117,7 @@ exports.show = function(req, res) {
             return handleError(res, err);
         }
         if (!record) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(record);
     });
@@ -133,7 +133,7 @@ exports.mine = function(req, res) {
             return handleError(res, err);
         }
         if (!records) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(records);
     });
@@ -151,7 +151,7 @@ exports.search = function(req, res) {
             return handleError(res, err);
         }
         if (!records) {
-            return res.send(404);
+            return res.sendStatus(404);
         }
         return res.json(records);
     });
@@ -165,7 +165,7 @@ exports.create = function(req, res) {
         authorId: req.author._id
     });
     if (!seed.type) {
-        return res.send(400); //Bad request
+        return res.sendStatus(400); //Bad request
     }
     exports.createInternal(req.body, function(err, record) {
         if (err) {
