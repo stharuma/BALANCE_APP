@@ -92,6 +92,9 @@ angular.module('kf6App')
 
             jq.find('.KFSupportStart').addClass('mceNonEditable');
             elemLoop(jq.find('.KFSupportStart'), function(elem) {
+                if (elem.id.startsWith('supportid_')) {
+                    return; //do nothing
+                }
                 var isTemplate = $(elem).hasClass('KFTemplateStart');
                 var ref = _.find(toConnections, function(conn) {
                     return conn._id === elem.id;
@@ -137,7 +140,11 @@ angular.module('kf6App')
 
             elemLoop(jq.find('.KFSupportStart'), function(elem) {
                 elem.innerHTML = '';
-                processOneElement(todos, elem, supportLinks, dSupportLinks, 'supports', elem.id, contributionId, endtags, {});
+                var supportId = elem.id;
+                if (supportId.startsWith('supportid_')) {
+                    supportId = supportId.split('_')[1];
+                }
+                processOneElement(todos, elem, supportLinks, dSupportLinks, 'supports', supportId, contributionId, endtags, {});
             });
 
             elemLoop(jq.find('.KFSupportEnd'), function(elem) {
@@ -163,9 +170,32 @@ angular.module('kf6App')
             processTodo(todos, handler, jq);
         };
 
-        function processOneElement(todos, elem, links, deleteLinks, type, fromId, toId, endtags, data) {
+        obj.processTemplate = function(text, toConnections) {
+            var supportLinks = getLinks(toConnections, 'supports');
+            var doc = '<div>' + text + '</div>';
+            var jq = $(doc);
+
+            var endtags = {};
+            elemLoop(jq.find('.KFSupportEnd'), function(elem) {
+                endtags[elem.id] = elem;
+            });
+
+            elemLoop(jq.find('.KFSupportStart'), function(elem) {
+                var link = supportLinks[elem.id];
+                var endtag = endtags[elem.id];
+                if (!link) {
+                    console.error('link not found.');
+                    return;
+                }
+                elem.id = 'supportid_' + link.from;
+                endtag.id = 'supportid_' + link.from;
+            });
+            return jq.html();
+        };
+
+        function processOneElement(todos, elem, links, links4delete, type, fromId, toId, endtags, data) {
             if (links[elem.id]) {
-                delete deleteLinks[elem.id];
+                delete links4delete[elem.id];
             } else {
                 todos.push(function(handler) {
                     createLink(type, fromId, toId, data, function(link) {

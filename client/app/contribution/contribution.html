@@ -44,7 +44,7 @@
                             <div class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
                             <div style="height: 100%; overflow: hidden;">
                                 <label>Riseabove View:</label>
-                                 <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
+                                <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
                                 <div id="riseabovediv" style="height: 100%; height: calc(100% - 20px);)border: 1px solid black;"></div>
                             </div>
                         </div>
@@ -259,8 +259,7 @@
                     <label>{{ 'attachments' | translate }}:</label>
                     <ul>
                         <li ng-repeat="conn in fromConnections" ng-if="conn.type==='attach'">
-                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a>
-                            &nbsp; &nbsp;
+                            <a href="/contribution/{{conn.to}}" target="_blank">{{conn._to.title}}</a> &nbsp; &nbsp;
                             <span ng-show="isEditable()">
                               <a ng-click="deleteAttachment(conn)">delete</a>
                             </span>
@@ -315,6 +314,10 @@
                         <div style="padding: 20px;">
                             {{contribution.status}}
                         </div>
+                        <label>Template:</label>
+                        <div style="padding: 20px;">
+                            isTemplate<input type="checkbox" ng-model="contribution.data.isTemplate">
+                        </div>
                     </div>
                     <div style="padding: 10px;" ng-if="contribution.type === 'Note'">
                         <label>Riseabove:</label>
@@ -335,6 +338,9 @@
         </div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="buildson()">{{ 'build-on' | translate }}</button>
+        </div>
+        <div ng-if="contribution.data.isTemplate" style="float: right; padding-top: 0px; padding-right: 10px;">
+            <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="makeFromTemplate()">New Note using Template</button>
         </div>
     </div>
 </div>
