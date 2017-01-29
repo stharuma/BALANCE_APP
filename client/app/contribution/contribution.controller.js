@@ -141,7 +141,8 @@ angular.module('kf6App')
                 $scope.updateRecords();
                 $scope.communityMembers = $community.getMembersArray();
                 $community.refreshMembers();
-                if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
+                // Open a contribution in "edit" mode only it is new (status "unsaved") and obviously if the author has the right to edit it.
+                if ($scope.contribution.status === "unsaved" && $scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }
                 if ($scope.contribution.status === 'active') {
@@ -225,7 +226,7 @@ angular.module('kf6App')
         };
 
         $scope.authorSelected = function(author) {
-            if (_.contains($scope.authors, author)) {
+            if (_.includes($scope.authors, author)) {
                 window.alert('already included');
                 return;
             }
@@ -267,7 +268,7 @@ angular.module('kf6App')
                 each();
             });
 
-            cont.authors = _.pluck($scope.authors, '_id');
+            cont.authors = _.map($scope.authors, '_id');
 
             if ($scope.copy.keywords) {
                 $scope.contribution.keywords = [];
@@ -403,6 +404,49 @@ angular.module('kf6App')
                     window.open(url, '_blank');
                 }
             });
+        };
+
+        $scope.makeFromTemplate = function() {
+            var templateBody = $scope.copy.body;
+            templateBody = $kftag.processTemplate(templateBody, $scope.toConnections);
+
+            /* here is a copy of making builds on (merge later) */
+            var w;
+            if ($scope.isMobile()) {
+                w = window.open('');
+            }
+            var mode = {};
+            mode.permission = $scope.contribution.permission;
+            mode.group = $scope.contribution.group;
+            $community.createNote(mode, function(newContribution) {
+                var url = './contribution/' + newContribution._id;
+                if (w) {
+                    w.location.href = url;
+                } else if (window.openContribution) {
+                    window.openContribution(newContribution._id);
+                } else {
+                    window.open(url, '_blank');
+                }
+                /* get context does not work -- need refactoring */
+                if (contextId) {
+                    $community.getObject(contextId, function(view) {
+                        if (view.type === 'View') {
+                            $community.getLinksFromTo(view._id, $scope.contribution._id, 'contains', function(links) {
+                                if (!links || links.length === 0) {
+                                    return;
+                                }
+                                var link = links[0];
+                                console.log(link);
+                                var data = { x: link.data.x + 100, y: link.data.y + 100 };
+                                $community.createLink(view._id, newContribution._id, 'contains', data, function() {
+                                    $community.createLink(newContribution._id, $scope.contribution._id, 'buildson', {}, function() {});
+                                });
+                            });
+                        }
+                    });
+                }
+            }, templateBody);
+            /* copy end */
         };
 
         $scope.makeRiseabove = function() {
@@ -668,6 +712,7 @@ angular.module('kf6App')
             $scope.mceEditor.insertContent(text);
         };
 
+        /* supportLink means a contains link from Scaffold to Support */
         $scope.addSupport = function(supportLink, selection, addhyphen, argInitialText, isTemplate) {
             if (!$scope.mceEditor) {
                 window.alert('$scope.mceEditor is not set.');

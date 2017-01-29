@@ -19,7 +19,7 @@ angular.module('kf6App')
         });
 
         $scope.preContributeHooks.push(function() {
-            $scope.contribution.members = _.pluck($scope.group._members, '_id');
+            $scope.contribution.members = _.map($scope.group._members, '_id');
         });
 
         $scope.authorSelected = function(author) {
@@ -27,7 +27,7 @@ angular.module('kf6App')
         };
 
         $scope.addMember = function(author) {
-            if (_.contains($scope.group._members, author)) {
+            if (_.includes($scope.group._members, author)) {
                 window.alert('already included');
                 return;
             }

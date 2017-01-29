@@ -320,6 +320,10 @@
                         <div style="padding: 20px;">
                             {{contribution.status}}
                         </div>
+                        <label>Template:</label>
+                        <div style="padding: 20px;">
+                            isTemplate<input type="checkbox" ng-model="contribution.data.isTemplate">
+                        </div>
                     </div>
                     <div style="padding: 10px;" ng-if="contribution.type === 'Note'">
                         <label>Riseabove:</label>
@@ -383,7 +387,7 @@
                             <br style="clear:both">
                             <label style="float: left; font-size:  9pt"> <b> Justification for Selection of Promising Idea:</b></label>
                             <br>
-                            <textarea id="text" cols="70" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
+                            <textarea id="promising-idea-reason" cols="70" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
                         </div>
                         <hr style="clear:both; height: 2px;background-color: #33BBFF; " />
                     </div>
@@ -420,6 +424,9 @@
         </div>
         <div style="float: right; padding-top: 0px; padding-right: 10px;">
             <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="buildson()">{{ 'build-on' | translate }}</button>
+        </div>
+        <div ng-if="contribution.data.isTemplate" style="float: right; padding-top: 0px; padding-right: 10px;">
+            <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="makeFromTemplate()">New Note using Template</button>
         </div>
         <div style="float: left; padding-top: 0px; padding-right: 5px;">
             <button ng-show="status.ispromisingideaTabDisplayed&&!status.hidebuildson" type="submit" class="btn btn-primary" ng-click="showPromisingIdeasInReadMode()">{{promisingmsg}}</button>

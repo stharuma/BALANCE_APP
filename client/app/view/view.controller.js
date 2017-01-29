@@ -372,13 +372,13 @@ angular.module('kf6App')
             var toId = $scope.generateConnectionId();
             toElement.attr('id', toId);
             var conn = $scope.jsPlumb.connect({
-                source: fromId,
-                target: toId,
-                type: 'kfarrow',
-                data: {
-                    color: color,
-                    label: label
-                }
+              source: fromId,
+              target: toId,
+              type: "kfarrow",
+              data: {
+                color: color,
+                label: label
+              }
             });
             if (conn) {
                 $('#' + fromId).on('$destroy', function() {
@@ -411,42 +411,49 @@ angular.module('kf6App')
         jsPlumb.ready(function() {
             $scope.jsPlumb = jsPlumb.getInstance();
             $scope.jsPlumb.setContainer($('#maincanvas'));
-            $scope.jsPlumb.importDefaults({
-                Connector: ['Straight'],
-                Endpoints: ['Blank', 'Blank'],
-                Overlays: [
-                    ['Arrow', {
-                        width: 7,
-                        length: 7,
-                        location: 1
-                    }]
-                ],
-                Anchor: ['Perimeter', {
-                    shape: 'Rectangle'
+
+
+          $scope.jsPlumb.importDefaults({
+            Connector: "Straight",
+            Endpoints: ['Blank', 'Blank'],
+            Overlays: [
+              ['Arrow', {
+                width: 7,
+                length: 7,
+                location: 1
+              }]
+            ],
+            Anchor: ['Perimeter', {
+              shape: 'Rectangle'
+            }],
+            PaintStyle: {
+              strokeWidth: 1,
+              stroke: 'rgba(180,180,180,0.7)'
+            }
+          });
+
+          $scope.jsPlumb.registerConnectionTypes({
+            "kfarrow": {
+              connector: "Straight",
+              endpoint: "Blank",
+              overlays: [
+                ['Arrow', {
+                  width: 7,
+                  length: 7,
+                  location: 1
                 }],
-                PaintStyle: {
-                    lineWidth: 1,
-                    strokeStyle: 'rgba(180,180,180,0.7)'
-                }
-            });
-            $scope.jsPlumb.registerConnectionTypes({
-                'kfarrow': {
-                    overlays: [
-                        ['Arrow', {
-                            width: 7,
-                            length: 7,
-                            location: 1
-                        }],
-                        ['Label', {
-                            label: '${label}'
-                        }]
-                    ],
-                    paintStyle: {
-                        strokeStyle: '${color}',
-                        lineWidth: 1
-                    }
-                },
-            });
+                ['Label', {
+                  label: '${label}'
+                }]],
+              anchor: ['Perimeter', {
+                shape: 'Rectangle'
+              }],
+              paintStyle: {
+                stroke: "${color}",
+                strokeWidth: 1
+              }
+            }
+          });
             $scope.initialize();
         });
 
@@ -716,9 +723,9 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
-        $scope.openTimemashine = function() {
+        $scope.openTimemachine = function() {
             $scope.openAnalytics();
-            var url = 'timemashine/' + $scope.view._id;
+            var url = 'timemachine/' + $scope.view._id;
             window.open(url, '_blank');
         };
 
@@ -732,6 +739,16 @@ angular.module('kf6App')
             $scope.openAnalytics();
             var url = 'scaffoldsupporttracker/' + $scope.view.communityId;
             $scope.openInPopup(url);
+        };
+
+        $scope.openStats = function() {
+            var url = '/stats/' + $scope.view.communityId;
+            window.open(url, '_blank');
+        };
+        $scope.openAuthorNetwork = function() {
+            $scope.openAnalytics();
+            var url = 'authornetwork/' + $scope.view._id;
+            window.open(url, '_blank');
         };
 
         $scope.doExit = function() {

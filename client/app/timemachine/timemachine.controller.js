@@ -4,7 +4,7 @@
 /* global vis */
 
 angular.module('kf6App')
-    .controller('TimemashineCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
+    .controller('TimemachineCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac) {
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
@@ -360,8 +360,8 @@ angular.module('kf6App')
                     shape: 'Rectangle'
                 }],
                 PaintStyle: {
-                    lineWidth: 1,
-                    strokeStyle: 'rgba(180,180,180,0.7)'
+                    strokeWidth: 1,
+                    stroke: 'rgba(180,180,180,0.7)'
                 }
             });
             $scope.jsPlumb.registerConnectionTypes({
@@ -377,8 +377,8 @@ angular.module('kf6App')
                         }]
                     ],
                     paintStyle: {
-                        strokeStyle: '${color}',
-                        lineWidth: 1
+                        stroke: '${color}',
+                        strokeWidth: 1
                     }
                 },
             });

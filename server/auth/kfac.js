@@ -44,7 +44,7 @@ var kfac = function() {
 
     var isAuthor = function(object, author) {
         //This is not work because ObjectId object is different
-        //return _.contains(object.authors, author._id.toString());
+        //return _.includes(object.authors, author._id.toString());
         return object.authors.indexOf(author._id) >= 0;
     };
 

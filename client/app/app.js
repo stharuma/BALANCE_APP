@@ -17,7 +17,6 @@ angular.module('kf6App', [
         'ngCookies',
         'chart.js',
         'ngCsv',
-        'ngjsColorPicker',
         'xeditable'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {

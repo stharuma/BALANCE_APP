@@ -51,7 +51,7 @@ angular.module('kf6App')
                 }
                 if (token.indexOf('-author:') >= 0) {
                     token = token.replace('-author:', '');
-                    var author = _.findWhere(communityMembers, {
+                    var author = _.find(communityMembers, {
                         userName: token
                     });
                     if (author) {
