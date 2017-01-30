@@ -86,7 +86,7 @@ angular.module('kf6App')
                                     reason: promisingIdeaobj.data.reason.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     inContributionTitle: note.title,
                                     author: user,
-                                    date: new Date(promisingIdeaobj.created).toLocaleString(),
+                                    date: new Date(promisingIdeaobj.modified).toLocaleString(),
                                     contribution: note,
                                     color: promisingIdeaobj.data.color,
                                     colordetail: pcolordetail
