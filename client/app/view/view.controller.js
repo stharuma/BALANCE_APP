@@ -110,7 +110,7 @@ angular.module('kf6App')
         };
 
         $scope.updateRef = function(ref) {
-
+            console.log("updated!");
             // show only contains
             if (ref.type !== 'contains') {
                 console.warn('item is not \'contains\'');
@@ -790,7 +790,7 @@ angular.module('kf6App')
                 }
                 var wid = 'ctrb_window_' + id;
                 var str = '<div id="' + wid + '"></div>';
-                var str1 = '<div  ng-include="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></div>';
+                var str1 = '<div style="height: 100%;display:block; width:100%;float:left;" ng-include="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></div>';
                 $('#windows').append(str);
                 $('#' + wid).append(str1);
                 $compile($('#' + wid).contents())($scope);
