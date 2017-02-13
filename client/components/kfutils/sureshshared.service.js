@@ -92,11 +92,10 @@ angular.module('kf6App')
                 onlytxt = word.replace('<span', '').replace(/<\/?span[^>]*>/g, '');
             }
             var curtxt = onlytxt;
-             console.log(word+'------- 1111----'+onlytxt);
             onlytxt = obj.strip(onlytxt.replace(/&nbsp;|(<([^>]+)>)|\/>|>/ig, ''));
             onlytxt = onlytxt.replace('—', '&mdash;').replace('–', '&ndash;');
             if (subContentText.replace(/\s/g, '').replace('—', '&mdash;').indexOf(onlytxt.replace(/\s/g, '')) !== -1 && onlytxt !== '') {
-                if (word.indexOf('&nbsp;') !== -1||word.indexOf('&ldquo;') !== -1) {
+                if (word.indexOf('&nbsp;') !== -1||word.indexOf('&ldquo;') !== -1||word.indexOf('&rdquo;') !== -1) {
                     onlytxt = curtxt;
                 }
                 var str = "<span " + style + " >" + onlytxt + " " + "</span>";
