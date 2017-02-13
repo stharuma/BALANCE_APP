@@ -1,7 +1,7 @@
 'use strict';
 
 try {
-    var setting = require('./setting.js.sample');
+    var setting = require('./setting.js');
     var enabled = true;
 } catch (e) {
     var enabled = false;
