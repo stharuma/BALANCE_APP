@@ -85,15 +85,20 @@ angular.module('kf6App')
         }
 
         function setColorInWord(word, subContentText, style) {
-            var onlytxt = obj.strip(word.replace(/(&nbsp;|<([^>]+)>)/ig, '')).replace('class=\"kfSupportStartLabel\">', '');
+            var onlytxt = word.replace(/(<([^>]+)>)/ig, '').replace('class=\"kfSupportStartLabel\">', '');
             onlytxt = onlytxt.replace(/\/?[a-z][a-z0-9]*[^>]*>/ig, '');
             onlytxt = onlytxt.replace('<span', '').replace(/<\/?span[^>]*>/g, '');
             if (word.indexOf('<br>') !== -1) {
                 onlytxt = word.replace('<span', '').replace(/<\/?span[^>]*>/g, '');
             }
+            var curtxt = onlytxt;
+             console.log(word+'------- 1111----'+onlytxt);
             onlytxt = obj.strip(onlytxt.replace(/&nbsp;|(<([^>]+)>)|\/>|>/ig, ''));
             onlytxt = onlytxt.replace('—', '&mdash;').replace('–', '&ndash;');
             if (subContentText.replace(/\s/g, '').replace('—', '&mdash;').indexOf(onlytxt.replace(/\s/g, '')) !== -1 && onlytxt !== '') {
+                if (word.indexOf('&nbsp;') !== -1||word.indexOf('&ldquo;') !== -1) {
+                    onlytxt = curtxt;
+                }
                 var str = "<span " + style + " >" + onlytxt + " " + "</span>";
                 word = word.replace(/\s\s|\s/g, '').replace(onlytxt, str);
             }
