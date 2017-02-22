@@ -327,8 +327,22 @@ angular.module('kf6App')
                 return;
             }
             var html = "";
+            var w = $(tinymce.activeEditor.getContainer()).width() - 10;
+            var h = $(tinymce.activeEditor.getContainer()).height() - 50;
             for(var i = 0 ; i< selectedImgs.length; i++){
-                html += "<img src=\""+selectedImgs[i].src+"\" alt=\"\" width=\"50px\" height=\"50px\" data-mce-src=\""+selectedImgs[i].src+"\">";
+                var tagName = selectedImgs[i].tagName;
+                var width = selectedImgs[i].naturalWidth;
+                var height = selectedImgs[i].naturalHeight;
+                if(width > w){
+                    width = w;
+                }
+                if(height > h){
+                    height = h;
+                }
+                if(tagName ==='IMG'){
+                    var data_mce_src = selectedImgs[i].getAttribute("src");
+                    html += "<img src=\""+data_mce_src+"\" width=\""+width+"px\" height=\""+height+"px\" alt=\"\" data-mce-src=\""+data_mce_src+"\">";
+                }
             }
             $scope.insertText(html);
         };
@@ -545,6 +559,24 @@ angular.module('kf6App')
             }
         };
 
+        $scope.imgDragStart = function(e){
+            var dt = e.dataTransfer;
+            var img = e.target;
+            var w = $(tinymce.activeEditor.getContainer()).width() - 10;
+            var h = $(tinymce.activeEditor.getContainer()).height() - 50;
+            var width = img.naturalWidth;
+            var height = img.naturalHeight;
+            if(width > w){
+                width = w;
+            }
+            if(height > h){
+                height = h;
+            }
+            var data_mce_src = img.getAttribute("src");
+            var html = "<img src=\""+data_mce_src+"\" width=\""+width+"px\" height=\""+height+"px\" alt=\"\" data-mce-src=\""+data_mce_src+"\">";
+            dt.setData('text/html', html);
+        };
+
         /*********** DnD Reference Related ************/
         $scope.kfdragstart = function(e) {
             var dt = e.dataTransfer; //error in IE
@@ -619,12 +651,14 @@ angular.module('kf6App')
 
         $scope.mceResize = function() {
             if ($scope.mceEditor) {
-                var height = ($('#ctrb_window_'+contributionId).height() - 140);
+                var height = ($('#ctrb_window_'+contributionId).height() - 150);
                 $scope.mceEditor.theme.resizeTo('100%', height);
             }
         };
 
-        $('#ctrb_window_'+contributionId).onresize = $scope.mceResize;
+        $('#ctrb_window_'+contributionId).bind( "dialogresize", function(event, ui) {
+            $scope.mceResize();
+        });
 
         var currentLang = $translate.proposedLanguage() || $translate.use();
         var languageURL = "";
@@ -639,6 +673,7 @@ angular.module('kf6App')
             theme: 'modern',
             menubar: false,
             statusbar: false,
+            convert_urls : false,
             // TODO decide if internationalize or remove font size
             /*
             style_formats_merge: true,
@@ -814,6 +849,15 @@ angular.module('kf6App')
                 return;
             }
             $http.delete('/api/links/' + annoVM.linkId);
+        };
+
+        $scope.annotatorHandler.displayEditor = function(editor, annoVM){
+            if(!editor.element.hasClass(editor.classes.invert.y)){
+                editor.element.addClass(editor.classes.invert.y);
+            }
+        };
+        $scope.annotatorHandler.displayViewer = function(viewer, annoVM){
+            viewer.element.addClass(viewer.classes.invert.y);
         };
 
         $scope.updateAnnotations = function() {

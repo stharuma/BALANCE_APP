@@ -26,6 +26,15 @@ angular.module('kf6App').directive('annotatable', function($community) {
                                 if (scope.annotatorHandler) {
                                     scope.annotatorHandler.annotationDeleted(annotation);
                                 }
+                            }).subscribe('annotationEditorShown', function(editor, annotation){
+                                if (scope.annotatorHandler) {
+                                    scope.annotatorHandler.displayEditor(editor, annotation);
+                                }
+                            })
+                            .subscribe('annotationViewerShown', function(viewer, annotations) {
+                                if (scope.annotatorHandler) {
+                                    scope.annotatorHandler.displayViewer(viewer, annotations);
+                                }
                             });
                         if (scope.annotatorHandler) {
                             scope.annotatorHandler.annotatorInitialized(this.annotator);

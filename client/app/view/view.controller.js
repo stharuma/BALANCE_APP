@@ -34,6 +34,8 @@ angular.module('kf6App')
                 $ac.mixIn($scope, view);
                 $community.enter(view.communityId, function() {
                     $community.refreshGroups();
+                    $community.refreshScaffolds(function(){
+                    });
                     $scope.community = $community.getCommunityData();
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
@@ -761,7 +763,7 @@ angular.module('kf6App')
                 }
                 var wid = 'ctrb_window_' + id;
                 var str = '<div id="' + wid + '"></div>';
-                var str1 = '<div  ng-include="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></div>';
+                var str1 = '<div style="height: 100%;display:block; width:100%;float:left;" ng-include="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></div>';
                 $('#windows').append(str);
                 $('#' + wid).append(str1);
                 $compile($('#' + wid).contents())($scope);

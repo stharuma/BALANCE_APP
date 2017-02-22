@@ -29,3 +29,16 @@ angular.module('kf6App')
             }
         };
     });
+    
+angular.module('kf6App')
+    .directive('kfimgdrag', function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element) {
+                var $scope = scope.$parent;
+                var el = element[0];
+                //el.draggable = true;
+                el.addEventListener('dragstart', $scope.imgDragStart);
+            }
+        };
+    });
