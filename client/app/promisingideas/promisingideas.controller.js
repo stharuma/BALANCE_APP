@@ -330,11 +330,11 @@ angular.module('kf6App')
         };
 
         $scope.setPromisingIdeacolorobj = function (promisingcolor) {
-           var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (Unassign)';
+           var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (Unassigned)';
            $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
             var promisngcolorgroup = pcolorobj.data.data;
             if(promisngcolorgroup===''){
-              promisngcolorgroup = 'Unassign';
+              promisngcolorgroup = 'Unassigned';
             }
              if (pcolorobj.data.color === promisingcolor) {
                     msg=promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (' + promisngcolorgroup+ ')';
