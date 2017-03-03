@@ -185,7 +185,7 @@
             </span>
         </span>
     </div>
-    <div id="helpButton" class="KFViewRightBar" ng-click="status.isHelpCollapsed = !status.isHelpCollapsed">Help</div>
+    <div ng-if="menuStatus !== 'X'" id="helpButton" class="KFViewRightBar" ng-click="status.isHelpCollapsed = !status.isHelpCollapsed">Help</div>
     <div id="maincanvas" class="KFViewMainCanvas">
         <div id="viewcanvas" class="KFViewContributionCanvas">
             <div ng-attr-id="{{ref._id}}" class="kfViewRef" ng-repeat="ref in refs" ng-style="{'top': ref.data.y, 'left': ref.data.x}" style="line-height: 100%;" ng-mousedown="mouseDown(this)" context-menu="onContextOpen(this)" data-target="menu-A">
@@ -227,12 +227,22 @@
         </div>
         <!-- for selection proxy-->
         <div id="selectioncanvas" class="KFViewSelectedCanvas"></div>
-        <div id="dropcanvas" class="kfViewDropCanvas kfViewMarqueeCanvas"></div>
+        <div id="dropcanvas" class="kfViewDropCanvas kfViewMarqueeCanvas" context-menu="canvasMenuOpen(this)" data-target="menu-Canvas"></div>
         <div id="windows" class="KFViewWindowsCanvas"></div>
     </div>
+
+    <div class="dropdown position-fixed" id="menu-Canvas" style="position: absolute; z-index: 20;">
+        <ul class="dropdown-menu" role="menu" style="font-size: 1.27em; min-width:13em;">
+            <li ng-if="canvasMenu === null || !canvasMenu" class="menuitem unclickable" ng-click="">{{ 'Paste' | translate }}</li>
+            <li ng-if="canvasMenu !== null && canvasMenu" class="menuitem" ng-click="pasteNote($event)">{{ 'Paste' | translate }}</li>
+            <!-- <li class="menuitem ng-scope" ng-click="importNoteFromGoogle($event)">{{ 'Import from Google Drive' | translate }}</li> -->
+        </ul>
+    </div>
+
     <div class="dropdown position-fixed" id="menu-A" style="position: absolute; z-index: 20;">
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu" role="menu" style="font-size: 1.27em; min-width:13em;">
             <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContribution()">{{ 'open' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="copy2Clipboard()">{{ 'Copy' | translate }}</li>
             <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInTab()">{{ 'openInTab' | translate }}</li>
             <li ng-if="contextTarget.data !== null && contextTarget._to.type !== 'View'" class="menuitem" ng-click="mOpenContributionInPopup()">{{ 'openInWindow' | translate }}</li>
             <li ng-if="contextTarget.data !== null && contextTarget._to.type === 'View'" class="menuitem" ng-click="mOpenView()">{{ 'open' | translate }}</li>
@@ -241,10 +251,12 @@
             <li ng-if="contextTarget.data.showInPlace === true && isEditable()" class="menuitem" ng-click="showAsIcon()">{{ 'show_as_icon' | translate }}</li>
             <li ng-if="contextTarget.data.showInPlace !== true && contextTarget._to.type !== 'Note' && isEditable()" class="menuitem" ng-click="showInPlace()">{{ 'show_in_place' | translate }}</li>
             <li ng-if="isFixable()" class="menuitem" ng-click="fix()">{{ 'position_fix' | translate }}</li>
-            <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">{{ 'position_fixAndLock' | translate }}</li>
             <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li>
+            <li ng-if="isLockable()" class="menuitem" ng-click="lock()">{{ 'object_lock' | translate }}</li>
+            <!-- <li ng-if="isFixable() && isLockable()" class="menuitem" ng-click="fixAndLock()">{{ 'position_fixAndLock' | translate }}</li> -->
+            <!-- <li ng-if="isUnfixable()" class="menuitem" ng-click="unfix()">{{ 'position_unfix' | translate }}</li> -->
             <li ng-if="isEditable()" class="menuitem" ng-click="createRiseaboveFromContextMenu()">{{ 'rise-above_create' | translate }}</li>
-            <li ng-if="contextTarget.data !== null && isEditable()" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
+            <li ng-if="contextTarget.data !== null && isEditable() && isDeletable" class="menuitem" ng-click="delete()">{{ 'delete' | translate }}</li>
         </ul>
     </div>
 </div>

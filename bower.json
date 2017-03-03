@@ -20,7 +20,7 @@
     "angular-ui-tinymce": "0.0.12",
     "angular-ui-sortable": "~0.13.1",
     "ng-context-menu": "~1.0.1",
-    "jsPlumb": "~1.7.2",
+    "jsPlumb": "<1.7.9",
     "ng-file-upload": "~2.0.4",
     "angular-ui-select": "~0.9.6",
     "d3": "~3.5.6",

@@ -229,15 +229,43 @@ angular.module('kf6App')
         $scope.getTable = function() {
             var table = [];
             $scope.contributions.forEach(function(each) {
+                var content = html2PlainText(each.data.body);
                 table.push({
                     title: each.title,
                     authors: $scope.makeAuthorString(each),
-                    body: each.data.body,
+                    body: content,
                     created: $scope.getTimeString(each.created)
                 });
             });
             return table;
         };
+
+        function html2PlainText(html){
+            var text = "";
+            if(html.trim() ===""){
+                return text;
+            }
+            
+            html = html.replace(/&nbsp;/g, "");
+            html = html.replace(/<span([^>]*)class="KFSupportStart mceNonEditable"([^>]*)>/g, "[");
+            html = html.replace(/<span\s*([^>]*)\s*class="KFSupportEnd mceNonEditable"\s*([^>]*)>/g, "]");
+            html = html.replace(/<span class="katex">/g, "");
+            html = html.replace(/<input type="hidden"\s*([^>]*)\s*value="(.*?)"\s*([^>]*)>/gi, "Equation -> $2<br>");
+            html = html.replace(/<span class="katex-html"[^>]*>(.(?!<label>))*<\/span><label><\/label>/g,"");
+            html = html.replace(/<\/?span[^>]*>/g,"");
+            html = html.replace(/<\/?em[^>]*>/g,"");
+            html = html.replace(/<\/?strong[^>]*>/g,"");
+            html = html.replace(/<\/?h1[^>]*>/g,"");
+            html = html.replace(/<\/?ul[^>]*>/g,"");
+            html = html.replace(/<\/?li[^>]*>/g,"<br>");
+            html = html.replace(/<\/?p[^>]*>/g,"<br>"); 
+            html = html.replace(/<img\s*([^>]*)\s*src="(.*?)"\s*([^>]*)>/gi, "<br>Image -> "+window.location.origin +"/$2<br>");
+            html = html.replace(/<a\s*([^>]*)\s*href="(.*?)"\s*([^>]*)>(.*?)<\/a>/gi, "$4 (Link->$2)<br>");
+            html = html.replace(/<a\s*([^>]*)\s*href="(.*?)"\s*([^>]*)>(.*?)<\/a>/gi, "$4 (Link->$2)<br>");
+            html = html.replace(/(<br[^>]*>\s*){1,}/g, "\n");
+            html = html.trim();
+            return html;
+        }
 
         $scope.getTableHeader = function() {
             return ['Title', 'Authors', 'Body', 'Created'];

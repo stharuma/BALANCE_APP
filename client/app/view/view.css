@@ -241,12 +241,21 @@
 }
 .menuitem {
     padding-left: 10px;
+    padding-left: 0.91em;
+    height: 25px;
+    height: 2.27em;
+    line-height: 25px;
+    line-height: 2.27em;
     cursor: default;
     background-color: white;
 }
 .menuitem:hover {
     color: white;
     background-color: #0070FF;
+}
+
+.unclickable{
+    color:gray;
 }
 /* endo of context menu */
 /* window related */

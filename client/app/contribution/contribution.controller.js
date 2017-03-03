@@ -651,7 +651,13 @@ angular.module('kf6App')
 
         $scope.mceResize = function() {
             if ($scope.mceEditor) {
-                var height = ($('#ctrb_window_'+contributionId).height() - 150);
+                var height = $('#ctrb_window_'+contributionId).height();
+                if(height === null){
+                    height = window.innerHeight - 150;
+                }
+                else{
+                    height = height - 150;
+                }
                 $scope.mceEditor.theme.resizeTo('100%', height);
             }
         };

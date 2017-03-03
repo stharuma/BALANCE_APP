@@ -81,9 +81,9 @@
                         </div>
                     </div>
                     <div style="height: 5px;"></div>
-                    <div ng-if="contribution.type === 'Note'" style="height: 100%; height: calc(100% - 24px);">
-                        <div style="float: left; height: 100%; overflow-y: auto; overflow-x: hidden;">
-                            <div collapse="status.isScaffoldCollapsed" valign="top" style="width: 195px; padding: 5px;">
+                    <div ng-if="contribution.type === 'Note'" style="height: calc(100% - 24px);">
+                        <div style="float: left; height: auto; overflow-y: auto; overflow-x: hidden;">
+                            <div collapse="status.isScaffoldCollapsed" valign="top" style="width: 195px; padding: 5px;height:auto;">
                                 <div style="max-width: 175px;">
                                     <div style="height: 7px;"></div>
                                     <label>{{ 'scaffolds' | translate }}:</label>

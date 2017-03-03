@@ -4,7 +4,22 @@ angular.module('kf6App')
     .controller('AttachmentUploaderCtrl', function($scope, $http, $upload, $community) {
         $scope.onFileSelect = function($files) {
             $files.forEach(function(file) {
-                $scope.createAttachment(file);
+                //$scope.createAttachment(file);
+                if(file.type.indexOf("image/") >= 0){
+                    var _URL = window.URL || window.webkitURL;
+                    var img = document.createElement("img");
+                    img.onload = function() {
+                        var width  = img.naturalWidth  || img.width;
+                        var height = img.naturalHeight || img.height;
+                        file.width = width;
+                        file.height = height;
+                        $scope.createAttachment(file); 
+                    };
+                    img.src = _URL.createObjectURL(file);
+                }
+                else{
+                    $scope.createAttachment(file);
+                }
             });
         };
 
@@ -25,6 +40,8 @@ angular.module('kf6App')
                         attachment.data = data;
                         attachment.tmpFilename = data.tmpFilename;
                         $community.modifyObject(attachment, function(newAttachment) {
+                            newAttachment.data.width = file.width;
+                            newAttachment.data.height = file.height;
                             $scope.notifyAttachmentUploaded(newAttachment);
                         });
                     }).error(function( /*data, status*/ ) {
