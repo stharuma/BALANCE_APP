@@ -8,7 +8,8 @@ exports.setup = function(User, config) {
         },
         function(userName, password, done) {
             User.findOne({
-                userName: userName
+              provider: 'local',
+              userName: userName
             }, function(err, user) {
                 if (err) {
                     return done(err);
