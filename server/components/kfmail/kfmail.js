@@ -1,7 +1,7 @@
 'use strict';
 
 try {
-    var settings = require('./../../../setting.js').mail;
+    var settings = require('./../../../settings.js').mail;
     var enabled = true;
 } catch (e) {
     var enabled = false;
