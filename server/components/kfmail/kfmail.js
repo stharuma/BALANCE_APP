@@ -1,12 +1,12 @@
 'use strict';
 
 try {
-    var setting = require('./setting.js');
+    var settings = require('./../../../setting.js').mail;
     var enabled = true;
 } catch (e) {
     var enabled = false;
     if (e instanceof Error && e.code === 'MODULE_NOT_FOUND') {
-        console.warn('The file kfmail/setting.js doesnt exist. disabled');
+        console.warn('The file setting.js doesn\'t exist or doesn\'t contain required information. Mail disabled');
     } else {
         throw e;
     }
@@ -18,9 +18,9 @@ exports.send = function(to, subject, body) {
     if (!enabled) {
         return;
     }
-    var transporter = nodemailer.createTransport(setting.transportOptions);
+    var transporter = nodemailer.createTransport(settings.transportOptions);
     var options = {
-        from: setting.from,
+        from: settings.from,
         to: to,
         subject: subject,
         text: body
@@ -35,5 +35,5 @@ exports.send = function(to, subject, body) {
 }
 
 exports.getBaseURL = function() {
-    return setting.baseURL;
+    return settings.baseURL;
 }

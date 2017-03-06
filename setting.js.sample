@@ -2,7 +2,8 @@
 
 // Reference: https://github.com/nodemailer/nodemailer#set-up-smtp
 
-exports.transportOptions = {
+exports.mail = {
+  transportOptions: {
     host: 'smtp.gmail.com',
     port: 465,
     secure: true, // use SSL
@@ -10,6 +11,8 @@ exports.transportOptions = {
         user: 'kf6feedback@gmail.com',
         pass: process.env.EMAIL_PASSWORD
     }
+  },
+  from: 'zzzz@gmail.com';
+  baseURL: 'https://kf.example.net/';
 };
-exports.from ='kf6feedback@gmail.com';
-exports.baseURL = 'https://kf.example.net/';
+
