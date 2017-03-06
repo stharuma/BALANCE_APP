@@ -255,13 +255,15 @@ angular.module('kf6App')
             html = html.replace(/<\/?span[^>]*>/g,"");
             html = html.replace(/<\/?em[^>]*>/g,"");
             html = html.replace(/<\/?strong[^>]*>/g,"");
-            html = html.replace(/<\/?h1[^>]*>/g,"");
+            html = html.replace(/<\/?div[^>]*>/g,"");
+            html = html.replace(/<\/?h[1-9][^>]*>/g,"");
             html = html.replace(/<\/?ul[^>]*>/g,"");
             html = html.replace(/<\/?li[^>]*>/g,"<br>");
-            html = html.replace(/<\/?p[^>]*>/g,"<br>"); 
-            html = html.replace(/<img\s*([^>]*)\s*src="(.*?)"\s*([^>]*)>/gi, "<br>Image -> "+window.location.origin +"/$2<br>");
+            html = html.replace(/<\/?p[^>]*>/g,"<br>");
             html = html.replace(/<a\s*([^>]*)\s*href="(.*?)"\s*([^>]*)>(.*?)<\/a>/gi, "$4 (Link->$2)<br>");
-            html = html.replace(/<a\s*([^>]*)\s*href="(.*?)"\s*([^>]*)>(.*?)<\/a>/gi, "$4 (Link->$2)<br>");
+            html = html.replace(/<img\s*([^>]*)\s*src="(.*?)"\s*([^>]*)>/gi, function(match,p1,p2){
+                return p2.startsWith("http") ? "<br>Image -> "+p2+"<br>" : "<br>Image -> "+window.location.origin +"/"+p2+"<br>";
+            });
             html = html.replace(/(<br[^>]*>\s*){1,}/g, "\n");
             html = html.trim();
             return html;
