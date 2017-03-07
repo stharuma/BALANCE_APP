@@ -258,6 +258,7 @@ angular.module('kf6App')
             html = html.replace(/<\/?div[^>]*>/g,"");
             html = html.replace(/<\/?h[1-9][^>]*>/g,"");
             html = html.replace(/<\/?ul[^>]*>/g,"");
+            html = html.replace(/<\/?ol[^>]*>/g,"");
             html = html.replace(/<\/?li[^>]*>/g,"<br>");
             html = html.replace(/<\/?p[^>]*>/g,"<br>");
             html = html.replace(/<a\s*([^>]*)\s*href="(.*?)"\s*([^>]*)>(.*?)<\/a>/gi, "$4 (Link->$2)<br>");

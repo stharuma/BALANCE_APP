@@ -2,12 +2,19 @@
 
 angular.module('kf6App')
     .controller('ScaffoldCtrl', function($scope, $community) {
+        //$scope.scaffolds = $community.getScaffolds();
         $scope.scaffolds = $community.getScaffolds();
-        
+        $scope.current = $scope.scaffolds[0];
 
-        $community.refreshScaffolds(function(){
-            $scope.current = $scope.scaffolds[0];
+        $scope.initializingHooks.push(function() {
+            $community.refreshScaffolds(function(scaffolds) {
+                $scope.scaffolds = scaffolds;
+                $scope.current = $scope.scaffolds[0];
+            });
         });
+        // $community.refreshScaffolds(function(){
+        //     $scope.current = $scope.scaffolds[0];
+        // });
 
         $scope.allClicked = function(scaffold) {
             if (!$scope.addSupport) {

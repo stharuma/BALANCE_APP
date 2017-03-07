@@ -120,8 +120,8 @@ angular.module('kf6App')
                     });
                 });
                 // $scope.updateRecords();
-                // $scope.communityMembers = $community.getMembersArray();
-                // $community.refreshMembers();
+                $scope.communityMembers = $community.getMembersArray();
+                $community.refreshMembers();
                 if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }
@@ -451,7 +451,6 @@ angular.module('kf6App')
                                     return;
                                 }
                                 var link = links[0];
-                                console.log(link);
                                 var data = { x: link.data.x + 100, y: link.data.y + 100 };
                                 $community.createLink(view._id, newContribution._id, 'contains', data, function() {
                                     $community.createLink(newContribution._id, $scope.contribution._id, 'buildson', {}, function() {});
