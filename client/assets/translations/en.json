@@ -82,7 +82,7 @@
   "password_restrictions": "Password must be at least 4 characters.",
   "personal_workspace": "Personal workspace",
   "position_fix": "Fix position",
-  "position_unfix": "Unlock position",
+  "position_unfix": "Unfix position",
   "object_lock": "Lock object",
   "object_unlock": "Unlock object",
   "properties": "Properties",
