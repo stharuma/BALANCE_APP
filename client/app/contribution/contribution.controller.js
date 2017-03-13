@@ -570,10 +570,52 @@ angular.module('kf6App')
 
         /*********** tab changed handler ************/
 
-        // $scope.readSelected = function() {
-        //     $scope.status.hidebuildson = false;
-        // };
+          $scope.tabSelected = function(idx) {
+            if(idx ==='edit'){
+                if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
+                    var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                    $('#svgeditdiv').html(xhtml);
+                    $scope.svgInitialized = true;
+                }
+            }
+            else if(idx ==='authors'){
+                $scope.contribution.getGroupName = function() {
+                    var groupId = $scope.contribution.group;
+                    if (!groupId) {
+                        return '(none)';
+                    }
+                    var group = $scope.community.groups[groupId];
+                    if (!group) {
+                        return groupId + ' (loading)';
+                    }
+                    return group.title;
+                };
+                $scope.selected.group = $community.getGroup($scope.contribution.group);
+                $scope.$watch('selected.group', function() {
+                    if ($scope.selected.group) {
+                        $scope.contribution.group = $scope.selected.group._id;
+                    }
+                });
+                $community.refreshGroups();
+                $community.refreshMembers();
+                $scope.communityMembers = $community.getMembersArray();
+            }
+            else if(idx ==='connections'){
 
+            }
+            else if(idx ==='history'){
+                $scope.updateRecords();
+            }
+            else if(idx ==='attachments'){
+
+            }
+            else if(idx ==='read'){
+                $scope.status.hidebuildson = false;
+            }
+            
+        };
+
+     
         $scope.readDeselected = function() {
             $scope.status.hidebuildson = true;
         };
@@ -1016,6 +1058,13 @@ angular.module('kf6App')
               $scope.selectedText = '';
           };
 
+
+          $scope.promisingIdeaobjProcessCancel = function () {
+             $scope.selectedText=''; 
+             $scope.status.ispromisingideaCollapsed = true; 
+             $scope.status.hidecontributeButtonBar = false;
+          };
+
           $scope.trustAsHtml = function (html) {
               return $sce.trustAsHtml(html);
           };
@@ -1224,51 +1273,7 @@ angular.module('kf6App')
 
         /*********** Promisingness Idea's code End  ************/
 
-          $scope.tabSelected = function(idx) {
-            if(idx ==='edit'){
-                if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
-                    var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
-                    $('#svgeditdiv').html(xhtml);
-                    $scope.svgInitialized = true;
-                }
-            }
-            else if(idx ==='authors'){
-                $scope.contribution.getGroupName = function() {
-                    var groupId = $scope.contribution.group;
-                    if (!groupId) {
-                        return '(none)';
-                    }
-                    var group = $scope.community.groups[groupId];
-                    if (!group) {
-                        return groupId + ' (loading)';
-                    }
-                    return group.title;
-                };
-                $scope.selected.group = $community.getGroup($scope.contribution.group);
-                $scope.$watch('selected.group', function() {
-                    if ($scope.selected.group) {
-                        $scope.contribution.group = $scope.selected.group._id;
-                    }
-                });
-                $community.refreshGroups();
-                $community.refreshMembers();
-                $scope.communityMembers = $community.getMembersArray();
-            }
-            else if(idx ==='connections'){
-
-            }
-            else if(idx ==='history'){
-                $scope.updateRecords();
-            }
-            else if(idx ==='attachments'){
-
-            }
-            else if(idx ==='read'){
-                $scope.status.hidebuildson = false;
-            }
-            
-        };
-
+        
           /*********** svg-edit ************/
           $scope.svgInitialized = false;
 

@@ -33,7 +33,7 @@
     <!-- tab and contents part -->
     <div class="KFTabSet">
         <tabset>
-            <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
+            <tab heading="{{ 'read' | translate }}" class="KFTab" select="tabSelected('read')" deselect="readDeselected()">
                 <div  style="position: relative; ">
                     <button ng-mouseup="clearSelection();" class="btn btn-primary KFToolBarButton promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng-show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
                       <span class="tooltiptext">Promisingness Idea</span></button>
@@ -414,8 +414,8 @@
             <textarea id="text" cols="70" rows="2" ng-model="textareaText"></textarea>
         </div>
          <div style="clear:both; text-align: right; padding-right: 10px; padding-top: 5px; height: 10%">
-           <button  type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false; selectedText=''; ">Cancel</button>
-           <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false;">Save</button>
+           <button  type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcessCancel()">Cancel</button>
+           <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess(); status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false;">Save</button>
          </div>
         <hr>
     </div>
