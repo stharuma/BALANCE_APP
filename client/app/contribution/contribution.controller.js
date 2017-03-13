@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $rootScope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh) {
+    .controller('ContributionCtrl', function($scope, $rootScope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh, $sureshshared) {
         var contributionId = $rootScope.contributionId;
         var contextId = $rootScope.contextId;
 
