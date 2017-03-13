@@ -1042,11 +1042,11 @@ angular.module('kf6App')
               $scope.newnoteIndex = index;
           };
 
-          $scope.promisingIdeaobjProcess = function () {
+          $scope.promisingIdeaobjProcess = function (targetColor) {
               $scope.promisingIdeaobj = {
                   idea: $scope.selectedText,
                   reason: $scope.textareaText,
-                  color: $scope.targetColor
+                  color: targetColor
               };
               $suresh.createPromisngIdeaobj($community, $scope.promisingIdeaobj, $scope.contribution._id, function (link, promisingIdeaobj) {
                   $scope.promisingIdeaobjLinks[link._id] = link;
