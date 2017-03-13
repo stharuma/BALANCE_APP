@@ -4,10 +4,11 @@ angular.module('kf6App')
     .controller('AuthorSelectorCtrl', function($scope, $community) {
 
         $scope.selected = {};
+        $scope.authors = $community.getMembersArray();
 
         var initialize = function() {
-            $scope.community = $community.getCommunityData();
-            $scope.authors = $scope.community.membersArray;
+            // $scope.community = $community.getCommunityData();
+            // $scope.authors = $scope.community.membersArray;
         };
 
         if ($scope.initializingHooks) {

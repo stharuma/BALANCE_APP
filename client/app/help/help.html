@@ -1,0 +1,29 @@
+<div>
+	<div class="feedback_form">
+		<label>{{ 'Send Feedback' | translate }}</label>
+		<table class="feedback_tb">
+			<tr>
+				<td class="td_label"><label>{{ 'From' | translate }}:</label></td>
+				<td class="td_content">
+					<select ng-model="email">
+						<option ng-repeat="opt in emails" value="{{opt.id}}">{{opt.name}}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="td_label"><span style="color:red">*</span>&nbsp;<label>{{ 'Title' | translate }}:</label></td>
+				<td class="td_content"><input type="text" ng-model="input.fbTitle"/></td>
+			</tr>
+			<tr class="tr_200">
+				<td class="td_label td_top"><span style="color:red">*</span>&nbsp;<label>{{ 'Description' | translate }}:</label></td>
+				<td class="td_content"><textarea ng-model="input.fbContent" rows=8></textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><button class="btn btn-primary kfbutton" ng-click="clearForm()" style="float:left;margin-left:10px;">{{ 'Clear' | translate }}</button><button class="btn btn-primary kfbutton" style="float:left;margin-left:410px;" ng-click="sendFeedback()">{{ 'Send' | translate }}</button></td>
+			</tr>
+		</table>
+	</div>
+	<div id="msg_div" ng-show="msgShow" class="msg_area">{{msg}}</div>
+	
+</div>

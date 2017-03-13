@@ -5,9 +5,16 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh, $sureshshared) {
-        var contributionId = $stateParams.contributionId;
-        var contextId = $stateParams.contextId;
+    .controller('ContributionCtrl', function($scope, $rootScope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh) {
+        var contributionId = $rootScope.contributionId;
+        var contextId = $rootScope.contextId;
+
+        if(contributionId === undefined){
+            contributionId = $stateParams.contributionId;
+        }
+        if(contextId === undefined){
+            contextId = $stateParams.contextId;
+        }
 
         $scope.relatedwordID = contributionId; //added by Xing Liu
 
@@ -17,21 +24,25 @@ angular.module('kf6App')
         $scope.status = {};
         $scope.status.error = false;
         $scope.status.isScaffoldCollapsed = false;
-        $scope.status.isAttachmentCollapsed = true;
+        $scope.status.isAttachmentsCollapsed = true;
         $scope.status.isContributionCollapsed = true;
         $scope.status.ispromisingideaCollapsed = true;
         $scope.status.ispromisingideaTabDisplayed = false;
         $scope.showpromisingideaCollapsed = false;
+        $scope.status.isInsertImgCollapsed = false;
         $scope.status.edittabActive = false;
         $scope.status.dirty = true;
         $scope.status.contribution = '';
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
+
         $scope.promisingmsg = 'Show Highlighted Text';
 
         $scope.selectedIndex = -1;
         $scope.newnoteIndex = -1;
         $scope.deletedIndex = -1;
+
+        $scope.status.insertable = false;
 
         $scope.community = {};
         $scope.contribution = {};
@@ -105,24 +116,25 @@ angular.module('kf6App')
                 $scope.contribution.authors.forEach(function(authorId) {
                     $scope.authors.push($community.getMember(authorId));
                 });
-                $scope.contribution.getGroupName = function() {
-                    var groupId = $scope.contribution.group;
-                    if (!groupId) {
-                        return '(none)';
-                    }
-                    var group = $scope.community.groups[groupId];
-                    if (!group) {
-                        return groupId + ' (loading)';
-                    }
-                    return group.title;
-                };
-                $scope.selected.group = $community.getGroup($scope.contribution.group);
-                $scope.$watch('selected.group', function() {
-                    if ($scope.selected.group) {
-                        $scope.contribution.group = $scope.selected.group._id;
-                    }
-                });
-                $community.refreshGroups();
+
+                // $scope.contribution.getGroupName = function() {
+                //     var groupId = $scope.contribution.group;
+                //     if (!groupId) {
+                //         return '(none)';
+                //     }
+                //     var group = $scope.community.groups[groupId];
+                //     if (!group) {
+                //         return groupId + ' (loading)';
+                //     }
+                //     return group.title;
+                // };
+                // $scope.selected.group = $community.getGroup($scope.contribution.group);
+                // $scope.$watch('selected.group', function() {
+                //     if ($scope.selected.group) {
+                //         $scope.contribution.group = $scope.selected.group._id;
+                //     }
+                // });
+                // $community.refreshGroups();
                 $community.refreshPromisingcolorobjs(function(){
                    $scope.promisingIdeacolorobjsarr=$community.getPromisingcolorobjsArray();
                     $scope.setPromisingColorData();
@@ -130,6 +142,7 @@ angular.module('kf6App')
                 if($scope.promisingIdeacolorobjsarr.length===0){
                    $scope.setPromisingColorData();
                 }
+
                 $scope.updateToConnections(function() {
                     $scope.updateAnnotations();
                     $scope.updatepromisingIdeaobjs();
@@ -138,9 +151,10 @@ angular.module('kf6App')
                         $scope.updateAttachments(links);
                     });
                 });
-                $scope.updateRecords();
-                $scope.communityMembers = $community.getMembersArray();
-                $community.refreshMembers();
+
+                // $scope.updateRecords();
+                // $scope.communityMembers = $community.getMembersArray();
+                // $community.refreshMembers();
                 // Open a contribution in "edit" mode only it is new (status "unsaved") and obviously if the author has the right to edit it.
                 if ($scope.contribution.status === "unsaved" && $scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
@@ -191,6 +205,7 @@ angular.module('kf6App')
                 }
             });
         };
+
         $scope.updateFromConnections = function(next) {
             $http.get('/api/links/from/' + contributionId).success(function(links) {
                 $scope.fromConnections = links;
@@ -339,12 +354,47 @@ angular.module('kf6App')
             }
         };
 
+        $scope.insertImg = function(){
+            var parentDOM = document.getElementsByClassName("KFContainer")[0];
+            var selectedImgs = parentDOM.getElementsByClassName("selected");
+            if(selectedImgs.length === 0){
+                return;
+            }
+            
+            var html = "";
+            var w = $(tinymce.activeEditor.getContainer()).width() - 10;
+            var h = $(tinymce.activeEditor.getContainer()).height() - 50;
+            for(var i = 0 ; i< selectedImgs.length; i++){
+                var tagName = selectedImgs[i].tagName;
+                var width = selectedImgs[i].naturalWidth;
+                var height = selectedImgs[i].naturalHeight;
+                if(width > w){
+                    width = w;
+                }
+                if(height > h){
+                    height = h;
+                }
+                if(tagName ==='IMG'){
+                    var data_mce_src = selectedImgs[i].getAttribute("src");
+                    html += "<img src=\""+data_mce_src+"\" width=\""+width+"px\" height=\""+height+"px\" alt=\"\" data-mce-src=\""+data_mce_src+"\">";
+                }
+            }
+            $scope.insertText(html);
+        };
+
         $scope.closeRequest = function() {
-            if (window.wid) {
-                window.parent.closeDialog(window.wid);
-            } else {
+            // if (window.wid) {
+            //     window.parent.closeDialog(window.wid);
+            // } else {
+            //     window.close();
+            // }
+            if(document.getElementById('ctrb_window_'+contributionId) === null){
                 window.close();
             }
+            else{
+                window.closeDialog('ctrb_window_'+contributionId);
+            }
+            
         };
 
         $scope.preProcess = function() {
@@ -480,7 +530,6 @@ angular.module('kf6App')
                 window.alert('this contribution is not riseabove');
             }
 
-            console.log('xx');
             var url = 'view/' + $scope.contribution.data.riseabove.viewId;
             window.open(url, '_blank');
         };
@@ -521,9 +570,9 @@ angular.module('kf6App')
 
         /*********** tab changed handler ************/
 
-        $scope.readSelected = function() {
-            $scope.status.hidebuildson = false;
-        };
+        // $scope.readSelected = function() {
+        //     $scope.status.hidebuildson = false;
+        // };
 
         $scope.readDeselected = function() {
             $scope.status.hidebuildson = true;
@@ -551,6 +600,24 @@ angular.module('kf6App')
                 title = $scope.contribution.type + ': ' + $scope.contribution.title;
                 document.title = title;
             }
+        };
+
+        $scope.imgDragStart = function(e){
+            var dt = e.dataTransfer;
+            var img = e.target;
+            var w = $(tinymce.activeEditor.getContainer()).width() - 10;
+            var h = $(tinymce.activeEditor.getContainer()).height() - 50;
+            var width = img.naturalWidth;
+            var height = img.naturalHeight;
+            if(width > w){
+                width = w;
+            }
+            if(height > h){
+                height = h;
+            }
+            var data_mce_src = img.getAttribute("src");
+            var html = "<img src=\""+data_mce_src+"\" width=\""+width+"px\" height=\""+height+"px\" alt=\"\" data-mce-src=\""+data_mce_src+"\">";
+            dt.setData('text/html', html);
         };
 
         /*********** DnD Reference Related ************/
@@ -627,12 +694,16 @@ angular.module('kf6App')
 
         $scope.mceResize = function() {
             if ($scope.mceEditor) {
-                var height = ($(window).height() - 140);
+                var height = ($('#ctrb_window_'+contributionId).height() - 150);
                 $scope.mceEditor.theme.resizeTo('100%', height);
             }
         };
 
-        window.onresize = $scope.mceResize;
+        $('#ctrb_window_'+contributionId).bind( "dialogresize", function(event, ui) {
+            $scope.mceResize();
+        });
+
+        //$('#ctrb_window_'+contributionId).onresize = $scope.mceResize;
 
         var currentLang = $translate.proposedLanguage() || $translate.use();
         var languageURL = "";
@@ -647,6 +718,7 @@ angular.module('kf6App')
             theme: 'modern',
             menubar: false,
             statusbar: false,
+            convert_urls : false,
             // TODO decide if internationalize or remove font size
             /*
             style_formats_merge: true,
@@ -771,6 +843,26 @@ angular.module('kf6App')
             $scope.copy.keywords = original + selectedText;
         };
 
+        $scope.selectedImg = function(){
+            if($scope.images.length === 0){
+                return;
+            }
+            //event = event || window.event;
+            var selectedImg = event.target || event.srcElement;
+            if(selectedImg.className === ""){
+                selectedImg.className = "selected";
+                $scope.status.insertable = true;
+            }
+            else{
+                selectedImg.className = "";
+                var parentDOM = document.getElementsByClassName("KFContainer")[0];
+                var selectedImgs = parentDOM.getElementsByClassName("selected");
+                if(selectedImgs.length === 0){
+                    $scope.status.insertable = false;
+                }
+            }
+        };
+
         /*********** annotator ***********/
         var annotator;
         $scope.annotatorHandler = {};
@@ -802,6 +894,16 @@ angular.module('kf6App')
                 return;
             }
             $http.delete('/api/links/' + annoVM.linkId);
+        };
+
+        $scope.annotatorHandler.displayEditor = function(editor, annoVM){
+            if(!editor.element.hasClass(editor.classes.invert.y)){
+                editor.element.addClass(editor.classes.invert.y);
+            }
+        };
+
+        $scope.annotatorHandler.displayViewer = function(viewer, annoVM){
+            viewer.element.addClass(viewer.classes.invert.y);
         };
 
         $scope.updateAnnotations = function() {
@@ -888,7 +990,7 @@ angular.module('kf6App')
             });
         };
 
-       /***********promising Ideas ************/
+       /***********promising Idea's code start ************/
           $scope.setIndex = function (index) {
               $scope.selectedIndex = index;
           };
@@ -1120,6 +1222,53 @@ angular.module('kf6App')
                 $sureshshared.clearSelection();
            };
 
+        /*********** Promisingness Idea's code End  ************/
+
+          $scope.tabSelected = function(idx) {
+            if(idx ==='edit'){
+                if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
+                    var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                    $('#svgeditdiv').html(xhtml);
+                    $scope.svgInitialized = true;
+                }
+            }
+            else if(idx ==='authors'){
+                $scope.contribution.getGroupName = function() {
+                    var groupId = $scope.contribution.group;
+                    if (!groupId) {
+                        return '(none)';
+                    }
+                    var group = $scope.community.groups[groupId];
+                    if (!group) {
+                        return groupId + ' (loading)';
+                    }
+                    return group.title;
+                };
+                $scope.selected.group = $community.getGroup($scope.contribution.group);
+                $scope.$watch('selected.group', function() {
+                    if ($scope.selected.group) {
+                        $scope.contribution.group = $scope.selected.group._id;
+                    }
+                });
+                $community.refreshGroups();
+                $community.refreshMembers();
+                $scope.communityMembers = $community.getMembersArray();
+            }
+            else if(idx ==='connections'){
+
+            }
+            else if(idx ==='history'){
+                $scope.updateRecords();
+            }
+            else if(idx ==='attachments'){
+
+            }
+            else if(idx ==='read'){
+                $scope.status.hidebuildson = false;
+            }
+            
+        };
+
           /*********** svg-edit ************/
           $scope.svgInitialized = false;
 
@@ -1145,3 +1294,7 @@ angular.module('kf6App')
               wnd.svgCanvas.setSvgString(svg);
               wnd.svgEditor.showSaveWarning = false;
           }
+       
+     
+       
+  

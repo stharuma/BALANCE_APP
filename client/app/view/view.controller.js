@@ -4,7 +4,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ViewCtrl', function($scope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac, $modal) {
+    .controller('ViewCtrl', function($scope, $rootScope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac, $modal) {
         var viewId = $stateParams.viewId;
         $scope.menuStatus = $stateParams.menuStatus;
         if ($scope.menuStatus) {
@@ -24,6 +24,7 @@ angular.module('kf6App')
         $scope.status.isAttachmentCollapsed = true;
         $scope.status.isAnalyticsCollapsed = true;
         $scope.status.isSettingCollapsed = true;
+        $scope.status.isHelpCollapsed = true;
         $scope.setting = $community.makeDefaultViewSetting();
         $scope.dragging = 'none';
 
@@ -109,7 +110,7 @@ angular.module('kf6App')
         };
 
         $scope.updateRef = function(ref) {
-
+            console.log("updated!");
             // show only contains
             if (ref.type !== 'contains') {
                 console.warn('item is not \'contains\'');
@@ -611,6 +612,11 @@ angular.module('kf6App')
             window.open(url, '_blank');
         };
 
+        $scope.openHelp = function() {
+            var url = '/help/';
+            window.open(url, '_blank');
+        };
+
         // $scope.openViewProperty = function() {
         //     var url = './contribution/' + viewId;
         //     window.open(url, '_blank');
@@ -765,13 +771,67 @@ angular.module('kf6App')
                 }
             }
             var url = 'contribution/' + id + '/' + viewId;
-
+            $rootScope.contributionId = id;
+            $rootScope.contextId = viewId;
             if (w) {
                 w.location.href = url;
                 return;
             }
             if (!$kfutil.isMobile()) {
-                return $scope.openByInternalWindow(url);
+                var width = 650;
+                var height = 410;
+                var wmax = window.innerWidth * 0.8;
+                if (width > wmax) {
+                    width = wmax;
+                }
+                var hmax = window.innerHeight * 0.8;
+                if (height > hmax) {
+                    height = hmax;
+                }
+                var wid = 'ctrb_window_' + id;
+                var str = '<div id="' + wid + '"></div>';
+                var str1 = '<div style="height: 100%;display:block; width:100%;float:left;" ng-include="\'app/contribution/contribution.html\'" ng-controller="ContributionCtrl"></div>';
+                $('#windows').append(str);
+                $('#' + wid).append(str1);
+                $compile($('#' + wid).contents())($scope);
+                $('#' + wid).dialog({
+                    width: width,
+                    height: height,
+                    create: function() {
+                        $(this).css('padding', '1px');
+                        
+                        //var contentWindow = document.getElementById(wid).contentWindow;
+                        // contentWindow.wid = wid;
+                        window.openContribution = function(id) {
+                            return $scope.openContribution(id);
+                        };
+                        window.setInternalWindowTitle = function(title) {
+                            $('#' + wid).dialog('option', 'title', title);
+                        };
+                    },
+                    open: function() {
+                        var iwnd = $(this).parent();
+                        var x = iwnd.offset().left;
+                        var y = iwnd.offset().top;
+                        var offset = frames.length * 20;
+                        iwnd.offset({
+                            left: x + offset,
+                            top: y + offset
+                        });
+                        frames.push(wid);
+                    },
+                    drag: function() {
+                        _.remove(frames, function(n) {
+                            return n === wid;
+                        });
+                    },
+                    close: function() { /*we need to erase element*/
+                        _.remove(frames, function(n) {
+                            return n === wid;
+                        });
+                        $(this).remove();
+                    }
+                });
             } else {
                 window.open(url);
             }
