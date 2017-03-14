@@ -1217,7 +1217,10 @@ angular.module('kf6App')
           };
 
           var getPromisingIdeacolorobjmsg = function (promisingcolor) {
-              var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) +' (Unassigned)';
+              var msg = ' (Unassigned)';
+              if(promisingcolor!==undefined){
+               msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) +' (Unassigned)';
+              }
               $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
                   var promisngcolorgroup = pcolorobj.data.data;
                     if(promisngcolorgroup===''){
