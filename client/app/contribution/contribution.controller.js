@@ -1006,27 +1006,48 @@ angular.module('kf6App')
           $scope.showPromisingIdeasInReadMode = function () {
               $scope.promisingmsg = 'Show Highlighted Text';
               $scope.showpromisingideaCollapsed = !$scope.showpromisingideaCollapsed;
+              $.getScript("/bower_components/mark.js/dist/mark.js", function(){
+              var markInstance = new Mark(document.querySelector("div.promising"));
+              markInstance.unmark({
+                  done: function () {}
+              });
               if ($scope.showpromisingideaCollapsed) {
-                  $scope.promisingmsg = 'Hide Highlighted Text';
-                  $scope.promisingIdeasInBody = $scope.copy.body;
-                  $scope.toConnections.forEach(function (conn) {
+                 $scope.promisingmsg = 'Hide Highlighted Text';
+                 $scope.toConnections.forEach(function (conn) {
                       if (conn.type === 'promisings') {
                           var promisingIdea = conn.data.idea;
-                          var bodyContentText = $sureshshared.strip($scope.promisingIdeasInBody).replace(/^\s+|\s+$/g, '').replace(/\s\s/g, '');
                           var color = $scope.promisingIdeaobjs[conn.from].data.color;
-                          var bodyContentWordsArray = $sureshshared.getWordsArray($scope.promisingIdeasInBody);
-                          var promingIdeaWordsArray = $sureshshared.getWordsArray(promisingIdea).filter(function (str) { //removed space array
-                              return /\S/.test(str);
+                          var searchVal = promisingIdea;
+                          markInstance.mark(searchVal, {
+                              "className": conn.from,
+                              "separateWordSearch": false,
+                              "acrossElements": true,
+                              "diacritics":false,
+                              "debug":false,
+                              done: function () {}
                           });
-                          $scope.promisingIdeasInBody = $sureshshared.getChangedBodyContent(bodyContentText, bodyContentWordsArray, promingIdeaWordsArray, promisingIdea, color);
-                      }
+                          if (color !== '') {
+                              $("." + conn.from).css({
+                                  "backgroundColor": color,
+                                  "color": "white",
+                                  "border": "1px solid #000000"
+                              });
+                          } else {
+                              $("." + conn.from).css({
+                                  "backgroundColor": "white",
+                                  "color": "black",
+                                  "border": "1px solid #000000"
+                              });
+                          }
+                          $("." + conn.from).attr('title', 'Promisingness Idea - By '+$scope.getPromisingIdeaCreator($scope.promisingIdeaobjs[conn.from].authors) +" "+ $scope.getPromisingIdeaCreated($scope.promisingIdeaobjs[conn.from].modified));
+                         }
                   });
-              }
-              $scope.selectedText ='';
+              }});
+              $scope.selectedText = '';
               $(document).ready(function () {
-                    var $element = $('div.annotator-adder');
-                    $element.hide();
-               });
+                  var $element = $('div.annotator-adder');
+                  $element.hide();
+              });
           };
 
           $scope.setPromisingColorData = function () {
@@ -1145,3 +1166,5 @@ angular.module('kf6App')
               wnd.svgCanvas.setSvgString(svg);
               wnd.svgEditor.showSaveWarning = false;
           }
+
+

@@ -42,13 +42,11 @@
                     <div style="height: 100%;" ng-if="contribution.type === 'Note'">
                         <link rel="stylesheet" type="text/css" href="/manual_assets/kfmce.css" />
                         <div annotatable style="padding-top: 2px; padding-left: 10px; padding-right: 10px;" ng-show="!contribution.isRiseabove()">
-                            <div  collapse="showpromisingideaCollapsed" class="kfDragSource" ng-bind-html="trustAsHtml(copy.body)"></div>
+                            <div  class="kfDragSource promising" ng-bind-html="trustAsHtml(copy.body)"></div>
                         </div>
-                        <div  collapse="!showpromisingideaCollapsed" class="kfDragSource" ng-bind-html="trustAsHtml(promisingIdeasInBody)"></div>
                         <div style="height: 100%; width: 100%;" ng-hide="!contribution.isRiseabove()">
-                             <div  collapse="showpromisingideaCollapsed" class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
-                               <div  collapse="!showpromisingideaCollapsed" class="kfDragSource" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="trustAsHtml(promisingIdeasInBody)"></div>
-                            <div style="height: 100%; overflow: hidden;">
+                             <div  class="kfDragSource promising" style="float: left; width: 40%; height: 100%; overflow: auto;" ng-bind-html="copy.body"></div>
+                             <div style="height: 100%; overflow: hidden;">
                                 <label>Riseabove View:</label>
                                 <button class="btn btn-default" ng-click="openRiseaboveView()">Open In Window</button>
                                 <div id="riseabovediv" style="height: 100%; height: calc(100% - 20px);)border: 1px solid black;"></div>
@@ -383,7 +381,7 @@
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }"></tt>
                             <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <br>
-                            <tt style="float:right">-(By {{getPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)}} suresh {{getPromisingIdeaCreated(promisingIdeaobjs[conn.from].modified)}})</tt>
+                            <tt style="float:right">-(By {{getPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)}} {{getPromisingIdeaCreated(promisingIdeaobjs[conn.from].modified)}})</tt>
                             <br style="clear:both">
                             <label style="float: left; font-size:  9pt"> <b> Justification for Selection of Promisingness Idea:</b></label>
                             <br>

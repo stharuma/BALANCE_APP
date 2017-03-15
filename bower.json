@@ -37,7 +37,8 @@
     "vis": "^4.16.1",
     "angular-xeditable": "^0.5.0",
     "highcharts": "^5.0.6",
-    "ngjs-color-picker": "^1.1.0"
+    "ngjs-color-picker": "^1.1.0",
+    "mark.js": "^8.8.3"
   },
   "overrides": {
     "bootstrap": {
