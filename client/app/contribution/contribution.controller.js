@@ -481,11 +481,19 @@ angular.module('kf6App')
         };
 
         $scope.prepareRiseabove = function() {
+            if($scope.contribution.isRiseabove === undefined){
+                 return;
+            }
             if ($scope.contribution.isRiseabove()) {
                 var url = 'view/' + $scope.contribution.data.riseabove.viewId + '/X';
                 var xhtml = '<iframe style="display: block;" height="100%" width="100%" src="%SRC%" ></iframe>';
                 xhtml = xhtml.replace('%SRC%', url);
-                $('#riseabovediv').html(xhtml);
+                if(document.getElementById('ctrb_window_'+contributionId) === null){
+                    $('div[name="riseabovediv"]').html(xhtml);
+                }
+                else{
+                    $('#ctrb_window_'+contributionId+' div[name="riseabovediv"]').html(xhtml);
+                }
             }
         };
 

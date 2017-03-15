@@ -230,6 +230,9 @@ angular.module('kf6App')
                         return; //not found
                     }
 
+                    e.preventDefault();
+                    //e.stopPropagation();
+                    e.stopImmediatePropagation();
                     //found
                     var model = $scope.searchById($scope.refs, found.id);
                     if (!model) {
@@ -244,8 +247,7 @@ angular.module('kf6App')
                     if (!confirmation) {
                         return;
                     }
-                    e.preventDefault();
-                    e.stopPropagation();
+                    
                     $scope.unlock(model);
                 });
 
@@ -535,18 +537,20 @@ angular.module('kf6App')
                 var pressY;
 
                 element.on('mousedown', function(e) {
-                    if (e.ctrlKey) {
-                        return;
+                    if(e.which === 1){
+                        if (e.ctrlKey) {
+                            return;
+                        }
+                        if (marquee !== null) {
+                            marquee.remove();
+                            marquee = null;
+                        }
+                        element.css('zIndex', 100);
+                        pressX = e.clientX - element.offset().left;
+                        pressY = e.clientY - element.offset().top;
+                        element.append('<div id="marquee" style="position: absolute; width: 1px; height: 1px; border-style: dashed; border-width: 1pt; border-color: #000000;"></div>');
+                        marquee = $('#marquee');
                     }
-                    if (marquee !== null) {
-                        marquee.remove();
-                        marquee = null;
-                    }
-                    element.css('zIndex', 100);
-                    pressX = e.clientX - element.offset().left;
-                    pressY = e.clientY - element.offset().top;
-                    element.append('<div id="marquee" style="position: absolute; width: 1px; height: 1px; border-style: dashed; border-width: 1pt; border-color: #000000;"></div>');
-                    marquee = $('#marquee');
                 });
 
                 element.on('mousemove', function(e) {
