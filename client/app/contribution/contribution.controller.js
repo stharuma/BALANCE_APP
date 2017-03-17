@@ -360,7 +360,7 @@ angular.module('kf6App')
             if(selectedImgs.length === 0){
                 return;
             }
-            
+
             var html = "";
             var w = $(tinymce.activeEditor.getContainer()).width() - 10;
             var h = $(tinymce.activeEditor.getContainer()).height() - 50;
@@ -394,7 +394,7 @@ angular.module('kf6App')
             else{
                 window.closeDialog('ctrb_window_'+contributionId);
             }
-            
+
         };
 
         $scope.preProcess = function() {
@@ -612,10 +612,10 @@ angular.module('kf6App')
             else if(idx ==='read'){
                 $scope.status.hidebuildson = false;
             }
-            
+
         };
 
-     
+
         $scope.readDeselected = function() {
             $scope.status.hidebuildson = true;
         };
@@ -1042,11 +1042,11 @@ angular.module('kf6App')
               $scope.newnoteIndex = index;
           };
 
-          $scope.promisingIdeaobjProcess = function (targetColor) {
+          $scope.promisingIdeaobjProcess = function () {
               $scope.promisingIdeaobj = {
                   idea: $scope.selectedText,
-                  reason: $scope.textareaText,
-                  color: targetColor
+                  reason: this.textareaText,
+                  color: this.targetColor
               };
               $suresh.createPromisngIdeaobj($community, $scope.promisingIdeaobj, $scope.contribution._id, function (link, promisingIdeaobj) {
                   $scope.promisingIdeaobjLinks[link._id] = link;
@@ -1054,14 +1054,17 @@ angular.module('kf6App')
                   $scope.toConnections.push(link);
                   $scope.status.ispromisingideaTabDisplayed = true;
               });
-              $scope.textareaText = '';
+              this.textareaText = '';
+              this.targetColor = '';
               $scope.selectedText = '';
           };
 
 
           $scope.promisingIdeaobjProcessCancel = function () {
-             $scope.selectedText=''; 
-             $scope.status.ispromisingideaCollapsed = true; 
+             this.textareaText = '';
+             this.targetColor = '';
+             $scope.selectedText='';
+             $scope.status.ispromisingideaCollapsed = true;
              $scope.status.hidecontributeButtonBar = false;
           };
 
@@ -1276,7 +1279,7 @@ angular.module('kf6App')
 
         /*********** Promisingness Idea's code End  ************/
 
-        
+
           /*********** svg-edit ************/
           $scope.svgInitialized = false;
 
@@ -1302,7 +1305,7 @@ angular.module('kf6App')
               wnd.svgCanvas.setSvgString(svg);
               wnd.svgEditor.showSaveWarning = false;
           }
-       
-     
-       
-  
+
+
+
+
