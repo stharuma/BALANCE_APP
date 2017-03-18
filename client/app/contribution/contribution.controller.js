@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function($scope, $rootScope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh, $sureshshared) {
+    .controller('ContributionCtrl', function( $rootScope, $scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh, $sureshshared) {
         var contributionId = $rootScope.contributionId;
         var contextId = $rootScope.contextId;
 
@@ -56,8 +56,7 @@ angular.module('kf6App')
         $scope.selected = {};
 
         $scope.selectedText = '';
-        $scope.targetColor = '';
-        $scope.textareaText = '';
+        $scope.obj = {targetColor:'', textareaText : ''};
         $scope.promisingIdeaobjs = {};
         $scope.promisingIdeaobjLinks = {};
         $scope.selectedViewIds = [];
@@ -1045,8 +1044,8 @@ angular.module('kf6App')
           $scope.promisingIdeaobjProcess = function () {
               $scope.promisingIdeaobj = {
                   idea: $scope.selectedText,
-                  reason: this.textareaText,
-                  color: this.targetColor
+                  reason: $scope.obj.textareaText,
+                  color: $scope.obj.targetColor
               };
               $suresh.createPromisngIdeaobj($community, $scope.promisingIdeaobj, $scope.contribution._id, function (link, promisingIdeaobj) {
                   $scope.promisingIdeaobjLinks[link._id] = link;
@@ -1054,15 +1053,15 @@ angular.module('kf6App')
                   $scope.toConnections.push(link);
                   $scope.status.ispromisingideaTabDisplayed = true;
               });
-              this.textareaText = '';
-              this.targetColor = '';
+              $scope.obj.textareaText = '';
+              $scope.obj.targetColor = '';
               $scope.selectedText = '';
           };
 
 
           $scope.promisingIdeaobjProcessCancel = function () {
-             this.textareaText = '';
-             this.targetColor = '';
+             $scope.obj.textareaText = '';
+             $scope.obj.targetColor = '';
              $scope.selectedText='';
              $scope.status.ispromisingideaCollapsed = true;
              $scope.status.hidecontributeButtonBar = false;
@@ -1206,8 +1205,8 @@ angular.module('kf6App')
           };
 
           $scope.clearColor = function () {
-              $scope.targetColor = '';
-              return $scope.targetColor;
+              $scope.obj.targetColor = '';
+              return $scope.obj.targetColor;
           };
 
           $scope.getPromisingIdeacolorobjupdatemsg = function (promisingcolor) {
@@ -1237,8 +1236,8 @@ angular.module('kf6App')
               return msg;
           };
 
-          $scope.$watch('targetColor', function () {
-              setPromisingIdeacolorobjcreatemsg($scope.targetColor);
+          $scope.$watch('obj.targetColor', function () {
+              setPromisingIdeacolorobjcreatemsg($scope.obj.targetColor);
           });
 
           $scope.savePromisingIdeacolorobj = function (pcolordata, pcolor, id, promingcolorobj) {

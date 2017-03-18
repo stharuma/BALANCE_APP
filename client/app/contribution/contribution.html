@@ -401,17 +401,17 @@
         <label style="font-size:  11pt; text-align: center; text-decoration: underline; padding-left: 10px;"><b>Add Promisingness Idea</b></label>
         <div style="padding-left: 20px; height: 90%; overflow: scroll; width:100%; float: left">
           <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{createmsg}}</b></label>
-          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="targetColor!==''"ng-click="clearColor();">Clear colour</button>
+          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="obj.targetColor!==''"ng-click="clearColor();">Clear colour</button>
            <br>
-           <ngjs-color-picker selected-color="targetColor" custom-colors="colors"></ngjs-color-picker>
+           <ngjs-color-picker selected-color="obj.targetColor" custom-colors="colors"></ngjs-color-picker>
            <label style="float: left;font-size:  9pt">Idea : </label>
-            <tt class="box" ng-style="{ 'background-color': targetColor}"></tt>
+            <tt class="box" ng-style="{ 'background-color': obj.targetColor}"></tt>
             <tt style="float: left" ng-bind-html="trustAsHtml(selectedText)"></tt>
             <br>
             <br>
             <label style="float: left; font-size:  9pt"> <b>Justification for Selection of Promisingness Idea:</b></label>
             <br>
-            <textarea id="text" cols="70" rows="2" ng-model="textareaText"></textarea>
+            <textarea id="text" cols="70" rows="2" ng-model="obj.textareaText"></textarea>
         </div>
          <div style="clear:both; text-align: right; padding-right: 10px; padding-top: 5px; height: 10%">
            <button  type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcessCancel()">Cancel</button>
