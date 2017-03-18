@@ -1,4 +1,4 @@
-<div ng-hide="status.error" class="col-md-12 KFContribution" style="height: 100%;">
+<div ng-hide="status.error" class="col-md-12 KFContribution" style="height: 100%;display:block; width:100%;float:left;">
     <!-- dialogs -->
     <div class="well" collapse="status.isContributionCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 0px; width: 100%; height: 400px; background-color: white; z-index: 100;">
         <div>
@@ -12,9 +12,9 @@
             <button ng-show="status.contribution==='success'" type="submit" class="btn btn-primary kfbutton" ng-click="closeRequest()">{{ 'contribution_finish' | translate }}</button>
         </div>
     </div>
-    <div class="well" collapse="status.isAttachmentCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
+    <div class="well" collapse="status.isAttachmentsCollapsed" style="padding-left: 50px; position: absolute; top: 0px; left: 50px; width: 50%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isAttachmentCollapsed = true;">{{ 'close' | translate }}</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isAttachmentsCollapsed = true;">{{ 'close' | translate }}</button>
         </div>
         <div style="padding: 10px;">
             <div ng-include="'components/kfutils/attachmentuploader/attachmentuploader.html'"></div>
@@ -33,7 +33,7 @@
     <!-- tab and contents part -->
     <div class="KFTabSet">
         <tabset>
-            <tab heading="{{ 'read' | translate }}" class="KFTab" select="readSelected()" deselect="readDeselected()">
+            <tab heading="{{ 'read' | translate }}" class="KFTab" select="tabSelected('read')" deselect="readDeselected()">
                 <div  style="position: relative; ">
                     <button ng-mouseup="clearSelection();" class="btn btn-primary KFToolBarButton promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng-show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
                       <span class="tooltiptext">Promisingness Idea</span></button>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
             </tab>
-            <tab class="KFTab" ng-show="isEditable()" heading="{{ 'edit' | translate }}" active="status.edittabActive" select="editSelected()">
+            <tab class="KFTab" ng-show="isEditable()" heading="{{ 'edit' | translate }}" active="status.edittabActive" select="tabSelected('edit')">
                 <div style="padding: 2px; height: 100%;">
                     <div>
                         <div ng-if="contribution.type === 'Note'" style="float: left;">
@@ -102,10 +102,11 @@
                                 </div>
                                 <div style="height: 7px;"></div>
                                 <label>{{ 'attachments' | translate }}:</label>
-                                <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">{{ 'attach' | translate }}</button>
+                                <button class="btn btn-default" ng-click="status.isAttachmentsCollapsed = !status.isAttachmentsCollapsed">{{ 'attach' | translate }}</button>
+                                <button ng-disabled="!status.insertable" class="btn btn-default" ng-click="insertImg()">{{ 'Insert' | translate }}</button>
                                 <div class="KFContainer">
                                     <span ng-repeat="attachment in images">
-                                    <img ng-attr-src="{{attachment.data.url}}" width="50px" height="50px"></img>
+                                    <img kfImgDrag class="" style="vertical-align: inherit;" ng-attr-src="{{attachment.data.url}}" width="50px" height="50px" ng-click="selectedImg()" data-mce-src="{{attachment.data.url}}"></img>
                                             </span>
                                     <p ng-if="images.length !== 0">Drag and drop to the editor!</p>
                                     <p ng-if="images.length === 0">{{ 'attachments_image_not' | translate }}</p>
@@ -150,7 +151,7 @@
             </tab>
             <!-- <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"> -->
             <link rel="stylesheet" href="manual_components/select2-css/3.4.5/select2.css">
-            <tab class="KFTab" heading="{{ 'author-s' | translate }}">
+            <tab class="KFTab" heading="{{ 'author-s' | translate }}" select="tabSelected('authors')">
                 <div style="height: 100%;">
                     <table style="width: 100%;">
                         <tr>
@@ -185,7 +186,7 @@
                     </table>
                 </div>
             </tab>
-            <tab class="KFTab" heading="{{ 'connections' | translate }}">
+            <tab class="KFTab" heading="{{ 'connections' | translate }}" select="tabSelected('connections')">
                 <div>
                     <label>{{ 'contribution_connection_buildsOnto' | translate }}:</label>
                     <ul>
@@ -241,7 +242,7 @@
                     </ul>
                 </div>
             </tab>
-            <tab class="KFTab" heading="{{ 'history' | translate }}">
+            <tab class="KFTab" heading="{{ 'history' | translate }}" select="tabSelected('history')">
                 <div>
                     <label>{{ 'edit_logs' | translate }}:</label>
                     <ul>
@@ -258,7 +259,7 @@
                     </ul>
                 </div>
             </tab>
-            <tab class="KFTab" heading="{{ 'attachments' | translate }}">
+            <tab class="KFTab" heading="{{ 'attachments' | translate }}" select="tabSelected('attachments')">
                 <div>
                     <label>{{ 'attachments' | translate }}:</label>
                     <ul>
@@ -272,10 +273,10 @@
                 </div>
                 <div ng-show="isEditable()">
                     <label>{{ "attachments_add" | translate }}:</label>
-                    <button class="btn btn-default" ng-click="status.isAttachmentCollapsed = !status.isAttachmentCollapsed">{{ 'attach' | translate }}</button>
+                    <button class="btn btn-default" ng-click="status.isAttachmentsCollapsed = !status.isAttachmentsCollapsed">{{ 'attach' | translate }}</button>
                 </div>
             </tab>
-            <tab class="KFTab" ng-show="isEditable()" heading="{{ 'properties' | translate }}">
+            <tab class="KFTab" ng-show="isEditable()" heading="{{ 'properties' | translate }}" select="tabSelected('properties')">
                 <div>
                     <label>{{ 'properties' | translate }}:</label>
                     <div style="padding: 10px;">
@@ -398,21 +399,21 @@
         <label style="font-size:  11pt; text-align: center; text-decoration: underline; padding-left: 10px;"><b>Add Promisingness Idea</b></label>
         <div style="padding-left: 20px; height: 90%; overflow: scroll; width:100%; float: left">
           <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{createmsg}}</b></label>
-          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="targetColor!==''"ng-click="clearColor();">Clear colour</button>
+          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="obj.targetColor!==''"ng-click="clearColor();">Clear colour</button>
            <br>
-           <ngjs-color-picker selected-color="targetColor" custom-colors="colors"></ngjs-color-picker>
+           <ngjs-color-picker selected-color="obj.targetColor" custom-colors="colors"></ngjs-color-picker>
            <label style="float: left;font-size:  9pt">Idea : </label>
-            <tt class="box" ng-style="{ 'background-color': targetColor}"></tt>
+            <tt class="box" ng-style="{ 'background-color': obj.targetColor}"></tt>
             <tt style="float: left" ng-bind-html="trustAsHtml(selectedText)"></tt>
             <br>
             <br>
             <label style="float: left; font-size:  9pt"> <b>Justification for Selection of Promisingness Idea:</b></label>
             <br>
-            <textarea id="text" cols="70" rows="2" ng-model="textareaText"></textarea>
+            <textarea id="text" cols="70" rows="2" ng-model="obj.textareaText"></textarea>
         </div>
          <div style="clear:both; text-align: right; padding-right: 10px; padding-top: 5px; height: 10%">
-           <button  type="submit" class="btn btn-primary kfbutton" ng-click="status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false; selectedText=''; ">Cancel</button>
-           <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess();status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false;">Save</button>
+           <button  type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcessCancel()">Cancel</button>
+           <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjProcess(); status.ispromisingideaCollapsed = true; status.hidecontributeButtonBar = false;">Save</button>
          </div>
         <hr>
     </div>

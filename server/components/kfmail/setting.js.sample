@@ -7,9 +7,9 @@ exports.transportOptions = {
     port: 465,
     secure: true, // use SSL
     auth: {
-        user: 'user@gmail.com',
-        pass: 'pass'
+        user: 'kf6feedback@gmail.com',
+        pass: process.env.EMAIL_PASSWORD
     }
 };
-exports.from ='zzzz@gmail.com';
+exports.from ='kf6feedback@gmail.com';
 exports.baseURL = 'https://kf.example.net/';

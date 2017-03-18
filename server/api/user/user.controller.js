@@ -103,7 +103,7 @@ exports.create = function(req, res, next) {
         var token = jwt.sign({
             _id: user._id
         }, config.secrets.session, {
-          expiresIn: "5h"
+            expiresIn: "5h"
         });
         res.json({
             token: token
@@ -186,8 +186,12 @@ exports.me = function(req, res, next) {
     User.findOne({
         _id: userId
     }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
-        if (err) return next(err);
-        if (!user) return res.status(401);
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.sendStatus(401);
+        }
         res.json(user);
     });
 };
