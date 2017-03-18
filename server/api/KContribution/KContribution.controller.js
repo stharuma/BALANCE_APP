@@ -152,6 +152,14 @@ function makeMongoQuery0(req, res, success) {
         });
     }
 
+    if (query.ids) {
+        mongoQuery.$and.push({
+            _id: {
+                $in: query.ids
+            }
+        });
+    }
+
     if (query.authors && query.authors.length > 0) {
         var authorIds = [];
         query.authors.forEach(function(authorIdStr) {
