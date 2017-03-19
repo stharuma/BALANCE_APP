@@ -1160,7 +1160,7 @@ angular.module('kf6App')
               $scope.promisingmsg = 'Show Highlighted Text';
               $scope.showpromisingideaCollapsed = !$scope.showpromisingideaCollapsed;
               $.getScript("/bower_components/mark.js/dist/mark.js", function(){
-              var markInstance = new Mark(document.querySelector("div.promising"));
+              var markInstance = new window.Mark(document.querySelector("div.promising"));
               markInstance.unmark({
                   done: function () {}
               });
