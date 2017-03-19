@@ -1159,7 +1159,6 @@ angular.module('kf6App')
           $scope.showPromisingIdeasInReadMode = function () {
               $scope.promisingmsg = 'Show Highlighted Text';
               $scope.showpromisingideaCollapsed = !$scope.showpromisingideaCollapsed;
-              $.getScript("/bower_components/mark.js/dist/mark.js", function(){
               var markInstance = new window.Mark(document.querySelector("div.promising"));
               markInstance.unmark({
                   done: function () {}
@@ -1195,7 +1194,7 @@ angular.module('kf6App')
                           $("." + conn.from).attr('title', 'Promisingness Idea - By '+$scope.getPromisingIdeaCreator($scope.promisingIdeaobjs[conn.from].authors) +" "+ $scope.getPromisingIdeaCreated($scope.promisingIdeaobjs[conn.from].modified));
                          }
                   });
-              }});
+              }
               $scope.selectedText = '';
               $(document).ready(function () {
                   var $element = $('div.annotator-adder');
