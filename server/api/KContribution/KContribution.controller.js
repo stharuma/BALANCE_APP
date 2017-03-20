@@ -144,14 +144,13 @@ function makeMongoQuery0(req, res, success) {
         });
     }
 
-    if (req.ids && req.ids.length > 0) {
+    if (req.ids) {
         mongoQuery.$and.push({
             _id: {
                 $in: req.ids
             }
         });
     }
-
     if (query.ids) {
         mongoQuery.$and.push({
             _id: {
