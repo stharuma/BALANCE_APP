@@ -2,23 +2,26 @@
 
 angular.module('kf6App')
     .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh, $kftag) {
-        var ids = ($stateParams.ids+'').split('§§§');
+        var ids = ($stateParams.ids + '').split('§§§');
         var communityId = ids[0];
         var viewId = ids[1];
-        var viewTitle = ids[2];
+        var viewTitle = '';
         $scope.promisingIdeacolorobjsarr = [];
         $scope.queryString = '';
+        $scope.currentCommunity = {};
         $community.enter(communityId, function () {
-            $community.refreshMembers();
-            $scope.communityMembers = $community.getCommunityData().membersArray;
-            $scope.currentCommunity = {};
-            $scope.currentCommunity = $community.getCommunityData();
-            $community.refreshPromisingcolorobjs(function () {
-                $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
-         });
-            $scope.queryString += ' -view:' +viewId;
-            $scope.viewTitles.push(viewTitle);
-            $scope.search();
+            $community.getObject(viewId, function (view) {
+                viewTitle = view.title;
+                $scope.queryString += ' -view:' + viewId;
+                $scope.viewTitles.push(viewTitle);
+                $scope.search();
+                $community.refreshMembers();
+                $scope.currentCommunity = $community.getCommunityData();
+                $scope.communityMembers = $scope.currentCommunity.membersArray;
+                $community.refreshPromisingcolorobjs(function () {
+                    $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
+                });
+            });
         });
         $scope.searchkeyword = '';
         $scope.viewTitlescopy = '';
@@ -62,7 +65,7 @@ angular.module('kf6App')
         $scope.selectedViewIds = [];
 
         $scope.getHeader = function () {
-            return ['Promisingness Ideas', 'Reason', 'In Contribution Title', 'Authour', 'Created Date', 'Contribution', 'Colour', 'Colour Detail',];
+            return ['Promisingness Ideas', 'Reason', 'In Contribution Title', 'Authour', 'Created Date', 'Contribution', 'Colour', 'Colour Detail', ];
         };
 
         var checkedPromisingtLinkInNote = function (notes) {
@@ -74,7 +77,7 @@ angular.module('kf6App')
                         if (link.type === 'promisings') {
                             $community.getObject(link.from, function (promisingIdeaobj) {
                                 var pcolordetail = $scope.setPromisingIdeacolorobj(promisingIdeaobj.data.color);
-                                var user =$community.getMember(promisingIdeaobj.authors).getName();
+                                var user = $community.getMember(promisingIdeaobj.authors).getName();
                                 if (promisingIdeaobj.data.color === '') {
                                     pcolordetail = 'None' + pcolordetail;
                                 }
@@ -97,7 +100,7 @@ angular.module('kf6App')
                                 if (!contains($scope.criteria, promisingIdeaobj.data.reason)) {
                                     $scope.criteria.push(promisingIdeaobj.data.reason);
                                 }
-                                 if (!contains($scope.users, user)) {
+                                if (!contains($scope.users, user)) {
                                     $scope.users.push(user);
                                 }
                                 if (inx === links.length - 1) {
@@ -136,17 +139,17 @@ angular.module('kf6App')
             $scope.hitcounts.length = 0;
             $scope.hitcounts.push('All');
             $scope.tableData.forEach(function (promising, index, data) {
-              if (!contains( $scope.overlappedpromising, promising)) {
-                counted(promising, index, data);
-              }
+                if (!contains($scope.overlappedpromising, promising)) {
+                    counted(promising, index, data);
+                }
                 if (index === $scope.tableData.length - 1) {
                     $scope.hitdata.sort(function (a, b) {
                         return parseInt(a.hitcount, 10) - parseInt(b.hitcount, 10);
                     }).reverse();
-                    $scope.hitdata.forEach(function (hdata){
-                      if(!$scope.hasitoverlappedpromising(hdata.promising)&&!contains($scope.hitcounts, hdata.hitcount)){
-                        $scope.hitcounts.push(hdata.hitcount);
-                      }
+                    $scope.hitdata.forEach(function (hdata) {
+                        if (!$scope.hasitoverlappedpromising(hdata.promising) && !contains($scope.hitcounts, hdata.hitcount)) {
+                            $scope.hitcounts.push(hdata.hitcount);
+                        }
                     });
                     $scope.hitcounts.sort().reverse();
                 }
@@ -220,9 +223,9 @@ angular.module('kf6App')
             $scope.users.push('All');
         }
 
-        function sortByTime( ) {
-             $scope.tableData.sort(function(a,b) {
-                 return new Date(a.date) - new Date(b.date);
+        function sortByTime() {
+            $scope.tableData.sort(function (a, b) {
+                return new Date(a.date) - new Date(b.date);
             }).reverse();
         }
 
@@ -276,8 +279,8 @@ angular.module('kf6App')
 
         $scope.hastextinpromisingidea = function (searchtext, idea, criteria, author) {
             var hasit = false;
-           if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
-                    criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1||
+            if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
+                    criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
                     author.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
                 hasit = true;
             }
@@ -315,7 +318,7 @@ angular.module('kf6App')
             $scope.setpromisingoverlappedcounted();
         });
 
-       $scope.makepromisingnote = function (title, body) {
+        $scope.makepromisingnote = function (title, body) {
             if (title === '') {
                 window.alert('Note title is empty ');
                 return;
@@ -330,16 +333,16 @@ angular.module('kf6App')
         };
 
         $scope.setPromisingIdeacolorobj = function (promisingcolor) {
-           var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (Unassigned)';
-           $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
-            var promisngcolorgroup = pcolorobj.data.data;
-            if(promisngcolorgroup===''){
-              promisngcolorgroup = 'Unassigned';
-            }
-             if (pcolorobj.data.color === promisingcolor) {
-                    msg=promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (' + promisngcolorgroup+ ')';
-                    return  msg;
-             }
+            var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (Unassigned)';
+            $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+                var promisngcolorgroup = pcolorobj.data.data;
+                if (promisngcolorgroup === '') {
+                    promisngcolorgroup = 'Unassigned';
+                }
+                if (pcolorobj.data.color === promisingcolor) {
+                    msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (' + promisngcolorgroup + ')';
+                    return msg;
+                }
             });
             return msg;
         };
