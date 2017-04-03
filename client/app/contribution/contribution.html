@@ -35,7 +35,7 @@
         <tabset>
             <tab heading="{{ 'read' | translate }}" class="KFTab" select="tabSelected('read')" deselect="readDeselected()">
                 <div  style="position: relative; ">
-                    <button ng-mouseup="clearSelection();" class="btn btn-primary KFToolBarButton promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng-show="selectedText!=''"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
+                    <button ng-mouseup="clearSelection();" class="btn btn-primary KFToolBarButton promisingbtn tooltip1" ng-style="promisingobj" type="submit" ng-click=" status.ispromisingideaCollapsed = !status.ispromisingideaCollapsed; status.hidecontributeButtonBar = !status.hidecontributeButtonBar;" ng-show="selectedText!=''&&context.data.plugins.promisingnessidea=== true"><img src="manual_assets/kf6images/promising-idea-normal.png" title="Promising Idea">
                       <span class="tooltiptext">Promisingness Idea</span></button>
                 </div>
                 <div ng-mouseup="setSelectedText($event)" style="padding: 10px; height: 100%;">
@@ -335,7 +335,7 @@
                     </div>
                 </div>
             </tab>
-            <tab class="KFTab" heading="Promisingness Ideas"  select="promisingIdeaSelected()" deselect="promisingIdeaDeselected()"  ng-show="status.ispromisingideaTabDisplayed">
+            <tab class="KFTab" heading="Promisingness Ideas"  select="promisingIdeaSelected()" deselect="promisingIdeaDeselected()"  ng-show="status.ispromisingideaTabDisplayed&&context.data.plugins.promisingnessidea=== true">
                 <label>Promisingness Ideas:</label>
                 <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
                     <div ng-hide="deletedIndex==$index">
@@ -428,7 +428,7 @@
             <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="makeFromTemplate()">New Note using Template</button>
         </div>
         <div style="float: left; padding-top: 0px; padding-right: 5px;">
-            <button ng-show="status.ispromisingideaTabDisplayed&&!status.hidebuildson" type="submit" class="btn btn-primary" ng-click="showPromisingIdeasInReadMode()">{{promisingmsg}}</button>
+            <button ng-show="(status.ispromisingideaTabDisplayed&&!status.hidebuildson)&&context.data.plugins.promisingnessidea=== true" type="submit" class="btn btn-primary" ng-click="showPromisingIdeasInReadMode()">{{promisingmsg}}</button>
         </div>
     </div>
 </div>
