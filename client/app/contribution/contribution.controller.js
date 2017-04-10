@@ -1300,6 +1300,7 @@ angular.module('kf6App')
            $scope.hasSubString=function(subString) {
             var fullString = $('div.promising').text();
             var has =$sureshshared.hasSubString(fullString, subString) ;
+            $scope.status.ispromisingideaTabDisplayed = true;
             if(has){
                   $scope.haspromisingidea = true;
             }
