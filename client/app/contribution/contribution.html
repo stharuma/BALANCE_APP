@@ -340,16 +340,16 @@
                 <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
                     <div ng-hide="deletedIndex==$index">
                         <div ng-hide="selectedIndex==$index ||newnoteIndex==$index ">
-                            <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
+                          <label style="float: left; color:red; font-size:  9pt" ng-if="!hasSubString(conn.data.idea)">The content pertaining to this promising idea no longer exist</label>
+                           <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index)">Export Ideas</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index)" title="Edit Justification & Highlight">Edit</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index" title="Delete the idea from database">Delete</button>
                             </div>
-                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
-                             <br>
-                            <label style="float: left; font-size:  9pt">Idea : </label>
+                            <label style="clear:both; float: left; font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
+                            <label style="clear:both;float: left; font-size:  9pt">Idea : </label>
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color}"></tt>
-                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            <tt style="clear:both; float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <br>
                             <tt style="float:right">-(By {{getPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)}}  {{getPromisingIdeaCreated(promisingIdeaobjs[conn.from].modified)}})</tt>
                             <br style="clear:both">
@@ -428,7 +428,7 @@
             <button ng-hide="status.hidebuildson" type="submit" class="btn btn-primary" ng-click="makeFromTemplate()">New Note using Template</button>
         </div>
         <div style="float: left; padding-top: 0px; padding-right: 5px;">
-            <button ng-show="(status.ispromisingideaTabDisplayed&&!status.hidebuildson)&&context.data.plugins.promisingnessidea=== true" type="submit" class="btn btn-primary" ng-click="showPromisingIdeasInReadMode()">{{promisingmsg}}</button>
+            <button ng-show="(haspromisingidea&&!status.hidebuildson)&&context.data.plugins.promisingnessidea=== true" type="submit" class="btn btn-primary" ng-click="showPromisingIdeasInReadMode()">{{promisingmsg}}</button>
         </div>
     </div>
 </div>

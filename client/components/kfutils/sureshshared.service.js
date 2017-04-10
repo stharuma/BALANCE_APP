@@ -14,6 +14,14 @@ angular.module('kf6App')
             return content.split(" ");
         };
 
+        obj.hasSubString = function (fullString, subString) {
+          var inx= fullString.toLowerCase().replace(/\s\s|\s/g, '').indexOf(subString.toLowerCase().replace(/\s\s|\s/g, ''));
+           if(inx===-1){
+               return false;
+           }
+           return true;
+        };
+
         obj.getSelectionText = function () {
             var text = '';
             if (window.getSelection) {

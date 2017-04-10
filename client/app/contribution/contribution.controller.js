@@ -28,7 +28,8 @@ angular.module('kf6App')
         $scope.status.isContributionCollapsed = true;
         $scope.status.ispromisingideaCollapsed = true;
         $scope.status.ispromisingideaTabDisplayed = false;
-        $scope.showpromisingideaCollapsed = false;
+        $scope.showpromisingideaColour = false;
+        $scope.haspromisingidea = false;
         $scope.status.isInsertImgCollapsed = false;
         $scope.status.edittabActive = false;
         $scope.status.dirty = true;
@@ -1158,12 +1159,12 @@ angular.module('kf6App')
 
           $scope.showPromisingIdeasInReadMode = function () {
               $scope.promisingmsg = 'Show Highlighted Text';
-              $scope.showpromisingideaCollapsed = !$scope.showpromisingideaCollapsed;
+              $scope.showpromisingideaColour = !$scope.showpromisingideaColour;
               var markInstance = new window.Mark(document.querySelector("div.promising"));
               markInstance.unmark({
                   done: function () {}
               });
-              if ($scope.showpromisingideaCollapsed) {
+              if ($scope.showpromisingideaColour) {
                  $scope.promisingmsg = 'Hide Highlighted Text';
                  $scope.toConnections.forEach(function (conn) {
                       if (conn.type === 'promisings') {
@@ -1294,6 +1295,15 @@ angular.module('kf6App')
 
           $scope.clearSelection=function() {
                 $sureshshared.clearSelection();
+           };
+
+           $scope.hasSubString=function(subString) {
+            var fullString = $('div.promising').text();
+            var has =$sureshshared.hasSubString(fullString, subString) ;
+            if(has){
+                  $scope.haspromisingidea = true;
+            }
+                return has;
            };
 
         /*********** Promisingness Idea's code End  ************/
