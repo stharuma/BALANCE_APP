@@ -113,7 +113,7 @@ angular.module('kf6App')
         };
 
         $scope.updateRef = function(ref) {
-            console.log("updated!");
+
             // show only contains
             if (ref.type !== 'contains') {
                 console.warn('item is not \'contains\'');
@@ -617,7 +617,7 @@ angular.module('kf6App')
                 }
                 h = (w * h) / attachment.data.width;
             }
-            
+
             $http.post('/api/links', {
                 from: $scope.view._id,
                 to: attachment._id,
@@ -1097,7 +1097,7 @@ angular.module('kf6App')
                 window.alert('You are not able to fix this object.');
                 return;
             }
-            
+
             ref.data.draggable = false;
             $scope.saveRef(ref);
             $scope.clearSelection();
@@ -1159,7 +1159,7 @@ angular.module('kf6App')
             if (!ref) {
                 return false;
             }
-            
+
             var fixed = ref.data.fixed;
             //return !$scope.isLocked(ref) || $scope.hasLockControl();
             return fixed !== undefined && fixed;
@@ -1171,7 +1171,7 @@ angular.module('kf6App')
             if (!ref) {
                 return false;
             }
-            
+
             var locked = ref.data.draggable;
             return locked !== undefined && !locked;
         };

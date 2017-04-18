@@ -1086,24 +1086,8 @@ angular.module('kf6App')
             else if(idx ==='read'){
                 $scope.status.hidebuildson = false;
             }
-            
+
         };
-    });
-
-function onSvgInitialized() {
-    var wnd = document.getElementById('svgedit').contentWindow;
-    var doc = wnd.document;
-    var mainButton = doc.getElementById('main_button');
-    mainButton.style.display = 'none';
-    //var svg = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
-    var svg = '';
-    if (window.contribution) {
-        svg = window.contribution.data.svg;
-    }
-    wnd.svgCanvas.setSvgString(svg);
-    wnd.svgEditor.showSaveWarning = false;
-}
-
 
        /***********promising Idea's code start ************/
           $scope.setIndex = function (index) {
@@ -1382,3 +1366,18 @@ function onSvgInitialized() {
 
         /*********** Promisingness Idea's code End  ************/
 
+    });
+
+function onSvgInitialized() {
+  var wnd = document.getElementById('svgedit').contentWindow;
+  var doc = wnd.document;
+  var mainButton = doc.getElementById('main_button');
+  mainButton.style.display = 'none';
+  //var svg = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
+  var svg = '';
+  if (window.contribution) {
+    svg = window.contribution.data.svg;
+  }
+  wnd.svgCanvas.setSvgString(svg);
+  wnd.svgEditor.showSaveWarning = false;
+}
