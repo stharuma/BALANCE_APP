@@ -701,7 +701,7 @@ angular.module('kf6App')
         };
 
           $scope.openPromisingIdeas = function() {
-            var url = 'promisingideas/' + $scope.view.communityId;
+            var url = 'promisingideas/' + $scope.view.communityId+'§§§'+viewId;
             $scope.openInPopup(url);
         };
 
@@ -799,7 +799,7 @@ angular.module('kf6App')
                     height: height,
                     create: function() {
                         $(this).css('padding', '1px');
-                        
+
                         //var contentWindow = document.getElementById(wid).contentWindow;
                         // contentWindow.wid = wid;
                         window.openContribution = function(id) {

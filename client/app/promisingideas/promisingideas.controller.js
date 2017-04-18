@@ -2,20 +2,27 @@
 
 angular.module('kf6App')
     .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh, $kftag) {
-        var communityId = $stateParams.communityId;
+        var ids = ($stateParams.ids + '').split('§§§');
+        var communityId = ids[0];
+        var viewId = ids[1];
+        var viewTitle = '';
         $scope.promisingIdeacolorobjsarr = [];
-        $community.enter(communityId, function () {
-            $community.refreshMembers();
-            $scope.communityMembers = $community.getCommunityData().membersArray;
-            $scope.currentCommunity = {};
-            $scope.currentCommunity = $community.getCommunityData();
-            $community.refreshPromisingcolorobjs(function () {
-                $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
-         });
-            $scope.search();
-        });
-
         $scope.queryString = '';
+        $scope.currentCommunity = {};
+        $community.enter(communityId, function () {
+            $community.getObject(viewId, function (view) {
+                viewTitle = view.title;
+                $scope.queryString += ' -view:' + viewId;
+                $scope.viewTitles.push(viewTitle);
+                $scope.search();
+                $community.refreshMembers();
+                $scope.currentCommunity = $community.getCommunityData();
+                $scope.communityMembers = $scope.currentCommunity.membersArray;
+                $community.refreshPromisingcolorobjs(function () {
+                    $scope.promisingIdeacolorobjsarr = $community.getPromisingcolorobjsArray();
+                });
+            });
+        });
         $scope.searchkeyword = '';
         $scope.viewTitlescopy = '';
 
@@ -28,6 +35,7 @@ angular.module('kf6App')
         $scope.overlappedpromising = [];
         $scope.colors = [];
         $scope.criteria = [];
+        $scope.users = [];
         $scope.status = {};
         $scope.status.detailCollapsed = true;
         $scope.status.noPromisingCollapsed = true;
@@ -37,12 +45,14 @@ angular.module('kf6App')
         $scope.status.selectedColorCollapsed = false;
         $scope.status.selectedHitCollapsed = true;
         $scope.status.selectedCriteriaCollapsed = true;
+        $scope.status.selectedUserCollapsed = true;
         $scope.status.status = 'init';
         $scope.labels = [];
         $scope.promisngNotes = [];
         $scope.selectedColor = '';
         $scope.selectedHitCount = '';
         $scope.selectedCriteria = '';
+        $scope.selectedUser = '';
         $scope.selectedtime = '';
         $scope.selectedpromisingideaIndex = -1;
         $scope.currentselected = {
@@ -53,10 +63,9 @@ angular.module('kf6App')
         $scope.selectedPromisingIdeas = [];
         $scope.promisingnoteTitle = '';
         $scope.selectedViewIds = [];
-        $scope.pager = {};
 
         $scope.getHeader = function () {
-            return ['Color', 'PromisingIIdeas', 'Reason', 'In ContributionTitle', 'Authour', 'Created date', 'Contribution', 'Weight(s)'];
+            return ['Promisingness Ideas', 'Reason', 'In Contribution Title', 'Authour', 'Created Date', 'Contribution', 'Colour', 'Colour Detail', ];
         };
 
         var checkedPromisingtLinkInNote = function (notes) {
@@ -64,11 +73,11 @@ angular.module('kf6App')
             notes.forEach(function (note, index) {
                 var promisingnotefound = true;
                 $http.get('/api/links/to/' + note._id).success(function (links) {
-                    links.forEach(function (link) {
+                    links.forEach(function (link, inx) {
                         if (link.type === 'promisings') {
                             $community.getObject(link.from, function (promisingIdeaobj) {
                                 var pcolordetail = $scope.setPromisingIdeacolorobj(promisingIdeaobj.data.color);
-
+                                var user = $community.getMember(promisingIdeaobj.authors).getName();
                                 if (promisingIdeaobj.data.color === '') {
                                     pcolordetail = 'None' + pcolordetail;
                                 }
@@ -76,20 +85,26 @@ angular.module('kf6App')
                                     promisingIdeaobj.data.reason = 'None';
                                 }
                                 $scope.tableData.push({
-                                    color: promisingIdeaobj.data.color,
-                                    colordetail: pcolordetail,
                                     promisingidea: promisingIdeaobj.data.idea.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     reason: promisingIdeaobj.data.reason.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s\s+/g, ' '),
                                     inContributionTitle: note.title,
-                                    author: $community.getMember(promisingIdeaobj.authors).getName(),
-                                    date: new Date(promisingIdeaobj.created).toLocaleString(),
-                                    contribution: note
+                                    author: user,
+                                    date: new Date(promisingIdeaobj.modified).toLocaleString(),
+                                    contribution: note,
+                                    color: promisingIdeaobj.data.color,
+                                    colordetail: pcolordetail
                                 });
                                 if (!contains($scope.colors, pcolordetail)) {
                                     $scope.colors.push(pcolordetail);
                                 }
                                 if (!contains($scope.criteria, promisingIdeaobj.data.reason)) {
                                     $scope.criteria.push(promisingIdeaobj.data.reason);
+                                }
+                                if (!contains($scope.users, user)) {
+                                    $scope.users.push(user);
+                                }
+                                if (inx === links.length - 1) {
+                                    sortByTime();
                                 }
                             });
                             if (promisingnotefound === true) {
@@ -106,6 +121,7 @@ angular.module('kf6App')
             $scope.selectedColor = $scope.colors[0];
             $scope.selectedHitCount = $scope.hitcounts[0];
             $scope.selectedCriteria = $scope.criteria[0];
+            $scope.selectedUser = $scope.users[0];
         };
 
         function setNopromising(index, notes) {
@@ -123,11 +139,18 @@ angular.module('kf6App')
             $scope.hitcounts.length = 0;
             $scope.hitcounts.push('All');
             $scope.tableData.forEach(function (promising, index, data) {
-                counted(promising, index, data);
+                if (!contains($scope.overlappedpromising, promising)) {
+                    counted(promising, index, data);
+                }
                 if (index === $scope.tableData.length - 1) {
                     $scope.hitdata.sort(function (a, b) {
                         return parseInt(a.hitcount, 10) - parseInt(b.hitcount, 10);
                     }).reverse();
+                    $scope.hitdata.forEach(function (hdata) {
+                        if (!$scope.hasitoverlappedpromising(hdata.promising) && !contains($scope.hitcounts, hdata.hitcount)) {
+                            $scope.hitcounts.push(hdata.hitcount);
+                        }
+                    });
                     $scope.hitcounts.sort().reverse();
                 }
             });
@@ -151,9 +174,6 @@ angular.module('kf6App')
                 promising: promising,
                 hitcount: hit
             });
-            if (!contains($scope.hitcounts, hit)) {
-                $scope.hitcounts.push(hit);
-            }
             data[idx].count = hit;
         }
 
@@ -197,8 +217,16 @@ angular.module('kf6App')
             $scope.promisngNotes.length = 0;
             $scope.colors.length = 0;
             $scope.criteria.length = 0;
+            $scope.users.length = 0;
             $scope.criteria.push('All');
             $scope.colors.push('All');
+            $scope.users.push('All');
+        }
+
+        function sortByTime() {
+            $scope.tableData.sort(function (a, b) {
+                return new Date(a.date) - new Date(b.date);
+            }).reverse();
         }
 
         $scope.viewSelected = function (view) {
@@ -249,10 +277,11 @@ angular.module('kf6App')
             $scope.status.isnewNoteCollapsed = false;
         };
 
-        $scope.hastextinpromisingidea = function (searchtext, idea, criteria) {
+        $scope.hastextinpromisingidea = function (searchtext, idea, criteria, author) {
             var hasit = false;
-           if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
-                    criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
+            if (searchtext !== '' && (idea.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
+                    criteria.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1 ||
+                    author.replace(/\s/g, '').toLowerCase().indexOf(searchtext.replace(/\s/g, '').toLowerCase()) !== -1)) {
                 hasit = true;
             }
             return hasit;
@@ -263,16 +292,25 @@ angular.module('kf6App')
                 $scope.status.selectedColorCollapsed = false;
                 $scope.status.selectedHitCollapsed = true;
                 $scope.status.selectedCriteriaCollapsed = true;
+                $scope.status.selectedUserCollapsed = true;
             }
             if ($scope.currentselected.name === 'Sortedhits') {
                 $scope.status.selectedColorCollapsed = true;
                 $scope.status.selectedHitCollapsed = false;
                 $scope.status.selectedCriteriaCollapsed = true;
+                $scope.status.selectedUserCollapsed = true;
             }
             if ($scope.currentselected.name === 'Sortedcriteria') {
                 $scope.status.selectedColorCollapsed = true;
                 $scope.status.selectedHitCollapsed = true;
                 $scope.status.selectedCriteriaCollapsed = false;
+                $scope.status.selectedUserCollapsed = true;
+            }
+            if ($scope.currentselected.name === 'Sorteduser') {
+                $scope.status.selectedColorCollapsed = true;
+                $scope.status.selectedHitCollapsed = true;
+                $scope.status.selectedCriteriaCollapsed = true;
+                $scope.status.selectedUserCollapsed = false;
             }
         };
 
@@ -295,11 +333,15 @@ angular.module('kf6App')
         };
 
         $scope.setPromisingIdeacolorobj = function (promisingcolor) {
-           var msg = promisingcolor + ' (Unassign)';
-           $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
-             if (pcolorobj.data.color === promisingcolor) {
-                    msg=promisingcolor + ' (' + pcolorobj.data.data + ')';
-                    return  msg;
+            var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (Unassigned)';
+            $scope.promisingIdeacolorobjsarr.forEach(function (pcolorobj) {
+                var promisngcolorgroup = pcolorobj.data.data;
+                if (promisngcolorgroup === '') {
+                    promisngcolorgroup = 'Unassigned';
+                }
+                if (pcolorobj.data.color === promisingcolor) {
+                    msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (' + promisngcolorgroup + ')';
+                    return msg;
                 }
             });
             return msg;

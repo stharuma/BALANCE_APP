@@ -6,7 +6,7 @@
     <div style="height: 10px;"></div>
     <div ng-include="'components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.html'"></div>
     <div style="height: 10px;"></div>
-    <label>Proming Idea's color Setting in this Context</label>
+    <label>Colour Palette Assignment of Promisingness Idea</label>
     <div>
         <table style="width: 100%; border-collapse: collapse;" ng-repeat="colordata in promisingColorData">
             <tr>
@@ -26,6 +26,8 @@
         <input type="checkbox" ng-model="contribution.data.plugins.lexicalanalysis" ng-change=""> Lexical Analysis </input>
         <br>
         <input type="checkbox" ng-model="contribution.data.plugins.scaffoldgrowth" ng-change=""> Scaffold Growth </input>
+        <br>
+        <input type="checkbox" ng-model="contribution.data.plugins.promisingnessidea" ng-change=""> Promisingness Idea </input>
         <br>
     </div>
 </div>

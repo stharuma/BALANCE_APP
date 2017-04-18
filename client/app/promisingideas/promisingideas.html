@@ -19,8 +19,8 @@
             <label style="font-size:  11pt;float: left"><b>Create New Note</b></label>
         </div>
         <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,selectedPromisingIdeas.toString());">create</button>
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed = true; ">cancel</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,selectedPromisingIdeas.toString());">Create</button>
+            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed = true; ">Cancel</button>
         </div>
         <div style="height : 250px ;overflow: scroll; width:100%; float: left">
             <input type="text" class="form-control" style="height : 20px; overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle">
@@ -48,11 +48,13 @@
                 <div ng-if="status.loading !== true">
                     <div style="float: right;width: 100%;">
                         <label style="float:left; padding-left: 5px;">
-                            <input type="radio" ng-model="currentselected.name" value="Sortedcolors" ng-click="progressselection(value)"> Sort by colors</label>
-                        <label style="float:left; padding-left:15px;">
-                            <input type="radio" ng-model="currentselected.name" value="Sortedhits" ng-click="progressselection(value)">Sort by weight counts</label>
-                        <label style="float:left; padding-left:15px;">
-                            <input type="radio" ng-model="currentselected.name" value="Sortedcriteria" ng-click="progressselection(value)">Sort by criteria</label>
+                            <input type="radio" ng-model="currentselected.name" value="Sortedcolors" ng-click="progressselection(value)"> Filter by colours</label>
+                        <label style="float:left; padding-left:7px;">
+                            <input type="radio" ng-model="currentselected.name" value="Sortedhits" ng-click="progressselection(value)">Filter by weight counts</label>
+                        <label style="float:left; padding-left:7px;">
+                            <input type="radio" ng-model="currentselected.name" value="Sortedcriteria" ng-click="progressselection(value)">Filter by justification</label>
+                        <label style="float:left; padding-left:7px;">
+                            <input type="radio" ng-model="currentselected.name" value="Sorteduser" ng-click="progressselection(value)">Filter by users</label>
                     </div>
                     <br/>
                     <div collapse="status.selectedColorCollapsed " style=" float:left;">
@@ -69,8 +71,14 @@
                     </div>
                     <div collapse="status.selectedCriteriaCollapsed " style=" float:left;">
                         <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
-                            <label clear:both>Criteria::</label>
+                            <label clear:both>Justification ::</label>
                             <select class="KFSupport" style="width:300px;height:25px;border: 2px  light blue;" ng-model="selectedCriteria" ng-options="c for c in criteria" ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
+                        </div>
+                    </div>
+                    <div collapse="status.selectedUserCollapsed " style=" float:left;">
+                        <div style="text-align: left; padding-left: 5px; padding-top: 1px;">
+                            <label clear:both>Users ::</label>
+                            <select class="KFSupport" style="width:300px;height:25px;border: 2px  light blue;" ng-model="selectedUser" ng-options="c for c in users" ng-click="selectedPromisingIdeas.length=0; searchkeyword='' "></select>
                         </div>
                     </div>
                     <div class="action-searchbox">
@@ -79,22 +87,26 @@
                     <br/>
                     <hr style="clear:both; height: 2px;background-color: #33BBFF; " />
                     <div style="clear:both">
-                        <label style="font-size: 12pt " ng-if="viewTitlescopy !==''"><b>PromisingnessIdeas in {{viewTitlescopy}} View(s)</b></label>
+                        <label style="font-size: 12pt " ng-if="viewTitlescopy !==''"><b>Promisingness Ideas in {{viewTitlescopy}} View(s)</b></label>
                         <label style=" font-size: 12pt;" ng-if=" !status.communityCollapsed"><b>Promisingness Ideas in {{currentCommunity.community.title}} Community</b></label>
                     </div>
-                    <table border='1' style="width: 100%;clear: both;" id="table1" ng-show="!status.selectedColorCollapsed||!status.selectedCriteriaCollapsed">
+                    <table border='1' style="width: 100%;clear: both;" id="table1" ng-show="!status.selectedColorCollapsed||!status.selectedCriteriaCollapsed||!status.selectedUserCollapsed">
                         <tr>
-                            <th style="width: 75%;"> PromisingIdeas</th>
+                            <th style="width: 75%;"> Promisingness Ideas</th>
                             <th>In Contribution</th>
                         </tr>
                         <tr class="KFSearchResult" ng-repeat="data in tableData | filter : searchkeyword:false " ng-if=" (selectedColor===colors[0] &&!status.selectedColorCollapsed)&&searchkeyword===''||
                         (selectedColor=== data.colordetail&&!status.selectedColorCollapsed)&&searchkeyword===''||
                         (selectedCriteria ===criteria[0]&&!status.selectedCriteriaCollapsed)&& searchkeyword==='' ||
                         (selectedCriteria===data.reason&&!status.selectedCriteriaCollapsed)&& searchkeyword===''||
-                        (selectedColor===colors[0]&&!status.selectedColorCollapsed) &&hastextinpromisingidea(searchkeyword, data .promisingidea, data .reason) ||
-                        (selectedColor=== data.colordetail&&!status.selectedColorCollapsed)&& hastextinpromisingidea(searchkeyword,data .promisingidea, data .reason) ||
-                        (selectedCriteria ===criteria[0]&&!status.selectedCriteriaCollapsed)&& hastextinpromisingidea(searchkeyword,data .promisingidea, data .reason) ||
-                        (selectedCriteria===data.reason&&!status.selectedCriteriaCollapsed)&& hastextinpromisingidea(searchkeyword,data .promisingidea, data .reason) ">
+                        (selectedUser ===users[0]&&!status.selectedUserCollapsed)&& searchkeyword==='' ||
+                        (selectedUser===data.author&&!status.selectedUserCollapsed)&& searchkeyword===''||
+                        (selectedColor===colors[0]&&!status.selectedColorCollapsed) &&hastextinpromisingidea(searchkeyword, data.promisingidea, data.reason, data.author) ||
+                        (selectedColor=== data.colordetail&&!status.selectedColorCollapsed)&& hastextinpromisingidea(searchkeyword,data.promisingidea, data.reason, data.author) ||
+                        (selectedCriteria ===criteria[0]&&!status.selectedCriteriaCollapsed)&& hastextinpromisingidea(searchkeyword,data.promisingidea, data.reason, data.author) ||
+                        (selectedCriteria===data.reason&&!status.selectedCriteriaCollapsed)&& hastextinpromisingidea(searchkeyword,data.promisingidea, data.reason, data.author)||
+                        (selectedUser ===users[0]&&!status.selectedUserCollapsed)&& hastextinpromisingidea(searchkeyword,data.promisingidea, data.reason, data.author) ||
+                        (selectedUser===data.author&&!status.selectedUserCollapsed)&& hastextinpromisingidea(searchkeyword,data.promisingidea, data.reason, data.author) ">
                             <td>
                                 <div>
                                     <div>
@@ -103,9 +115,9 @@
                                         <tt class="box" ng-style="{ 'background-color': data.color }"></tt>
                                         <tt style="float:left; margin: 3px" ng-bind-html="data .promisingidea | highlighted:searchkeyword:f"></tt>
                                         <br>
-                                        <tt style="float:right">-(By {{data.author}}  {{data.date}})</tt>
+                                        <tt style="float:right">-(By <tt ng-bind-html="data .author | highlighted:searchkeyword"></tt>  {{data.date}})</tt>
                                         <br style="clear:both">
-                                        <b> Criteria: -  </b><tt ng-bind-html="data .reason | highlighted:searchkeyword"></tt>
+                                        <b> Justification : -  </b><tt ng-bind-html="data .reason | highlighted:searchkeyword"></tt>
                                     </div>
                                 </div>
                             </td>
@@ -119,26 +131,26 @@
                     </table>
                     <table border='1' style="width: 100%;" id="table2" ng-show="!status.selectedHitCollapsed">
                         <tr>
-                            <th style="width: 75%;"> PromisingIdeas</th>
+                            <th style="width: 75%;"> Promisingness Ideas</th>
                             <th>In Contribution</th>
                         </tr>
                         <tr class="KFSearchResult" ng-repeat=" hitd in hitdata| filter:searchkeyword " ng-if="((selectedHitCount===hitcounts[0]&&!status.selectedHitCollapsed )&&searchkeyword===''||
                         (selectedHitCount===hitd.promising.count &&!status.selectedHitCollapsed)&&searchkeyword===''||
-                        (selectedHitCount===hitcounts[0]&&!status.selectedHitCollapsed )&&hastextinpromisingidea(searchkeyword, hitd.promising.promisingidea, hitd.promising.reason) ||
-                        (selectedHitCount===hitd.promising.count &&!status.selectedHitCollapsed)&&hastextinpromisingidea(searchkeyword, hitd.promising .promisingidea, hitd.promising.reason))&&!hasitoverlappedpromising(hitd.promising) ">
+                        (selectedHitCount===hitcounts[0]&&!status.selectedHitCollapsed )&&hastextinpromisingidea(searchkeyword, hitd.promising.promisingidea, hitd.promising.reason, hitd.promising.author) ||
+                        (selectedHitCount===hitd.promising.count &&!status.selectedHitCollapsed)&&hastextinpromisingidea(searchkeyword, hitd.promising .promisingidea, hitd.promising.reason, hitd.promising.author))&&!hasitoverlappedpromising(hitd.promising)">
                             <td>
                                 <div>
-                                    <tt style="float:left"><input id="{{hitd.promising.promisingidea}}" type="checkbox" value="{{hitd.promising .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(hitd.promising .promisingidea) > -1" ng-click="toggleSelection(hitd.promising)" /></tt>
+                                    <tt style="float:left"><input id="{{hitd.promising._id}}" type="checkbox" value="{{hitd.promising .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(hitd.promising .promisingidea) > -1" ng-click="toggleSelection(hitd.promising)" /></tt>
                                     <label for="{{hitd.promising.promisingidea}}"></label>
                                     <tt style="font-weight:bold; float: left;margin: 3px" ng-if="hitd.promising.count==1">( <button type="submit" ng-class="{false: 'btn-primary', true: 'btn-default'}[selectedpromisingideaIndex===$index ]"  ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weight)</tt>
                                     <tt style="font-weight:bold; float: left;margin: 3px" ng-if="hitd.promising.count!==1">( <button type="submit" ng-class="{false: 'btn-primary', true: 'btn-default'}[selectedpromisingideaIndex===$index ]"  ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weights)</tt>
                                     <tt class="box" ng-style="{ 'background-color': hitd.promising.color}"></tt>
                                     <tt style="float: left;margin: 3px " ng-bind-html="hitd.promising.promisingidea| highlighted:searchkeyword"></tt>
                                     <br>
-                                    <tt style="float:right">-(By {{hitd.promising.author}}  {{hitd.promising.date}})</tt>
+                                    <tt style="float:right">-(By <tt ng-bind-html="hitd.promising.author| highlighted:searchkeyword"></tt>  {{hitd.promising.date}})</tt>
                                     <div ng-show="selectedpromisingideaIndex===$index  " style="clear:both">
-                                        <tt ng-if="hitd.promising.count==1">There is no overlapping of promising ideas present here!</tt>
-                                        <tt ng-if="hitd.promising.count !=1">The following are the overlapping of promising ideas:</tt>
+                                        <tt ng-if="hitd.promising.count==1">There is no overlapping of promisingness ideas present here!</tt>
+                                        <tt ng-if="hitd.promising.count !=1">The following are the overlapping of promisingness ideas:</tt>
                                         <div style="clear:both" ng-repeat=" overd  in overlappeddata " ng-if="overd.mainpromising===hitd.promising">
                                             <tt class="box" ng-style="{ 'background-color': overd.subpromising.color }"></tt>
                                             <tt style="float:left">{{overd.subpromising.promisingidea}} (
@@ -153,7 +165,7 @@
                                         </div>
                                     </div>
                                     <br style="clear:both">
-                                    <b> Criteria: -  </b><tt ng-bind-html="hitd.promising.reason| highlighted:searchkeyword"></tt>
+                                    <b> Justification: -  </b><tt ng-bind-html="hitd.promising.reason| highlighted:searchkeyword"></tt>
                                 </div>
                             </td>
                             <td>
@@ -171,3 +183,4 @@
     </div>
     <hr style="clear: both;height: 2px;background-color: #33BBFF; " />
 </div>
+
