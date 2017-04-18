@@ -13,12 +13,12 @@
     <div collapse="status.detailCollapsed">
         <div class="well well-lg">
             <div style="padding: 15px;">
-                <label>Search Views:</label>
-                <button type="button" class="btn btn-primary kfbutton" ng-click="addSearchView()">On</button>
+                <label>{{ 'search_views' | translate}}:</label>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addSearchView()">{{'on' | translate}}</button>
             </div>
             <div style="padding: 15px;">
-                <label>Search My Private Notes:</label>
-                <button type="button" class="btn btn-primary kfbutton" ng-click="addPrivateMode()">On</button>
+                <label>{{'search_private_notes' | translate}}:</label>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addPrivateMode()">{{'on' | translate}}</button>
             </div>
             <div style="padding: 15px;">
                 <label>Views:</label>
@@ -28,7 +28,7 @@
                         <div ng-bind-html="view.title | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
-                <button type="button" class="btn btn-primary kfbutton" ng-click="addViews()">Add</button>
+                <button type="button" class="btn btn-primary kfbutton" ng-click="addViews()">{{'add' | translate}}</button>
             </div>
             <div style="padding: 15px;">
                 <label>{{ 'authors' | translate }}:</label>

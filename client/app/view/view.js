@@ -230,25 +230,25 @@ angular.module('kf6App')
                         return; //not found
                     }
 
+                    e.preventDefault();
+                    //e.stopPropagation();
+                    e.stopImmediatePropagation();
                     //found
                     var model = $scope.searchById($scope.refs, found.id);
                     if (!model) {
                         window.alert('model not found for ' + found.id);
                         return;
                     }
-                    if (!$scope.isUnfixable(model)) {
+                    if (!$scope.isUnlockable(model)) {
                         window.alert('You cannot edit this object on your privilege.');
                         return;
                     }
-
-                    var confirmation = window.confirm('here is a fixed object, would you like to unfix?');
+                    var confirmation = window.confirm('here is a locked object, would you like to unlock?');
                     if (!confirmation) {
                         return;
                     }
-
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $scope.unfix(model);
+                    
+                    $scope.unlock(model);
                 });
 
                 function findObject(e) {
@@ -446,6 +446,9 @@ angular.module('kf6App')
 
                     if ($scope.dragging !== 'none') { //Internal DnD
                         var postref = $scope.dragging;
+                        if(postref.data.draggable !== undefined && !postref.data.draggable) {
+                            return;
+                        }
                         var dx = newX - postref.data.x - $scope.dragpoint.x;
                         var dy = newY - postref.data.y - $scope.dragpoint.y;
                         $scope.moveRefs({
@@ -482,10 +485,21 @@ angular.module('kf6App')
                         text = data.replace('postref:', '');
                         var models = JSON.parse(text);
                         models.forEach(function(each) {
-                            $scope.createContainsLink(each.to, {
-                                x: newX + each.offsetX,
-                                y: newY + each.offsetY
-                            });
+                            var dt = {};
+                            dt.x = newX + each.offsetX;
+                            dt.y = newY + each.offsetY;
+                            if(each.data){
+                                if(each.data.width){
+                                    dt.width = each.data.width;
+                                }
+                                if(each.data.height){
+                                    dt.height = each.data.height;
+                                }
+                                if(each.data.showInPlace){
+                                    dt.showInPlace = each.data.showInPlace;
+                                }
+                            }
+                            $scope.createContainsLink(each.to, dt);
                         });
                     }
                     $scope.draggingViewlink = null;
@@ -523,18 +537,20 @@ angular.module('kf6App')
                 var pressY;
 
                 element.on('mousedown', function(e) {
-                    if (e.ctrlKey) {
-                        return;
+                    if(e.which === 1){
+                        if (e.ctrlKey) {
+                            return;
+                        }
+                        if (marquee !== null) {
+                            marquee.remove();
+                            marquee = null;
+                        }
+                        element.css('zIndex', 100);
+                        pressX = e.clientX - element.offset().left;
+                        pressY = e.clientY - element.offset().top;
+                        element.append('<div id="marquee" style="position: absolute; width: 1px; height: 1px; border-style: dashed; border-width: 1pt; border-color: #000000;"></div>');
+                        marquee = $('#marquee');
                     }
-                    if (marquee !== null) {
-                        marquee.remove();
-                        marquee = null;
-                    }
-                    element.css('zIndex', 100);
-                    pressX = e.clientX - element.offset().left;
-                    pressY = e.clientY - element.offset().top;
-                    element.append('<div id="marquee" style="position: absolute; width: 1px; height: 1px; border-style: dashed; border-width: 1pt; border-color: #000000;"></div>');
-                    marquee = $('#marquee');
                 });
 
                 element.on('mousemove', function(e) {

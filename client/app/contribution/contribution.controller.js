@@ -5,7 +5,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('ContributionCtrl', function( $rootScope, $scope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh, $sureshshared) {
+    .controller('ContributionCtrl', function($scope, $rootScope, $http, $community, $kftag, $stateParams, $ac, $timeout, $kfutil, $translate, $sce, $suresh, $sureshshared) {
         var contributionId = $rootScope.contributionId;
         var contextId = $rootScope.contextId;
 
@@ -83,7 +83,6 @@ angular.module('kf6App')
             $scope.contribution = contribution;
             $community.enter($scope.contribution.communityId, function() {
                 $scope.community = $community.getCommunityData();
-                var communityId = $community.getCommunityData().community._id;
                 $community.refreshContext(contextId, function(context) {
                     $community.getContext(null, function(context) {
                         $scope.context = context;
@@ -153,10 +152,9 @@ angular.module('kf6App')
                 });
 
                 // $scope.updateRecords();
-                // $scope.communityMembers = $community.getMembersArray();
-                // $community.refreshMembers();
-                // Open a contribution in "edit" mode only it is new (status "unsaved") and obviously if the author has the right to edit it.
-                if ($scope.contribution.status === "unsaved" && $scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
+                $scope.communityMembers = $community.getMembersArray();
+                $community.refreshMembers();
+                if ($scope.isEditable() && $scope.contribution.type !== 'Attachment' && !$scope.contribution.isRiseabove()) {
                     $scope.status.edittabActive = true;
                 }
                 if ($scope.contribution.status === 'active') {
@@ -486,7 +484,6 @@ angular.module('kf6App')
                                     return;
                                 }
                                 var link = links[0];
-                                console.log(link);
                                 var data = { x: link.data.x + 100, y: link.data.y + 100 };
                                 $community.createLink(view._id, newContribution._id, 'contains', data, function() {
                                     $community.createLink(newContribution._id, $scope.contribution._id, 'buildson', {}, function() {});
@@ -517,11 +514,19 @@ angular.module('kf6App')
         };
 
         $scope.prepareRiseabove = function() {
+            if($scope.contribution.isRiseabove === undefined){
+                 return;
+            }
             if ($scope.contribution.isRiseabove()) {
                 var url = 'view/' + $scope.contribution.data.riseabove.viewId + '/X';
                 var xhtml = '<iframe style="display: block;" height="100%" width="100%" src="%SRC%" ></iframe>';
                 xhtml = xhtml.replace('%SRC%', url);
-                $('#riseabovediv').html(xhtml);
+                if(document.getElementById('ctrb_window_'+contributionId) === null){
+                    $('div[name="riseabovediv"]').html(xhtml);
+                }
+                else{
+                    $('#ctrb_window_'+contributionId+' div[name="riseabovediv"]').html(xhtml);
+                }
             }
         };
 
@@ -736,7 +741,13 @@ angular.module('kf6App')
 
         $scope.mceResize = function() {
             if ($scope.mceEditor) {
-                var height = ($('#ctrb_window_'+contributionId).height() - 150);
+                var height = $('#ctrb_window_'+contributionId).height();
+                if(height === null){
+                    height = window.innerHeight - 150;
+                }
+                else{
+                    height = height - 150;
+                }
                 $scope.mceEditor.theme.resizeTo('100%', height);
             }
         };
@@ -744,8 +755,6 @@ angular.module('kf6App')
         $('#ctrb_window_'+contributionId).bind( "dialogresize", function(event, ui) {
             $scope.mceResize();
         });
-
-        //$('#ctrb_window_'+contributionId).onresize = $scope.mceResize;
 
         var currentLang = $translate.proposedLanguage() || $translate.use();
         var languageURL = "";
@@ -1032,6 +1041,70 @@ angular.module('kf6App')
             });
         };
 
+/*********** svg-edit ************/
+        $scope.svgInitialized = false;
+
+        $scope.tabSelected = function(idx) {
+            if(idx ==='edit'){
+                if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
+                    var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
+                    $('#svgeditdiv').html(xhtml);
+                    $scope.svgInitialized = true;
+                }
+            }
+            else if(idx ==='authors'){
+                $scope.contribution.getGroupName = function() {
+                    var groupId = $scope.contribution.group;
+                    if (!groupId) {
+                        return '(none)';
+                    }
+                    var group = $scope.community.groups[groupId];
+                    if (!group) {
+                        return groupId + ' (loading)';
+                    }
+                    return group.title;
+                };
+                $scope.selected.group = $community.getGroup($scope.contribution.group);
+                $scope.$watch('selected.group', function() {
+                    if ($scope.selected.group) {
+                        $scope.contribution.group = $scope.selected.group._id;
+                    }
+                });
+                $community.refreshGroups();
+                $community.refreshMembers();
+                $scope.communityMembers = $community.getMembersArray();
+            }
+            else if(idx ==='connections'){
+
+            }
+            else if(idx ==='history'){
+                $scope.updateRecords();
+            }
+            else if(idx ==='attachments'){
+
+            }
+            else if(idx ==='read'){
+                $scope.status.hidebuildson = false;
+            }
+            
+        };
+    });
+
+function onSvgInitialized() {
+    var wnd = document.getElementById('svgedit').contentWindow;
+    var doc = wnd.document;
+    var mainButton = doc.getElementById('main_button');
+    mainButton.style.display = 'none';
+    //var svg = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
+    var svg = '';
+    if (window.contribution) {
+        svg = window.contribution.data.svg;
+    }
+    wnd.svgCanvas.setSvgString(svg);
+    wnd.svgEditor.showSaveWarning = false;
+}
+
+
        /***********promising Idea's code start ************/
           $scope.setIndex = function (index) {
               $scope.selectedIndex = index;
@@ -1308,31 +1381,4 @@ angular.module('kf6App')
            };
 
         /*********** Promisingness Idea's code End  ************/
-
-
-          /*********** svg-edit ************/
-          $scope.svgInitialized = false;
-
-          $scope.editSelected = function () {
-          if ($scope.svgInitialized === false && $scope.contribution.type === 'Drawing') {
-              var xhtml = '<iframe style="display: block;" id="svgedit" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgInitialized();"></iframe>';
-              $('#svgeditdiv').html(xhtml);
-              $scope.svgInitialized = true;
-          }
-          };
-          });
-
-          function onSvgInitialized() {
-              var wnd = document.getElementById('svgedit').contentWindow;
-              var doc = wnd.document;
-              var mainButton = doc.getElementById('main_button');
-              mainButton.style.display = 'none';
-              //var svg = '<svg width="100%" height="100%" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1<\/title><rect stroke-width="5" stroke="#000000" fill="#FF0000" id="svg_1" height="35" width="51" y="35" x="32"/><ellipse ry="15" rx="24" stroke-width="5" stroke="#000000" fill="#0000ff" id="svg_2" cy="60" cx="66"/><\/g><\/svg>';
-              var svg = '';
-              if (window.contribution) {
-                  svg = window.contribution.data.svg;
-              }
-              wnd.svgCanvas.setSvgString(svg);
-              wnd.svgEditor.showSaveWarning = false;
-          }
 

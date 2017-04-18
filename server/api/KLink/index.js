@@ -3,6 +3,7 @@
 var express = require('express');
 var controller = require('./KLink.controller');
 var commauth = require('../../auth/commauth.service');
+var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
@@ -16,7 +17,7 @@ router.post('/:communityId/search', commauth.isAuthenticated(), controller.searc
 router.get('/buildson/:id', controller.buildsonIndex); // ajout michelle janvier 2016
 
 router.get('/updatecache/:linkId', controller.updateCash);
-router.get('/updateallcache/:communityId', controller.updateAllCash);
+router.get('/updateallcache/:communityId', auth.hasRole('admin'), controller.updateAllCash);
 
 router.get('/:id', controller.show);
 router.post('/', commauth.isLinkAuthenticated(), controller.create);

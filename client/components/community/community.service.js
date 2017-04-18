@@ -29,9 +29,9 @@ angular.module('kf6App')
             }
             var currentUserId = Auth.getCurrentUser()._id;
             if (communityId !== newId || userId !== currentUserId) {
+
                 userId = currentUserId;
                 communityId = newId;
-
                 //clear
                 rootContext = null;
                 communityData.community = null;
@@ -222,7 +222,7 @@ angular.module('kf6App')
                             }
                         });
                     });
-                    handler();
+                    handler(communityData.scaffolds);
                 });
             });
         };

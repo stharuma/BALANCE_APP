@@ -12,8 +12,8 @@ router.get('/:id/views', auth.isAuthenticated(), controller.showviews);
 router.get('/:id/authors', auth.isAuthenticated(), controller.showauthors);
 router.get('/:id/groups', auth.isAuthenticated(), controller.showgroups);
 router.post('/', auth.hasRole('admin'), controller.create);
-router.put('/:id', auth.isAuthenticated(), controller.update);
-router.patch('/:id', controller.update);
+router.put('/:id', auth.hasRole('admin'), controller.update);
+router.patch('/:id', auth.hasRole('admin'), controller.update);
 router.delete('/:id', controller.destroy);
 
 module.exports = router;

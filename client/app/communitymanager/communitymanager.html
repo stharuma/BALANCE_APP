@@ -1,7 +1,7 @@
 <div class="col-md-12" style="padding-left: 50px;">
     <label>{{ 'kbc_myKBCsTitle' | translate }}:</label>
     <table>
-        <tr ng-repeat="registration in myRegistrations">
+        <tr ng-repeat="registration in myRegistrations" class="tableRow">
             <td style="padding-left: 20px;">{{registration._community.title}}</td>
             <td style="padding-left: 10px;">
                 <!-- TODO i18n (created: {{toTimeString(registration._community.created)}}) -->

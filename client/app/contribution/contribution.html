@@ -85,9 +85,9 @@
                         </div>
                     </div>
                     <div style="height: 5px;"></div>
-                    <div ng-if="contribution.type === 'Note'" style="height: 100%; height: calc(100% - 24px);">
-                        <div style="float: left; height: 100%; overflow-y: auto; overflow-x: hidden;">
-                            <div collapse="status.isScaffoldCollapsed" valign="top" style="width: 195px; padding: 5px;">
+                    <div ng-if="contribution.type === 'Note'" style="height: calc(100% - 24px);">
+                        <div style="float: left; height: auto; overflow-y: auto; overflow-x: hidden;">
+                            <div collapse="status.isScaffoldCollapsed" valign="top" style="width: 195px; padding: 5px;height:auto;">
                                 <div style="max-width: 175px;">
                                     <div style="height: 7px;"></div>
                                     <label>{{ 'scaffolds' | translate }}:</label>
@@ -103,7 +103,7 @@
                                 <div style="height: 7px;"></div>
                                 <label>{{ 'attachments' | translate }}:</label>
                                 <button class="btn btn-default" ng-click="status.isAttachmentsCollapsed = !status.isAttachmentsCollapsed">{{ 'attach' | translate }}</button>
-                                <button ng-disabled="!status.insertable" class="btn btn-default" ng-click="insertImg()">{{ 'Insert' | translate }}</button>
+                                <button ng-disabled="!status.insertable" class="btn btn-default" ng-click="insertImg()">{{ 'insert' | translate }}</button>
                                 <div class="KFContainer">
                                     <span ng-repeat="attachment in images">
                                     <img kfImgDrag class="" style="vertical-align: inherit;" ng-attr-src="{{attachment.data.url}}" width="50px" height="50px" ng-click="selectedImg()" data-mce-src="{{attachment.data.url}}"></img>
