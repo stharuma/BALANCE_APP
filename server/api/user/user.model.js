@@ -97,7 +97,8 @@ UserSchema
     .validate(function(value, respond) {
         var self = this;
         this.constructor.findOne({
-            userName: value
+          provider: 'local',
+          userName: value
         }, function(err, user) {
             if (err) throw err;
             if (user) {
