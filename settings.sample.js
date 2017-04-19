@@ -12,7 +12,7 @@ exports.mail = {
         pass: process.env.EMAIL_PASSWORD
     }
   },
-  from: 'zzzz@gmail.com';
-  baseURL: 'https://kf.example.net/';
+  from: 'zzzz@gmail.com',
+  baseURL: 'https://kf.example.net/'
 };
 
