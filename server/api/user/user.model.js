@@ -94,11 +94,11 @@ UserSchema
 
 UserSchema
     .path('userName')
-    .validate(function(value, respond) {
+    .validate(function(userName, respond) {
         var self = this;
         this.constructor.findOne({
           provider: 'local',
-          userName: value
+          userName: new RegExp(userName, 'i')
         }, function(err, user) {
             if (err) throw err;
             if (user) {
