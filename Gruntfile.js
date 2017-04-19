@@ -40,8 +40,7 @@ module.exports = function(grunt) {
             dev: {
                 options: {
                     script: 'server/app.js',
-                    debug: true,
-                  opts: ['--debug=5859']
+                    debug: true
                 }
             },
             prod: {
@@ -105,7 +104,7 @@ module.exports = function(grunt) {
                 tasks: ['express:dev', 'wait'],
                 options: {
                     livereload: true,
-                    nospawn: true, //Without this option specified express won't be reloaded
+                    nospawn: true //Without this option specified express won't be reloaded
                 }
             }
         },
@@ -181,7 +180,7 @@ module.exports = function(grunt) {
         'node-inspector': {
             custom: {
                 options: {
-                  'web-host': 'localhost',
+                    'web-host': 'localhost'
                 }
             }
         },
@@ -191,6 +190,7 @@ module.exports = function(grunt) {
             debug: {
                 script: 'server/app.js',
                 options: {
+                    nodeArgs: ['--debug-brk'],
                     env: {
                         PORT: process.env.PORT || 9000
                     },
@@ -202,7 +202,7 @@ module.exports = function(grunt) {
                         // opens browser on initial server start
                         nodemon.on('config:update', function() {
                             setTimeout(function() {
-                                require('open')('http://localhost:8080/debug?port=5859');
+                                require('open')('http://localhost:8080/debug?port=5858');
                             }, 500);
                         });
                     }
