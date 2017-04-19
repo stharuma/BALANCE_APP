@@ -16,3 +16,8 @@ exports.mail = {
   baseURL: 'https://kf.example.net/'
 };
 
+exports.auth = {
+  local: {
+    caseSensitiveUsername : false // default = false
+  }
+};
