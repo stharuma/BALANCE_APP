@@ -141,7 +141,6 @@
                             <td>
                                 <div>
                                     <tt style="float:left"><input id="{{hitd.promising._id}}" type="checkbox" value="{{hitd.promising .promisingidea}}" ng-checked="selectedPromisingIdeas.indexOf(hitd.promising .promisingidea) > -1" ng-click="toggleSelection(hitd.promising)" /></tt>
-                                    <label for="{{hitd.promising.promisingidea}}"></label>
                                     <tt style="font-weight:bold; float: left;margin: 3px" ng-if="hitd.promising.count==1">( <button type="submit" ng-class="{false: 'btn-primary', true: 'btn-default'}[selectedpromisingideaIndex===$index ]"  ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weight)</tt>
                                     <tt style="font-weight:bold; float: left;margin: 3px" ng-if="hitd.promising.count!==1">( <button type="submit" ng-class="{false: 'btn-primary', true: 'btn-default'}[selectedpromisingideaIndex===$index ]"  ng-click="setselectedpromisingideaIndex($index)">{{hitd.promising.count}}</button> Weights)</tt>
                                     <tt class="box" ng-style="{ 'background-color': hitd.promising.color}"></tt>
