@@ -11,7 +11,7 @@
         <div ng-include="'components/kfutils/viewauthordateselector/viewauthordateselector.html'"></div>
         <div style="padding: 15px;">
             <label>Scaffolds::</label>
-            <select class="KFSupport" style="width: 300px;height:25px;border: 2px  light blue;" ng-model="current" ng-options="s.title for s in scaffolds"></select>
+            <select class="KFSupport" style="width: 300px;height:25px;" ng-model="current" ng-options="s.title for s in scaffolds"></select>
             <button ng-click=" search()" ng-model="queryString">Scaffold Tracker:</button>
             <div class="panel">
                 <div class="check-box-panel">
