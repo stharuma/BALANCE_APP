@@ -1,23 +1,23 @@
 <div ng-controller="VieweditorCtrl" class="col-md-12">
     <!-- notification setting -->
     <div>
-        <input type="checkbox" ng-model="setting.notificationSettingEnabled" ng-change="notificationSettingEnabledChanged()">Enable Specific Notification Setting</input>
+        <input type="checkbox" ng-model="setting.notificationSettingEnabled" ng-change="notificationSettingEnabledChanged()">Enable Specific Notification Setting
         <div style="padding-left: 20px;" ng-show="setting.notificationSettingEnabled">
             <label>Notification: </label>
             <div>
-                <input type="checkbox" ng-model="setting.receiveNotification" ng-change="notificationSettingChanged()">I will receive notification for this view.</input>
+                <input type="checkbox" ng-model="setting.receiveNotification" ng-change="notificationSettingChanged()">I will receive notification for this view.
             </div>
         </div>
     </div>
     <!-- view setting -->
     <div style="height: 10px;"></div>
     <div>
-        <input type="checkbox" ng-model="setting.viewSettingEnabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+        <input type="checkbox" ng-model="setting.viewSettingEnabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting
         <div ng-show="setting.viewSettingEnabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
     </div>
     <!-- scaffold setting -->
     <div style="height: 10px;"></div>
-    <input type="checkbox" ng-model="contribution.data.scaffoldSettingEnabled"> Enable Specific Scaffold Setting</input>
+    <input type="checkbox" ng-model="contribution.data.scaffoldSettingEnabled"> Enable Specific Scaffold Setting
     <div ng-if="contribution.data.scaffoldSettingEnabled" ng-include="'components/kfutils/scaffoldsettingsubeditor/scaffoldsettingsubeditor.html'"></div>
     <!-- community setting -->
     <div style="height: 10px;"></div>

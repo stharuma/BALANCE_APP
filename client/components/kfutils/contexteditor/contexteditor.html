@@ -1,6 +1,6 @@
 <div ng-controller="ContexteditorCtrl" class="col-md-12">
     <!-- view setting -->
-    <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting</input>
+    <input type="checkbox" ng-model="viewSetting.enabled" ng-change="viewsettingEnabledChanged()"> Enable Specific View Setting
     <div ng-show="viewSetting.enabled" ng-include="'components/kfutils/viewsettingsubeditor/viewsettingsubeditor.html'"></div>
     <!-- scaffold setting -->
     <div style="height: 10px;"></div>
@@ -21,13 +21,13 @@
     <div style="height: 10px;"></div>
     <label>Plugin Setting in this Context</label>
     <div>
-        <input type="checkbox" ng-model="contribution.data.plugins.relatedword" ng-change=""> RelatedWord </input>
+        <input type="checkbox" ng-model="contribution.data.plugins.relatedword" ng-change=""> RelatedWord
         <br>
-        <input type="checkbox" ng-model="contribution.data.plugins.lexicalanalysis" ng-change=""> Lexical Analysis </input>
+        <input type="checkbox" ng-model="contribution.data.plugins.lexicalanalysis" ng-change=""> Lexical Analysis
         <br>
-        <input type="checkbox" ng-model="contribution.data.plugins.scaffoldgrowth" ng-change=""> Scaffold Growth </input>
+        <input type="checkbox" ng-model="contribution.data.plugins.scaffoldgrowth" ng-change=""> Scaffold Growth
         <br>
-        <input type="checkbox" ng-model="contribution.data.plugins.promisingnessidea" ng-change=""> Promisingness Idea </input>
+        <input type="checkbox" ng-model="contribution.data.plugins.promisingnessidea" ng-change=""> Promisingness Idea
         <br>
     </div>
 </div>
