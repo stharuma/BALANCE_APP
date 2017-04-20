@@ -375,7 +375,7 @@
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1); updatepromisingIdeaobjs()">Cancel</button>
                             </div>
                            <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
-                           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''"ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear colour</button>
+                           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''" ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear colour</button>
                            <br>
                            <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
                            <label style="float: left;font-size:  9pt">Idea : </label>
@@ -399,7 +399,7 @@
         <label style="font-size:  11pt; text-align: center; text-decoration: underline; padding-left: 10px;"><b>Add Promisingness Idea</b></label>
         <div style="padding-left: 20px; height: 90%; overflow: scroll; width:100%; float: left">
           <label style="font-size:  9pt"> <b> Colour-Group Attribution : {{createmsg}}</b></label>
-          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="obj.targetColor!==''"ng-click="clearColor();">Clear colour</button>
+          <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="obj.targetColor!==''" ng-click="clearColor();">Clear colour</button>
            <br>
            <ngjs-color-picker selected-color="obj.targetColor" custom-colors="colors"></ngjs-color-picker>
            <label style="float: left;font-size:  9pt">Idea : </label>
