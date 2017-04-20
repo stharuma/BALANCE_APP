@@ -9,7 +9,7 @@ exports.mail = {
     secure: true, // use SSL
     auth: {
         user: 'kf6feedback@gmail.com',
-        pass: process.env.EMAIL_PASSWORD
+        pass: 'password or use environment variable such as process.env.EMAIL_PASSWORD'
     }
   },
   from: 'zzzz@gmail.com',
