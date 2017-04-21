@@ -51,14 +51,26 @@ function hasRole(roleRequired) {
 
     return compose()
         .use(isAuthenticated())
-        .use(function meetsRequirements(req, res, next) {
-            if (config.userRoles.indexOf(req.user.role) >= config.userRoles.indexOf(roleRequired)) {
+        .use(function (req, res, next) {
+            if (meetsRoleRequirement(req.user.role, roleRequired)) {
                 next();
             } else {
                 res.sendStatus(403);
             }
         });
 }
+
+function meetsRoleRequirement(role, roleRequired) {
+  if (!role) throw new Error('Role needs to be set');
+  if (!roleRequired) throw new Error('Required role needs to be set');
+
+  if (config.userRoles.indexOf(role) >= config.userRoles.indexOf(roleRequired)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 /**
  * Returns a jwt token signed by the app secret
@@ -85,5 +97,6 @@ function setTokenCookie(req, res) {
 
 exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
+exports.meetsRoleRequirement = meetsRoleRequirement;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;
