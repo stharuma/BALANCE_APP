@@ -661,9 +661,11 @@ angular.module('kf6App')
                 var height = 0;
                 if($scope.isMobile()){
                     var h1 = $('div[class="KFTabSet"]').height();
-                    var h2 = $('ul[class="nav nav-tabs"]').height();
-                    var h3 = $('div[class~="mce-toolbar-grp"]').height();
-                    h3 = h3 === 196? 100 : h3;
+                    //var h2 = $('ul[class="nav nav-tabs"]').height();
+                    var h2 = 38;
+                    //var h3 = $('div[class~="mce-toolbar-grp"]').height();
+                    var h3 = 130;
+                    //h3 = h3 === 196? 100 : h3;
                     height = h1 - h2 - 40 - h3 ;
                 }
                 else{
@@ -741,7 +743,7 @@ angular.module('kf6App')
                 }]
             }], */
             plugins: ['advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table directionality emoticons template textcolor paste textcolor noneditable fullpage'],
-            toolbar: 'styleselect | bold italic underline strikethrough | forecolor backcolor bullist numlist link | code',
+            toolbar: 'styleselect | bold italic underline strikethrough | forecolor backcolor bullist numlist | link code',
             //toolbar: 'undo redo formatselect fontselect fontsizeselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | forecolor backcolor bullist numlist link image code',
             //toolbar1: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
             //toolbar2: 'forecolor backcolor | emotions link unlink image media | code | styleselect fontselect fontsizeselect',
