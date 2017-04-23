@@ -43,8 +43,22 @@
 	vertical-align:top;
 }
 
+.td_option{
+	padding-left:15%;
+	text-align:left;
+}
+
+.td_option input{
+	width:10px;
+	margin-left:10px;
+}
+
 .tr_200{
 	height:200px;
+}
+
+.tr_20{
+	height:20px;
 }
 
 .feedback_tb td_button{
@@ -55,4 +69,9 @@
 	margin-top:10px;
 	text-align: center;
     color: red;
+}
+
+.warning_area{
+	color: red;
+	margin-left:10px;
 }
