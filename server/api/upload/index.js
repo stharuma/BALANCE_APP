@@ -22,6 +22,6 @@ var multipartMiddleware = multipart({
     uploadDir: config.attachmentsPath
 });
 router.post('/', multipartMiddleware, controller.upload);
-
+router.post('/newImage', controller.uploadAndUpdate);
 
 module.exports = router;
