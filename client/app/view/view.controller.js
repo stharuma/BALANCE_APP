@@ -18,7 +18,7 @@ function onSvgDrawingInitialized() {
                     w = 300;
                     h = (300/img.width) * h;
                 }
-                var svg = '<svg width="'+w+'" height="'+h+'" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1</title><image xlink:href="'+imgSrc+'" id="svg_1" height="'+h+'" width="'+w+'" y="0" x="0"/></g></svg>';
+                var svg = '<svg width="'+w+'" height="'+h+'" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1</title><image xlink:href="'+imgSrc+'" id="svg_1" height="'+h+'" width="'+w+'" y="0" x="0"/></g><g><title>Layer 2</title></g></svg>';
                 wnd.svgCanvas.setSvgString(svg);
             }).error(function () {
                 // image couldnt be loaded
