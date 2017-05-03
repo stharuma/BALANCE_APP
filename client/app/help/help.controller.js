@@ -5,14 +5,17 @@ angular.module('kf6App')
         $scope.emails = [];
         $http.get('/api/users/me').success(function(me) {
                 var myself = {};
-                myself.id = me.email;
-                myself.name = me.email;
+                myself.value = me.firstName + " " + me.lastName + " <" + me.email + ">";
+                myself.name = me.firstName + " " + me.lastName + " <" + me.email + ">";
                 $scope.emails.push(myself);
-                $scope.email = me.email;
+                $scope.emails.push({"value":"Anonymous", "name":"Anonymous"});
+                $scope.userInfo = $scope.emails[0].value;
+                $scope.selected = $scope.emails[0].value;
         });
         $scope.input = {fbTitle:'',fbContent:''};
+        $scope.warningShow = false;
         $scope.msgShow = false;
-        $scope.emails.push({"id":"anonymous", "name":"Anonymous"});
+        $scope.checkboxes = {"browser": true, "community": true};
         $scope.sendFeedback = function(){
             if($scope.input.fbTitle === undefined || $scope.input.fbTitle === "") {
                 $scope.msgShow = true;
@@ -24,17 +27,28 @@ angular.module('kf6App')
                 $scope.msg = "Description feild can not be empty.";
                 return;
             }
+            var content = "";
+            //get browser info
+            if($scope.checkboxes.browser){
+                content = "Browser version: " + $scope.sayswho() + "\n";
+            }
+            //get community info
+            if($scope.checkboxes.community){
+                content = content + "Community: " + $scope.community.community.title + "\n";
+            }
+            content  = content + $scope.input.fbContent;
+
             $http.post('/api/help/send', {
-                email:$scope.email,
+                email:$scope.selected,
                 subject:$scope.input.fbTitle,
-                content:$scope.input.fbContent
+                content:content
             }).success(function() {
                 // $scope.msg_show = true;
                 // $scope.msg = "Your feedback has been sent to the administrator.";
                 // document.getElementById("msg_div").style.color = "green";
                 window.alert("Your feedback has been sent to the administrator. ");
-                $scope.msgShow = false;
-                //$window.close();
+                $scope.clearForm();
+                $scope.status.isHelpCollapsed = true;
             }).error(function() {
                 $scope.msgShow = true;
                 $scope.msg = "Failed to send your feedback.";
@@ -42,9 +56,41 @@ angular.module('kf6App')
             });
         };
 
+        $scope.update = function(option){
+            if(option === "Anonymous"){
+                $scope.warningShow = true;
+                $scope.selected = "Anonymous";
+            }
+            else{
+                $scope.warningShow = false;
+                $scope.selected = option;
+            }
+        };
+
         $scope.clearForm = function(){
             $scope.input = {};
             $scope.msgShow = false;
+            $scope.checkboxes = {"browser": true, "community": true};
+        };
+
+        $scope.sayswho = function(){
+            var ua= navigator.userAgent, tem, 
+            M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+            if(/trident/i.test(M[1])){
+                tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
+                return 'IE '+(tem[1] || '');
+            }
+            if(M[1]=== 'Chrome'){
+                tem= ua.match(/\b(OPR|Edge)\/(\d+)/);
+                if(tem !== null) {
+                    return tem.slice(1).join(' ').replace('OPR', 'Opera');
+                }
+            }
+            M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+            if((tem= ua.match(/version\/(\d+)/i)) !== null) {
+                M.splice(1, 1, tem[1]);
+            }
+            return M.join(' ');
         };
 
     });
