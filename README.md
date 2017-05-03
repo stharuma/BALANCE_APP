@@ -40,6 +40,9 @@ $ npm install
 ```shell
 $ bower install
 ```
+5. Configure server settings (v6.10+)
+
+*  Version 6.10 introduces (temporarily) a settings.js file controlling mandatory and non mandatory settings such as username case sensibility for login. See settings.sample.js for an example file. 
 
 ### Run ###
 
