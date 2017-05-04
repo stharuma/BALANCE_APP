@@ -25,9 +25,9 @@
 <script src="spinbtn/JQuerySpinBtn.min.js"></script>
 <script src="touch.js"></script>
 
-<!--{if svg_edit_release}-->
+<!--{if svg_edit_release}
   <script src="svgedit.compiled.js"></script>
-<!--{else}>
+{else}>-->
   <script src="svgedit.js"></script>
   <script src="jquery-svg.js"></script>
   <script src="contextmenu/jquery.contextMenu.js"></script>
@@ -48,7 +48,7 @@
   <script src="svg-editor.js"></script>
   <script src="locale/locale.js"></script>
   <script src="contextmenu.js"></script>
-<!{endif}-->
+<!--{endif}-->
 
 <!-- always minified scripts -->
 <script src="jquery-ui/jquery-ui-1.8.17.custom.min.js"></script>
@@ -465,8 +465,8 @@ by creating the following file and adding by calls to svgEditor.setConfig -->
 	<div class="tool_button" id="tool_path" title="Path Tool"></div>
 	<div class="tool_button" id="tool_text" title="Text Tool"></div>
 	<div class="tool_button" id="tool_image" title="Image Tool"></div>
-	<div class="tool_button" id="tool_zoom" title="Zoom Tool [Ctrl+Up/Down]"></div>
-	
+	<!-- <div class="tool_button" id="tool_zoom" title="Zoom Tool [Ctrl+Up/Down]"></div>
+	 -->
 	<div style="display: none">
 		<div id="tool_rect" title="Rectangle"></div>
 		<div id="tool_square" title="Square"></div>
@@ -480,7 +480,7 @@ by creating the following file and adding by calls to svgEditor.setConfig -->
 <div id="tools_bottom" class="tools_panel">
 
 	<!-- Zoom buttons -->
-	<div id="zoom_panel" class="toolset" title="Change zoom level">
+	<!-- <div id="zoom_panel" class="toolset" title="Change zoom level">
 		<label>
 		<span id="zoomLabel" class="zoom_tool icon_label"></span>
 		<input id="zoom" size="3" value="100" type="text" />
@@ -502,7 +502,7 @@ by creating the following file and adding by calls to svgEditor.setConfig -->
 			</ul>
 		</div>
 		<div class="tool_sep"></div>
-	</div>
+	</div> -->
 
 	<div id="tools_bottom_2">
 		<div id="color_tools">
