@@ -355,6 +355,16 @@ angular.module('kf6App')
             }
         };
 
+        $('img.Exportview').on("dragstart", function (event) {
+            console.log('dragenter');
+             if ($scope.selectedPromisingIdeas.length === 0) {
+                window.alert('Promising Idea is not selected');
+                return;
+             }
+              event.originalEvent.dataTransfer.setData('text/plain',$scope.selectedPromisingIdeas.toString()+'§§§pidata');
+
+         });
+
     })
 
 .filter('highlighted', function ($sce) {
@@ -367,3 +377,4 @@ angular.module('kf6App')
         return $sce.trustAsHtml(text);
     };
 });
+

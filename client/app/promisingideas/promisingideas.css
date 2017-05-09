@@ -6,9 +6,8 @@
 }
 .KFBarButton {
     width: 34px;
-    border-color: #DDD;
-   /* background-color: #DDD;*/
-    padding: 1px;
+    border: 3px solid #DDD;
+   padding: 1px;
 }
 
 .action-searchbox {

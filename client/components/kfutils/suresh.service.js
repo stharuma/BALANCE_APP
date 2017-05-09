@@ -5,6 +5,7 @@ angular.module('kf6App')
         var obj = {};
         var toConnections = [];
         var fromConnections = [];
+        var xpos=100, ypos=100;
         //  var communityId = $community.getCommunityData().community._id;
 
         obj.searchprocess = function (queryString, communityId, communityMembers, $community, status, getContributions) {
@@ -129,11 +130,16 @@ angular.module('kf6App')
             });
         };
 
+        obj.setCordinate = function(x,y){
+             xpos=x;
+             ypos =y;
+        };
+
         obj.createnewnote = function (title, viewId, $community, body, hasPromisingIdeas) {
             $community.createNote(null, function (note) {
                 createContainsLink(viewId, note._id, $community, {
-                    x: 100,
-                    y: 100
+                    x: xpos,
+                    y: ypos
                 });
                 postProcess(note._id, body, function (jq) {
                     if (!note.data) {
