@@ -334,7 +334,7 @@ angular.module('kf6App')
             $('button.create').html('Add');
         };
 
-         $scope.cancelpromisingnote = function (title, body) {
+         $scope.cancelpromisingnote = function () {
              $scope.status.isnewNoteCollapsed = true;
              $('button.create').html('Add');
          };
