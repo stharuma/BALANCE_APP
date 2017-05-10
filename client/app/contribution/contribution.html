@@ -342,7 +342,7 @@
                         <div ng-hide="selectedIndex==$index ||newnoteIndex==$index ">
                           <label style="float: left; color:red; font-size:  9pt" ng-if="!hasSubString(conn.data.idea)">The content pertaining to this promising idea no longer exist</label>
                            <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index)">Export Ideas</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index); setnewnoteInfo(conn.data.idea)">Export Ideas</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index)" title="Edit Justification & Highlight">Edit</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index" title="Delete the idea from database">Delete</button>
                             </div>
@@ -358,9 +358,9 @@
                         </div>
                         <div style="padding: 1px ;" ng-show="newnoteIndex==$index">
                             <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,conn.data.idea);">Create</button>
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">Cancel</button>
+                               <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">Cancel</button>
                             </div>
+                             <label>Title:</label>
                             <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle" />
                             <label>Views:</label>
                             <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
