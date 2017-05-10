@@ -484,7 +484,8 @@ angular.module('kf6App')
                             $suresh.setCordinate(newX,newY);
                             var viewIds =[];
                             viewIds.push(scope.view);
-                            $suresh.createnewnoteInMutipleView('Promising', viewIds, $community, body, true);
+                            $suresh.createnewnoteInMutipleView('PI Pool', viewIds, $community, body, true);
+                            return;
                         }
 
                         index = data.indexOf('postref:');
