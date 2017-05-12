@@ -93,7 +93,7 @@ exports.update = function(req, res) {
         /* Database validation check end */
 
         updated.modified = Date.now();
-        if (updated.group.toString() !== newobj.group) {
+        if (updated.group && updated.group.toString() !== newobj.group) {
             updated._groupMembers = null;
         }
         updated.save(function(err, newContribution) {
