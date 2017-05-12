@@ -486,6 +486,7 @@ angular.module('kf6App')
             var mode = {};
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
             $community.createNote(mode, function(note) {
                 $scope.createContainsLink(note._id, $scope.getNewElementPosition());
                 $scope.openContribution(note._id, null, w);
@@ -523,6 +524,7 @@ angular.module('kf6App')
             var mode = {};
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
             $community.createView('riseabove:', function(view) {
                 $community.createNote(mode, function(note) {
                     note.title = title;
@@ -1258,6 +1260,7 @@ angular.module('kf6App')
             var mode = {};
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
             $community.createView('riseabove:', function(view) {
                 $community.createNote(mode, function(note) {
                     note.title = 'Riseabove';

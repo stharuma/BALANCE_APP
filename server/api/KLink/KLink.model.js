@@ -93,6 +93,7 @@ KLink.createCashObj = function(obj) {
     cache.modified = obj.modified;
     cache.authors = obj.authors;
     cache.group = obj.group;
+    cache._groupMembers = obj._groupMembers;
     cache.permission = obj.permission;
 
     /* for author */
