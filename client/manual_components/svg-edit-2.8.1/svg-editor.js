@@ -1881,7 +1881,7 @@ TODOS
 			};
 
 			var zoomChanged = svgCanvas.zoomChanged = function(win, bbox, autoCenter) {
-				return false; //disable zoom
+				//return false; //disable zoom
 				var scrbar = 15,
 					// res = svgCanvas.getResolution(), // Currently unused
 					w_area = workarea;
@@ -2842,7 +2842,7 @@ TODOS
 				}
 				exportWindow.location.href = data.dataurlstring;
 			});
-			svgCanvas.bind('zoomed', zoomChanged);
+			//svgCanvas.bind('zoomed', zoomChanged);
 			svgCanvas.bind('contextset', contextChanged);
 			svgCanvas.bind('extension_added', extAdded);
 			svgCanvas.textActions.setInputElem($('#text')[0]);
@@ -3986,7 +3986,7 @@ TODOS
 				var pos = elem.offset();
 				$('#color_picker')
 					.draggable({cancel: '.jGraduate_tabs, .jGraduate_colPick, .jGraduate_gradPick, .jPicker', containment: 'window'})
-					.css(curConfig.colorPickerCSS || {'left': 40, 'bottom': 40})
+					.css(curConfig.colorPickerCSS || {'left': pos.left - 140, 'bottom': 40})
 					.jGraduate(
 					{
 						paint: paint,
