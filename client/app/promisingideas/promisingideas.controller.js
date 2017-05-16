@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('kf6App')
-    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh, $kftag) {
+    .controller('PromisingIdeasCtrl', function ($scope, $http, $community, $stateParams, $ac, $suresh, $kftag, $timeout) {
         var ids = ($stateParams.ids + '').split('§§§');
         var communityId = ids[0];
         var viewId = ids[1];
@@ -238,7 +238,14 @@ angular.module('kf6App')
                 $scope.status.detailCollapsed = true;
                 $scope.search();
             } else {
+                if ($scope.promisingnoteTitle === '') {
+                    window.alert('Note title is empty ');
+                    return;
+                }
                 $scope.selectedViewIds.push(view._id);
+                $timeout(function() {
+                    $scope.makepromisingnote($scope.promisingnoteTitle,$scope.selectedPromisingIdeas.toString());
+                }, 500);
             }
         };
         //results
@@ -274,6 +281,8 @@ angular.module('kf6App')
                 window.alert('Promising Idea is not selected');
                 return;
             }
+            $('button.create').html('Create');
+            $scope.promisingnoteTitle = 'PI Pool';
             $scope.status.isnewNoteCollapsed = false;
         };
 
@@ -319,18 +328,16 @@ angular.module('kf6App')
         });
 
         $scope.makepromisingnote = function (title, body) {
-            if (title === '') {
-                window.alert('Note title is empty ');
-                return;
-            }
-            if ($scope.selectedViewIds.length === 0) {
-                window.alert('View is not selected');
-                return;
-            }
             $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, true);
             $scope.selectedViewIds.length = 0;
             $scope.status.isnewNoteCollapsed = true;
+            $('button.create').html('Add');
         };
+
+         $scope.cancelpromisingnote = function () {
+             $scope.status.isnewNoteCollapsed = true;
+             $('button.create').html('Add');
+         };
 
         $scope.setPromisingIdeacolorobj = function (promisingcolor) {
             var msg = promisingcolor.charAt(0).toUpperCase() + promisingcolor.slice(1) + ' (Unassigned)';
@@ -355,6 +362,15 @@ angular.module('kf6App')
             }
         };
 
+        $('img.Exportview').on("dragstart", function (event) {
+             if ($scope.selectedPromisingIdeas.length === 0) {
+                window.alert('Promising Idea is not selected');
+                return;
+             }
+              event.originalEvent.dataTransfer.setData('text/plain',$scope.selectedPromisingIdeas.toString()+'§§§pidata');
+
+         });
+
     })
 
 .filter('highlighted', function ($sce) {
@@ -367,3 +383,4 @@ angular.module('kf6App')
         return $sce.trustAsHtml(text);
     };
 });
+

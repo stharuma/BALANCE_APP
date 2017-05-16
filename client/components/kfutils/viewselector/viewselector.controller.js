@@ -16,6 +16,9 @@ angular.module('kf6App')
                     $scope.viewSelected(each);
                 });
                 $scope.selected.views = [];
+            }else{
+                window.alert('View is not selected');
+                return;
             }
         };
     });

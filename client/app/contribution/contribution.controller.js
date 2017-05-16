@@ -1118,6 +1118,12 @@ angular.module('kf6App')
               $scope.newnoteIndex = index;
           };
 
+         $scope.setnewnoteInfo = function (idea) {
+                $scope.promisingnoteTitle = 'PI Pool';
+                $('button.create').html('Create');
+                $scope.currentPI=idea;
+          };
+
           $scope.promisingIdeaobjProcess = function () {
               $scope.promisingIdeaobj = {
                   idea: $scope.selectedText,
@@ -1214,19 +1220,17 @@ angular.module('kf6App')
           };
 
           $scope.viewSelected = function (view) {
-              $scope.selectedViewIds.push(view._id);
-          };
-
-          $scope.makepromisingnote = function (title, body) {
-              if (title === '') {
+             if ($scope.promisingnoteTitle === '') {
                   window.alert('Note title is empty ');
                   return;
               }
-              if ($scope.selectedViewIds.length === 0) {
-                  window.alert('View is not selected');
-                  return;
-              }
+              $scope.selectedViewIds.push(view._id);
+              $timeout(function() {
+                    $scope.makepromisingnote($scope.promisingnoteTitle,$scope.currentPI);
+              }, 500);
+          };
 
+          $scope.makepromisingnote = function (title, body) {
               body = $kftag.createNewReferenceTag($scope.contribution._id, $scope.contribution.title, $scope.contribution.authors, body);
               $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, true);
               $scope.selectedViewIds.length = 0;

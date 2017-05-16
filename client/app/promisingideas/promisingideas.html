@@ -1,8 +1,8 @@
 <label style="font-size:  12pt; "><b>Promisingness Ideas</b></label>
-<button type="submit" class="btn btn-primary KFToolBarButton" style="float:right;" ng-click=" status.noPromisingCollapsed=true; queryString='';search();" ng-model="queryString"><img class="KFToolBarImage" src="manual_assets/kf6images/community.png" title="Promisingness Ideas In Community"></button>
+<img  src="manual_assets/kf6images/community.png" ng-click=" status.noPromisingCollapsed=true; queryString='';search();" class="KFBarButton" style="float:right;" ng-model="queryString" title="Promisingness Ideas In Community"/>
 <div collapse="status.detailCollapsed" style="float:right;">
-    <button type="submit" class="KFBarButton" style="float:right; " ng-click="createnote()"><img src="manual_assets/kf6images/01-toolbar-newwriting.png" title="Export Ideas To View"></button>
-    <button type="button" class="KFBarButton" style="float:right" ng-csv="tableData" csv-header="getHeader()" filename="test.csv"><img src="manual_assets/kf6images/download.png" title="Export Ideas To CSV"></button>
+   <img src="manual_assets/kf6images/01-toolbar-newwriting.png" title="Export Ideas To View"  class="KFBarButton Exportview" style="float:right; " ng-click="createnote()"/>
+   <img  src="manual_assets/kf6images/download.png"  class="KFBarButton" style="float:right" ng-csv="tableData" csv-header="getHeader()" filename="test.csv" title="Export Ideas To CSV"/>
 </div>
 <br/>
 <label style="float:left">Views:</label>
@@ -13,16 +13,16 @@
     <label style="font-size:  12pt; " ng-if="viewTitlescopy !==''"><b>There are no promisingness ideas in {{viewTitlescopy}} View(s)</b></label>
     <label style="font-size:  12pt; " ng-if=" !status.communityCollapsed"><b>There are no promisingness ideas in {{currentCommunity.community.title}} Community</b></label>
 </div>
-<div collapse="status.detailCollapsed">
+<div collapse="status.detailCollapsed" class="suresh" >
     <div class="well" collapse="status.isnewNoteCollapsed" style="padding-left: 50px; position: absolute; top:0px; left: 50px; width: 90%; height: 80%; background-color: white; z-index: 100;">
         <div style="text-align: right; padding-right: 50px; padding-top: 5px;">
             <label style="font-size:  11pt;float: left"><b>Create New Note</b></label>
         </div>
         <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="makepromisingnote(promisingnoteTitle,selectedPromisingIdeas.toString());">Create</button>
-            <button type="submit" class="btn btn-primary kfbutton" ng-click="status.isnewNoteCollapsed = true; ">Cancel</button>
+           <button type="submit" class="btn btn-primary kfbutton" ng-click="cancelpromisingnote(); " title="Close">X</button>
         </div>
         <div style="height : 250px ;overflow: scroll; width:100%; float: left">
+            <label>Title:</label>
             <input type="text" class="form-control" style="height : 20px; overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle">
             <label>Views:</label>
             <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>

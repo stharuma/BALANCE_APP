@@ -247,7 +247,7 @@ angular.module('kf6App')
                     if (!confirmation) {
                         return;
                     }
-                    
+
                     $scope.unlock(model);
                 });
 
@@ -412,7 +412,7 @@ angular.module('kf6App')
     });
 
 angular.module('kf6App')
-    .directive('kfViewDropCanvas', function() {
+    .directive('kfViewDropCanvas', function($suresh, $community) {
         return {
             restrict: 'C',
             link: function(scope, element) {
@@ -475,6 +475,16 @@ angular.module('kf6App')
                                     y: newY
                                 });
                             });
+                            return;
+                        }
+                        index = data.indexOf('pidata');
+                        if (index !== -1) {
+                            var d= data.split('§§§');
+                            var body = d[0];
+                            $suresh.setCordinate(newX,newY);
+                            var viewIds =[];
+                            viewIds.push(scope.view);
+                            $suresh.createnewnoteInMutipleView('PI Pool', viewIds, $community, body, true);
                             return;
                         }
 
