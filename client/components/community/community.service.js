@@ -475,9 +475,11 @@ angular.module('kf6App')
             if (contextmode && contextmode.permission === 'private') {
                 mode.permission = contextmode.permission;
                 mode.group = contextmode.group;
+                mode._groupMembers = contextmode._groupMembers;
             } else {
                 mode.permission = 'protected';
                 mode.group = undefined;
+                mode._groupMembers = [];
             }
 
             var newobj = {
@@ -489,6 +491,7 @@ angular.module('kf6App')
                 status: 'unsaved',
                 permission: mode.permission,
                 group: mode.group,
+                _groupMembers: mode._groupMembers,
                 data: {
                     body: content
                 },

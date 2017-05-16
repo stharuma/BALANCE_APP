@@ -829,6 +829,7 @@ span.zoom_tool {
 	right: 0;
 	bottom: 0;
 	height: 40px;
+	width:450px;
 	overflow: visible;
 }
 

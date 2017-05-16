@@ -102,7 +102,9 @@ angular.module('kf6App')
                     }
                 });
                 el.addEventListener('touchmove', function(e) {
-                    clearTimeout(timer);
+                    if(ref.data.draggable !== undefined && !ref.data.draggable) {
+                        return;
+                    }
                     if (state === 'MOVING') {
                         var d = calcDelta(e);
                         $('#kf6-touch-proxy').css({
@@ -435,7 +437,7 @@ angular.module('kf6App')
                     if (!$scope.isEditable || !$scope.isEditable()) {
                         return;
                     }
-
+                    
                     var firefox = (e.offsetX === undefined);
                     var newX = firefox ? e.layerX : e.offsetX;
                     var newY = firefox ? e.layerY : e.offsetY;

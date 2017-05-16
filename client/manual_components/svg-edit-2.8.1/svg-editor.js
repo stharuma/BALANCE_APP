@@ -90,7 +90,6 @@ TODOS
 				'ext-overview_window.js',
 				'ext-markers.js',
 				'ext-connector.js',
-				'ext-eyedropper.js',
 				'ext-shapes.js',
 				'ext-imagelib.js',
 				'ext-grid.js',
@@ -135,7 +134,7 @@ TODOS
 				gridColor: '#000',
 				baseUnit: 'px',
 				snappingStep: 10,
-				showRulers: true,
+				showRulers: false,
 				// URL BEHAVIOR CONFIGURATION
 				preventAllURLConfig: false,
 				preventURLContentLoading: false,
@@ -1774,6 +1773,7 @@ TODOS
 				if (mode === 'select') {
 					setSelectMode();
 				}
+				//window.alert(mode);
 				var is_node = (mode == "pathedit");
 				// if elems[1] is present, then we have more than one element
 				selectedElement = (elems.length === 1 || elems[1] == null ? elems[0] : null);
@@ -1881,6 +1881,7 @@ TODOS
 			};
 
 			var zoomChanged = svgCanvas.zoomChanged = function(win, bbox, autoCenter) {
+				//return false; //disable zoom
 				var scrbar = 15,
 					// res = svgCanvas.getResolution(), // Currently unused
 					w_area = workarea;
@@ -2841,7 +2842,7 @@ TODOS
 				}
 				exportWindow.location.href = data.dataurlstring;
 			});
-			svgCanvas.bind('zoomed', zoomChanged);
+			//svgCanvas.bind('zoomed', zoomChanged);
 			svgCanvas.bind('contextset', contextChanged);
 			svgCanvas.bind('extension_added', extAdded);
 			svgCanvas.textActions.setInputElem($('#text')[0]);
