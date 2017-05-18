@@ -28,6 +28,7 @@
   "authornetwork_legend1": "In blue, the selected author",
   "authornetwork_legend2": "In green, the authors who have build-on contributions from the selected author",
   "authornetwork_legend3": "In red, authors from which the selected author has built on contributions",
+  "beta": "Beta",
   "beta_version" : "Beta version",
   "build-on": "Build-on",
   "by": "by",
