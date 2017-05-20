@@ -277,13 +277,11 @@ angular.module('kf6App')
             }
         };
         $scope.createnote = function () {
-            if ($scope.selectedPromisingIdeas.length === 0) {
-                window.alert('Promising Idea is not selected');
-                return;
-            }
-            $('button.create').html('Create');
-            $scope.promisingnoteTitle = 'PI Pool';
-            $scope.status.isnewNoteCollapsed = false;
+           if (hasPIselected()) {
+                $('button.create').html('Create');
+                $scope.promisingnoteTitle = 'PI Pool';
+                $scope.status.isnewNoteCollapsed = false;
+           }
         };
 
         $scope.hastextinpromisingidea = function (searchtext, idea, criteria, author) {
@@ -363,13 +361,18 @@ angular.module('kf6App')
         };
 
         $('img.Exportview').on("dragstart", function (event) {
-             if ($scope.selectedPromisingIdeas.length === 0) {
-                window.alert('Promising Idea is not selected');
-                return;
+             if (hasPIselected()) {
+                event.originalEvent.dataTransfer.setData('text/plain',$scope.selectedPromisingIdeas.toString()+'§§§pidata');
              }
-              event.originalEvent.dataTransfer.setData('text/plain',$scope.selectedPromisingIdeas.toString()+'§§§pidata');
+        });
 
-         });
+          var hasPIselected = function () {
+            if ($scope.selectedPromisingIdeas.length === 0) {
+                window.alert('Promisingness Idea is not selected');
+                return false;
+             }
+             return true;
+         };
 
     })
 
