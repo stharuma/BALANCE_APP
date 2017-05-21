@@ -344,7 +344,7 @@
                            <div style="clear:both; float:right; text-align: right; padding:3px;">
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index); setnewnoteInfo(conn.data.idea); setIndex(-1)">Export Ideas</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index); setnewnoteIndex(-1)" title="Edit Justification & Highlight">Edit</button>
-                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn, $index);" title="Delete the idea from database">Delete</button>
+                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)||isManager()"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn, $index);" title="Delete the idea from database">Delete</button>
                             </div>
                             <label style="clear:both; float: left; font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
                             <label style="clear:both;float: left; font-size:  9pt"><b>Promisingness Ideas: </b></label>
@@ -381,13 +381,10 @@
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }"></tt>
                             <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             </div>
-                            <br>
                             <tt style="clear:both; float:right">-(By {{getPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)}} {{getPromisingIdeaCreated(promisingIdeaobjs[conn.from].modified)}})</tt>
-                            <br style="clear:both">
-                            <label style="float: left; font-size:  9pt"> <b> Justification for Selection of Promisingness Idea:</b></label>
-                            <br>
-                            <textarea id="promising-idea-reason" style="float:left" cols="50" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
-                               <div style="float:left; padding:3px; padding-top: 15px">
+                            <label style="clear:both; float: left; font-size:  9pt"> <b> Justification for Selection of Promisingness Idea:</b></label>
+                            <textarea id="promising-idea-reason" style="clear:both; float:left" cols="50" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
+                             <div style="float:left; padding:3px; padding-top: 15px">
                                <button type="submit"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">Save</button>
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1); updatepromisingIdeaobjs()">Cancel</button>
                             </div>
