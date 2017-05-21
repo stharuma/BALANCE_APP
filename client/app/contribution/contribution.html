@@ -338,13 +338,13 @@
             <tab class="KFTab" heading="Promisingness Ideas"  select="promisingIdeaSelected()" deselect="promisingIdeaDeselected()"  ng-show="status.ispromisingideaTabDisplayed&&context.data.plugins.promisingnessidea=== true">
                  <br/>
                   <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
-                    <div ng-hide="deletedIndex==$index ">
+                    <div ng-hide="deletedIndex==$index">
                         <div ng-hide="selectedIndex==$index ||newnoteIndex==$index ">
                            <label style="float: left; color:red; font-size:  9pt" ng-if="!hasSubString(conn.data.idea)">The content pertaining to this promising idea no longer exist</label>
                            <div style="clear:both; float:right; text-align: right; padding:3px;">
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index); setnewnoteInfo(conn.data.idea); setIndex(-1)">Export Ideas</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index); setnewnoteIndex(-1)" title="Edit Justification & Highlight">Edit</button>
-                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index" title="Delete the idea from database">Delete</button>
+                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn, $index);" title="Delete the idea from database">Delete</button>
                             </div>
                             <label style="clear:both; float: left; font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
                             <label style="clear:both;float: left; font-size:  9pt"><b>Promisingness Ideas: </b></label>

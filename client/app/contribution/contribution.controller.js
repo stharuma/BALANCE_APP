@@ -36,6 +36,7 @@ angular.module('kf6App')
         $scope.status.contribution = '';
         $scope.status.initializing = 'true';
         $scope.status.recoverable = false;
+        $scope.confirmationPI =false;
 
         $scope.promisingmsg = 'Show Highlighted Text';
 
@@ -1194,8 +1195,16 @@ angular.module('kf6App')
               $suresh.promisingIdeaobjUpdated(promisingIdeaobjLink, $community, $scope.promisingIdeaobjs);
           };
 
-          $scope.promisingIdeaobjDeleted = function (promisingIdeaobjLink) {
-              $suresh.promisingIdeaobjDeleted(promisingIdeaobjLink);
+          $scope.promisingIdeaobjDeleted = function (promisingIdeaobjLink, inx) {
+            var selected = promisingIdeaobjLink.data.idea;
+            $scope.confirmationPI = window.confirm('Are you sure to delete the selected PI (' + selected + ') ?');
+            if (!$scope.confirmationPI) {
+                 $scope.deletedIndex=-1;
+                return;
+            }
+            $suresh.promisingIdeaobjDeleted(promisingIdeaobjLink);
+             $scope.toConnections.splice(inx, 1);
+           //  $scope.deletedIndex=inx;
           };
 
           $scope.updatepromisingIdeaobjs = function () {
