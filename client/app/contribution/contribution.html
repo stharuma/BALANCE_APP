@@ -347,7 +347,7 @@
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)||isManager()"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn, $index);" title="Delete the idea from database">Delete</button>
                             </div>
                             <label style="clear:both; float: left; font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
-                            <label style="clear:both;float: left; font-size:  9pt"><b>Promisingness Ideas: </b></label>
+                            <label style="clear:both;float: left; font-size:  9pt"><b>Promisingness Idea :</b></label>
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color}"></tt>
                             <tt style="clear:both; float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <br>
@@ -358,8 +358,6 @@
                         </div>
                         <div style="padding: 1px ;" ng-show="newnoteIndex==$index">
                             <label style="float: left; font-size:  12pt; text-decoration: underline; "><b>Create new note</b></label>
-                            <label style="clear:both; float: left;font-size:  9pt"><b>Promisingness Ideas: </b> </label>
-                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <div style="clear:both; float:left">
                              <label>Title:</label>
                             <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle" />
@@ -369,6 +367,8 @@
                             <button type="submit"  class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">Cancel</button>
                            </div>
                             </div>
+                             <label style="clear:both; float: left;font-size:  9pt"><b>Promisingness Idea : </b> </label>
+                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                         </div>
                         <div ng-show="selectedIndex==$index ">
                            <label style="float: left; font-size:  12pt; text-decoration: underline; "><b>Edit Justification & Highlight</b></label>
@@ -377,7 +377,7 @@
                            <button type="submit" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''" ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear Colour</button>
                            <br>
                            <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
-                           <label style="float: left;font-size:  9pt"><b>Promisingness Ideas: </b> </label>
+                           <label style="float: left;font-size:  9pt"><b>Promisingness Idea : </b> </label>
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }"></tt>
                             <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             </div>
