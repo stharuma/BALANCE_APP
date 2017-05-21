@@ -343,7 +343,7 @@
                            <label style="float: left; color:red; font-size:  9pt" ng-if="!hasSubString(conn.data.idea)">The content pertaining to this promising idea no longer exist</label>
                            <div style="clear:both; float:right; text-align: right; padding:3px;">
                                 <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index); setnewnoteInfo(conn.data.idea); setIndex(-1)">Export Ideas</button>
-                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index); setnewnoteIndex(-1)" title="Edit Justification & Highlight">Edit</button>
+                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)||isManager()" class="btn btn-primary kfbutton" ng-click="setIndex($index); setnewnoteIndex(-1)" title="Edit Justification & Highlight">Edit</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)||isManager()"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn, $index);" title="Delete the idea from database">Delete</button>
                             </div>
                             <label style="clear:both; float: left; font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
