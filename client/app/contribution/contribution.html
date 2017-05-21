@@ -336,18 +336,18 @@
                 </div>
             </tab>
             <tab class="KFTab" heading="Promisingness Ideas"  select="promisingIdeaSelected()" deselect="promisingIdeaDeselected()"  ng-show="status.ispromisingideaTabDisplayed&&context.data.plugins.promisingnessidea=== true">
-                <label>Promisingness Ideas:</label>
-                <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
-                    <div ng-hide="deletedIndex==$index">
+                 <br/>
+                  <div ng-repeat="conn in toConnections" ng-if="conn.type==='promisings'">
+                    <div ng-hide="deletedIndex==$index ">
                         <div ng-hide="selectedIndex==$index ||newnoteIndex==$index ">
-                          <label style="float: left; color:red; font-size:  9pt" ng-if="!hasSubString(conn.data.idea)">The content pertaining to this promising idea no longer exist</label>
-                           <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index); setnewnoteInfo(conn.data.idea)">Export Ideas</button>
-                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index)" title="Edit Justification & Highlight">Edit</button>
+                           <label style="float: left; color:red; font-size:  9pt" ng-if="!hasSubString(conn.data.idea)">The content pertaining to this promising idea no longer exist</label>
+                           <div style="clear:both; float:right; text-align: right; padding:3px;">
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex($index); setnewnoteInfo(conn.data.idea); setIndex(-1)">Export Ideas</button>
+                                <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)" class="btn btn-primary kfbutton" ng-click="setIndex($index); setnewnoteIndex(-1)" title="Edit Justification & Highlight">Edit</button>
                                 <button type="submit" ng-show="isPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjDeleted(conn);deletedIndex=$index" title="Delete the idea from database">Delete</button>
                             </div>
                             <label style="clear:both; float: left; font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
-                            <label style="clear:both;float: left; font-size:  9pt">Idea : </label>
+                            <label style="clear:both;float: left; font-size:  9pt"><b>Promisingness Ideas: </b></label>
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color}"></tt>
                             <tt style="clear:both; float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
                             <br>
@@ -357,36 +357,40 @@
                                &nbsp;&nbsp; {{promisingIdeaobjs[conn.from].data.reason}}
                         </div>
                         <div style="padding: 1px ;" ng-show="newnoteIndex==$index">
-                            <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                               <button type="submit" class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">Cancel</button>
-                            </div>
+                            <label style="float: left; font-size:  12pt; text-decoration: underline; "><b>Create new note</b></label>
+                            <label style="clear:both; float: left;font-size:  9pt"><b>Promisingness Ideas: </b> </label>
+                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            <div style="clear:both; float:left">
                              <label>Title:</label>
                             <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle" />
-                            <label>Views:</label>
-                            <div style="width: 400px;" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
-                            <br>
-                            <label style="float: left;font-size:  9pt">Idea : </label>
-                            <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
-                            <br>
+                            <label style="clear:both; float:left">Views:</label>
+                            <div style="width: 300px;clear:both; float:left" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
+                            <div style="float:left; padding-top:5px">
+                            <button type="submit"  class="btn btn-primary kfbutton" ng-click="setnewnoteIndex(-1)">Cancel</button>
+                           </div>
+                            </div>
                         </div>
                         <div ng-show="selectedIndex==$index ">
-                            <div style="text-align: right; padding-right: 20px; padding-top: 1px;">
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">Save</button>
-                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1); updatepromisingIdeaobjs()">Cancel</button>
-                            </div>
-                           <label style="font-size:  9pt" ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
-                           <button type="submit" style="clear: both" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''" ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear colour</button>
+                           <label style="float: left; font-size:  12pt; text-decoration: underline; "><b>Edit Justification & Highlight</b></label>
+                           <div style="clear:both; float:left">
+                           <label style="font-size:  9pt; clear: both; " ng-if="getPromisingIdeacolorobjupdatemsg(promisingIdeaobjs[conn.from].data.color)"> <b> Colour-Group Attribution : {{updatemsg}}</b></label>
+                           <button type="submit" class="btn btn-primary kfbutton" ng-if="promisingIdeaobjs[conn.from].data.color!==''" ng-click="promisingIdeaobjs[conn.from].data.color=''">Clear Colour</button>
                            <br>
                            <ngjs-color-picker selected-color="promisingIdeaobjs[conn.from].data.color" custom-colors="colors"></ngjs-color-picker>
-                           <label style="float: left;font-size:  9pt">Idea : </label>
+                           <label style="float: left;font-size:  9pt"><b>Promisingness Ideas: </b> </label>
                             <tt class="box" ng-style="{ 'background-color': promisingIdeaobjs[conn.from].data.color }"></tt>
                             <tt style="float: left" ng-bind-html="trustAsHtml(conn.data.idea)"></tt>
+                            </div>
                             <br>
-                            <tt style="float:right">-(By {{getPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)}} {{getPromisingIdeaCreated(promisingIdeaobjs[conn.from].modified)}})</tt>
+                            <tt style="clear:both; float:right">-(By {{getPromisingIdeaCreator(promisingIdeaobjs[conn.from].authors)}} {{getPromisingIdeaCreated(promisingIdeaobjs[conn.from].modified)}})</tt>
                             <br style="clear:both">
                             <label style="float: left; font-size:  9pt"> <b> Justification for Selection of Promisingness Idea:</b></label>
                             <br>
-                            <textarea id="promising-idea-reason" cols="70" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
+                            <textarea id="promising-idea-reason" style="float:left" cols="50" rows="2" ng-model="promisingIdeaobjs[conn.from].data.reason"></textarea>
+                               <div style="float:left; padding:3px; padding-top: 15px">
+                               <button type="submit"  class="btn btn-primary kfbutton" ng-click="promisingIdeaobjUpdated(conn);setIndex(-1)">Save</button>
+                                <button type="submit" class="btn btn-primary kfbutton" ng-click="setIndex(-1); updatepromisingIdeaobjs()">Cancel</button>
+                            </div>
                         </div>
                         <hr style="clear:both; height: 2px;background-color: #33BBFF; " />
                     </div>
