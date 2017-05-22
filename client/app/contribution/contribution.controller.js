@@ -1105,6 +1105,12 @@ angular.module('kf6App')
             }
             else if(idx ==='read'){
                 $scope.status.hidebuildson = false;
+                if($scope.isMobile()){
+                    $('div[class="tab-content"]').css("height","calc(100% - 38px)");
+                }
+                else{
+                    $('div[class="tab-content"]').css("height","calc(100% - 38px)");
+                }
             }
 
         };

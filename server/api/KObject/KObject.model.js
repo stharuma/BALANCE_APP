@@ -58,36 +58,30 @@ var KObjectSchema = new Schema({
 
 var KObject = mongoose.model('KObject', KObjectSchema);
 
-KObjectSchema.post('save', function(obj) {
-    if (obj.group && !obj._groupMembers) {
+KObjectSchema.pre('save', function(next) {
+    var obj = this;
+    if (obj.group) {
         KObject.findById(obj.group, function(err, group) {
             if (err || !group) {
                 console.error('error on updating groupmembers.');
+            } else {
+                obj._groupMembers = group.members;
             }
-            KObject.findOneAndUpdate({
-                _id: obj._id
-            }, {
-                _groupMembers: group.members
-            }, function(err) {
-                if (err) {
-                    console.error(err);
-                }
-            });
+            next();
         });
+    } else {
+        next();
     }
+});
+
+KObjectSchema.post('save', function(obj) {
     if (obj.type === 'Group') {
-        KObject.update({
-            group: obj._id
-        }, {
-            $set: {
-                _groupMembers: obj.members
-            }
-        }, {
-            multi: true
-        }, function(err) {
-            if (err) {
-                console.error(err);
-            }
+        KObject.find({ group: obj._id }, function(err, objs){
+            objs.forEach(function(doc){
+                doc._groupMembers = doc.members;
+                doc.save();
+            }); 
+
         });
     }
 });

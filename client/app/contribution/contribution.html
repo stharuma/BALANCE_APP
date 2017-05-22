@@ -21,9 +21,9 @@
         </div>
     </div>
     <!-- title header part -->
-    <div style="overflow: hidden;">
+    <div id="title_area" style="overflow: hidden;">
         <div style="float: left; overflow: hidden;">
-            <span class="KFTitle">&nbsp;{{contribution.title}}</span>
+            <span class="KFTitle" title="{{contribution.title}}">&nbsp;{{isMobile() && contribution.title.length > 21 ? contribution.title.substring(0,21) + '...' : contribution.title}}</span>
         </div>
         <div style="float: right; padding-right: 20px;">
             <p class="KFModified">{{ 'createdBy' | translate }}: {{getAuthorString()}}</p>

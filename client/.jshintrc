@@ -23,6 +23,7 @@
     "console": true,
     "$": true,
     "_": true,
+    "canvg": true,
     "moment": true,
     "describe": true,
     "beforeEach": true,

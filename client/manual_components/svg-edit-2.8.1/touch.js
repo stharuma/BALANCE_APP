@@ -23,6 +23,14 @@ function touchHandler(event) {'use strict';
 								false, false, false, 0/*left*/, null);
 	if (touches.length < 2) {
 		first.target.dispatchEvent(simulatedEvent);
+		if(event.type == "touchstart"){
+			var simulatedClickEvent = document.createEvent("MouseEvent");
+			simulatedClickEvent.initMouseEvent("click", true, true, window, 1,
+								first.screenX, first.screenY,
+								first.clientX, first.clientY, false,
+								false, false, false, 0/*left*/, null);
+			first.target.dispatchEvent(simulatedClickEvent);
+		}
 		event.preventDefault();
 	}
 }

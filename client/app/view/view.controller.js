@@ -3,6 +3,30 @@
 
 'use strict';
 
+function onSvgDrawingInitialized() {
+            var wnd = document.getElementById('svg-drawing').contentWindow;
+            var doc = wnd.document;
+            var mainButton = doc.getElementById('main_button');
+            mainButton.style.display = 'none';
+            var img = new Image();
+            var imgSrc = $('#drawingEditor input[name="targetImage"]').val();
+
+            $(img).load(function () {
+                var h = img.height;
+                var w = img.width;
+                if(w > 300){
+                    w = 300;
+                    h = (300/img.width) * h;
+                }
+                var svg = '<svg width="'+w+'" height="'+h+'" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1</title><image xlink:href="'+imgSrc+'" id="svg_1" height="'+h+'" width="'+w+'" y="0" x="0"/></g><g><title>Layer 2</title></g></svg>';
+                wnd.svgCanvas.setSvgString(svg);
+            }).error(function () {
+                // image couldnt be loaded
+                console.log('An error occurred and your image could not be loaded.  Please try again.');
+            }).attr({ src: imgSrc });
+            wnd.svgEditor.showSaveWarning = false;
+}
+
 angular.module('kf6App')
     .controller('ViewCtrl', function($scope, $rootScope, $http, $stateParams, $community, $compile, $timeout, socket, Auth, $location, $kfutil, $ac, $modal) {
         var viewId = $stateParams.viewId;
@@ -476,6 +500,7 @@ angular.module('kf6App')
             var mode = {};
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
             $community.createNote(mode, function(note) {
                 $scope.createContainsLink(note._id, $scope.getNewElementPosition());
                 $scope.openContribution(note._id, null, w);
@@ -513,6 +538,7 @@ angular.module('kf6App')
             var mode = {};
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
             $community.createView('riseabove:', function(view) {
                 $community.createNote(mode, function(note) {
                     note.title = title;
@@ -1058,6 +1084,61 @@ angular.module('kf6App')
             });
         };
 
+        $scope.drawOnImage = function() {
+            if(!$('#drawingEditor').length){
+                //create new equatio Editor
+                var str = '<div id="drawingEditor" class="drawingEditor">';
+                str += '<input type="hidden" name="targetImage" value=""/>';
+                str += '<iframe style="display: block;" id="svg-drawing" height="500px" width="100%" src="manual_components/svg-edit-2.8.1/svg-editor.html" onload="onSvgDrawingInitialized();"></iframe>';
+                str += '<div class="drawing-btn-area"><span id="drawing_cancel" class="drawing-btn" title="Close">Cancel</span>';
+                str += '<span id="drawing_save" class="drawing-btn" title="Save as image">Save</span></div>';
+                str += '</div>';
+                str += '<canvas id="export_canvas"></canvas>';
+                str += '<div id="drawing_overlay" class="ui-widget-overlay ui-front" style="z-index: 102;"></div>';
+                $('body').append(str);
+                $('#drawing_cancel').bind("click", function(){
+                    $('#drawingEditor').css("display","none");
+                    $('#drawing_overlay').css("display","none");
+                });
+                $('#drawingEditor input[name=targetImage]').val($scope.contextTarget.contribution.data.url);
+            }
+            else{
+                $('#drawingEditor input[name=targetImage]').val($scope.contextTarget.contribution.data.url);
+                onSvgDrawingInitialized();
+            }
+            $('#drawing_save').unbind("click");
+            $('#drawing_save').bind("click", function(){
+                    //save new image to contribution
+                    var svgCanvas = document.getElementById('svg-drawing').contentWindow.svgEditor.canvas;
+                    var c = document.getElementById('export_canvas');
+                    c.width = svgCanvas.contentW;
+                    c.height = svgCanvas.contentH;
+                    var str = svgCanvas.svgCanvasToString();
+                    canvg(c,str, {renderCallback: function() {
+                                var canvas = document.getElementById("export_canvas");
+                                var img = canvas.toDataURL($scope.contextTarget.contribution.data.type);
+                                var file = {};
+                                file.communityId = $scope.contextTarget.communityId;
+                                file._id = $scope.contextTarget.contribution._id;
+                                file.name = $scope.contextTarget.contribution.data.filename;
+                                file.version = $scope.contextTarget.contribution.data.version + 1;
+                                file.type = $scope.contextTarget.contribution.data.type;
+                                $http.post('/api/upload/newImage', {
+                                    data: img,
+                                    file: file
+                                }).success(function(result) {
+                                    $scope.contextTarget.contribution = result;
+                                    $('#drawing_cancel').trigger("click");
+                                });
+                    
+                    }});
+            });
+            $('#drawing_overlay').css("display","block");
+            $('#drawingEditor').css("display","block");
+            
+        };
+
+
         $scope.showAsIcon = function() {
             $scope.contextTarget.data.showInPlace = false;
             $scope.saveRef($scope.contextTarget);
@@ -1208,6 +1289,7 @@ angular.module('kf6App')
             var mode = {};
             mode.permission = $scope.view.permission;
             mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
             $community.createView('riseabove:', function(view) {
                 $community.createNote(mode, function(note) {
                     note.title = 'Riseabove';
@@ -1231,6 +1313,7 @@ angular.module('kf6App')
         };
 
     });
+
 
 function closeDialog(wid) {
     $('#' + wid).dialog('close');
