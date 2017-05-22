@@ -360,7 +360,7 @@
                             <label style="float: left; font-size:  12pt; text-decoration: underline; "><b>Create new note</b></label>
                             <div style="clear:both; float:left">
                              <label>Title:</label>
-                            <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-model="promisingnoteTitle" />
+                            <input type="text" class="form-control" style="overflow: hidden; width:400px; " placeholder="put your title here." ng-change="change(promisingnoteTitle)" ng-model="promisingnoteTitle" />
                             <label style="clear:both; float:left">Views:</label>
                             <div style="width: 300px;clear:both; float:left" ng-include="'components/kfutils/viewselector/viewselector.html'"></div>
                             <div style="float:left; padding-top:5px">

@@ -1239,6 +1239,10 @@ angular.module('kf6App')
               }, 500);
           };
 
+         $scope.change = function(title) {
+            $scope.promisingnoteTitle=title;
+         };
+
           $scope.makepromisingnote = function (title, body) {
               body = $kftag.createNewReferenceTag($scope.contribution._id, $scope.contribution.title, $scope.contribution.authors, body);
               $suresh.createnewnoteInMutipleView(title, $scope.selectedViewIds, $community, body, true);
