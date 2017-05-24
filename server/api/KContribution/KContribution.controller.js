@@ -61,6 +61,7 @@ exports.search = function(req, res) {
     var query = req.body.query;
 
     var pagesize = query.pagesize ? query.pagesize : 50;
+    pagesize = parseInt(pagesize);
     var page = query.page ? query.page : 1;
     var skip = pagesize * (page - 1);
 
