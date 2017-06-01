@@ -1,7 +1,7 @@
 {
   "name": "kf6",
-  "version": "6.10.0",
-  "build": "2017.05.03",
+  "version": "6.10.1",
+  "build": "2017.05.25",
   "main": "server/app.js",
   "dependencies": {
     "body-parser": "^1.15.2",

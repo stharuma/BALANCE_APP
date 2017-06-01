@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/)
 ### Added
 - [Important] New requirement : a server.js file placed at the root folder. This file centralizes and controls important server settings. See the server.sample.js file as a model.
 - [Important] New server setting to control the username case sensitivity of a local user account at login (default = false). (issue #47)
+- MONGODB_URI environment variable in production mode (in addition to existing ones)
 
 ### Changed
 - The mail settings (server/components/kfmail/kfmail.js) are moved to the new settings.js.
