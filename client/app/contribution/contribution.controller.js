@@ -62,7 +62,8 @@ angular.module('kf6App')
         $scope.promisingIdeaobjs = {};
         $scope.promisingIdeaobjLinks = {};
         $scope.selectedViewIds = [];
-        $scope.promisingnoteTitle = '';
+        $scope.titleObj = {};
+        $scope.titleObj.promisingnoteTitle = '';
 
         $scope.preContributeHooks = [];
         $scope.initializingHooks = [];
@@ -1126,7 +1127,7 @@ angular.module('kf6App')
           };
 
          $scope.setnewnoteInfo = function (idea) {
-                $scope.promisingnoteTitle = 'PI Pool';
+                $scope.titleObj.promisingnoteTitle = 'PI Pool';
                 $('button.create').html('Create');
                 $scope.currentPI=idea;
           };
@@ -1235,19 +1236,15 @@ angular.module('kf6App')
           };
 
           $scope.viewSelected = function (view) {
-             if ($scope.promisingnoteTitle === '') {
+             if ($scope.titleObj.promisingnoteTitle === '') {
                   window.alert('Note title is empty ');
                   return;
               }
               $scope.selectedViewIds.push(view._id);
               $timeout(function() {
-                    $scope.makepromisingnote($scope.promisingnoteTitle,$scope.currentPI);
+                    $scope.makepromisingnote($scope.titleObj.promisingnoteTitle,$scope.currentPI);
               }, 500);
           };
-
-         $scope.change = function(title) {
-            $scope.promisingnoteTitle=title;
-         };
 
           $scope.makepromisingnote = function (title, body) {
               body = $kftag.createNewReferenceTag($scope.contribution._id, $scope.contribution.title, $scope.contribution.authors, body);
