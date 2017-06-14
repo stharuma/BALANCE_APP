@@ -3,7 +3,6 @@
 angular.module('kf6App')
     .controller('AttachmentUploaderCtrl', function($scope, $http, $upload, $community) {
         $scope.onFileSelect = function($files, x, y) {
-            console.log($files);
             $files.forEach(function(file) {
                 //$scope.createAttachment(file);
                 if(file.type.indexOf("image/") >= 0){
