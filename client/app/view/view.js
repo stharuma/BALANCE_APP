@@ -102,7 +102,7 @@ angular.module('kf6App')
                     }
                 });
                 el.addEventListener('touchmove', function(e) {
-                    if(ref.data.draggable !== undefined && !ref.data.draggable) {
+                    if (ref.data.draggable !== undefined && !ref.data.draggable) {
                         return;
                     }
                     if (state === 'MOVING') {
@@ -437,7 +437,7 @@ angular.module('kf6App')
                     if (!$scope.isEditable || !$scope.isEditable()) {
                         return;
                     }
-                    
+
                     var firefox = (e.offsetX === undefined);
                     var newX = firefox ? e.layerX : e.offsetX;
                     var newY = firefox ? e.layerY : e.offsetY;
@@ -448,7 +448,7 @@ angular.module('kf6App')
 
                     if ($scope.dragging !== 'none') { //Internal DnD
                         var postref = $scope.dragging;
-                        if(postref.data.draggable !== undefined && !postref.data.draggable) {
+                        if (postref.data.draggable !== undefined && !postref.data.draggable) {
                             return;
                         }
                         var dx = newX - postref.data.x - $scope.dragpoint.x;
@@ -481,18 +481,18 @@ angular.module('kf6App')
                         }
                         index = data.indexOf('pidata');
                         if (index !== -1) {
-                            var d= data.split('§§§');
+                            var d = data.split('§§§');
                             var body = d[0];
-                            $suresh.setCordinate(newX,newY);
-                            var viewIds =[];
+                            $suresh.setCordinate(newX, newY);
+                            var viewIds = [];
                             viewIds.push(scope.view);
                             $suresh.createnewnoteInMutipleView('PI Pool', viewIds, $community, body, true);
                             return;
                         }
-                        if(e.dataTransfer && e.dataTransfer.files){
+                        if (e.dataTransfer && e.dataTransfer.files) {
                             $scope.uploadFiles(e.dataTransfer.files, newX, newY);
                             return;
-                        }  
+                        }
 
                         index = data.indexOf('postref:');
                         if (index !== 0) {
@@ -504,14 +504,14 @@ angular.module('kf6App')
                             var dt = {};
                             dt.x = newX + each.offsetX;
                             dt.y = newY + each.offsetY;
-                            if(each.data){
-                                if(each.data.width){
+                            if (each.data) {
+                                if (each.data.width) {
                                     dt.width = each.data.width;
                                 }
-                                if(each.data.height){
+                                if (each.data.height) {
                                     dt.height = each.data.height;
                                 }
-                                if(each.data.showInPlace){
+                                if (each.data.showInPlace) {
                                     dt.showInPlace = each.data.showInPlace;
                                 }
                             }
@@ -553,7 +553,7 @@ angular.module('kf6App')
                 var pressY;
 
                 element.on('mousedown', function(e) {
-                    if(e.which === 1){
+                    if (e.which === 1) {
                         if (e.ctrlKey) {
                             return;
                         }
