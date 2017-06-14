@@ -808,6 +808,12 @@ angular.module('kf6App')
             $scope.openInPopup(url);
         };
 
+        $scope.openIdeaGrowth = function () {
+            $scope.openAnalytics();
+            var url = 'ideagrowth/' + $scope.view.communityId;
+            $scope.openInPopup(url);
+        };
+
         $scope.openStats = function() {
             var url = '/stats/' + $scope.view.communityId;
             window.open(url, '_blank');
@@ -1130,12 +1136,12 @@ angular.module('kf6App')
                                     $scope.contextTarget.contribution = result;
                                     $('#drawing_cancel').trigger("click");
                                 });
-                    
+
                     }});
             });
             $('#drawing_overlay').css("display","block");
             $('#drawingEditor').css("display","block");
-            
+
         };
 
 

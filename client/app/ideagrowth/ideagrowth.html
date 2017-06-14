@@ -1,0 +1,114 @@
+<br/>
+<label style="font-size:  15pt; "><b>KF Idea Growth</b></label>
+<br/>
+<br/>
+<p style="text-align: left;">
+    <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailCollapsed]" ng-click="status.detailCollapsed = !status.detailCollapsed">Selector</button>
+</p>
+<div collapse="status.detailCollapsed">
+    <div ng-include="'components/kfutils/viewauthordateselector/viewauthordateselector.html'"></div>
+     <div style="padding: 5px; clear:both;">
+    <button  ng-click="search()" ng-model="queryString">Idea growth:</button>
+    </br>
+    </div>
+</div>
+<div ng-if="status.detailCollapsed">
+    <div ng-if="queryString === ''">
+        <label style="font-size:  12pt; "><b>Count word Occurrences in {{currentCommunity.community.title}}</b></label>
+    </div>
+     <div ng-if="queryString !== ''">
+            <label style="font-size:  12pt; "><b>Word Reiteration Tracker via Selected Criterions ({{views}} / {{authors}} / {{fromdate}} / {{todate}})</b></label>
+        </div>
+    <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailsCollapsed]" ng-click="detailsControl()">Details:</button>
+    <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.barchartCollapsed]" ng-click="barchartControl()">Visualization</button>
+    <div collapse="status.barchartCollapsed">
+        <nvd3 options='options' data='data'></nvd3>
+    </div>
+    <div style="padding: 5px;" collapse="status.detailsCollapsed">
+        <div class="KFSearchResult">
+            <div ng-if="status.status === 'searching'">
+                searching...
+            </div>
+            <div ng-if="status.status === 'noresult'">
+                There was no contributions to match.
+            </div>
+            <div ng-if="status.status === 'searched'">
+                <div ng-if="status.loading === true">
+                </div>
+                <div ng-if="status.loading !== true">
+                     <div style="float: right;width: 100%;">
+                        <label style="float:left; padding-left: 5px;">
+                        <input type="radio" ng-model="currentselected.name" ng-value="'Weekly'" ng-click="progressselection()"> Weekly
+                    </label>
+                     <label style="float:left; padding-left: 5px;">
+                        <input type="radio" ng-model="currentselected.name" ng-value="Bi weekly" ng-click="progressselection()">  Bi Weekly
+                    </label>
+</div>                      <div style="text-align: left; padding-left: 5px; padding-top: 1px;float:left">
+                            <label >Select Time line::</label>
+                            <select class="KFSupport" style="width: 150px;height:25px;border: 2px  light blue; " ng-model="current" ng-options="date.weekdate for date in weeksdate" ng></select>
+                        </div>
+                                    <br style="clear: both;" ><br>
+                     <table border='1' style="width: 100%; clear: both;" id="table1">
+                        <tr>
+                            <th style="width: 20%;">Contribution</th>
+                            <th style="width: 20%;">Word Count </th>
+                            <th style="width: 20%;">Word Frequency</th>
+                            <th style="width: 20%;">Unique Word Count </th>
+                            <th style="width: 20%;">Unique Word Frequency</th>
+                        </tr>
+                        <tr class="KFSearchResult" ng-repeat="wordinfo in notewordInfo" ng-if="current.weekdate==='All' ">
+                            <td>
+                                <div kfelement draggable="true">
+                                    <span><img ng-src="{{getIcon(wordinfo.note)}}" draggable="false"></span>
+                                    <a class="KFSearchLink" href="contribution/{{wordinfo.note._id}}" target="_blank" draggable="false">{{wordinfo.note.title}}</a>
+                                </div>
+                            </td>
+                            <td>
+                                {{wordinfo .wordcount}}
+                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openViewSetting()"><img class="KFToolBarImage" src="manual_assets/kf6images/wordfre.png" title="Settings"></button>
+                                        </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.wordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                            <td>
+                                {{wordinfo .uniwordcount}}
+                            </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.uniwordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="KFSearchResult" ng-repeat="wordinfo in notewordInfo" ng-if="current.weekdate.getTime() >=wordinfo.created.getTime()&&current.weekdate!=='All'">
+                            <td>
+                                <div kfelement draggable="true">
+                                    <span><img ng-src="{{getIcon(wordinfo.note)}}" draggable="false"></span>
+                                    <a class="KFSearchLink" href="contribution/{{wordinfo.note._id}}" target="_blank" draggable="false">{{wordinfo.note.title}}</a>
+                                </div>
+                            </td>
+                            <td>
+                                {{wordinfo .wordcount}}
+                            </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.wordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                            <td>
+                                {{wordinfo .uniwordcount}}
+                            </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.uniwordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="height: 20px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
