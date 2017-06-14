@@ -489,6 +489,10 @@ angular.module('kf6App')
                             $suresh.createnewnoteInMutipleView('PI Pool', viewIds, $community, body, true);
                             return;
                         }
+                        if(e.dataTransfer && e.dataTransfer.files){
+                            $scope.uploadFiles(e.dataTransfer.files, newX, newY);
+                            return;
+                        }  
 
                         index = data.indexOf('postref:');
                         if (index !== 0) {

@@ -617,7 +617,21 @@ angular.module('kf6App')
             $scope.status.isAttachmentCollapsed = !$scope.status.isAttachmentCollapsed;
         };
 
-        $scope.attachmentUploaded = function(attachment) {
+        $scope.uploadFiles = function(files, x, y) {
+            $scope.status.isAttachmentCollapsed = false;
+            $scope.$apply();
+            var $files = [];
+            for (var i = 0; i < files.length; i++) {
+                $files.push(files[i]);
+            }
+            if ($scope.status.onFileSelect) {
+                $scope.status.onFileSelect($files, x, y);
+            } else {
+                //ERROR
+            }
+        };
+
+        $scope.attachmentUploaded = function(attachment, x, y) {
             // $http.post('/api/links', {
             //     from: $scope.view._id,
             //     to: attachment._id,
@@ -634,11 +648,16 @@ angular.module('kf6App')
             //         $scope.$digest($scope.status.isAttachmentCollapsed);
             //     }, 500);
             // });
-            var w = 200, h = 200;
-            if(attachment.data.type.indexOf("image/") >= 0){
+
+            var newX = x ? x : 200;
+            var newY = y ? y : 200;
+
+            var w = 200,
+                h = 200;
+            if (attachment.data.type.indexOf("image/") >= 0) {
                 w = attachment.data.width;
                 h = attachment.data.height;
-                if(w > 200){
+                if (w > 200) {
                     w = 200;
                 }
                 h = (w * h) / attachment.data.width;
@@ -649,8 +668,8 @@ angular.module('kf6App')
                 to: attachment._id,
                 type: 'contains',
                 data: {
-                    x: 200,
-                    y: 200,
+                    x: newX,
+                    y: newY,
                     width: w,
                     height: h
                 }
@@ -658,7 +677,7 @@ angular.module('kf6App')
                 $timeout(function() {
                     $scope.status.isAttachmentCollapsed = true;
                     $scope.$digest($scope.status.isAttachmentCollapsed);
-                    if(attachment.data.type.indexOf("image/") >= 0){
+                    if (attachment.data.type.indexOf("image/") >= 0) {
                         var ref = $scope.searchById($scope.refs, link._id);
                         $scope.contextTarget = ref;
                         $scope.contextTarget.data.showInPlace = true;
