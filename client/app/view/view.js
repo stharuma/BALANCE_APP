@@ -466,9 +466,10 @@ angular.module('kf6App')
                         });
                     } else { //External DnD
                         var data = e.dataTransfer.getData('text');
-                        var index = data.indexOf('objectIds:');
-                        var text = '';
-                        if (index === 0) {
+
+                        //Droped by Search Result
+                        if (data.indexOf('objectIds:') === 0) {
+                            var text = '';
                             text = data.replace('objectIds:', '');
                             var ids = JSON.parse(text);
                             ids.forEach(function(each) {
@@ -477,46 +478,53 @@ angular.module('kf6App')
                                     y: newY
                                 });
                             });
-                            return;
                         }
-                        index = data.indexOf('pidata');
-                        if (index !== -1) {
+
+                        //Promising Ideas Tools by Suresh (remaking needed).
+                        else if (data.indexOf('pidata') !== -1) {
                             var d = data.split('§§§');
                             var body = d[0];
                             $suresh.setCordinate(newX, newY);
                             var viewIds = [];
                             viewIds.push(scope.view);
                             $suresh.createnewnoteInMutipleView('PI Pool', viewIds, $community, body, true);
-                            return;
-                        }
-                        if (e.dataTransfer && e.dataTransfer.files) {
-                            $scope.uploadFiles(e.dataTransfer.files, newX, newY);
-                            return;
                         }
 
-                        index = data.indexOf('postref:');
-                        if (index !== 0) {
-                            return;
+                        //URL dropped
+                        else if (data.indexOf('http:') === 0 || data.indexOf('https:') === 0) {
+                            $scope.urlDropped(data, newX, newY);
                         }
-                        text = data.replace('postref:', '');
-                        var models = JSON.parse(text);
-                        models.forEach(function(each) {
-                            var dt = {};
-                            dt.x = newX + each.offsetX;
-                            dt.y = newY + each.offsetY;
-                            if (each.data) {
-                                if (each.data.width) {
-                                    dt.width = each.data.width;
+
+
+                        //File dropped
+                        else if (!data && e.dataTransfer && e.dataTransfer.files) {
+                            $scope.uploadFiles(e.dataTransfer.files, newX, newY);
+                        }
+
+                        //Postref dropped
+                        else if (data.indexOf('postref:') === 0) {
+                            var text2 = data.replace('postref:', '');
+                            var models = JSON.parse(text2);
+                            models.forEach(function(each) {
+                                var dt = {};
+                                dt.x = newX + each.offsetX;
+                                dt.y = newY + each.offsetY;
+                                if (each.data) {
+                                    if (each.data.width) {
+                                        dt.width = each.data.width;
+                                    }
+                                    if (each.data.height) {
+                                        dt.height = each.data.height;
+                                    }
+                                    if (each.data.showInPlace) {
+                                        dt.showInPlace = each.data.showInPlace;
+                                    }
                                 }
-                                if (each.data.height) {
-                                    dt.height = each.data.height;
-                                }
-                                if (each.data.showInPlace) {
-                                    dt.showInPlace = each.data.showInPlace;
-                                }
-                            }
-                            $scope.createContainsLink(each.to, dt);
-                        });
+                                $scope.createContainsLink(each.to, dt);
+                            });
+                        } else {
+                            window.alert('the file drop is not supported.');
+                        }
                     }
                     $scope.draggingViewlink = null;
                 };

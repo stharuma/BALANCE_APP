@@ -687,6 +687,22 @@ angular.module('kf6App')
             });
         };
 
+        $scope.urlDropped = function(url, x, y) {
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
+            mode.status = '';
+            $community.createNote(mode, function(note) {
+                note.title = url;
+                note.status = 'active';
+                note.data.body = '<html><head></head><body><a href="' + url + '">link</a></body></html>';
+                $community.modifyObject(note, function(note) {
+                    $scope.createContainsLink(note._id, { x: x, y: y });
+                });
+            });
+        };
+
         $scope.openSearch = function() {
             var url = '/search/' + $scope.view.communityId;
             window.open(url, '_blank');
