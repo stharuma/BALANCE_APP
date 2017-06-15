@@ -2,7 +2,7 @@
 
 angular.module('kf6App')
     .controller('AttachmentUploaderCtrl', function($scope, $http, $upload, $community) {
-        $scope.onFileSelect = function($files) {
+        $scope.onFileSelect = function($files, x, y) {
             $files.forEach(function(file) {
                 //$scope.createAttachment(file);
                 if(file.type.indexOf("image/") >= 0){
@@ -13,17 +13,19 @@ angular.module('kf6App')
                         var height = img.naturalHeight || img.height;
                         file.width = width;
                         file.height = height;
-                        $scope.createAttachment(file); 
+                        $scope.createAttachment(file, x, y); 
                     };
                     img.src = _URL.createObjectURL(file);
                 }
                 else{
-                    $scope.createAttachment(file);
+                    $scope.createAttachment(file, x, y);
                 }
             });
         };
 
-        $scope.createAttachment = function(file) {
+        $scope.status.onFileSelect = $scope.onFileSelect;
+
+        $scope.createAttachment = function(file, x, y) {
             $community.createAttachment(function(attachment) {
                 $scope.upload = $upload.upload({
                         url: 'api/upload',
@@ -42,7 +44,7 @@ angular.module('kf6App')
                         $community.modifyObject(attachment, function(newAttachment) {
                             newAttachment.data.width = file.width;
                             newAttachment.data.height = file.height;
-                            $scope.notifyAttachmentUploaded(newAttachment);
+                            $scope.notifyAttachmentUploaded(newAttachment, x, y);
                         });
                     }).error(function( /*data, status*/ ) {
                         window.alert('error on uploading');
@@ -50,11 +52,11 @@ angular.module('kf6App')
             });
         };
 
-        $scope.notifyAttachmentUploaded = function(attachment) {
+        $scope.notifyAttachmentUploaded = function(attachment, x, y) {
             if (!$scope.attachmentUploaded) {
                 window.alert('$scope.attachmentUploaded is not defined.');
                 return;
             }
-            $scope.attachmentUploaded(attachment);
+            $scope.attachmentUploaded(attachment, x, y);
         };
     });

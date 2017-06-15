@@ -4,27 +4,27 @@
 'use strict';
 
 function onSvgDrawingInitialized() {
-            var wnd = document.getElementById('svg-drawing').contentWindow;
-            var doc = wnd.document;
-            var mainButton = doc.getElementById('main_button');
-            mainButton.style.display = 'none';
-            var img = new Image();
-            var imgSrc = $('#drawingEditor input[name="targetImage"]').val();
+    var wnd = document.getElementById('svg-drawing').contentWindow;
+    var doc = wnd.document;
+    var mainButton = doc.getElementById('main_button');
+    mainButton.style.display = 'none';
+    var img = new Image();
+    var imgSrc = $('#drawingEditor input[name="targetImage"]').val();
 
-            $(img).load(function () {
-                var h = img.height;
-                var w = img.width;
-                if(w > 300){
-                    w = 300;
-                    h = (300/img.width) * h;
-                }
-                var svg = '<svg width="'+w+'" height="'+h+'" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1</title><image xlink:href="'+imgSrc+'" id="svg_1" height="'+h+'" width="'+w+'" y="0" x="0"/></g><g><title>Layer 2</title></g></svg>';
-                wnd.svgCanvas.setSvgString(svg);
-            }).error(function () {
-                // image couldnt be loaded
-                console.log('An error occurred and your image could not be loaded.  Please try again.');
-            }).attr({ src: imgSrc });
-            wnd.svgEditor.showSaveWarning = false;
+    $(img).load(function() {
+        var h = img.height;
+        var w = img.width;
+        if (w > 300) {
+            w = 300;
+            h = (300 / img.width) * h;
+        }
+        var svg = '<svg width="' + w + '" height="' + h + '" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g><title>Layer 1</title><image xlink:href="' + imgSrc + '" id="svg_1" height="' + h + '" width="' + w + '" y="0" x="0"/></g><g><title>Layer 2</title></g></svg>';
+        wnd.svgCanvas.setSvgString(svg);
+    }).error(function() {
+        // image couldnt be loaded
+        console.log('An error occurred and your image could not be loaded.  Please try again.');
+    }).attr({ src: imgSrc });
+    wnd.svgEditor.showSaveWarning = false;
 }
 
 angular.module('kf6App')
@@ -59,8 +59,7 @@ angular.module('kf6App')
                 $ac.mixIn($scope, view);
                 $community.enter(view.communityId, function() {
                     $community.refreshGroups();
-                    $community.refreshScaffolds(function(){
-                    });
+                    $community.refreshScaffolds(function() {});
                     $scope.community = $community.getCommunityData();
                     $scope.views = $community.getViews();
                     $scope.updateCanvas();
@@ -240,8 +239,8 @@ angular.module('kf6App')
                     if (ref.isRiseabove()) {
                         name += 'rise';
                     }
-                     if (ref.isPromisingContains()) {
-                       name += 'promising';
+                    if (ref.isPromisingContains()) {
+                        name += 'promising';
                     }
                     name += '.gif';
                     return name;
@@ -400,13 +399,13 @@ angular.module('kf6App')
             var toId = $scope.generateConnectionId();
             toElement.attr('id', toId);
             var conn = $scope.jsPlumb.connect({
-              source: fromId,
-              target: toId,
-              type: "kfarrow",
-              data: {
-                color: color,
-                label: label
-              }
+                source: fromId,
+                target: toId,
+                type: "kfarrow",
+                data: {
+                    color: color,
+                    label: label
+                }
             });
             if (conn) {
                 $('#' + fromId).on('$destroy', function() {
@@ -441,47 +440,48 @@ angular.module('kf6App')
             $scope.jsPlumb.setContainer($('#maincanvas'));
 
 
-          $scope.jsPlumb.importDefaults({
-            Connector: "Straight",
-            Endpoints: ['Blank', 'Blank'],
-            Overlays: [
-              ['Arrow', {
-                width: 7,
-                length: 7,
-                location: 1
-              }]
-            ],
-            Anchor: ['Perimeter', {
-              shape: 'Rectangle'
-            }],
-            PaintStyle: {
-              strokeWidth: 1,
-              stroke: 'rgba(180,180,180,0.7)'
-            }
-          });
-
-          $scope.jsPlumb.registerConnectionTypes({
-            "kfarrow": {
-              connector: "Straight",
-              endpoint: "Blank",
-              overlays: [
-                ['Arrow', {
-                  width: 7,
-                  length: 7,
-                  location: 1
+            $scope.jsPlumb.importDefaults({
+                Connector: "Straight",
+                Endpoints: ['Blank', 'Blank'],
+                Overlays: [
+                    ['Arrow', {
+                        width: 7,
+                        length: 7,
+                        location: 1
+                    }]
+                ],
+                Anchor: ['Perimeter', {
+                    shape: 'Rectangle'
                 }],
-                ['Label', {
-                  label: '${label}'
-                }]],
-              anchor: ['Perimeter', {
-                shape: 'Rectangle'
-              }],
-              paintStyle: {
-                stroke: "${color}",
-                strokeWidth: 1
-              }
-            }
-          });
+                PaintStyle: {
+                    strokeWidth: 1,
+                    stroke: 'rgba(180,180,180,0.7)'
+                }
+            });
+
+            $scope.jsPlumb.registerConnectionTypes({
+                "kfarrow": {
+                    connector: "Straight",
+                    endpoint: "Blank",
+                    overlays: [
+                        ['Arrow', {
+                            width: 7,
+                            length: 7,
+                            location: 1
+                        }],
+                        ['Label', {
+                            label: '${label}'
+                        }]
+                    ],
+                    anchor: ['Perimeter', {
+                        shape: 'Rectangle'
+                    }],
+                    paintStyle: {
+                        stroke: "${color}",
+                        strokeWidth: 1
+                    }
+                }
+            });
             $scope.initialize();
         });
 
@@ -617,7 +617,21 @@ angular.module('kf6App')
             $scope.status.isAttachmentCollapsed = !$scope.status.isAttachmentCollapsed;
         };
 
-        $scope.attachmentUploaded = function(attachment) {
+        $scope.uploadFiles = function(files, x, y) {
+            $scope.status.isAttachmentCollapsed = false;
+            $scope.$apply();
+            var $files = [];
+            for (var i = 0; i < files.length; i++) {
+                $files.push(files[i]);
+            }
+            if ($scope.status.onFileSelect) {
+                $scope.status.onFileSelect($files, x, y);
+            } else {
+                //ERROR
+            }
+        };
+
+        $scope.attachmentUploaded = function(attachment, x, y) {
             // $http.post('/api/links', {
             //     from: $scope.view._id,
             //     to: attachment._id,
@@ -634,11 +648,16 @@ angular.module('kf6App')
             //         $scope.$digest($scope.status.isAttachmentCollapsed);
             //     }, 500);
             // });
-            var w = 200, h = 200;
-            if(attachment.data.type.indexOf("image/") >= 0){
+
+            var newX = x ? x : 200;
+            var newY = y ? y : 200;
+
+            var w = 200,
+                h = 200;
+            if (attachment.data.type.indexOf("image/") >= 0) {
                 w = attachment.data.width;
                 h = attachment.data.height;
-                if(w > 200){
+                if (w > 200) {
                     w = 200;
                 }
                 h = (w * h) / attachment.data.width;
@@ -649,8 +668,8 @@ angular.module('kf6App')
                 to: attachment._id,
                 type: 'contains',
                 data: {
-                    x: 200,
-                    y: 200,
+                    x: newX,
+                    y: newY,
                     width: w,
                     height: h
                 }
@@ -658,13 +677,29 @@ angular.module('kf6App')
                 $timeout(function() {
                     $scope.status.isAttachmentCollapsed = true;
                     $scope.$digest($scope.status.isAttachmentCollapsed);
-                    if(attachment.data.type.indexOf("image/") >= 0){
+                    if (attachment.data.type.indexOf("image/") >= 0) {
                         var ref = $scope.searchById($scope.refs, link._id);
                         $scope.contextTarget = ref;
                         $scope.contextTarget.data.showInPlace = true;
                         $scope.saveRef($scope.contextTarget);
                     }
                 }, 500);
+            });
+        };
+
+        $scope.urlDropped = function(url, x, y) {
+            var mode = {};
+            mode.permission = $scope.view.permission;
+            mode.group = $scope.view.group;
+            mode._groupMembers = $scope.view._groupMembers;
+            mode.status = '';
+            $community.createNote(mode, function(note) {
+                note.title = url;
+                note.status = 'active';
+                note.data.body = '<html><head></head><body><a href="' + url + '">link</a></body></html>';
+                $community.modifyObject(note, function(note) {
+                    $scope.createContainsLink(note._id, { x: x, y: y });
+                });
             });
         };
 
@@ -761,8 +796,8 @@ angular.module('kf6App')
             $scope.status.isAnalyticsCollapsed = !$scope.status.isAnalyticsCollapsed;
         };
 
-          $scope.openPromisingIdeas = function() {
-            var url = 'promisingideas/' + $scope.view.communityId+'§§§'+viewId;
+        $scope.openPromisingIdeas = function() {
+            var url = 'promisingideas/' + $scope.view.communityId + '§§§' + viewId;
             $scope.openInPopup(url);
         };
 
@@ -1036,11 +1071,10 @@ angular.module('kf6App')
 
         /* ----------- context menu --------- */
 
-        $scope.canvasMenuOpen = function(){
-            if($rootScope.clipboardData !== undefined){
+        $scope.canvasMenuOpen = function() {
+            if ($rootScope.clipboardData !== undefined) {
                 $scope.canvasMenu = true;
-            }
-            else{
+            } else {
                 $scope.canvasMenu = false;
             }
         };
@@ -1050,12 +1084,11 @@ angular.module('kf6App')
             var selected = $scope.getSelectedModels();
             var result = true;
             var author = $scope.community.author._id;
-            if($scope.community.author.role === 'manager'){
+            if ($scope.community.author.role === 'manager') {
                 result = true;
-            }
-            else{
-                selected.some(function(ref){
-                    if(ref._to.authors.indexOf(author) < 0){
+            } else {
+                selected.some(function(ref) {
+                    if (ref._to.authors.indexOf(author) < 0) {
                         result = false;
                         return true;
                     }
@@ -1064,25 +1097,25 @@ angular.module('kf6App')
             $scope.isDeletable = result;
         };
 
-        $scope.copy2Clipboard = function(){
+        $scope.copy2Clipboard = function() {
             $rootScope.clipboardData = $scope.contextTarget._id;
             window.alert("Note has been copied to clipboard.");
         };
-        $scope.pasteNote = function(e){
+        $scope.pasteNote = function(e) {
             //get noteid from copy board and then create a new note from this note
             var clipboardData = $rootScope.clipboardData;
             $http.get('/api/links/' + clipboardData).success(function(link) {
                 var data = {};
                 data.x = e.clientX - 30;
                 data.y = e.clientY - 34;
-                if(link.data){
-                    if(link.data.width){
+                if (link.data) {
+                    if (link.data.width) {
                         data.width = link.data.width;
                     }
-                    if(link.data.height){
+                    if (link.data.height) {
                         data.height = link.data.height;
                     }
-                    if(link.data.showInPlace){
+                    if (link.data.showInPlace) {
                         data.showInPlace = link.data.showInPlace;
                     }
                 }
@@ -1091,7 +1124,7 @@ angular.module('kf6App')
         };
 
         $scope.drawOnImage = function() {
-            if(!$('#drawingEditor').length){
+            if (!$('#drawingEditor').length) {
                 //create new equatio Editor
                 var str = '<div id="drawingEditor" class="drawingEditor">';
                 str += '<input type="hidden" name="targetImage" value=""/>';
@@ -1102,45 +1135,46 @@ angular.module('kf6App')
                 str += '<canvas id="export_canvas"></canvas>';
                 str += '<div id="drawing_overlay" class="ui-widget-overlay ui-front" style="z-index: 102;"></div>';
                 $('body').append(str);
-                $('#drawing_cancel').bind("click", function(){
-                    $('#drawingEditor').css("display","none");
-                    $('#drawing_overlay').css("display","none");
+                $('#drawing_cancel').bind("click", function() {
+                    $('#drawingEditor').css("display", "none");
+                    $('#drawing_overlay').css("display", "none");
                 });
                 $('#drawingEditor input[name=targetImage]').val($scope.contextTarget.contribution.data.url);
-            }
-            else{
+            } else {
                 $('#drawingEditor input[name=targetImage]').val($scope.contextTarget.contribution.data.url);
                 onSvgDrawingInitialized();
             }
             $('#drawing_save').unbind("click");
-            $('#drawing_save').bind("click", function(){
-                    //save new image to contribution
-                    var svgCanvas = document.getElementById('svg-drawing').contentWindow.svgEditor.canvas;
-                    var c = document.getElementById('export_canvas');
-                    c.width = svgCanvas.contentW;
-                    c.height = svgCanvas.contentH;
-                    var str = svgCanvas.svgCanvasToString();
-                    canvg(c,str, {renderCallback: function() {
-                                var canvas = document.getElementById("export_canvas");
-                                var img = canvas.toDataURL($scope.contextTarget.contribution.data.type);
-                                var file = {};
-                                file.communityId = $scope.contextTarget.communityId;
-                                file._id = $scope.contextTarget.contribution._id;
-                                file.name = $scope.contextTarget.contribution.data.filename;
-                                file.version = $scope.contextTarget.contribution.data.version + 1;
-                                file.type = $scope.contextTarget.contribution.data.type;
-                                $http.post('/api/upload/newImage', {
-                                    data: img,
-                                    file: file
-                                }).success(function(result) {
-                                    $scope.contextTarget.contribution = result;
-                                    $('#drawing_cancel').trigger("click");
-                                });
+            $('#drawing_save').bind("click", function() {
+                //save new image to contribution
+                var svgCanvas = document.getElementById('svg-drawing').contentWindow.svgEditor.canvas;
+                var c = document.getElementById('export_canvas');
+                c.width = svgCanvas.contentW;
+                c.height = svgCanvas.contentH;
+                var str = svgCanvas.svgCanvasToString();
+                canvg(c, str, {
+                    renderCallback: function() {
+                        var canvas = document.getElementById("export_canvas");
+                        var img = canvas.toDataURL($scope.contextTarget.contribution.data.type);
+                        var file = {};
+                        file.communityId = $scope.contextTarget.communityId;
+                        file._id = $scope.contextTarget.contribution._id;
+                        file.name = $scope.contextTarget.contribution.data.filename;
+                        file.version = $scope.contextTarget.contribution.data.version + 1;
+                        file.type = $scope.contextTarget.contribution.data.type;
+                        $http.post('/api/upload/newImage', {
+                            data: img,
+                            file: file
+                        }).success(function(result) {
+                            $scope.contextTarget.contribution = result;
+                            $('#drawing_cancel').trigger("click");
+                        });
 
-                    }});
+                    }
+                });
             });
-            $('#drawing_overlay').css("display","block");
-            $('#drawingEditor').css("display","block");
+            $('#drawing_overlay').css("display", "block");
+            $('#drawingEditor').css("display", "block");
 
         };
 
@@ -1172,7 +1206,7 @@ angular.module('kf6App')
             $scope.saveRef(ref);
             $scope.clearSelection();
         };
-        $scope.fix = function(ref){
+        $scope.fix = function(ref) {
             if (!ref) {
                 ref = $scope.contextTarget;
             }
