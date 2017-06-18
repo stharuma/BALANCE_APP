@@ -8,7 +8,9 @@ angular.module('balanceApp', [
   'ngMessages',
   'btford.socket-io',
   'ui.router',
-  'ngMaterial'
+  'ngMaterial',
+  'chart.js',
+  'nvd3'
 ])
   .config(function($mdIconProvider) {
     $mdIconProvider
