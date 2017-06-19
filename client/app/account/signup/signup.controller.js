@@ -10,8 +10,10 @@ angular.module('balanceApp')
 
       if(form.$valid) {
         Auth.createUser({
-          name: $scope.user.name,
+          firstname: $scope.user.fname,
+          lastname: $scope.user.lname,
           email: $scope.user.email,
+          userName: $scope.user.uname,
           password: $scope.user.password
         })
         .then( function() {

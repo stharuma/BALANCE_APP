@@ -17,27 +17,29 @@ angular.module('balanceApp')
        * @return {Promise}
        */
       login: function(user, callback) {
-        var cb = callback || angular.noop;
-        var deferred = $q.defer();
+                var cb = callback || angular.noop;
+                var deferred = $q.defer();
 
-        $http.post('/auth/local', {
-          userName: user.userName,
-          password: user.password
-        }).
-        success(function(data) {
-          $cookieStore.put('token', data.token);
-          currentUser = User.get();
-          deferred.resolve(data);
-          return cb();
-        }).
-        error(function(err) {
-          this.logout();
-          deferred.reject(err);
-          return cb(err);
-        }.bind(this));
+                $http.post('/auth/local', {
+                    userName: user.userName,
+                    password: user.password
+                }).
+                then(function(response) {
+                  var data = response.data;
+                    $cookieStore.put('token', data.token);
+                    currentUser = User.get();
+                    deferred.resolve(data);
+                    return cb();
+                }).
+                catch(function(response) {
+                  var err = response.data;
+                    this.logout();
+                    deferred.reject(err);
+                    return cb(err);
+                }.bind(this));
 
-        return deferred.promise;
-      },
+                return deferred.promise;
+            },
 
       /**
        * Delete access token and user info

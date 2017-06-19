@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('balanceApp')
-  .controller('MainCtrl', function ($scope, $http, socket) {
-    $scope.awesomeThings = [];
-    $http.get('/api/users/myRegistrations').success(function(myRegs) {
-            $scope.myRegistrations = myRegs;
+  .controller('MainCtrl', function ($scope, $http, socket, Auth) {
+    $scope.isLoggedIn = Auth.isLoggedIn ? true : false;
+    // if(!$scope.isLoggedIn){
+    $http.get('/api/users/myRegistrations').then(function(myRegs) {
+             $scope.myRegistrations = myRegs;
     });
+//}
 
     // $http.get('/api/things').success(function(awesomeThings) {
     //   $scope.awesomeThings = awesomeThings;
