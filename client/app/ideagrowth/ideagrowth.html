@@ -1,5 +1,4 @@
-<br/>
-<label style="font-size:  15pt; "><b>KF Idea Growth</b></label>
+<br<label style="font-size:  15pt; "><b>KF Idea Growth</b></label>
 <br/>
 <br/>
 <p style="text-align: left;">
@@ -14,11 +13,11 @@
 </div>
 <div ng-if="status.detailCollapsed">
     <div ng-if="queryString === ''">
-        <label style="font-size:  12pt; "><b>Count word Occurrences in {{currentCommunity.community.title}}</b></label>
+        <label style="font-size:  12pt; "><b>Word Reiteration Tracker in {{currentCommunity.community.title}}</b></label>
     </div>
-     <div ng-if="queryString !== ''">
-            <label style="font-size:  12pt; "><b>Word Reiteration Tracker via Selected Criterions ({{views}} / {{authors}} / {{fromdate}} / {{todate}})</b></label>
-        </div>
+    <div ng-if="queryString !== ''">
+            <label style="font-size:  12pt; "><b>Word Reiteration Tracker via Selected Criterions ({{views}}  {{authors}} {{fromdate}} {{todate}})</b></label>
+    </div>
     <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.detailsCollapsed]" ng-click="detailsControl()">Details:</button>
     <button ng-class="{true: 'btn-primary', false: 'btn-default'}[status.barchartCollapsed]" ng-click="barchartControl()">Visualization</button>
     <div collapse="status.barchartCollapsed">
@@ -55,6 +54,10 @@
                             <th style="width: 20%;">Word Frequency</th>
                             <th style="width: 20%;">Unique Word Count </th>
                             <th style="width: 20%;">Unique Word Frequency</th>
+                            <th style="width: 20%;">Common Word Count </th>
+                            <th style="width: 20%;">Common Word Frequency</th>
+                            <th style="width: 20%;">Uncommon Word Count </th>
+                            <th style="width: 20%;">Uncommon Word Frequency</th>
                         </tr>
                         <tr class="KFSearchResult" ng-repeat="wordinfo in notewordInfo" ng-if="current.weekdate==='All' ">
                             <td>
@@ -65,8 +68,7 @@
                             </td>
                             <td>
                                 {{wordinfo .wordcount}}
-                <button type="submit" class="btn btn-primary KFToolBarButton" ng-click="openViewSetting()"><img class="KFToolBarImage" src="manual_assets/kf6images/wordfre.png" title="Settings"></button>
-                                        </td>
+                            </td>
                             <td>
                                 <div ng-repeat="(key, value) in wordinfo.wordfreq">
                                     {{key}} -{{value}}
@@ -77,6 +79,22 @@
                             </td>
                             <td>
                                 <div ng-repeat="(key, value) in wordinfo.uniwordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                             <td>
+                                {{wordinfo .commonwordcount}}
+                            </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.commonwordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                             <td>
+                                {{wordinfo .uncommonwordcount}}
+                            </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.uncommonwordfreq">
                                     {{key}} -{{value}}
                                 </div>
                             </td>
@@ -101,6 +119,22 @@
                             </td>
                             <td>
                                 <div ng-repeat="(key, value) in wordinfo.uniwordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                              <td>
+                                {{wordinfo .commonwordcount}}
+                            </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.commonwordfreq">
+                                    {{key}} -{{value}}
+                                </div>
+                            </td>
+                             <td>
+                                {{wordinfo .uncommonwordcount}}
+                            </td>
+                            <td>
+                                <div ng-repeat="(key, value) in wordinfo.uncommonwordfreq">
                                     {{key}} -{{value}}
                                 </div>
                             </td>

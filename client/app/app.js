@@ -18,7 +18,8 @@ angular.module('kf6App', [
         'chart.js',
         'ngCsv',
         'ngjsColorPicker',
-        'xeditable'
+        'xeditable',
+        'nvd3'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
         $urlRouterProvider.otherwise('/');

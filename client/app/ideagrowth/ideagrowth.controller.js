@@ -19,14 +19,23 @@ angular.module('kf6App')
         $scope.weeksdate = [];
         $scope.selectedItems = [];
         $scope.uniwords = [];
+        $scope.curcommonwords = [];
+        $scope.uncommonwords = [];
         $scope.current = '';
         $scope.currentselected = {
             name: 'Weekly'
         };
         var wcountincommunity = [];
         var uniwcountincommunity = [];
-        var wcount = [];
-        var uniwcount = [];
+        var totaluniwords = [];
+        var wordsInfo = [];
+        var uniwordsInfo = [];
+        var commonwordsInfo = [];
+        var uncommonwordsInfo = [];
+        var wordsInfoInCommunity = [];
+        var uniwordsInfoInCommunity = [];
+        var commonwordsInfoInCommunity = [];
+        var uncommonwordsInfoInCommunity = [];
         var startdate = '';
         var enddate = '';
         var weeklydates = [];
@@ -44,38 +53,110 @@ angular.module('kf6App')
 
         var checkedWordInNote = function (notes) {
             var body =[];
-            $scope.notewordInfo.length = 0;
-            wcount.length = 0;
-            uniwcount.length = 0;
-            setweekdates();
-            $scope.progressselection();
+            intilize();
             notes.forEach(function (note) {
                 body = note.text4search.toLowerCase().match(/\w+/g);
                 body.splice(0, 1);
-             //     var body = strip(note.data.body.replace(/&nbsp;|(<([^>]+)>)/ig, ' ')).replace(/[\(\)\+\.,\/#!$%\^&\*{}=_`~]/g, '');
-             //    body = body.replace(/[\r\n\t\u00A0\u3000]/g, ' ').replace(/['"]+/g, '').replace(/\s\s+/g, ' ').replace(/&nbsp;|(<([^>]+)>)/ig, ' ');
-             //     body = body.toLowerCase().split(' ');
-             // console.log('body :'+body);
-                setuniquewords(commonwords, body);
+                setwords(commonwords, body, $scope.uncommonwords, true);
+                setwords(totaluniwords, $scope.uncommonwords, $scope.uniwords, false);
                 $scope.notewordInfo.push({
                     note: note,
                     created: new Date(note.created),
                     wordcount: body.length,
                     wordfreq: wordFrequency(body),
                     uniwordcount: $scope.uniwords.length,
-                    uniwordfreq: wordFrequency($scope.uniwords)
+                    uniwordfreq: wordFrequency($scope.uniwords),
+                    uncommonwordcount:$scope.uncommonwords.length,
+                    uncommonwordfreq: wordFrequency($scope.uncommonwords),
+                    commonwordcount:$scope.curcommonwords.length,
+                    commonwordfreq: wordFrequency($scope.curcommonwords)
+
                 });
                 if ($scope.queryString === '') {
-                    wcountincommunity.push(body.length);
-                    uniwcountincommunity.push($scope.uniwords.length);
+                     wordsInfoInCommunity.push(
+                     { note: note,
+                       words: body
+                     });
+                     totaluniwords.push($scope.uniwords);
+                    uniwordsInfoInCommunity.push(
+                     { note: note,
+                       uniwords: $scope.uniwords
+                     });
+                    commonwordsInfoInCommunity.push(
+                     { note: note,
+                       commonwords: $scope.commonwords
+                     });
+                    uncommonwordsInfoInCommunity.push(
+                     { note: note,
+                       uncommonwords: $scope.uncommonwords
+                     });
                 } else {
-                    wcount.push(body.length);
-                    uniwcount.push($scope.uniwords.length);
+                    wordsInfo.push(
+                     { note: note,
+                       words: body
+                     });
+                    addnotduplicatevaluesInarray(totaluniwords,$scope.uniwords)
+                    //totaluniwords.push($scope.uniwords);
+                    console.log(totaluniwords.toString());
+                    uniwordsInfo.push(
+                     { note: note,
+                       uniwords: $scope.uniwords
+                     });
+                    commonwordsInfo.push(
+                     { note: note,
+                       commonwords: $scope.commonwords
+                     });
+                    uncommonwordsInfo.push(
+                     { note: note,
+                       uncommonwords: $scope.uncommonwords
+                     });
                 }
             });
         };
 
-          function strip(html) {
+        var setwords = function (commonwords, words, curwords, hasCommonwords ) {
+            curwords.length = 0;
+            if(hasCommonwords){
+               $scope.curcommonwords.length=0;
+            }   
+            words.forEach(function (eachword) {// console.log('each: '+eachword);
+                if (commonwords.toString().indexOf(eachword) === -1) {
+                    curwords.push(eachword);
+                }else{
+                    if(hasCommonwords){
+                      // $scope.curcommonwords.length=0;
+                       $scope.curcommonwords.push(eachword);
+                    }
+                }
+            });
+        };
+
+        $scope.getCreated = function (created) {
+                return new Date(created).toLocaleString();
+          };
+
+        function addnotduplicatevaluesInarray(a,b){
+            b.forEach(function(value){
+              if (a.indexOf(value)==-1) a.push(value);
+            });
+        }    
+
+        function intilize() {
+            $scope.notewordInfo.length = 0;
+            wordsInfo.length = 0;
+            totaluniwords.length = 0;
+            uniwordsInfo.length = 0;
+            commonwordsInfo.length=0;
+            uncommonwordsInfo.length=0;
+            wordsInfoInCommunity.length = 0;
+            uniwordsInfoInCommunity.length = 0;
+            commonwordsInfoInCommunity.length=0;
+            uncommonwordsInfoInCommunity.length=0;
+            setweekdates();
+            $scope.progressselection();
+        }
+
+        function strip(html) {
             var tmp = document.createElement("DIV");
             tmp.innerHTML = html;
             return (tmp.textContent || tmp.innerText || "");
@@ -93,72 +174,93 @@ angular.module('kf6App')
 
         $scope.barchartControl = function () {
             $suresh.barchartControl($scope.status);
-            // var tdata = $scope.gettermdata($scope.weeksdate, $scope.notewordInfo);
-            // var sample1 = [];
-            // var sample2 = [];
+            var tdata = $scope.gettermdata($scope.weeksdate, $scope.notewordInfo);
+            var sample1 = [];
+            var sample2 = [];
 
-            // tdata.forEach(function (d) {
-            //   //  console.log('d.date, d.twordcount' + d.date + '   ' + d.twordcount);
-            //     sample1.push([d.date, d.twordcount]);
-            //     sample2.push([d.date, d.tuniwordcount]);
+            tdata.forEach(function (d) {
+              //  console.log('d.date, d.twordcount' + d.date + '   ' + d.twordcount);
+                sample1.push([d.date, d.twordcount]);
+                sample2.push([d.date, d.tuniwordcount]);
 
-            // });
+            });
 
+            $scope.options = {
+            chart: {
+                type: 'linePlusBarChart',
+                height: 500,
+                margin: {
+                    top: 30,
+                    right: 75,
+                    bottom: 50,
+                    left: 75
+                },
+                bars: {
+                    forceY: [0]
+                },
+                bars2: {
+                    forceY: [0]
+                },
+                color: ['#2ca02c', 'darkred'],
+                x: function(d,i) { return i },
+                xAxis: {
+                    axisLabel: 'X Axis',
+                    tickFormat: function(d) {
+                        var dx = $scope.data[0].values[d] && $scope.data[0].values[d].x || 0;
+                        if (dx > 0) {
+                            return d3.time.format('%x')(new Date(dx))
+                        }
+                        return null;
+                    }
+                },
+                x2Axis: {
+                    tickFormat: function(d) {
+                        var dx = $scope.data[0].values[d] && $scope.data[0].values[d].x || 0;
+                        return d3.time.format('%b-%Y')(new Date(dx))
+                    },
+                    showMaxMin: false
+                },
+                y1Axis: {
+                    axisLabel: 'Y1 Axis',
+                    tickFormat: function(d){
+                        return d3.format(',f')(d);
+                    },
+                    axisLabelDistance: 12
+                },
+                y2Axis: {
+                    axisLabel: 'Y2 Axis',
+                    tickFormat: function(d) {
+                        return d3.format(',.2f')(d)
+                    }
+                },
+                y3Axis: {
+                    tickFormat: function(d){
+                        return d3.format(',f')(d);
+                    }
+                },
+                y4Axis: {
+                    tickFormat: function(d) {
+                        return d3.format(',.2f')(d)
+                    }
+                }
+            }
+        };
 
-            // $scope.options = {
-            //     chart: {
-            //         type: 'lineChart',
-            //         height: 450,
-            //         margin: {
-            //             top: 20,
-            //             right: 20,
-            //             bottom: 60,
-            //             left: 65
-            //         },
-            //         x: function (d) {
-            //             return d[0];
-            //         },
-            //         y: function (d) {
-            //             return d[1];
-            //         },
+        $scope.data = [
+            {
+                "key" : "Total word" ,
+                "bar": true,
+                "values" : sample1
+            },
+            {
+                "key" : "Unique Word" ,
+                "values" : sample2
+            }
 
-
-            //         color: d3.scale.category10().range(),
-            //         duration: 300,
-            //         useInteractiveGuideline: true,
-            //                            clipVoronoi: false,
-
-            //         xAxis: {
-            //             axisLabel: 'X Axis',
-            //             tickFormat: function (d) {
-            //                return d3.time.format('%x')(new Date(d))
-            //                // return d
-            //             },
-            //             showMaxMin: false,
-            //             staggerLabels: true
-            //         },
-
-            //         yAxis: {
-            //             axisLabel: 'Y Axis',
-            //                                   tickFormat: function (d) {
-            //                 return d;
-            //             },
-            //             axisLabelDistance: 20
-            //         }
-
-            //         }
-            // };
-            // $scope.data = [
-            //     {
-            //         key: "Word count",
-            //         values: sample1
-            //   },
-
-            //     {
-            //         key: "Unique word count",
-            //         values: sample2
-            //          }
-            //       ];
+        ].map(function(series) {
+                series.values = series.values.map(function(d) { return {x: d[0], y: d[1] } });
+                return series;
+            });
         };
 
         $scope.detailsControl = function () {
@@ -189,19 +291,7 @@ angular.module('kf6App')
             });
             return freqMap;
         }
-
-        var setuniquewords = function (commonwords, words) {
-            $scope.uniwords.length = 0;
-            words.forEach(function (eachword) {// console.log('each: '+eachword);
-              commonwords.forEach(function (cword) { //console.log('each: '+cword);
-                 });
-
-                if (commonwords.toString().indexOf(eachword) === -1) {
-                    $scope.uniwords.push(eachword);
-                }
-            });
-        };
-
+               
         function treatAsUTC(date) {
             var result = new Date(date);
             result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
